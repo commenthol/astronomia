@@ -143,6 +143,21 @@ class Calendar {
     return this.toJD()
   }
 
+  /**
+   * @param {Boolean} td - if `true` calendar instance is in TD; date gets converted to UT
+   *   true  - `UT = TD - ΔT`
+   *   false - `TD = UT + ΔT`
+   */
+  deltaT (td) {
+    let dT = deltat.deltaT(this.toYear()) // in seconds
+    if (td) {
+      this.day -= dT / 86400
+    } else {
+      this.day += dT / 86400
+    }
+    return this
+  }
+
   dayOfWeek () {
     return M.DayOfWeek(this.toJD())
   }

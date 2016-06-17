@@ -1,5 +1,7 @@
 /* global describe, it */
 
+'use strict'
+
 var assert = require('assert')
 var base = require('..').base
 var julian = require('..').julian

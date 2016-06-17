@@ -32,15 +32,15 @@ const int = Math.trunc
  * Error values returned by functions and methods in this package.
  * Defined here to help testing for specific errors.
  */
-const errorNot3 = new Error('Argument y must be length 3')
-const errorNot4 = new Error('Argument y must be length 4')
-const errorNot5 = new Error('Argument y must be length 5')
-const errorNoXRange = new Error('Argument x3 (or x5) cannot equal x1')
-const errorNOutOfRange = new Error('Interpolating factor n must be in range -1 to 1')
-const errorNoExtremum = new Error('No extremum in table')
-const errorExtremumOutside = new Error('Extremum falls outside of table')
-const errorZeroOutside = new Error('Zero falls outside of table')
-const errorNoConverge = new Error('Failure to converge')
+const errorNot3 = M.errorNot3 = new Error('Argument y must be length 3')
+const errorNot4 = M.errorNot4 = new Error('Argument y must be length 4')
+const errorNot5 = M.errorNot5 = new Error('Argument y must be length 5')
+const errorNoXRange = M.errorNoXRange = new Error('Argument x3 (or x5) cannot equal x1')
+const errorNOutOfRange = M.errorNOutOfRange = new Error('Interpolating factor n must be in range -1 to 1')
+const errorNoExtremum = M.errorNoExtremum = new Error('No extremum in table')
+const errorExtremumOutside = M.errorExtremumOutside = new Error('Extremum falls outside of table')
+const errorZeroOutside = M.errorZeroOutside = new Error('Zero falls outside of table')
+const errorNoConverge = M.errorNoConverge = new Error('Failure to converge')
 
 /**
  * Len3 allows second difference interpolation.

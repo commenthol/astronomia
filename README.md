@@ -28,14 +28,21 @@ For documentation of the different packages please take a look at the source cod
 
 ## Packages
 
-- _apparent_: Apparent Place of a Star
+- _angle_: Angular Separation.
+- _apparent_: Apparent Place of a Star.
+- _apsis_: Perigee and apogee of the Moon.
 - _base_: Basic constants and methods
+- _binary_: Binary Stars.
+- _circle_: Smallest Circle containing three Celestial Bodies.
+- _conjunction_: Planetary Conjunctions.
 - _coord_: Transformation of Coordinates. Ecliptic, Equatorial, Horizontal, Galactic coordinates.
 - _elementequinox_: Reduction of Ecliptical Elements from one Equinox to another one.
 - _globe_: Ellipsoid, Globe, Coordinates of Earth Observer
 - _julian_: Julian Days, Gregorian, Julian calendar functions
 - _interpolation_: Interpolation of equidistant values (linear, len3, len5); Lagrange Polynoms
+- _iterate_: Iteration.
 - _jm_: Jewish and Moslem Calendars.
+- _kepler_: Equation of Kepler.
 - _moon_: Ephemeris for Physical Observations of the Moon.
 - _moonillum_: Illuminated Fraction of the Moon's Disk.
 - _moonmaxdec_: Maximum Declinations of the Moon.

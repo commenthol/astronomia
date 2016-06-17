@@ -1,6 +1,8 @@
 /* eslint no-multi-spaces: 0 */
 /* globals describe, it */
 
+'use strict'
+
 var assert = require('assert')
 var julian = require('..').julian
 var moonphase = require('..').moonphase
