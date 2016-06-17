@@ -1,0 +1,10 @@
+node_modules/
+coverage/
+output/
+scripts/
+attic/
+test/
+tmp/
+*.log
+*.tgz
+.*
