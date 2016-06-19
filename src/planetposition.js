@@ -30,7 +30,7 @@ const precess = require('./precess')
 const M = exports
 
 function sum (t, series) {
-  let coeffs = new Array(6)
+  let coeffs = []
   Object.keys(series).forEach((x) => {
     coeffs[x] = 0
     let y = series[x].length - 1
@@ -49,7 +49,8 @@ function sum (t, series) {
 
 class Planet {
   constructor (planet) {
-    this.series = require('../data/vsop87B' + planet.toLowerCase())
+    this.name = planet.toLowerCase()
+    this.series = require('../data/vsop87B' + this.name)
   }
 
   /**

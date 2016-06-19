@@ -29,6 +29,7 @@ module.exports = {
   moonposition: require('./moonposition'),
   parallax: require('./parallax'),
   parallactic: require('./parallactic'),
+  perihelion: require('./perihelion'),
   planetposition: require('./planetposition'),
   precess: require('./precess'),
   rise: require('./rise'),
