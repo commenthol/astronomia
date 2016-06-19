@@ -21,7 +21,7 @@ August 10, 2009.
 ## Usage
 
 ```
-npm install --save astronomia@~0.0
+npm install --save astronomia@~0.1
 ```
 
 For documentation of the different packages please take a look at the source code as well as at the tests.
@@ -36,12 +36,17 @@ For documentation of the different packages please take a look at the source cod
 - _circle_: Smallest Circle containing three Celestial Bodies.
 - _conjunction_: Planetary Conjunctions.
 - _coord_: Transformation of Coordinates. Ecliptic, Equatorial, Horizontal, Galactic coordinates.
+- _deltat_: Dynamical Time and Universal Time.
+- _eclipse_: Eclipses.
 - _elementequinox_: Reduction of Ecliptical Elements from one Equinox to another one.
+- _eqtime_: Equation of time.
+- _fit_: Curve Fitting.
 - _globe_: Ellipsoid, Globe, Coordinates of Earth Observer
-- _julian_: Julian Days, Gregorian, Julian calendar functions
 - _interpolation_: Interpolation of equidistant values (linear, len3, len5); Lagrange Polynoms
 - _iterate_: Iteration.
 - _jm_: Jewish and Moslem Calendars.
+- _julian_: Julian Days, Gregorian, Julian calendar functions
+- _line_: Bodies in Straight Line
 - _kepler_: Equation of Kepler.
 - _moon_: Ephemeris for Physical Observations of the Moon.
 - _moonillum_: Illuminated Fraction of the Moon's Disk.
@@ -49,12 +54,17 @@ For documentation of the different packages please take a look at the source cod
 - _moonnode_: Passages of the Moon through the Nodes.
 - _moonphase_: Phases of the Moon.
 - _moonposition_: Position of the Moon.
+- _nearparabolic_: Near-parabolic Motion.
 - _nutation_: Nutation and the Obliquity of the Ecliptic.
+- _parabolic_: Parabolic Motion.
 - _parallax_: Correction for Parallax.
+- _perihelion_: Planets in Perihelion and Aphelion.
 - _planetposition_: Ecliptic position of planets by full VSOP87 theory.
-- _precess_: Precession
+- _precess_: Precession.
+- _refraction_: Atmospheric Refraction.
 - _rise_: Rising, Transit, and Setting.
-- _sexagesimal_: Sexagesimal classes
+- _semidiameter_: Semidiameters of the Sun, Moon, and Planets.
+- _sexagesimal_: Sexagesimal classes.
 - _sidereal_: Sidereal Time at Greenwich.
 - _solar_: Solar Coordinates.
 - _solstice_: Equinoxes, Solstices and Solarterms.
