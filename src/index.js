@@ -8,6 +8,7 @@ module.exports = {
   conjunction: require('./conjunction'),
   circle: require('./circle'),
   elementequinox: require('./elementequinox'),
+  eclipse: require('./eclipse'),
   deltat: require('./deltat'),
   globe: require('./globe'),
   interpolation: require('./interpolation'),

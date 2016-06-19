@@ -6,8 +6,6 @@ var assert = require('assert')
 var circle = require('..').circle
 var sexa = require('..').sexagesimal
 
-console.log(circle)
-
 describe('#circle', function () {
   it('Smallest typeII', function () {
     // Example 20.a, p. 128.0
