@@ -27,6 +27,7 @@ module.exports = {
   moonnode: require('./moonnode'),
   moonphase: require('./moonphase'),
   moonposition: require('./moonposition'),
+  parabolic: require('./parabolic'),
   parallax: require('./parallax'),
   parallactic: require('./parallactic'),
   perihelion: require('./perihelion'),
