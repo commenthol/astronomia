@@ -33,6 +33,7 @@ module.exports = {
   perihelion: require('./perihelion'),
   planetposition: require('./planetposition'),
   precess: require('./precess'),
+  refraction: require('./refraction'),
   rise: require('./rise'),
   sexagesimal: require('./sexagesimal'),
   sidereal: require('./sidereal'),
