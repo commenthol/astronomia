@@ -18,7 +18,7 @@ describe('#nearparabolic', function () {
     ]
     var e = new nearparabolic.Elements()
 
-    tdat.forEach((d, i) => {
+    tdat.forEach(function (d, i) {
       it(i, function () {
         e.timeP = base.J2000 + Math.random() * base.JulianCentury
         e.pDis = d.q
@@ -61,7 +61,7 @@ describe('#nearparabolic', function () {
     ]
 
     var e = new nearparabolic.Elements()
-    tdat.forEach((d, i) => {
+    tdat.forEach(function (d, i) {
       it(i, function () {
         e.timeP = base.J2000 + Math.random() * base.JulianCentury
         e.pDis = d.q

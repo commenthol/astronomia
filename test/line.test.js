@@ -18,10 +18,10 @@ describe('#line', function () {
     var r2 = 116.25042 * Math.PI / 180
     var d2 = 28.03681 * Math.PI / 180
     // apparent equatorial coordinates Mars from 29/9 to 3/10/1994
-    var r3 = [118.98067, 119.59396, 120.20413, 120.81108, 121.41475].map((ri) => {
+    var r3 = [118.98067, 119.59396, 120.20413, 120.81108, 121.41475].map(function (ri) {
       return ri * Math.PI / 180
     })
-    var d3 = [21.68417, 21.58983, 21.49394, 21.39653, 21.29761].map((di) => {
+    var d3 = [21.68417, 21.58983, 21.49394, 21.39653, 21.29761].map(function (di) {
       return di * Math.PI / 180
     })
 
