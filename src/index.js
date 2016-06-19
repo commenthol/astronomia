@@ -19,6 +19,7 @@ module.exports = {
   julian: require('./julian'),
   kepler: require('./kepler'),
   line: require('./line'),
+  nearparabolic: require('./nearparabolic'),
   nutation: require('./nutation'),
   moon: require('./moon'),
   moonillum: require('./moonillum'),
