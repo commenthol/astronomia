@@ -18,6 +18,7 @@ module.exports = {
   jm: require('./jm'),
   julian: require('./julian'),
   kepler: require('./kepler'),
+  line: require('./line'),
   nutation: require('./nutation'),
   moon: require('./moon'),
   moonillum: require('./moonillum'),

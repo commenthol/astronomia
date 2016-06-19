@@ -4,7 +4,7 @@
   "description": "An astronomical library",
   "main": "lib",
   "scripts": {
-    "test": "mocha test/*.test.js",
+    "test": "mocha -R dot test/*.test.js",
     "cover": "istanbul cover _mocha --report lcov --report text -- --reporter dot --check-leaks test/*.test.js",
     "lint": "eslint '**/*.js'",
     "dev": "babel --watch -d lib src",
