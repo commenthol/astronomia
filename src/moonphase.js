@@ -15,7 +15,7 @@ const ck = 1 / 1236.85
 /**
  * mean synodial lunar month
  */
-M.meanLunarMonth = 29.53
+M.meanLunarMonth = 29.530588861
 
 // (49.1) p. 349
 function mean (T) {

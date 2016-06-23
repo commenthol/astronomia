@@ -199,7 +199,7 @@ M.trueVSOP87 = function (planet, jde) {
 M.apparentVSOP87 = function (planet, jde) {
 	// note: see duplicated code in ApparentEquatorialVSOP87.
   let {lon, lat, range} = M.trueVSOP87(planet, jde)
-  let [Δψ, _] = nutation.nutation(jde) // eslint-disable-line
+  let Δψ = nutation.nutation(jde)[0]
   let a = M.aberration(range)
   lon = lon + Δψ + a
   return {lon, lat, range}
