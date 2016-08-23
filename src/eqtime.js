@@ -20,7 +20,7 @@ const M = exports
  * Parameter planet must be a planetposition.Planet object for Earth obtained
  * with `new planetposition.Planet('earth')`.
  *
- * @param {Number} jde
+ * @param {Number} jde - Julian ephemeris day
  * @param {planetposition.Planet} earth - VSOP87 planet
  * @returns {Number} equation of time as an hour angle in radians.
  */
@@ -54,7 +54,7 @@ const l0 = function (τ) {
  * Result is less accurate that e() but the function has the advantage
  * of not requiring the V87Planet object.
  *
- * @param {Number} jde
+ * @param {Number} jde - Julian ephemeris day
  * @returns {Number} equation of time as an hour angle in radians.
  */
 M.eSmart = function (jde) {

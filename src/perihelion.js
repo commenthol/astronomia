@@ -32,17 +32,15 @@ const M = exports
 /**
  * Planet constants for first argument of Perihelion and Aphelion functions.
  */
-const NAME = M.NAME = {
-  mercury: 0,
-  venus: 1,
-  earth: 2,
-  mars: 3,
-  jupiter: 4,
-  saturn: 5,
-  uranus: 6,
-  neptune: 7,
-  embary: 8
-}
+M.mercury = 0
+M.venus = 1
+M.earth = 2
+M.mars = 3
+M.jupiter = 4
+M.saturn = 5
+M.uranus = 6
+M.neptune = 7
+M.embary = 8
 
 /**
  * Perihelion returns an approximate jde of the perihelion event nearest the given time.
@@ -76,12 +74,12 @@ const af = function (x) { // (x float64)  float64
 
 const ap = function (p, y, a, f) { // (p int, y float64, a bool, f func(float64)  float64) float64
   let i = p
-  if (i === NAME.embary) {
-    i = NAME.earth
+  if (i === M.embary) {
+    i = M.earth
   }
   let k = f(ka[i].a * (y - ka[i].b))
   let j = base.horner(k, c[i])
-  if (p === NAME.earth) {
+  if (p === M.earth) {
     let c = ep
     if (a) {
       c = ea
@@ -138,7 +136,7 @@ var ea = [-1.352, 0.061, 0.062, 0.029, 0.031]
  *   {Number} r - the distance of the planet from the Sun in AU.
  */
 M.perihelion2 = function (planet, year, precision, cb) {
-  return ap2(NAME[planet.name], year, precision, planet, false, pf, cb)
+  return ap2(M[planet.name], year, precision, planet, false, pf, cb)
 }
 
 /**
@@ -153,7 +151,7 @@ M.perihelion2 = function (planet, year, precision, cb) {
  *   {Number} r - the distance of the planet from the Sun in AU.
  */
 M.aphelion2 = function (planet, year, precision, cb) {
-  return ap2(NAME[planet.name], year, precision, planet, true, af, cb)
+  return ap2(M[planet.name], year, precision, planet, true, af, cb)
 }
 
 if (typeof setImmediate !== 'function') {
@@ -162,7 +160,7 @@ if (typeof setImmediate !== 'function') {
 
 const ap2 = function (p, y, d, v, a, f, cb) {
   let j1 = ap(p, y, a, f)
-  if (p !== NAME.neptune) {
+  if (p !== M.neptune) {
     return ap2a(j1, d, a, v, cb)
   }
   // handle the double extrema of Neptune

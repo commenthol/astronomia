@@ -23,15 +23,15 @@ describe('#deltat', function () {
     {date: [1973,  1, 31], exp:   43.467},
     {date: [1973,  2,  1], exp:   43.470},
     {date: [1977,  2, 18], exp:   47.647}, // Example 10.a, p. 78.
-    {date: [2000,  1,  1], exp:   63.828},
-    {date: [2005,  1,  1], exp:   64.687},
-    {date: [2010,  1,  1], exp:   66.070},
-    {date: [2015,  1,  1], exp:   67.644},
-    {date: [2016,  1,  1], exp:   68.102},
-    {date: [2017,  1,  1], exp:   68.600}, // might change on new deltat data set
+    {date: [2000,  1,  1], exp:   63.829},
+    {date: [2005,  1,  1], exp:   64.688},
+    {date: [2010,  1,  1], exp:   66.071},
+    {date: [2015,  1,  1], exp:   67.645},
+    {date: [2016,  1,  1], exp:   68.104},
+    {date: [2017,  1,  1], exp:   68.660}, // might change on new deltat data set
     {date: [2020,  1,  1], exp:   70.000},
-    {date: [2024, 12, 31], exp:   72.984},
-    {date: [2025,  1,  1], exp:   74.467},
+    {date: [2024, 12, 31], exp:   73.000},
+    {date: [2025,  1,  1], exp:   73.000},
     {date: [2049, 12, 31], exp:   92.999},
     {date: [2050,  1,  1], exp:   93.004},
     {date: [2100,  1,  2], exp:  202.750},

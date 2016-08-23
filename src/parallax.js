@@ -17,11 +17,10 @@ const M = exports
 /**
  * Horizontal returns equatorial horizontal parallax of a body.
  *
- * Argument Δ is distance in AU.
- *
- * Result is parallax in radians.
+ * @param {number} Δ - distance in AU.
+ * @return {number} parallax in radians.
  */
-M.horizontal = function (Δ) { // (Δ float64)  (π float64)
+M.horizontal = function (Δ) {
   return 8.794 / 60 / 60 * Math.PI / 180 / Δ // (40.1) p. 279
 }
 
@@ -33,19 +32,25 @@ M.horizontal = function (Δ) { // (Δ float64)  (π float64)
  * constants (see package globe.) L is geographic longitude of the observer,
  * jde is time of observation.
  *
- * Results are observed topocentric ra and dec in radians.
+ * @param {base.Coord} c - geocentric right ascension and declination in radians
+ * @param {number} ρsφ - parallax constants (see package globe.)
+ * @param {number} ρcφ - parallax constants (see package globe.)
+ * @param {number} L - geographic longitude of the observer
+ * @param {number} jde - time of observation
+ * @return {base.Coord} observed topocentric ra and dec in radians.
  */
-M.topocentric = function (α, δ, Δ, ρsφ_, ρcφ_, L, jde) { // (α, δ, Δ, ρsφ_, ρcφ_, L, jde float64)  (α_, δ_ float64)
+M.topocentric = function (c, ρsφ, ρcφ, L, jde) {
+  let [α, δ, Δ] = [c.ra, c.dec, c.range]
   let π = M.horizontal(Δ)
   let θ0 = new sexa.Time(sidereal.apparent(jde)).rad()
   let H = base.pmod(θ0 - L - α, 2 * Math.PI)
   let sπ = Math.sin(π)
   let [sH, cH] = base.sincos(H)
   let [sδ, cδ] = base.sincos(δ)
-  let Δα = Math.atan2(-ρcφ_ * sπ * sH, cδ - ρcφ_ * sπ * cH) // (40.2) p. 279
+  let Δα = Math.atan2(-ρcφ * sπ * sH, cδ - ρcφ * sπ * cH) // (40.2) p. 279
   let α_ = α + Δα
-  let δ_ = Math.atan2((sδ - ρsφ_ * sπ) * Math.cos(Δα), cδ - ρcφ_ * sπ * cH) // (40.3) p. 279
-  return [α_, δ_]
+  let δ_ = Math.atan2((sδ - ρsφ * sπ) * Math.cos(Δα), cδ - ρcφ * sπ * cH) // (40.3) p. 279
+  return new base.Coord(α_, δ_)
 }
 
 /**
@@ -54,16 +59,24 @@ M.topocentric = function (α, δ, Δ, ρsφ_, ρcφ_, L, jde) { // (α, δ, Δ, 
  * This function implements the "non-rigorous" method descripted in the text.
  *
  * Note that results are corrections, not corrected coordinates.
+ *
+ * @param {base.Coord} c - geocentric right ascension and declination in radians
+ * @param {number} ρsφ - parallax constants (see package globe.)
+ * @param {number} ρcφ - parallax constants (see package globe.)
+ * @param {number} L - geographic longitude of the observer
+ * @param {number} jde - time of observation
+ * @return {base.Coord} observed topocentric ra and dec in radians.
  */
-M.topocentric2 = function (α, δ, Δ, ρsφ_, ρcφ_, L, jde) { // (α, δ, Δ, ρsφ_, ρcφ_, L, jde float64)  (Δα, Δδ float64)
+M.topocentric2 = function (c, ρsφ, ρcφ, L, jde) {
+  let [α, δ, Δ] = [c.ra, c.dec, c.range]
   let π = M.horizontal(Δ)
   let θ0 = new sexa.Time(sidereal.apparent(jde)).rad()
   let H = base.pmod(θ0 - L - α, 2 * Math.PI)
   let [sH, cH] = base.sincos(H)
   let [sδ, cδ] = base.sincos(δ)
-  let Δα = -π * ρcφ_ * sH / cδ // (40.4) p. 280
-  let Δδ = -π * (ρsφ_ * cδ - ρcφ_ * cH * sδ) // (40.5) p. 280
-  return [Δα, Δδ]
+  let Δα = -π * ρcφ * sH / cδ // (40.4) p. 280
+  let Δδ = -π * (ρsφ * cδ - ρcφ * cH * sδ) // (40.5) p. 280
+  return new base.Coord(Δα, Δδ)
 }
 
 /**
@@ -72,8 +85,18 @@ M.topocentric2 = function (α, δ, Δ, ρsφ_, ρcφ_, L, jde) { // (α, δ, Δ,
  * This function implements the "alternative" method described in the text.
  * The method should be similarly rigorous to that of Topocentric() and results
  * should be virtually consistent.
+ *
+ * @param {base.Coord} c - geocentric right ascension and declination in radians
+ * @param {number} ρsφ - parallax constants (see package globe.)
+ * @param {number} ρcφ - parallax constants (see package globe.)
+ * @param {number} L - geographic longitude of the observer
+ * @param {number} jde - time of observation
+ * @return {Array}
+ *    {number} H_ - topocentric hour angle
+ *    {number} δ_ - topocentric declination
  */
-M.topocentric3 = function (α, δ, Δ, ρsφ_, ρcφ_, L, jde) { // (α, δ, Δ, ρsφ_, ρcφ_, L, jde float64)  (H_, δ_ float64)
+M.topocentric3 = function (c, ρsφ_, ρcφ_, L, jde) {
+  let [α, δ, Δ] = [c.ra, c.dec, c.range]
   let π = M.horizontal(Δ)
   let θ0 = new sexa.Time(sidereal.apparent(jde)).rad()
   let H = base.pmod(θ0 - L - α, 2 * Math.PI)
@@ -92,7 +115,7 @@ M.topocentric3 = function (α, δ, Δ, ρsφ_, ρcφ_, L, jde) { // (α, δ, Δ,
 /**
  * TopocentricEcliptical returns topocentric ecliptical coordinates including parallax.
  *
- * Arguments λ, β are geocentric ecliptical longitude and latitude of a body,
+ * Arguments `c` are geocentric ecliptical longitude and latitude of a body,
  * s is its geocentric semidiameter. φ, h are the observer's latitude and
  * and height above the ellipsoid in meters.  ε is the obliquity of the
  * ecliptic, θ is local sidereal time, π is equatorial horizontal parallax
@@ -100,9 +123,20 @@ M.topocentric3 = function (α, δ, Δ, ρsφ_, ρcφ_, L, jde) { // (α, δ, Δ,
  *
  * All angular parameters and results are in radians.
  *
- * Results are observed topocentric coordinates and semidiameter.
+ * @param {base.Coord} c - geocentric right ascension and declination in radians
+ * @param {number} s - geocentric semidiameter of `c`
+ * @param {number} φ - observer's latitude
+ * @param {number} h - observer's height above the ellipsoid in meters
+ * @param {number} ε - is the obliquity of the ecliptic
+ * @param {number} θ - local sidereal time
+ * @param {number} π - equatorial horizontal parallax of the body
+ * @return {Array}
+ *    {number} λ_ - observed topocentric longitude
+ *    {number} β_ - observed topocentric latitude
+ *    {number} s_ - observed topocentric semidiameter
  */
-M.topocentricEcliptical = function (λ, β, s, φ, h, ε, θ, π) {
+M.topocentricEcliptical = function (c, s, φ, h, ε, θ, π) {
+  let [λ, β] = [c.lon, c.lat]
   let [S, C] = globe.Earth76.parallaxConstants(φ, h)
   let [sλ, cλ] = base.sincos(λ)
   let [sβ, cβ] = base.sincos(β)

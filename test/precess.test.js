@@ -109,7 +109,7 @@ describe('#precess', function () {
     })
   })
 
-  describe('Position JDE', function () {
+  describe('position JDE', function () {
     // Exercise, p. 136.
     var eqFrom = new coord.Equatorial(
       new sexa.RA(2, 31, 48.704).rad(),
@@ -134,7 +134,7 @@ describe('#precess', function () {
     })
   })
 
-  describe('Position Epochs', function () {
+  describe('position Epochs', function () {
     // Exercise, p. 136.
     var eqFrom = new coord.Equatorial(
       new sexa.RA(2, 31, 48.704).rad(),
@@ -162,7 +162,7 @@ describe('#precess', function () {
     })
   })
 
-  describe('EclipticPosition', function () {
+  describe('eclipticPosition', function () {
     it('Example', function () {
       // Example 21.c, p. 137.
       var eclFrom = new coord.Ecliptic(

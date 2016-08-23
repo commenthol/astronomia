@@ -1,4 +1,3 @@
-/* eslint one-var: 0 */
 /* global describe, it */
 
 var assert = require('assert')
@@ -8,23 +7,23 @@ var sexa = require('..').sexagesimal
 var apsis = require('..').apsis
 
 describe('#apsis', function () {
-  it('MeanApogee', function () {
+  it('meanApogee', function () {
     // Example 50.a, p. 357.0
-    var res = apsis.MeanApogee(1988.75)
+    var res = apsis.meanApogee(1988.75)
     assert.equal(res.toFixed(4), 2447442.8191)
   })
 
-  it('Apogee', function () {
+  it('apogee', function () {
     // Example 50.a, p. 357.0
-    var j = apsis.Apogee(1988.75)
+    var j = apsis.apogee(1988.75)
     assert.equal(j.toFixed(4), 2447442.3543) // JDE
     var date = julian.JDEToDate(j)
     assert.equal(date.toISOString(), '1988-10-07T20:29:15.382Z')
   })
 
-  it('ApogeeParallax', function () {
-  // Example 50.a, p. 357.0
-    var p = apsis.ApogeeParallax(1988.75)
+  it('apogeeParallax', function () {
+    // Example 50.a, p. 357.0
+    var p = apsis.apogeeParallax(1988.75)
     assert.equal((p * 180 / Math.PI * 3600).toFixed(3), 3240.679)
     assert.equal(new sexa.Angle(p).toString(3), '0°54′.679″')
   })
@@ -32,7 +31,7 @@ describe('#apsis', function () {
   /**
    * Test cases from p. 361.0
    */
-  it('Perigee', function () {
+  it('perigee', function () {
     var tests = [
       [1997, 12, 9 + 16.9 / 24, 1997.93],
       [1998, 1, 3 + 8.5 / 24, 1998.01],
@@ -43,10 +42,34 @@ describe('#apsis', function () {
       var c = { y: t[0], m: t[1], d: t[2], dy: t[3] }
       it(c.dy, function () {
         var ref = julian.CalendarGregorianToJD(c.y, c.m, c.d)
-        var j = apsis.Perigee(c.dy)
+        var j = apsis.perigee(c.dy)
         var err = Math.abs(j - ref)
         assert.ok(err < 0.1, 'got' + j + 'expected' + ref)
       })
     })
+  })
+
+  it('perigeeParallax', function () {
+    var p = apsis.perigeeParallax(1997.93)
+    assert.equal((p * 180 / Math.PI * 3600).toFixed(3), 3566.637)
+    assert.equal(new sexa.Angle(p).toString(3), '0°59′26.637″')
+  })
+
+  it('perigeeDistance', function () {
+    var p = apsis.perigeeParallax(1997.93)
+    var d = apsis.distance(p)
+    assert.equal(d.toFixed(0), 367139)
+    // verified with https://www.fourmilab.ch/earthview/pacalc.html - error < 0.5 km
+    // Perigee Dec  9 16:56 368877 km
+    assert.ok(Math.abs(368877 - d - apsis.MOON_RADIUS) < 0.5)
+  })
+
+  it('apogeeDistance', function () {
+    var p = apsis.apogeeParallax(1997.90)
+    var d = apsis.distance(p)
+    assert.equal(d.toFixed(0), 402957)
+    // verified with https://www.fourmilab.ch/earthview/pacalc.html - error < 0.5km
+    // Apogee Nov 24  2:28 404695 km
+    assert.ok(Math.abs(404695 - d - apsis.MOON_RADIUS) < 0.5)
   })
 })

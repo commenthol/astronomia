@@ -6,9 +6,9 @@
 /**
  * Moonillum: Chapter 48, Illuminated Fraction of the Moon's Disk
  *
- * Also see functions Illuminated and Limb in package base.  The function
+ * Also see functions `illuminated` and `limb` in package base.  The function
  * for computing illuminated fraction given a phase angle (48.1) is
- * base.Illuminated.  Formula (48.3) is implemented as base.Limb.
+ * base.illuminated.  Formula (48.3) is implemented as base.limb.
  */
 
 const base = require('./base')
@@ -17,24 +17,21 @@ const M = exports
 const p = Math.PI / 180
 
 /**
-/**
  * phaseAngleEquatorial computes the phase angle of the Moon given equatorial coordinates.
  *
- * Arguments α, δ, Δ are geocentric right ascension, declination, and distance
- * to the Moon; α0, δ0, R  are coordinates of the Sun.  Angles must be in
- * radians.  Distances must be in the same units as each other.
- *
- * Result in radians.
+ * @param {base.Coord} cMoon - geocentric right ascension,  declination and distance to the Moon
+ * @param {base.Coord} cSun - coordinates and distance of the Sun
+ * @returns {number} phase angle of the Moon in radians
  */
-M.phaseAngleEquatorial = function (α, δ, Δ, α0, δ0, R) { // (α, δ, Δ, α0, δ0, R float64)  float64
-  return pa(Δ, R, cosEq(α, δ, α0, δ0))
+M.phaseAngleEquatorial = function (cMoon, cSun) {
+  return pa(cMoon.range, cSun.range, cosEq(cMoon.ra, cMoon.dec, cSun.ra, cSun.dec))
 }
 
 /**
  * cos elongation from equatorial coordinates
  * @private
  */
-function cosEq (α, δ, α0, δ0) { // (α, δ, α0, δ0 float64)  float64
+function cosEq (α, δ, α0, δ0) {
   let [sδ, cδ] = base.sincos(δ)
   let [sδ0, cδ0] = base.sincos(δ0)
   return sδ0 * sδ + cδ0 * cδ * Math.cos(α0 - α)
@@ -65,23 +62,25 @@ function pa (Δ, R, cψ) {
  * Arguments α, δ are geocentric right ascension and declination of the Moon;
  * α0, δ0  are coordinates of the Sun.  Angles must be in radians.
  *
- * Result in radians.
+ * @param {base.Coord} cMoon - eocentric right ascension and declination of the Moon
+ * @param {base.Coord} cSun - coordinates of the Sun
+ * @returns {number} phase angle of the Moon in radians
  */
-M.phaseAngleEquatorial2 = function (α, δ, α0, δ0) { // (α, δ, α0, δ0 float64)  float64
-  return Math.acos(-cosEq(α, δ, α0, δ0))
+M.phaseAngleEquatorial2 = function (cMoon, cSun) {
+  return Math.acos(-cosEq(cMoon.ra, cMoon.dec, cSun.ra, cSun.dec))
 }
 
 /**
  * phaseAngleEcliptic computes the phase angle of the Moon given ecliptic coordinates.
  *
- * Arguments λ, β, Δ are geocentric longitude, latitude, and distance
- * to the Moon; λ0, R  are longitude and distance to the Sun.  Angles must be
- * in radians.  Distances must be in the same units as each other.
+ * Distances must be in the same units as each other.
  *
- * Result in radians.
+ * @param {base.Coord} cMoon - geocentric longitude, latitude and distance to the Moon
+ * @param {base.Coord} cSun -  longitude and distance to the Sun
+ * @returns {number} phase angle of the Moon in radians
  */
-M.phaseAngleEcliptic = function (λ, β, Δ, λ0, R) { // (λ, β, Δ, λ0, R float64)  float64
-  return pa(Δ, R, cosEcl(λ, β, λ0))
+M.phaseAngleEcliptic = function (cMoon, cSun) {
+  return pa(cMoon.range, cSun.range, cosEcl(cMoon.lon, cMoon.lat, cSun.lon))
 }
 
 /**
@@ -97,18 +96,14 @@ function cosEcl (λ, β, λ0) { // (λ, β, λ0 float64)  float64
  *
  * Less accurate than phaseAngleEcliptic.
  *
- * Arguments λ, β are geocentric longitude and latitude of the Moon;
- * λ0 is longitude of the Sun.  Angles must be in radians.
+ * Angles must be in radians.
  *
- * Result in radians.
- *
- * @param {number} λ
- * @param {number} β
- * @param {number} λ0
- * @returns {number}
+ * @param {base.Coord} cMoon - geocentric longitude, latitude of the Moon
+ * @param {base.Coord} cSun -  longitude of the Sun
+ * @returns {number} phase angle of the Moon in radians
  */
-M.phaseAngleEcliptic2 = function (λ, β, λ0) {
-  return Math.acos(-cosEcl(λ, β, λ0))
+M.phaseAngleEcliptic2 = function (cMoon, cSun) {
+  return Math.acos(-cosEcl(cMoon.lon, cMoon.lat, cSun.lon))
 }
 
 /**

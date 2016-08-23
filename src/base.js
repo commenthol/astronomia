@@ -93,8 +93,10 @@ M.B1950 = 2433282.4235
 M.JulianYear = 365.25 // days
 /** JulianCentury in days */
 M.JulianCentury = 36525 // days
-/** BesselianYear in days */
+/** BesselianYear in days; equals mean tropical year */
 M.BesselianYear = 365.2421988 // days
+/** Mean sidereal year */
+M.meanSiderealYear = 365.25636 // days
 
 /**
  * JulianYearToJDE returns the Julian ephemeris day for a Julian year.
@@ -163,15 +165,51 @@ M.illuminated = function (i) {
 }
 
 /**
+ * celestial coordinates in right ascension and declination
+ * or ecliptic coordinates in longitude and latitude
+ *
+ * @param {number} ra - right ascension (or longitude)
+ * @param {number} dec - declination (or latitude)
+ * @param {number} [range] - distance
+ * @param {number} [elongation] - elongation
+ */
+function Coord (ra /* lon */, dec /* lat */, range, elongation) {
+  this._ra = ra || 0
+  this._dec = dec || 0
+  this.range = range
+  this.elongation = elongation
+
+  Object.defineProperties(this, {
+    ra: {
+      get: function () { return this._ra },
+      set: function (ra) { this._ra = ra }
+    },
+    dec: {
+      get: function () { return this._dec },
+      set: function (dec) { this._dec = dec }
+    },
+    lon: {
+      get: function () { return this._ra },
+      set: function (ra) { this._ra = ra }
+    },
+    lat: {
+      get: function () { return this._dec },
+      set: function (dec) { this._dec = dec }
+    }
+  })
+}
+M.Coord = Coord
+
+/**
  * Limb returns the position angle of the midpoint of an illuminated limb.
  *
  * The illuminated body can be the Moon or a planet.
  *
- * @param {Object} equ - equatorial coordinates of the body `{ra, dec}` (in radians)
- * @param {Object} appSun - apparent coordinates of the Sun `{ra, dec}` (In radians).
+ * @param {base.Coord} equ - equatorial coordinates of the body `{ra, dec}` (in radians)
+ * @param {base.Coord} appSun - apparent coordinates of the Sun `{ra, dec}` (In radians).
  * @returns {Number} position angle of the midpoint (in radians).
  */
-M.Limb = function (equ, appSun) {
+M.limb = function (equ, appSun) {
   let α = equ.ra
   let δ = equ.dec
   let α0 = appSun.ra
@@ -220,7 +258,7 @@ M.pmod = function (x, y) {
 
 /**
  * horner evaluates a polynomal with coefficients c at x.  The constant
- * term is c[0].  The function panics with an empty coefficient list.
+ * term is c[0].
  * @param {Number} x
  * @param {Number|Number[]} c - coefficients
  * @returns {Number}

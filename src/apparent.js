@@ -12,7 +12,6 @@ const coord = require('./coord')
 const nutation = require('./nutation')
 const precess = require('./precess')
 const solar = require('./solar')
-// const sexa = require('./sexagesimal')
 
 const M = exports
 

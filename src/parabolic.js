@@ -26,12 +26,12 @@ class Elements {
   /**
    * AnomalyDistance returns true anomaly and distance of a body in a parabolic orbit of the Sun.
    *
-   * @param {Number} jde - Julian Ephemeris Day
+   * @param {Number} jde - Julian ephemeris day
    * @returns {Object} {ano, dist}
    *   {Number} ano - True anomaly ν in radians.
    *   {Number} dist - Distance r returned in AU.
    */
-  anomalyDistance (jde) { // (ν, r float64) {
+  anomalyDistance (jde) {
     let W = 3 * base.K / Math.SQRT2 * (jde - this.timeP) / this.pDis / Math.sqrt(this.pDis)
     let G = W * 0.5
     let Y = Math.cbrt(G + Math.sqrt(G * G + 1))

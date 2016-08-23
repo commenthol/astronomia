@@ -94,6 +94,7 @@ class Calendar {
     let date = new Date(Date.UTC(
       this.year, this.month - 1, day, hour, minute, second, Math.round(fms * 1000)
     ))
+    date.setUTCFullYear(this.year)
     return date
   }
 
@@ -411,7 +412,7 @@ M.DateToJD = function (date) {
 }
 
 /**
- * JDEToDate converts a Julian ephermis day `jde` to a Date Object (Gregorian Calendar)
+ * JDEToDate converts a Julian ephemeris day `jde` to a Date Object (Gregorian Calendar)
  * To obtain "Universal Time" (UT) from "Dynamical Time" (TD) the correction ΔT (in seconds) gets applied
  * ```
  * UT = TD - ΔT
@@ -423,7 +424,7 @@ M.DateToJD = function (date) {
  * its year of introduction in 1582. Therefore dates between 1582-10-05 and
  * 1582-10-14 exists.
  *
- * @param {number} jde - Julian ephermis day (float)
+ * @param {number} jde - Julian ephemeris day
  * @returns {Date} Javascript Date Object
  */
 M.JDEToDate = function (jde) {
@@ -431,7 +432,7 @@ M.JDEToDate = function (jde) {
 }
 
 /**
- * DateToJDE converts a Date Object (Gregorian Calendar) to a Julian ephermis day `jde`
+ * DateToJDE converts a Date Object (Gregorian Calendar) to a Julian ephemeris day `jde`
  * To obtain "Dynamical Time" (TD) from "Universal Time" (UT) the correction ΔT (in seconds) gets applied
  * ```
  * TD = UT + ΔT
@@ -439,7 +440,7 @@ M.JDEToDate = function (jde) {
  * If your use case does not require such accuracy converting `Date` using `DateToJD` is fine.
  *
  * @param {Date} date - Javascript Date Object
- * @returns {number} jde - Julian ephermis day (float)
+ * @returns {number} jde - Julian ephemeris day (float)
  */
 M.DateToJDE = function (date) {
   return new CalendarGregorian().fromDate(date).toJDE()

@@ -24,7 +24,7 @@ const M = exports
  *
  * Result units are radians.
  *
- * @param {number} jde - Julian Ephemeris Day
+ * @param {number} jde - Julian ephemeris day
  * @return {number[]} [Δψ, Δε] - [longitude, obliquity] in radians
  */
 M.nutation = function (jde) {
@@ -61,7 +61,7 @@ M.nutation = function (jde) {
  *
  * Result units are radians.
  *
- * @param {number} jde - Julian Ephemeris Day
+ * @param {number} jde - Julian ephemeris day
  * @return {number[]} [Δψ, Δε] - [longitude, obliquity] in radians
  */
 M.approxNutation = function (jde) {
@@ -87,7 +87,7 @@ M.approxNutation = function (jde) {
  *
  * Result unit is radians.
  *
- * @param {number} jde - Julian Ephemeris Day
+ * @param {number} jde - Julian ephemeris day
  * @return {number} mean obliquity (ε₀)
  */
 M.meanObliquity = function (jde) {
@@ -112,7 +112,7 @@ M.meanObliquity = function (jde) {
  *
  * Result unit is radians.
  *
- * @param {number} jde - Julian Ephemeris Day
+ * @param {number} jde - Julian ephemeris day
  * @return {number} mean obliquity (ε₀)
  */
 M.meanObliquityLaskar = function (jde) {
@@ -139,7 +139,7 @@ M.meanObliquityLaskar = function (jde) {
  *
  * Result is an angle in radians.
  *
- * @param {number} jde - Julian Ephemeris Day
+ * @param {number} jde - Julian ephemeris day
  * @return {number} nutation in right ascension
  */
 M.nutationInRA = function (jde) {

@@ -5,14 +5,14 @@
 var assert = require('assert')
 var julian = require('..').julian
 var sexa = require('..').sexagesimal
-var planetpos = require('..').planetposition
+var planetposition = require('..').planetposition
 
-describe('#planetpos', function () {
-  describe('Position2000', function () {
+describe('#planetposition', function () {
+  describe('position2000', function () {
     it('Mars at 2415020.0', function () {
       // Mars 1899 spherical data from vsop87.chk.
       var jd = 2415020.0
-      var planet = new planetpos.Planet('mars')
+      var planet = new planetposition.Planet(planetposition.mars)
       var res = planet.position2000(jd)
 
       assert.equal(res.lon, 5.018579265623366)
@@ -23,7 +23,7 @@ describe('#planetpos', function () {
     it('Venus at 1992-12-20', function () {
       // Example 32.a, p. 219
       var jd = julian.CalendarGregorianToJD(1992, 12, 20)
-      var planet = new planetpos.Planet('venus')
+      var planet = new planetposition.Planet(planetposition.venus)
       var res = planet.position2000(jd)
 
       assert.equal(res.lon, 0.45749253478276586)    // rad
@@ -32,11 +32,11 @@ describe('#planetpos', function () {
     })
   })
 
-  describe('Position', function () {
+  describe('position', function () {
     it('Venus at 1992-12-20', function () {
       // Example 32.a, p. 219
       var jd = julian.CalendarGregorianToJD(1992, 12, 20)
-      var planet = new planetpos.Planet('venus')
+      var planet = new planetposition.Planet(planetposition.venus)
       var res = planet.position(jd)
       assert.equal(new sexa.Angle(res.lon).toDegString(5), '26°.11412')
       assert.equal(new sexa.Angle(res.lat).toDegString(5), '-2°.6206')

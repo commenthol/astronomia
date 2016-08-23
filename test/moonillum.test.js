@@ -15,13 +15,18 @@ describe('#moonillum', function () {
   var j = julian.CalendarGregorianToJD(1992, 4, 12)
 
   it('phaseAngleEquatorial', function () {
-    var i = moonillum.phaseAngleEquatorial(134.6885 * p, 13.7684 * p, 368410,
-      20.6579 * p, 8.6964 * p, 149971520)
+    var i = moonillum.phaseAngleEquatorial(
+      new base.Coord(134.6885 * p, 13.7684 * p, 368410),
+      new base.Coord(20.6579 * p, 8.6964 * p, 149971520)
+    )
     assert.equal((i / p).toFixed(4), 69.0756)
   })
 
   it('phaseAngleEquatorial2', function () {
-    var i = moonillum.phaseAngleEquatorial2(134.6885 * p, 13.7684 * p, 20.6579 * p, 8.6964 * p)
+    var i = moonillum.phaseAngleEquatorial2(
+      new base.Coord(134.6885 * p, 13.7684 * p),
+      new base.Coord(20.6579 * p, 8.6964 * p)
+    )
     var k = base.illuminated(i)
     assert.equal(k.toFixed(4), 0.6775)
   })
@@ -31,7 +36,7 @@ describe('#moonillum', function () {
     var T = base.J2000Century(j)
     var λ0 = solar.apparentLongitude(T)
     var R = solar.radius(T) * base.AU
-    var i = moonillum.phaseAngleEcliptic(pos.lon, pos.lat, pos.range, λ0, R)
+    var i = moonillum.phaseAngleEcliptic(pos, new base.Coord(λ0, 0, R))
     var ref = 69.0756 * Math.PI / 180
     var err = Math.abs((i - ref) / ref)
     assert.ok(err < 1e-4)
@@ -40,7 +45,7 @@ describe('#moonillum', function () {
   it('phaseAngleEcliptic2', function () {
     var pos = moonposition.position(j)
     var λ0 = solar.apparentLongitude(base.J2000Century(j))
-    var i = moonillum.phaseAngleEcliptic2(pos.lon, pos.lat, λ0)
+    var i = moonillum.phaseAngleEcliptic2(pos, new base.Coord(λ0))
     var k = base.illuminated(i)
     var ref = 0.6775
     var err = Math.abs(k - ref)

@@ -1,4 +1,4 @@
-all: v0.12 v4.4 v6.2
+all: v0.12 v4.5 v6.4
 
 v%:
 	n $@ && npm test

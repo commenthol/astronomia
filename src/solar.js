@@ -120,8 +120,8 @@ M.true2000 = function (T) {
 /**
  * trueEquatorial returns the true geometric position of the Sun as equatorial coordinates.
  *
- * @param {Number} jde
- * @returns {Object}
+ * @param {Number} jde - Julian ephemeris day
+ * @returns {base.Coord}
  *   {Number} ra - right ascension in radians
  *   {Number} dec - declination in radians
  */
@@ -133,14 +133,14 @@ M.trueEquatorial = function (jde) {
   // (25.6, 25.7) p. 165
   let ra = Math.atan2(cε * ss, cs)
   let dec = sε * ss
-  return {ra, dec}
+  return new base.Coord(ra, dec)
 }
 
 /**
  * apparentEquatorial returns the apparent position of the Sun as equatorial coordinates.
  *
- * @param {Number} jde
- * @returns {Object}
+ * @param {Number} jde - Julian ephemeris day
+ * @returns {base.Coord}
  *   {Number} ra - right ascension in radians
  *   {Number} dec - declination in radians
  */
@@ -153,7 +153,7 @@ M.apparentEquatorial = function (jde) {
   let [sε, cε] = base.sincos(ε + 0.00256 * Math.PI / 180 * Math.cos(node(T)))
   let ra = Math.atan2(cε * sλ, cλ)
   let dec = Math.asin(sε * sλ)
-  return {ra, dec}
+  return new base.Coord(ra, dec)
 }
 
 /**
@@ -162,8 +162,8 @@ M.apparentEquatorial = function (jde) {
  * Result computed by full VSOP87 theory.  Result is at equator and equinox
  * of date in the FK5 frame.  It does not include nutation or aberration.
  *
- * @param {planetpos.Planet} planet
- * @param {Number} jde
+ * @param {planetposition.Planet} planet
+ * @param {Number} jde - Julian ephemeris day
  * @returns {Object}
  * 	{Number} lon - ecliptic longitude in radians
  * 	{Number} lat - ecliptic latitude in radians
@@ -180,7 +180,7 @@ M.trueVSOP87 = function (planet, jde) {
   // (25.9) p. 166
   lon = base.pmod(s - 0.09033 / 3600 * Math.PI / 180, 2 * Math.PI)
   lat = Δβ - lat
-  return {lon, lat, range}
+  return new base.Coord(lon, lat, range)
 }
 
 /**
@@ -189,9 +189,9 @@ M.trueVSOP87 = function (planet, jde) {
  * Result computed by VSOP87, at equator and equinox of date in the FK5 frame,
  * and includes effects of nutation and aberration.
  *
- * @param {planetpos.Planet} planet
- * @param {Number} jde
- * @returns {Object}
+ * @param {planetposition.Planet} planet
+ * @param {Number} jde - Julian ephemeris day
+ * @returns {base.Coord}
  * 	{Number} lon - ecliptic longitude in radians
  * 	{Number} lat - ecliptic latitude in radians
  * 	{Number} range - range in AU
@@ -202,7 +202,7 @@ M.apparentVSOP87 = function (planet, jde) {
   let Δψ = nutation.nutation(jde)[0]
   let a = M.aberration(range)
   lon = lon + Δψ + a
-  return {lon, lat, range}
+  return new base.Coord(lon, lat, range)
 }
 
 /**
@@ -211,8 +211,8 @@ M.apparentVSOP87 = function (planet, jde) {
  * Result computed by VSOP87, at equator and equinox of date in the FK5 frame,
  * and includes effects of nutation and aberration.
  *
- * @param {planetpos.Planet} planet
- * @param {Number} jde
+ * @param {planetposition.Planet} planet
+ * @param {Number} jde - Julian ephemeris day
  * @returns
  * 	{Number} ra - right ascension in radians
  * 	{Number} dec - declination in radians
@@ -227,7 +227,7 @@ M.apparentEquatorialVSOP87 = function (planet, jde) {
   let λ = lon + Δψ + a
   let ε = nutation.meanObliquity(jde) + Δε
   let {ra, dec} = new coord.Ecliptic(λ, lat).toEquatorial(ε)
-  return {ra, dec, range}
+  return new base.Coord(ra, dec, range)
 }
 
 /**

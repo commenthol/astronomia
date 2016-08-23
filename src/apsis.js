@@ -5,10 +5,6 @@
  */
 /**
  * Apsis: Chapter 50, Perigee and apogee of the Moon
- *
- * Incomplete:  PerigeeParallax not implemented for lack of test cases.
- * Implementation involves copying a table of coefficients, involving
- * risk of typographical error.
  */
 
 const base = require('./base')
@@ -20,10 +16,18 @@ const M = exports
  */
 const ck = 1 / 1325.55
 
+const p = Math.PI / 180
+
+// from http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
+const EARTH_RADIUS = 6378.137 // km
+// from http://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+const MOON_RADIUS = M.MOON_RADIUS = 1738.1 // km
+
 /**
+ * mean time of perigee or apogee
  * (50.1) p. 355
  */
-const mean = function (T) { // (T float64)  float64
+const mean = function (T) {
   return base.horner(T, 2451534.6698, 27.55454989 / ck,
     -0.0006691, -0.000001098, 0.0000000052)
 }
@@ -31,64 +35,85 @@ const mean = function (T) { // (T float64)  float64
 /**
  * snap returns k at half h nearest year y.
  */
-const snap = function (y, h) { // (y, h float64)  float64
+const snap = function (y, h) {
   let k = (y - 1999.97) * 13.2555 // (50.2) p. 355
   return Math.floor(k - h + 0.5) + h
 }
 
 /**
- * MeanPerigee returns the jde of the mean perigee of the Moon nearest the given date.
+ * meanPerigee returns the jde of the mean perigee of the Moon nearest the given date.
  *
- * Year is a decimal year specifying a date.
+ * @param {Number} year - is a decimal year specifying a date.
+ * @return {Number} jde - Julian ephemeris day
  */
-M.MeanPerigee = function (year) { // (year float64)  float64
+M.meanPerigee = function (year) {
   return mean(snap(year, 0) * ck)
 }
 
 /**
- * Perigee returns the jde of perigee of the Moon nearest the given date.
+ * perigee returns the jde of perigee of the Moon nearest the given date.
  *
- * Year is a decimal year specifying a date.
+ * @param {Number} year - is a decimal year specifying a date.
+ * @return {Number} jde - Julian ephemeris day
  */
-M.Perigee = function (year) { // (year float64)  float64
+M.perigee = function (year) {
   let l = new La(year, 0)
-  return mean(l.T) + l.pc()
+  return mean(l.T) + l.perigeeCorr()
 }
 
 /**
- * MeanApogee returns the jde of the mean apogee of the Moon nearest the given date.
+ * meanApogee returns the jde of the mean apogee of the Moon nearest the given date.
  *
- * Year is a decimal year specifying a date.
+ * @param {Number} year - is a decimal year specifying a date.
+ * @return {Number} jde - Julian ephemeris day
  */
-M.MeanApogee = function (year) { // (year float64)  float64
+M.meanApogee = function (year) { // (year float64)  float64
   return mean(snap(year, 0.5) * ck)
 }
 
 /**
- * Apogee returns the jde of apogee of the Moon nearest the given date.
+ * apogee returns the jde of apogee of the Moon nearest the given date.
  *
- * Year is a decimal year specifying a date.
+ * @param {Number} year - is a decimal year specifying a date.
+ * @return {Number} jde - Julian ephemeris day
  */
-M.Apogee = function (year) { // (year float64)  float64
+M.apogee = function (year) {
   let l = new La(year, 0.5)
-  return mean(l.T) + l.ac()
+  return mean(l.T) + l.apogeeCorr()
 }
 
 /**
- * ApogeeParallax returns equatorial horizontal parallax of the Moon at the Apogee nearest the given date.
+ * apogeeParallax returns equatorial horizontal parallax of the Moon at the Apogee nearest the given date.
  *
- * Year is a decimal year specifying a date.
- *
- * Result in radians.
+ * @param {Number} year - is a decimal year specifying a date.
+ * @return {Number} equatorial horizontal parallax in radians
  */
-M.ApogeeParallax = function (year) { // (year float64)  float64
-  return new La(year, 0.5).ap()
+M.apogeeParallax = function (year) {
+  return new La(year, 0.5).apogeeParallax()
 }
 
-const p = Math.PI / 180
+/**
+ * perigeeParallax returns equatorial horizontal parallax of the Moon at the Apogee nearest the given date.
+ *
+ * @param {Number} year - is a decimal year specifying a date.
+ * @return {Number} equatorial horizontal parallax in radians
+ */
+M.perigeeParallax = function (year) {
+  return new La(year, 0).perigeeParallax()
+}
+
+/**
+ * Calculate the distance earth - moon using the parallax angle in radians
+ *
+ * @param {Number} parallax - parallax angle in radians
+ * @return {Number} distance in `km`
+ */
+M.distance = function (parallax) {
+  return EARTH_RADIUS / Math.sin(parallax) - MOON_RADIUS
+}
 
 class La {
-  constructor (y, h) { // (y, h float64)  *la
+  constructor (y, h) {
     this.k = snap(y, h)
     this.T = this.k * ck // (50.3) p. 350
     this.D = base.horner(this.T, 171.9179 * p, 335.9106046 * p / ck,
@@ -103,7 +128,7 @@ class La {
   /**
    * perigee correction
    */
-  pc () {
+  perigeeCorr () {
     let l = this
     return -1.6769 * Math.sin(2 * l.D) +
     0.4589 * Math.sin(4 * l.D) +
@@ -170,7 +195,7 @@ class La {
   /**
    * apogee correction
    */
-  ac () {
+  apogeeCorr () {
     let l = this
     return 0.4392 * Math.sin(2 * l.D) +
     0.0684 * Math.sin(4 * l.D) +
@@ -209,7 +234,7 @@ class La {
   /**
    * apogee parallax
    */
-  ap () {
+  apogeeParallax () {
     const s = Math.PI / 180 / 3600
     let l = this
     return 3245.251 * s +
@@ -230,5 +255,60 @@ class La {
     -0.016 * s * Math.cos(2 * l.M) +
     0.014 * s * Math.cos(6 * l.D - l.M) +
     0.01 * s * Math.cos(8 * l.D)
+  }
+
+  /**
+   * perigee parallax
+   */
+  perigeeParallax () {
+    const s = Math.PI / 180 / 3600
+    let l = this
+    return 3629.215 * s +
+      63.224 * s * Math.cos(2 * l.D) +
+      -6.990 * s * Math.cos(4 * l.D) +
+      (2.834 * s - 0.0071 * l.T * s) * Math.cos(2 * l.D - l.M) +
+      1.927 * s * Math.cos(6 * l.D) +
+      -1.263 * s * Math.cos(l.D) +
+      -0.702 * s * Math.cos(8 * l.D) +
+      (0.696 * s - 0.0017 * l.T * s) * Math.cos(l.M) +
+      -0.690 * s * Math.cos(2 * l.F) +
+      (-0.629 * s + 0.0016 * l.T * s) * Math.cos(4 * l.D - l.M) +
+      -0.392 * s * Math.cos(2 * (l.D - l.F)) +
+      0.297 * s * Math.cos(10 * l.D) +
+      0.260 * s * Math.cos(6 * l.D - l.M) +
+      0.201 * s * Math.cos(3 * l.D) +
+      -0.161 * s * Math.cos(2 * l.D + l.M) +
+      0.157 * s * Math.cos(l.D + l.M) +
+      -0.138 * s * Math.cos(12 * l.D) +
+      -0.127 * s * Math.cos(8 * l.D - l.M) +
+      0.104 * s * Math.cos(2 * (l.D + l.F)) +
+      0.104 * s * Math.cos(2 * (l.D - l.M)) +
+      -0.079 * s * Math.cos(5 * l.D) +
+      0.068 * s * Math.cos(14 * l.D) +
+      0.067 * s * Math.cos(10 * l.D - l.M) +
+      0.054 * s * Math.cos(4 * l.D + l.M) +
+      -0.038 * s * Math.cos(12 * l.D - l.M) +
+      -0.038 * s * Math.cos(4 * l.D - 2 * l.M) +
+      0.037 * s * Math.cos(7 * l.D) +
+      -0.037 * s * Math.cos(4 * l.D + 2 * l.F) +
+      -0.035 * s * Math.cos(16 * l.D) +
+      -0.030 * s * Math.cos(3 * l.D + l.M) +
+      0.029 * s * Math.cos(l.D - l.M) +
+      -0.025 * s * Math.cos(6 * l.D + l.M) +
+      0.023 * s * Math.cos(2 * l.M) +
+      0.023 * s * Math.cos(14 * l.D - l.M) +
+      -0.023 * s * Math.cos(2 * (l.D + l.M)) +
+      0.022 * s * Math.cos(6 * l.D - 2 * l.M) +
+      -0.021 * s * Math.cos(2 * l.D - 2 * l.F - l.M) +
+      -0.020 * s * Math.cos(9 * l.D) +
+      0.019 * s * Math.cos(18 * l.D) +
+      0.017 * s * Math.cos(6 * l.D + 2 * l.F) +
+      0.014 * s * Math.cos(2 * l.F - l.M) +
+      -0.014 * s * Math.cos(16 * l.D - l.M) +
+      0.013 * s * Math.cos(4 * l.D - 2 * l.F) +
+      0.012 * s * Math.cos(8 * l.D + l.M) +
+      0.011 * s * Math.cos(11 * l.D) +
+      0.010 * s * Math.cos(5 * l.D + l.M) +
+      -0.010 * s * Math.cos(20 * l.D)
   }
 }

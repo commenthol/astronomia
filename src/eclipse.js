@@ -11,6 +11,9 @@ const moonphase = require('./moonphase')
 
 const M = exports
 
+/**
+ * @private
+ */
 const g = function (k, jm, c1, c2) { // (k, jm, c1, c2 float64)  (eclipse bool, jdeMax, γ, u, Mʹ float64)
   const ck = 1 / 1236.85
   const p = Math.PI / 180

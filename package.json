@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "An astronomical library",
   "main": "lib",
+  "jsnext:main": "src",
   "scripts": {
     "test": "mocha -R dot test/*.test.js",
     "cover": "istanbul cover _mocha --report lcov --report text -- --reporter dot --check-leaks test/*.test.js",
@@ -44,7 +45,7 @@
     "url": "https://github.com/commenthol/astronomia.git"
   },
   "bugs": {
-    "url": "https://github.com/commenthol/blanc/astronomia"
+    "url": "https://github.com/commenthol/astronomia"
   },
   "homepage": "https://github.com/commenthol/astronomia",
   "keywords": [

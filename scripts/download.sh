@@ -24,6 +24,11 @@ vsop () {
   done
 }
 
+## convert VSOP87 data
+vsop_conv () {
+  node $cwd/vsop87convert.js
+}
+
 ## DeltaT data
 deltat () {
   urls=$(cat << EOS
@@ -38,5 +43,44 @@ EOS
   done
 }
 
-deltat
-vsop
+## convert DeltaT data
+deltat_conv () {
+  node $cwd/deltat.js
+}
+
+help () {
+  cat << EOS
+
+    download dataset for VSOP87 data and/or delta-T
+
+    Usage:
+
+    -t, --deltat    download delta T data
+    -v, --vsop      download VSOP87 data
+    -h, --help      this help
+
+EOS
+}
+
+case $1 in
+  -t|--deltat)
+    deltat
+    deltat_conv
+    ;;
+  -v|--vsop)
+    vsop
+    vsop_conv
+    ;;
+  -a|--all)
+    deltat
+    deltat_conv
+    vsop
+    vsop_conv
+    ;;
+  -h|--help)
+    help
+    ;;
+  *)
+    help
+    ;;
+esac

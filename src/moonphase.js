@@ -74,7 +74,7 @@ M.meanLast = function (year) {
 }
 
 /**
- * New returns the jde of New Moon nearest the given datthis.
+ * New returns the jde of New Moon nearest the given date.
  *
  * @param {Number} year - decimal year
  * @returns {Number} jde
@@ -243,6 +243,7 @@ var fc = [
   -0.00003, 0.00003, -0.00002, -0.00002, 0.00002
 ]
 
+// additional corrections
 var ac = [
   0.000325, 0.000165, 0.000164, 0.000126, 0.00011,
   0.000062, 0.00006, 0.000056, 0.000047, 0.000042,

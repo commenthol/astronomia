@@ -65,6 +65,7 @@ M.reduceB1950ToJ2000 = function (eFrom) {
 const Lp = 4.50001688 * Math.PI / 180
 const L = 5.19856209 * Math.PI / 180
 const J = 0.00651966 * Math.PI / 180
+
 /**
  * ReduceB1950ToJ2000 reduces orbital elements of a solar system body from
  * equinox B1950 in the FK4 system to equinox J2000 in the FK5 system.

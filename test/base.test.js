@@ -191,9 +191,10 @@ describe('#base', function () {
     it('Limb', function () {
       // Example 48.a, p. 347.
       var p = Math.PI / 180
-      var χ = base.Limb(
-        {ra: 134.6885 * p, dec: 13.7684 * p},
-        {ra: 20.6579 * p, dec: 8.6964 * p})
+      var χ = base.limb(
+        new base.Coord(134.6885 * p, 13.7684 * p),
+        new base.Coord(20.6579 * p, 8.6964 * p)
+      )
       assert.equal(χ / p, 285.04418687158426)
     })
   })

@@ -10,6 +10,7 @@
 const base = require('./base')
 
 const M = exports
+const EARTH_RADIUS = 6378.137 // km
 
 /**
  * parallax returns equatorial horizontal parallax of the Moon.
@@ -19,7 +20,7 @@ const M = exports
  */
 M.parallax = function (distance) {
   // p. 337
-  return Math.asin(6378.14 / distance)
+  return Math.asin(EARTH_RADIUS / distance)
 }
 
 const p = Math.PI / 180
@@ -39,10 +40,10 @@ function dmf (T) {
  * Results are referenced to mean equinox of date and do not include
  * the effect of nutation.
  *
- * @param {number} jde - Julian ephermis day
- * @returns {object}
+ * @param {number} jde - Julian ephemeris day
+ * @returns {base.Coord}
  *  {number} lon - Geocentric longitude, in radians.
- *  {number} lat - Geocentric latidude, in radians.
+ *  {number} lat - Geocentric latitude, in radians.
  *  {number} range - Distance between centers of the Earth and Moon, in km.
  */
 M.position = function (jde) {
@@ -97,11 +98,7 @@ M.position = function (jde) {
   let lon = base.pmod(l_, 2 * Math.PI) + Σl * 1e-6 * p
   let lat = Σb * 1e-6 * p
   let range = 385000.56 + Σr * 1e-3
-  return {
-    lon,
-    lat,
-    range
-  }
+  return new base.Coord(lon, lat, range)
 }
 
 const ta = (function () {
@@ -280,7 +277,7 @@ const tb = (function () {
 /**
  * Node returns longitude of the mean ascending node of the lunar orbit.
  *
- * @param {number} jde - Julian ephermis day
+ * @param {number} jde - Julian ephemeris day
  * @returns result in radians.
  */
 M.node = function (jde) {
@@ -290,7 +287,7 @@ M.node = function (jde) {
 /**
  * perigee returns longitude of perigee of the lunar orbit.
  *
- * @param {number} jde - Julian ephermis day
+ * @param {number} jde - Julian ephemeris day
  * @returns result in radians.
  */
 M.perigee = function (jde) {
@@ -303,7 +300,7 @@ M.perigee = function (jde) {
  *
  * That is, the node of the instantaneous lunar orbit.
  *
- * @param {number} jde - Julian ephermis day
+ * @param {number} jde - Julian ephemeris day
  * @returns result in radians.
  */
 M.trueNode = function (jde) {

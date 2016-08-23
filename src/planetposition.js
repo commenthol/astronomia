@@ -29,6 +29,16 @@ const precess = require('./precess')
 
 const M = exports
 
+// planet names used in Planet
+M.mercury = 'mercury'
+M.venus = 'venus'
+M.earth = 'earth'
+M.mars = 'mars'
+M.jupiter = 'jupiter'
+M.saturn = 'saturn'
+M.uranus = 'uranus'
+M.neptune = 'neptune'
+
 function sum (t, series) {
   let coeffs = []
   Object.keys(series).forEach((x) => {
@@ -48,6 +58,9 @@ function sum (t, series) {
 }
 
 class Planet {
+  /**
+   * @param {string} planet - name of planet
+   */
   constructor (planet) {
     this.name = planet.toLowerCase()
     this.series = require('../data/vsop87B' + this.name)
@@ -56,7 +69,7 @@ class Planet {
   /**
    * Position2000 returns ecliptic position of planets by full VSOP87 theory.
    *
-   * @param jde - the date for which positions are desired.
+   * @param {Number} jde - the date for which positions are desired.
    * @returns {Object} Results are for the dynamical equinox and ecliptic J2000.
    *  {Number} lon - heliocentric longitude in radians.
    *  {Number} lat - heliocentric latitude in radians.
@@ -68,13 +81,13 @@ class Planet {
     let lon = base.pmod(sum(τ, this.series.L), 2 * Math.PI)
     let lat = sum(τ, this.series.B)
     let range = sum(τ, this.series.R)
-    return {lon, lat, range}
+    return new base.Coord(lon, lat, range)
   }
 
   /**
    * Position returns ecliptic position of planets at equinox and ecliptic of date.
    *
-   * @param jde - the date for which positions are desired.
+   * @param {Number} jde - the date for which positions are desired.
    * @returns {Object} Results are positions consistent with those from Meeus's
    * Apendix III, that is, at equinox and ecliptic of date.
    *  {Number} lon - heliocentric longitude in radians.
@@ -87,11 +100,11 @@ class Planet {
     let epochFrom = 2000.0
     let epochTo = base.JDEToJulianYear(jde)
     let eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
-    return {
-      lon: eclTo.lon,
-      lat: eclTo.lat,
-      range: range
-    }
+    return new base.Coord(
+      eclTo.lon,
+      eclTo.lat,
+      range
+    )
   }
 }
 M.Planet = Planet
@@ -99,6 +112,13 @@ M.Planet = Planet
 /**
  * ToFK5 converts ecliptic longitude and latitude from dynamical frame to FK5.
  * (L, B, jde float64) (L5, B5 float64)
+ *
+ * @param {Number} L - ecliptic longitude
+ * @param {Number} B - ecliptic latitude
+ * @param {Number} jde - Julian ephemeris day
+ * @return {Array}
+ *    {Number} L0 - FK5 longitude
+ *    {Number} B0 - FK5 latitude
  */
 M.toFK5 = function (L, B, jde) {
   // formula 32.3, p. 219.
@@ -109,5 +129,5 @@ M.toFK5 = function (L, B, jde) {
   let L5 = L + -0.09033 / 3600 * Math.PI / 180 +
     0.03916 / 3600 * Math.PI / 180 * (cLp + sLp) * Math.tan(B)
   let B5 = B + 0.03916 / 3600 * Math.PI / 180 * (cLp - sLp)
-  return [L5, B5]
+  return new base.Coord(L5, B5)
 }
