@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module jupiter
  */
 /**
  * Jupiter: Chapter 42, Ephemeris for Physical Observations of Jupiter.

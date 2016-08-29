@@ -6,6 +6,7 @@ var assert = require('assert')
 var julian = require('..').julian
 var sexa = require('..').sexagesimal
 var planetposition = require('..').planetposition
+var venusData = require('../data/vsop87Bvenus')
 
 describe('#planetposition', function () {
   describe('position2000', function () {
@@ -36,7 +37,7 @@ describe('#planetposition', function () {
     it('Venus at 1992-12-20', function () {
       // Example 32.a, p. 219
       var jd = julian.CalendarGregorianToJD(1992, 12, 20)
-      var planet = new planetposition.Planet(planetposition.venus)
+      var planet = new planetposition.Planet(venusData)
       var res = planet.position(jd)
       assert.equal(new sexa.Angle(res.lon).toDegString(5), '26°.11412')
       assert.equal(new sexa.Angle(res.lat).toDegString(5), '-2°.6206')

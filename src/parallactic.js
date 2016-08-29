@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module parallactic
  */
 /**
  * Parallactic: Chapter 14, The Parallactic Angle, and three other Topics.

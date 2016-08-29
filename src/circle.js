@@ -1,4 +1,10 @@
 /**
+ * @copyright 2013 Sonia Keys
+ * @copyright 2016 commenthol
+ * @license MIT
+ * @module circle
+ */
+/**
  * Circle: Chapter 20, Smallest Circle containing three Celestial Bodies.
  */
 const M = exports

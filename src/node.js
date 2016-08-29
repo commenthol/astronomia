@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module node
  */
 /**
  * Node: Chapter 39, Passages through the Nodes.

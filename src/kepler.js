@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module kepler
  */
 /**
  * Kepler: Chapter 30, Equation of Kepler.

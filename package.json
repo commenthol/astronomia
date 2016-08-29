@@ -11,7 +11,7 @@
     "dev": "babel --watch -d lib src",
     "watch": "babel --watch -d lib src",
     "transpile": "babel -d lib src",
-    "doc": "jsdox lib",
+    "doc": "jsdox src",
     "clean": "rimraf doc coverage node_modules",
     "all": "npm run transpile; npm test; npm run lint"
   },

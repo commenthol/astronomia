@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module jm
  */
 /**
  * JM: Chapter 9, Jewish and Moslem Calendars.

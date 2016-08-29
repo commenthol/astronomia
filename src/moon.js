@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module moon
  */
 /**
  * Moon: Chapter 53, Ephemeris for Physical Observations of the Moon.

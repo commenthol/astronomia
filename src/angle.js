@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module angle
  */
 /**
  * Angle: Chapter 17: Angular Separation.
@@ -57,8 +58,8 @@ M.sep = function (c1, c2) {
  * @throws Error
  * @param {Number} jd1 - Julian day - time at cs1[0], cs2[0]
  * @param {Number} jd3 - Julian day - time at cs1[2], cs2[2]
- * @param {base.Coord[3]} cs1 - 3 coordinates of moving object 1
- * @param {base.Coord[3]} cs2 - 3 coordinates of moving object 2
+ * @param {base.Coord[]} cs1 - 3 coordinates of moving object 1
+ * @param {base.Coord[]} cs2 - 3 coordinates of moving object 2
  * @param {function} [fnSep] - alternative `sep` function e.g. `angle.sepPauwels`, `angle.sepHav`
  * @return {Number} angular separation between two celestial bodies
  */
@@ -82,11 +83,11 @@ M.minSep = function (jd1, jd3, cs1, cs2, fnSep) {
  * Like `minSep`, but using a method of rectangular coordinates that gives
  * accurate results even for close approaches.
  *
- * @throws
+ * @throws Error
  * @param {Number} jd1 - Julian day - time at cs1[0], cs2[0]
  * @param {Number} jd3 - Julian day - time at cs1[2], cs2[2]
- * @param {base.Coord[3]} cs1 - 3 coordinates of moving object 1
- * @param {base.Coord[3]} cs2 - 3 coordinates of moving object 2
+ * @param {base.Coord[]} cs1 - 3 coordinates of moving object 1
+ * @param {base.Coord[]} cs2 - 3 coordinates of moving object 2
  * @return {Number} angular separation between two celestial bodies
  */
 M.minSepRect = function (jd1, jd3, cs1, cs2) {

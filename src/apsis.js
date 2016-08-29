@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module apsis
  */
 /**
  * Apsis: Chapter 50, Perigee and apogee of the Moon
@@ -19,9 +20,9 @@ const ck = 1 / 1325.55
 const p = Math.PI / 180
 
 // from http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
-const EARTH_RADIUS = 6378.137 // km
+M.EARTH_RADIUS = 6378.137 // km
 // from http://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
-const MOON_RADIUS = M.MOON_RADIUS = 1738.1 // km
+M.MOON_RADIUS = 1738.1 // km
 
 /**
  * mean time of perigee or apogee
@@ -109,7 +110,7 @@ M.perigeeParallax = function (year) {
  * @return {Number} distance in `km`
  */
 M.distance = function (parallax) {
-  return EARTH_RADIUS / Math.sin(parallax)
+  return M.EARTH_RADIUS / Math.sin(parallax)
 }
 
 class La {

@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module saturnring
  */
 /**
  * Saturnrings: Chapter 45, The Ring of Saturn
@@ -13,14 +14,6 @@ const nutation = require('./nutation')
 const planetposition = require('./planetposition')
 
 const M = exports
-
-/**
- * Constants for scaling aEdge and bEdge.
- */
-const InnerEdgeOfOuter = 0.8801
-const OuterEdgeOfInner = 0.8599
-const InnerEdgeOfInner = 0.6650
-const InnerEdgeOfDusky = 0.5486
 
 /**
  * Ring computes quantities of the ring of Saturn.

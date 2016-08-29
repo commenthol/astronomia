@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module saturnmoons
  */
 /**
  * Saturnmoons: Chapter 46, Positions of the Satellites of Saturn
@@ -45,7 +46,7 @@ const d = Math.PI / 180
  * @param {number} jde - Julian ephemeris day
  * @param {planetposition.Planet} earth - VSOP87 planet Earth
  * @param {planetposition.Planet} saturn - VSOP87 planet Saturn
- * @return {array[XY]} Array of Moon Positions in `XY`
+ * @return {XY[]} Array of Moon Positions in `XY`
  *   Use `M.mimas ... M.iapetus` to resolve to Moon and its position at `jde`
  */
 M.positions = function (jde, earth, saturn) {

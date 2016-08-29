@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module illum
  */
 /**
  * Illum: Chapter 41, Illuminated Fraction of the Disk and Magnitude of a Planet.

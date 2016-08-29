@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module interpolation
  */
 /**
  * Interp: Chapter 3, Interpolation.
@@ -222,7 +223,7 @@ M.len3ForInterpolateX = function (x, x1, xN, y) {
  * @private
  * @param {Number} n0
  * @param {Function} f
- * @returns {Array[]}
+ * @returns {Array}
  *   {Number} n1
  *   {Boolean} ok - if `false` failure to converge
  */
@@ -242,7 +243,7 @@ const iterate = M.iterate = function (n0, f) {
 
 /**
  * Len4Half interpolates a center value from a table of four rows.
- * @param {Number[4]} y
+ * @param {Number[]} y - 4 values
  * @returns {Number} interpolation result
  */
 M.len4Half = function (y) {

@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module conjunction
  */
 /**
  * Conjunction: Chapter 18: Planetary Conjunctions.
@@ -29,8 +30,8 @@ const M = exports
  *
  * @param {Number} t1 - julian ephemeris day of first row
  * @param {Number} t5 - julian ephemeris day of fifth row
- * @param {base.Coord[5]} cs1 - ephemeris of first moving object
- * @param {base.Coord[5]} cs2 - ephemeris of decond moving object
+ * @param {base.Coord[]} cs1 - ephemeris of first moving object
+ * @param {base.Coord[]} cs2 - ephemeris of decond moving object
  * @return {Array}
  *    {Number} t - time of conjunction in JDE
  *    {Number} Δd - is the amount that object 2 was "above" object 1 at the time of conjunction.
@@ -57,7 +58,7 @@ M.planetary = function (t1, t5, cs1, cs2) {
  * @param {Number} t1 - julian ephemeris day of first row
  * @param {Number} t5 - julian ephemeris day of fifth row
  * @param {base.Coord} c1 - ephemeris of non-moving object
- * @param {base.Coord[5]} cs2 - ephemeris of moving object
+ * @param {base.Coord[]} cs2 - ephemeris of moving object
  * @return {Array}
  *    {Number} t - time of conjunction in JDE
  *    {Number} Δd - is the amount that object 2 was "above" object 1 at the time of conjunction.

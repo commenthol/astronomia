@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module solardisk
  */
 /**
  * Solardisk: Chapter 29, Ephemeris for Physical Observations of the Sun.

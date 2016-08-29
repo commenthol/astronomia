@@ -2,9 +2,10 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module sexagesimal
  */
 /**
- * Sidereal: Chapter 12, Sidereal Time at Greenwich.
+ * Sexagesimal functions
  */
 
 const M = exports
@@ -95,7 +96,7 @@ class Angle {
    * @returns {String}
    */
   toDegString (precision) {
-    var [i, s] = Modf(this.deg())
+    var [i, s] = modf(this.deg())
     s = round(s, precision).toString().replace(/^0\./, '.')
     var str = (i + '°') + s
     return str
@@ -195,8 +196,8 @@ M.DMSToDeg = function (neg, d, m, s) {
 M.degToDMS = function (deg) {
   var neg = (deg < 0)
   deg = Math.abs(deg)
-  var [d, s] = Modf(deg % 360)
-  var [m, s1] = Modf(s * 60)
+  var [d, s] = modf(deg % 360)
+  var [m, s1] = modf(s * 60)
   s = round(s1 * 60) // may introduce an error < 1e13
   return [neg, d, m, s]
 }
@@ -318,7 +319,7 @@ class Time {
    */
   toString (precision) {
     var [neg, h, m, s] = this.toHMS()
-    var [si, sf] = Modf(s)
+    var [si, sf] = modf(s)
     if (precision === 0) {
       si = round(s, 0)
       sf = 0
@@ -337,12 +338,13 @@ M.Time = Time
 
 /**
  * separate fix `i` from fraction `f`
+ * @private
  * @param {Number} float
  * @returns {Array} [i, f]
  *  {Number} i - (int) fix value
  *  {Number} f - (float) fractional portion; always > 1
  */
-function Modf (float) {
+function modf (float) {
   var i = Math.trunc(float)
   var f = Math.abs(float - i)
   return [i, f]
@@ -350,6 +352,7 @@ function Modf (float) {
 
 /**
  * Rounds `float` value by precision
+ * @private
  * @param {Number} float - value to round
  * @param {Number} precision - (int) number of post decimal positions
  * @return {Number} rounded `float`

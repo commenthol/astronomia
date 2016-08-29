@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module nutation
  */
 /**
  * Nutation: Chapter 22, Nutation and the Obliquity of the Ecliptic.

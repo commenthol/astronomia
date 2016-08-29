@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module semidiameter
  */
 /**
  * Semidiameter: Chapter 55, Semidiameters of the Sun, Moon, and Planets.

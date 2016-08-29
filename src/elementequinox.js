@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module elementequinox
  */
 /**
  * Elementequinox: Chapter 24, Reduction of Ecliptical Elements

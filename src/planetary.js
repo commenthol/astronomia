@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module planetary
  */
 /**
  * Planetary: Chapter 36, The Calculation of some Planetary Phenomena.

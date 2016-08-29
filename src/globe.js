@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module globe
  */
 /**
  * Globe: Chapter 11, The Earth's Globe.

@@ -2,6 +2,7 @@
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
  * @license MIT
+ * @module moonillum
  */
 /**
  * Moonillum: Chapter 48, Illuminated Fraction of the Moon's Disk

@@ -1,4 +1,9 @@
 /**
+ * @copyright 2016 commenthol
+ * @license MIT
+ * @module vsop87
+ */
+/**
  * Converts VSOP87 data files to javascript modules
  */
 
