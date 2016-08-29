@@ -58,18 +58,16 @@ describe('#apsis', function () {
   it('perigeeDistance', function () {
     var p = apsis.perigeeParallax(1997.93)
     var d = apsis.distance(p)
-    assert.equal(d.toFixed(0), 367139)
-    // verified with https://www.fourmilab.ch/earthview/pacalc.html - error < 0.5 km
+    assert.equal(d.toFixed(0), 368877)
+    // verified with https://www.fourmilab.ch/earthview/pacalc.html
     // Perigee Dec  9 16:56 368877 km
-    assert.ok(Math.abs(368877 - d - apsis.MOON_RADIUS) < 0.5)
   })
 
   it('apogeeDistance', function () {
     var p = apsis.apogeeParallax(1997.90)
     var d = apsis.distance(p)
-    assert.equal(d.toFixed(0), 402957)
-    // verified with https://www.fourmilab.ch/earthview/pacalc.html - error < 0.5km
+    assert.equal(d.toFixed(0), 404695)
+    // verified with https://www.fourmilab.ch/earthview/pacalc.html
     // Apogee Nov 24  2:28 404695 km
-    assert.ok(Math.abs(404695 - d - apsis.MOON_RADIUS) < 0.5)
   })
 })

@@ -9,6 +9,7 @@
     "cover": "istanbul cover _mocha --report lcov --report text -- --reporter dot --check-leaks test/*.test.js",
     "lint": "eslint '**/*.js'",
     "dev": "babel --watch -d lib src",
+    "watch": "babel --watch -d lib src",
     "transpile": "babel -d lib src",
     "doc": "jsdox lib",
     "clean": "rimraf doc coverage node_modules",
