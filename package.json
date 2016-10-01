@@ -1,6 +1,6 @@
 {
   "name": "astronomia",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "An astronomical library",
   "main": "lib",
   "jsnext:main": "src",
