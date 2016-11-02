@@ -32,7 +32,7 @@ describe('#planetary', function () {
     var e = res[1]
     var d = new julian.Calendar().fromJDE(j).toDate().toISOString()
     assert.equal(j.toFixed(2), 2449314.14)
-    assert.equal(d, '1993-11-22T15:18:35.044Z')
+    assert.equal(d, '1993-11-22T15:18:35.045Z')
     assert.equal((e * 180 / Math.PI).toFixed(4), 19.7506 /* deg */)
     assert.equal(new sexa.Angle(e).toString(0), '19°45′2″')
   })
@@ -42,7 +42,7 @@ describe('#planetary', function () {
     var j = planetary.marsStation2(1997.3)
     var d = new julian.Calendar().fromJDE(j).toDate().toISOString()
     assert.equal(j.toFixed(3), 2450566.255)
-    assert.equal(d, '1997-04-27T18:06:34.277Z')
+    assert.equal(d, '1997-04-27T18:06:34.278Z')
   })
 
   function Tc (f, jNom, hour) {

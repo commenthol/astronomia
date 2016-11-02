@@ -1,6 +1,9 @@
-all: v0.12 v4.5 v6.4
+all: v0.12 v4.5 v6.9
 
 v%:
 	n $@ && npm test
 
-.PHONY: all
+deltat:
+	./scripts/download.sh -t	
+
+.PHONY: all deltat

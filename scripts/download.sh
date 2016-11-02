@@ -9,15 +9,15 @@ target=$cwd/../attic
 test ! -d $target && mkdir -p $target
 
 ## get filename
-file () {
+function file () {
   echo $1 | sed "s/^.*\/\([^\/]*\)$/\1/"
 }
 
 ## VSOP87 data
-vsop () {
-  url=ftp://cdsarc.u-strasbg.fr/pub/cats/VI/81
-  file="VSOP87B"
-  exts="mer ven ear mar jup sat ura nep"
+function vsop () {
+  local url=ftp://cdsarc.u-strasbg.fr/pub/cats/VI/81
+  local file="VSOP87B"
+  local exts="mer ven ear mar jup sat ura nep"
 
   for ext in $exts; do
     $curl $url/$file.$ext > $target/$file.$ext
@@ -25,16 +25,21 @@ vsop () {
 }
 
 ## convert VSOP87 data
-vsop_conv () {
+function vsop_conv () {
   node $cwd/vsop87convert.js
 }
 
 ## DeltaT data
-deltat () {
-  urls=$(cat << EOS
-    http://maia.usno.navy.mil/ser7/deltat.preds
-    http://maia.usno.navy.mil/ser7/deltat.data
-    http://maia.usno.navy.mil/ser7/historic_deltat.data
+# primary: ftp://maia.usno.navy.mil
+# secondary: ftp://toshi.nofs.navy.mil
+function deltat () {
+	local server="http://maia.usno.navy.mil/ser7"
+  local urls=$(cat << EOS
+    $server/deltat.preds
+    $server/deltat.data
+    $server/historic_deltat.data
+		$server/finals2000A.data
+		$server/tai-utc.dat
 EOS
 )
   for url in $urls; do
@@ -44,11 +49,11 @@ EOS
 }
 
 ## convert DeltaT data
-deltat_conv () {
+function deltat_conv () {
   node $cwd/deltat.js
 }
 
-help () {
+function help () {
   cat << EOS
 
     download dataset for VSOP87 data and/or delta-T
