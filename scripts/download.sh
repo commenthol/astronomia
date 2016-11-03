@@ -33,13 +33,13 @@ function vsop_conv () {
 # primary: ftp://maia.usno.navy.mil
 # secondary: ftp://toshi.nofs.navy.mil
 function deltat () {
-	local server="http://maia.usno.navy.mil/ser7"
+  local server="http://maia.usno.navy.mil/ser7"
   local urls=$(cat << EOS
     $server/deltat.preds
     $server/deltat.data
     $server/historic_deltat.data
-		$server/finals2000A.data
-		$server/tai-utc.dat
+    $server/finals2000A.data
+    $server/tai-utc.dat
 EOS
 )
   for url in $urls; do

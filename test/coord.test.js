@@ -43,10 +43,12 @@ describe('#coord', function () {
 
   it('Equatorial.toHorizontal', function () {
     // Example 13.b, p. 95.
+    // Venus apparent equatorial coordinates
     var eq = new coord.Equatorial(
       new sexa.RA(23, 9, 16.641).rad(),
       new sexa.Angle(true, 6, 43, 11.61).rad()
     )
+    // coordinates at Washington D.C. Longitude is measured positively westwards!
     var g = new globe.Coord(
       new sexa.Angle(false, 38, 55, 17).rad(), // lat
       new sexa.Angle(false, 77, 3, 56).rad()   // lon

@@ -39,7 +39,7 @@ M.nutation = function (α, δ, jd) { // (α, δ, jd float64)  (Δα1, Δδ1 floa
 }
 
 /**
- * κ is the constnt of aberration in radians.
+ * κ is the constant of aberration in radians.
  */
 const κ = 20.49552 * Math.PI / 180 / 3600
 

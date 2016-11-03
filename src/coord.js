@@ -36,6 +36,8 @@ const M = exports
 /** Ecliptic coordinates are referenced to the plane of the ecliptic. */
 class Ecliptic {
   /**
+   * IMPORTANT: Longitudes are measured *positively* westwards
+   * e.g. Washington D.C. +77°04; Vienna -16°23'
    * @param {Number} lon - Longitude (λ) in radians
    * @param {Number} lat - Latitude (β) in radians
    */

@@ -194,7 +194,7 @@ M.geocentricLatitudeDifference = function (φ) {
 class Coord {
   /**
    * @param {number} lat - latitude (φ) in radians
-   * @param {number} lon - longitude (ψ, or L) in radians
+   * @param {number} lon - longitude (ψ, or L) in radians (measured positively westward)
    */
   constructor (lat = 0, lon = 0) {
     this.lat = lat
