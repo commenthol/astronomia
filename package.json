@@ -5,6 +5,7 @@
   "main": "lib",
   "jsnext:main": "src",
   "scripts": {
+    "prepublish": "npm run lint && npm run transpile && npm run test",
     "test": "mocha -R dot test/*.test.js",
     "cover": "istanbul cover _mocha --report lcov --report text -- --reporter dot --check-leaks test/*.test.js",
     "lint": "eslint '**/*.js'",
