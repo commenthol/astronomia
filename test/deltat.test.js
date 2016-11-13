@@ -32,7 +32,8 @@ describe('#deltat', function () {
     {date: [2010,  1,  1], exp:   66.070},
     {date: [2015,  1,  1], exp:   67.644},
     {date: [2016,  1,  1], exp:   68.103},
-    {date: [2017,  1,  1], exp:   68.589}, // might change on new deltat data set
+    {date: [2017,  1,  1], exp:   68.592}, // might change on new deltat data set
+    {date: [2017,  1,  7], exp:   68.600},
     {date: [2018,  1,  1], exp:   69.200},
     {date: [2019,  1,  1], exp:   69.800},
     {date: [2020,  1,  1], exp:   70.000},
