@@ -5,6 +5,7 @@ var assert = require('assert')
 var julian = require('..').julian
 var sexa = require('..').sexagesimal
 var apsis = require('..').apsis
+var moonposition = require('..').moonposition
 
 describe('#apsis', function () {
   it('meanApogee', function () {
@@ -56,18 +57,42 @@ describe('#apsis', function () {
   })
 
   it('perigeeDistance', function () {
-    var p = apsis.perigeeParallax(1997.93)
+    var y = 1997.93
+    var p = apsis.perigeeParallax(y)
     var d = apsis.distance(p)
     assert.equal(d.toFixed(0), 368877)
-    // verified with https://www.fourmilab.ch/earthview/pacalc.html
-    // Perigee Dec  9 16:56 368877 km
+    var per = apsis.perigee(y)
+    var dist = moonposition.position(per).range
+    assert.equal(dist.toFixed(0), 368881)
+  })
+
+  it('comparing perigeeParallax with parallax from position', function () {
+    var y = 1997.93
+    var perPar = apsis.perigeeParallax(y)
+    var per = apsis.perigee(y)
+    var dist = moonposition.position(per).range
+    var par = moonposition.parallax(dist)
+    var Δ = Math.abs(perPar - par) / Math.PI * 180 * 3600 // difference in arc seconds
+    assert.ok(Δ < 0.1, Δ + ' should be less than 0.1')
   })
 
   it('apogeeDistance', function () {
-    var p = apsis.apogeeParallax(1997.90)
+    var y = 1997.90
+    var p = apsis.apogeeParallax(y)
     var d = apsis.distance(p)
     assert.equal(d.toFixed(0), 404695)
-    // verified with https://www.fourmilab.ch/earthview/pacalc.html
-    // Apogee Nov 24  2:28 404695 km
+    var apo = apsis.apogee(y)
+    var dist = moonposition.position(apo).range
+    assert.equal(dist.toFixed(0), 404697)
+  })
+
+  it('comparing apogeeParallax with parallax from position', function () {
+    var y = 1997.90
+    var apoPar = apsis.apogeeParallax(y)
+    var apo = apsis.apogee(y)
+    var dist = moonposition.position(apo).range
+    var par = moonposition.parallax(dist)
+    var Δ = Math.abs(apoPar - par) / Math.PI * 180 * 3600 // difference in arc seconds
+    assert.ok(Δ < 0.1, Δ + ' should be less than 0.1')
   })
 })
