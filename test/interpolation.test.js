@@ -248,7 +248,7 @@ describe('#interpolation', function () {
   it('linear', function () {
     var t = [0.2, 0.4, 0.7, -1.5, 15]
     t.forEach(function (x) {
-      it(x, function () {
+      it('' + x, function () {
         var y = interp.linear(x, 0, 1, [0, 1])
         assert.equal(y, x)
       })

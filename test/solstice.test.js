@@ -94,28 +94,28 @@ describe('#solstice', function () {
 
     describe('March', function () {
       tests.mar.forEach(function (e) {
-        it(e.y, function () {
+        it('' + e.y, function () {
           t2000(e, 3, 'march')
         })
       })
     })
     describe('June', function () {
       tests.jun.forEach(function (e) {
-        it(e.y, function () {
+        it('' + e.y, function () {
           t2000(e, 6, 'june')
         })
       })
     })
     describe('September', function () {
       tests.sep.forEach(function (e) {
-        it(e.y, function () {
+        it('' + e.y, function () {
           t2000(e, 9, 'september')
         })
       })
     })
     describe('December', function () {
       tests.dec.forEach(function (e) {
-        it(e.y, function () {
+        it('' + e.y, function () {
           t2000(e, 12, 'december')
         })
       })
@@ -283,7 +283,7 @@ describe('#solstice', function () {
 
     ;[2014, 2015, 2016, 2017].forEach(function (year) {
       var i = map[year]
-      describe(year, function () {
+      describe('' + year, function () {
         tests.forEach(function (test) {
           var deg = test[1]
           it(deg + '° ' + test[2], function () {

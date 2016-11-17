@@ -34,7 +34,7 @@ describe('#precess', function () {
       }
       var a = precess.mn(epochFrom, e.epoch)
       var m = a[0], na = a[1], nd = a[2]
-      it(e.epoch, function () {
+      it('' + e.epoch, function () {
         assert.ok(Math.abs(m - e.m) < 1e-3, 'm')
         assert.ok(Math.abs(na - e.na) < 1e-3, 'na')
         assert.ok(Math.abs(nd - e.nd) < 1e-2, 'nd')
@@ -215,7 +215,7 @@ describe('#precess', function () {
 
     tests.forEach(function (test) {
       var epoch = test[0]
-      it(epoch, function () {
+      it('' + epoch, function () {
         var eqTo = precess.properMotion3D(eqFrom, 2000, epoch, r, mr, mra, mdec)
         assert.equal(new sexa.RA(eqTo.ra).toString(2), test[1])
         assert.equal(new sexa.Angle(eqTo.dec).toString(2), test[2])

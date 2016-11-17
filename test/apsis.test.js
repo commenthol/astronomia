@@ -41,7 +41,7 @@ describe('#apsis', function () {
     ]
     tests.forEach(function (t) {
       var c = { y: t[0], m: t[1], d: t[2], dy: t[3] }
-      it(c.dy, function () {
+      it('' + c.dy, function () {
         var ref = julian.CalendarGregorianToJD(c.y, c.m, c.d)
         var j = apsis.perigee(c.dy)
         var err = Math.abs(j - ref)

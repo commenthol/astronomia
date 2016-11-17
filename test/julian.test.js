@@ -123,7 +123,7 @@ describe('#julian', function () {
       ]
 
       tests.forEach(function (test) {
-        it(test[0], function () {
+        it('' + test[0], function () {
           assert.equal(julian.LeapYearJulian(test[0]), test[1])
         })
       })
@@ -141,7 +141,7 @@ describe('#julian', function () {
       ]
 
       tests.forEach(function (test) {
-        it(test[0], function () {
+        it('' + test[0], function () {
           assert.equal(julian.LeapYearGregorian(test[0]), test[1])
         })
       })
@@ -159,7 +159,7 @@ describe('#julian', function () {
 
     describe('JDToDate', function () {
       tests.forEach(function (test) {
-        it(test[0], function () {
+        it('' + test[0], function () {
           assert.deepEqual(julian.JDToDate(test[0]), test[1])
         })
       })

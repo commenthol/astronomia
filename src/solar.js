@@ -31,8 +31,8 @@ const M = exports
  *
  * @param {Number} T - number of Julian centuries since J2000. See base.J2000Century.
  * @returns {Object}
- * 	{Number} lon = true geometric longitude, ☉, in radians
- * 	{Number} ano = true anomaly in radians
+ *   {Number} lon = true geometric longitude, ☉, in radians
+ *   {Number} ano = true anomaly in radians
  */
 M.true = function (T) {
   // (25.2) p. 163
@@ -55,7 +55,7 @@ M.true = function (T) {
  * @returns {Number} Result is in radians and is not normalized to the range 0..2π.
  */
 M.meanAnomaly = function (T) {
-	// (25.3) p. 163
+  // (25.3) p. 163
   return base.horner(T, 357.52911, 35999.05029, -0.0001537) * Math.PI / 180
 }
 
@@ -66,7 +66,7 @@ M.meanAnomaly = function (T) {
  * @returns {Number} eccentricity of the Earth's orbit around the sun.
  */
 M.eccentricity = function (T) {
-	// (25.4) p. 163
+  // (25.4) p. 163
   return base.horner(T, 0.016708634, -0.000042037, -0.0000001267)
 }
 
@@ -79,7 +79,7 @@ M.eccentricity = function (T) {
 M.radius = function (T) {
   let {lon, ano} = M.true(T) // eslint-disable-line
   let e = M.eccentricity(T)
-	// (25.5) p. 164
+  // (25.5) p. 164
   return 1.000001018 * (1 - e * e) / (1 + e * Math.cos(ano))
 }
 
@@ -109,8 +109,8 @@ function node (T) {
  *
  * @param {Number} T - number of Julian centuries since J2000. See base.J2000Century.
  * @returns {Object}
- * 	{Number} lon - true geometric longitude, ☉, in radians
- * 	{Number} ano - true anomaly in radians
+ *   {Number} lon - true geometric longitude, ☉, in radians
+ *   {Number} ano - true anomaly in radians
  */
 M.true2000 = function (T) {
   let {lon, ano} = M.true(T)
@@ -166,9 +166,9 @@ M.apparentEquatorial = function (jde) {
  * @param {planetposition.Planet} planet
  * @param {Number} jde - Julian ephemeris day
  * @returns {Object}
- * 	{Number} lon - ecliptic longitude in radians
- * 	{Number} lat - ecliptic latitude in radians
- * 	{Number} range - range in AU
+ *   {Number} lon - ecliptic longitude in radians
+ *   {Number} lat - ecliptic latitude in radians
+ *   {Number} range - range in AU
  */
 M.trueVSOP87 = function (planet, jde) {
   let {lon, lat, range} = planet.position(jde)
@@ -193,12 +193,12 @@ M.trueVSOP87 = function (planet, jde) {
  * @param {planetposition.Planet} planet
  * @param {Number} jde - Julian ephemeris day
  * @returns {base.Coord}
- * 	{Number} lon - ecliptic longitude in radians
- * 	{Number} lat - ecliptic latitude in radians
- * 	{Number} range - range in AU
+ *   {Number} lon - ecliptic longitude in radians
+ *   {Number} lat - ecliptic latitude in radians
+ *   {Number} range - range in AU
  */
 M.apparentVSOP87 = function (planet, jde) {
-	// note: see duplicated code in ApparentEquatorialVSOP87.
+  // note: see duplicated code in ApparentEquatorialVSOP87.
   let {lon, lat, range} = M.trueVSOP87(planet, jde)
   let Δψ = nutation.nutation(jde)[0]
   let a = M.aberration(range)
@@ -215,13 +215,13 @@ M.apparentVSOP87 = function (planet, jde) {
  * @param {planetposition.Planet} planet
  * @param {Number} jde - Julian ephemeris day
  * @returns
- * 	{Number} ra - right ascension in radians
- * 	{Number} dec - declination in radians
- * 	{Number} range - range in AU
+ *   {Number} ra - right ascension in radians
+ *   {Number} dec - declination in radians
+ *   {Number} range - range in AU
  */
 M.apparentEquatorialVSOP87 = function (planet, jde) {
-	// note: duplicate code from ApparentVSOP87 so we can keep Δε.
-	// see also duplicate code in time.E().
+  // note: duplicate code from ApparentVSOP87 so we can keep Δε.
+  // see also duplicate code in time.E().
   let {lon, lat, range} = M.trueVSOP87(planet, jde)
   let [Δψ, Δε] = nutation.nutation(jde)
   let a = M.aberration(range)
@@ -240,6 +240,6 @@ M.apparentEquatorialVSOP87 = function (planet, jde) {
  * @returns {Number} aberation
  */
 M.aberration = function (range) {
-	// (25.10) p. 167
+  // (25.10) p. 167
   return -20.4898 / 3600 * Math.PI / 180 / range
 }

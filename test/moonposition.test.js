@@ -43,7 +43,7 @@ describe('#moonposition', function () {
       julian.CalendarGregorianToJD(2099, 7, 13)
     ]
     n0.forEach(function (j) {
-      it(j, function () {
+      it('' + j, function () {
         var e = Math.abs(base.pmod(moonposition.node(j) + 1, 2 * Math.PI) - 1)
         assert.ok(e < 1e-3)
       })
@@ -66,7 +66,7 @@ describe('#moonposition', function () {
       julian.CalendarGregorianToJD(2108, 11, 3)
     ]
     n180.forEach(function (j) {
-      it(j, function () {
+      it('' + j, function () {
         var e = Math.abs(moonposition.node(j) - Math.PI)
         assert.ok(e < 1e-3)
       })

@@ -63,7 +63,7 @@ describe('#planetary', function () {
 
   describe('255', function () {
     td.forEach(function (d, i) {
-      it(i, function () {
+      it('' + i, function () {
         var f = base.modf(0.5 + d.f(base.JDEToJulianYear(d.jNom)))[1]
         assert.equal(Math.floor(f * 24 + 0.5), d.hour)
       })

@@ -29,7 +29,7 @@ describe('#saturnmoons', function () {
     ]
 
     pos.forEach(function (p, i) {
-      it(i, function () {
+      it('' + i, function () {
         comp(pos[i], exp[i])
       })
     })
