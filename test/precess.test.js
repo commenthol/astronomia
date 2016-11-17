@@ -189,7 +189,9 @@ describe('#precess', function () {
       ele = p.reduceElements(ele)
 
       assert.equal(ele.inc * 180 / Math.PI, 47.13795835860312)   // i
-      assert.equal(ele.node * 180 / Math.PI, 48.603689662630515) // Ω
+      assert.equal((ele.node * 180 / Math.PI).toFixed(13), 48.6036896626305) // Ω
+      /* 48.603689662630515 in node <6.9.1 */
+      /* 48.60368966263054 in node 7.0.1 */
       assert.equal(ele.peri * 180 / Math.PI, 151.47823843361917) // ω
     })
   })
