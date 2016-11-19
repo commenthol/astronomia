@@ -112,6 +112,7 @@ class Sunrise {
   }
 
   /**
+   * time of solar transit
    * @return {julian.Calendar} time of noon
    */
   noon () {
@@ -123,6 +124,7 @@ class Sunrise {
   }
 
   /**
+   * Solar limb appears over the easter horizon in the morning
    * @return {julian.Calendar} time of sunrise
    */
   rise () {
@@ -131,12 +133,14 @@ class Sunrise {
 
   /**
    * @return {julian.Calendar} time of sunset
+   * Solar limb disappears on the western horizon in the evening
    */
   set () {
     return this._calc(stdh0Sunrise(this.refraction), true)
   }
 
   /**
+   * Solar limb is fully visible at the easter horizon
    * @return {julian.Calendar} time of sunrise end
    */
   riseEnd () {
@@ -144,6 +148,7 @@ class Sunrise {
   }
 
   /**
+   * Solar limb starts disappearing on the western horizon in the evening
    * @return {julian.Calendar} time of sunset start
    */
   setStart () {
@@ -151,6 +156,7 @@ class Sunrise {
   }
 
   /**
+   * Dawn, there is still enough light for objects to be distinguishable,
    * @return {julian.Calendar} time of dawn
    */
   dawn () {
@@ -158,6 +164,8 @@ class Sunrise {
   }
 
   /**
+   * Dusk, there is still enough light for objects to be distinguishable
+   * Bright stars and planets are visible by naked eye
    * @return {julian.Calendar} time of dusk
    */
   dusk () {
@@ -165,6 +173,7 @@ class Sunrise {
   }
 
   /**
+   * nautical dawn - Horizon gets visible by naked eye
    * @return {julian.Calendar} time of nautical dawn
    */
   nauticalDawn () {
@@ -172,6 +181,7 @@ class Sunrise {
   }
 
   /**
+   * nautical dusk - Horizon is no longer visible by naked eye
    * @return {julian.Calendar} time of nautical dusk
    */
   nauticalDusk () {
@@ -179,6 +189,8 @@ class Sunrise {
   }
 
   /**
+   * night starts - No sunlight illumination of the sky, such no intereferance
+   * with astronomical observations.
    * @return {julian.Calendar} time of start of night
    */
   nightStart () {
@@ -186,6 +198,8 @@ class Sunrise {
   }
 
   /**
+   * night end - Sunlight starts illumination of the sky and interferes
+   * with astronomical observations.
    * @return {julian.Calendar} time of end of night
    */
   nightEnd () {
@@ -193,14 +207,16 @@ class Sunrise {
   }
 
   /**
-   * @return {julian.Calendar} time of start of golden hour (starts before sunset start)
+   * Start of "golden hour" before sunset
+   * @return {julian.Calendar} time of start of golden hour
    */
   goldenHourStart () {
     return this._calc(stdh0GoldenHour(this.refraction), true)
   }
 
   /**
-   * @return {julian.Calendar} time of end of golden hour (ends after sunrise end)
+   * End of "golden hour" after sunrise
+   * @return {julian.Calendar} time of end of golden hour
    */
   goldenHourEnd () {
     return this._calc(stdh0GoldenHour(this.refraction), false)
