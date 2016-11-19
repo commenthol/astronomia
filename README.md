@@ -10,6 +10,8 @@ selected algorithms from the book "Astronomical Algorithms" by Jean Meeus,
 following the second edition, copyright 1998, with corrections as of
 August 10, 2009.
 
+Additional algorithms not covered in the book have been added.
+
 ## Installation
 
 ```
@@ -77,6 +79,7 @@ For documentation of the different packages please take a look at the source cod
 - **solstice**: Equinoxes, Solstices and Solarterms.
 - **stellar**: Stellar Magnitudes.
 - **sundial**: Calculation of a Planar Sundial.
+- **sunrise**: Compute rise, noon, set of the Sun for an earth observer.
 
 ## Using a single package
 

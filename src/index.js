@@ -53,5 +53,6 @@ module.exports = {
   solarxyz: require('./solarxyz'),
   solstice: require('./solstice'),
   stellar: require('./stellar'),
-  sundial: require('./sundial')
+  sundial: require('./sundial'),
+  sunrise: require('./sunrise')
 }
