@@ -15,6 +15,8 @@ const sexa = require('./sexagesimal')
 
 const M = exports
 
+const horPar = (8.794 / 3600) * Math.PI / 180 // 8".794 arcseconds in radians
+
 /**
  * Horizontal returns equatorial horizontal parallax of a body.
  *
@@ -22,29 +24,31 @@ const M = exports
  * @return {number} parallax in radians.
  */
 M.horizontal = function (Δ) {
-  return 8.794 / 60 / 60 * Math.PI / 180 / Δ // (40.1) p. 279
+  // (40.1) p. 279
+  return Math.asin(Math.sin(horPar) / Δ)
+  // return horPar / Δ // with sufficient accuracy
 }
 
 /**
  * Topocentric returns topocentric positions including parallax.
  *
  * Arguments α, δ are geocentric right ascension and declination in radians.
- * Δ is distance to the observed object in AU.  ρsφ_, ρcφ_ are parallax
- * constants (see package globe.) L is geographic longitude of the observer,
+ * Δ is distance to the observed object in AU. ρsφ_, ρcφ_ are parallax
+ * constants (see package globe.) lon is geographic longitude of the observer,
  * jde is time of observation.
  *
  * @param {base.Coord} c - geocentric right ascension and declination in radians
  * @param {number} ρsφ - parallax constants (see package globe.)
  * @param {number} ρcφ - parallax constants (see package globe.)
- * @param {number} L - geographic longitude of the observer
+ * @param {number} lon - geographic longitude of the observer (measured positively westwards!)
  * @param {number} jde - time of observation
  * @return {base.Coord} observed topocentric ra and dec in radians.
  */
-M.topocentric = function (c, ρsφ, ρcφ, L, jde) {
+M.topocentric = function (c, ρsφ, ρcφ, lon, jde) {
   let [α, δ, Δ] = [c.ra, c.dec, c.range]
   let π = M.horizontal(Δ)
   let θ0 = new sexa.Time(sidereal.apparent(jde)).rad()
-  let H = base.pmod(θ0 - L - α, 2 * Math.PI)
+  let H = base.pmod(θ0 - lon - α, 2 * Math.PI)
   let sπ = Math.sin(π)
   let [sH, cH] = base.sincos(H)
   let [sδ, cδ] = base.sincos(δ)
@@ -64,15 +68,15 @@ M.topocentric = function (c, ρsφ, ρcφ, L, jde) {
  * @param {base.Coord} c - geocentric right ascension and declination in radians
  * @param {number} ρsφ - parallax constants (see package globe.)
  * @param {number} ρcφ - parallax constants (see package globe.)
- * @param {number} L - geographic longitude of the observer
+ * @param {number} lon - geographic longitude of the observer (measured positively westwards!)
  * @param {number} jde - time of observation
  * @return {base.Coord} observed topocentric ra and dec in radians.
  */
-M.topocentric2 = function (c, ρsφ, ρcφ, L, jde) {
+M.topocentric2 = function (c, ρsφ, ρcφ, lon, jde) {
   let [α, δ, Δ] = [c.ra, c.dec, c.range]
   let π = M.horizontal(Δ)
   let θ0 = new sexa.Time(sidereal.apparent(jde)).rad()
-  let H = base.pmod(θ0 - L - α, 2 * Math.PI)
+  let H = base.pmod(θ0 - lon - α, 2 * Math.PI)
   let [sH, cH] = base.sincos(H)
   let [sδ, cδ] = base.sincos(δ)
   let Δα = -π * ρcφ * sH / cδ // (40.4) p. 280
@@ -90,17 +94,17 @@ M.topocentric2 = function (c, ρsφ, ρcφ, L, jde) {
  * @param {base.Coord} c - geocentric right ascension and declination in radians
  * @param {number} ρsφ - parallax constants (see package globe.)
  * @param {number} ρcφ - parallax constants (see package globe.)
- * @param {number} L - geographic longitude of the observer
+ * @param {number} lon - geographic longitude of the observer (measured positively westwards!)
  * @param {number} jde - time of observation
  * @return {Array}
  *    {number} H_ - topocentric hour angle
  *    {number} δ_ - topocentric declination
  */
-M.topocentric3 = function (c, ρsφ_, ρcφ_, L, jde) {
+M.topocentric3 = function (c, ρsφ_, ρcφ_, lon, jde) {
   let [α, δ, Δ] = [c.ra, c.dec, c.range]
   let π = M.horizontal(Δ)
   let θ0 = new sexa.Time(sidereal.apparent(jde)).rad()
-  let H = base.pmod(θ0 - L - α, 2 * Math.PI)
+  let H = base.pmod(θ0 - lon - α, 2 * Math.PI)
   let sπ = Math.sin(π)
   let [sH, cH] = base.sincos(H)
   let [sδ, cδ] = base.sincos(δ)

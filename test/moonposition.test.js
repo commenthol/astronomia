@@ -7,15 +7,15 @@ var base = require('..').base
 var julian = require('..').julian
 var moonposition = require('..').moonposition
 
-var p = 180 / Math.PI
+var R2D = 180 / Math.PI
 
 describe('#moonposition', function () {
   it('position', function () {
     // Example 47.a, p. 342.
     var jde = julian.CalendarGregorianToJD(1992, 4, 12)
     var res = moonposition.position(jde)
-    assert.equal((res.lon * p).toFixed(6), 133.162655)
-    assert.equal((res.lat * p).toFixed(6), -3.229126)
+    assert.equal((res.lon * R2D).toFixed(6), 133.162655)
+    assert.equal((res.lat * R2D).toFixed(6), -3.229126)
     assert.equal((res.range).toFixed(1), 368409.7)
   })
 
@@ -24,7 +24,15 @@ describe('#moonposition', function () {
     var jde = julian.CalendarGregorianToJD(1992, 4, 12)
     var res = moonposition.position(jde)
     var π = moonposition.parallax(res.range)
-    assert.equal((π * p).toFixed(6), 0.991990)
+    assert.equal((π * R2D).toFixed(6), 0.991990)
+  })
+
+  it('parallax 2', function () {
+    // test case from chapter 40, p. 280
+    var π = moonposition.parallax(0.37276 * base.AU)
+    var got = π * R2D * 60 * 60 // radians to seconds
+    var want = 23.592
+    assert.ok(Math.abs(got - want) < 0.001)
   })
 
   describe('test node 0°', function () {
