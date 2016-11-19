@@ -100,8 +100,8 @@ const D2R = Math.PI / 180
 M.hourAngle = function (lat, h0, δ) {
   // approximate local hour angle
   let [sLat, cLat] = base.sincos(lat)
-  let [sδ1, cδ1] = base.sincos(δ)
-  let cosH = (Math.sin(h0) - sLat * sδ1) / (cLat * cδ1) // (15.1) p. 102
+  let [sδ, cδ] = base.sincos(δ)
+  let cosH = (Math.sin(h0) - sLat * sδ) / (cLat * cδ) // (15.1) p. 102
   if (cosH < -1 || cosH > 1) {
     throw errorCircumpolar
   }
