@@ -294,4 +294,96 @@ describe('#julian', function () {
       assert.ok(res)
     })
   })
+
+  describe('Calendar', function () {
+    it('can instatiate with year', function () {
+      var d = new julian.Calendar(2015)
+      assert.equal(d.year, 2015)
+      assert.equal(d.month, 1)
+      assert.equal(d.day, 1)
+    })
+    it('can instatiate with Date', function () {
+      var d = new julian.Calendar(new Date('2015-10-20T12:00:00Z'))
+      assert.equal(d.year, 2015)
+      assert.equal(d.month, 10)
+      assert.equal(d.day, 20.5)
+    })
+    it('can convert from Date to JD', function () {
+      var d = new julian.Calendar().fromDate(new Date('2000-01-01T12:00:00Z'))
+      var jd = d.toJD()
+      assert.equal(jd, base.J2000)
+    })
+    it('can convert from JD to Date', function () {
+      var d = new julian.Calendar().fromJD(base.J2000)
+      var date = d.toDate()
+      assert.equal(date.toISOString(), '2000-01-01T12:00:00.000Z')
+    })
+    it('can set date to midnight of same day and convert date to iso string', function () {
+      var d = new julian.Calendar(2015, 10, 20.4)
+      var datestr = d.midnight().toISOString()
+      assert.equal(datestr, '2015-10-20T00:00:00.000Z')
+    })
+    it('can set date to noon of same day', function () {
+      var d = new julian.Calendar(2015, 10, 20.4)
+      var date = d.noon().toDate()
+      assert.equal(date.toISOString(), '2015-10-20T12:00:00.000Z')
+    })
+    it('can return date', function () {
+      var d = new julian.Calendar(2015, 10, 20.4)
+      assert.deepEqual(d.getDate(), {year: 2015, month: 10, day: 20})
+    })
+    it('can return time', function () {
+      var d = new julian.Calendar(new Date('2015-10-20T08:00:00.000Z'))
+      assert.deepEqual(d.getTime(), {hour: 8, minute: 0, second: 0, millisecond: 0})
+    })
+    it('can return time 2', function () {
+      var d = new julian.Calendar(2015, 10, 20.33333333)
+      assert.deepEqual(d.getTime(), {hour: 7, minute: 59, second: 59, millisecond: 999})
+    })
+    it('can convert to Dynamical Time and back to Universal Time', function () {
+      var d = new julian.Calendar(1, 1, 1)
+      assert.equal(d.toISOString(), '0001-01-01T00:00:00.000Z')
+      d.deltaT() // convert to Dynamical Time
+      assert.equal(d.toISOString(), '0001-01-01T02:56:13.459Z')
+      d.deltaT(true) // convert back to Universal Time
+      assert.equal(d.toISOString(), '0001-01-01T00:00:00.003Z') // 3 ms precision error
+    })
+    it('can convert to decimal year', function () {
+      var d = new julian.Calendar(2000, 7, 2)
+      assert.equal(d.toYear(), 2000.5)
+    })
+    it('can get day of year', function () {
+      var d = new julian.Calendar(1400, 12, 24)
+      assert.equal(d.dayOfYear(), 359)
+    })
+    it('can get day of week', function () {
+      var d = new julian.Calendar(1400, 12, 24)
+      var weekday = 'sun mon tue wed thu fri sat'.split(' ')
+      assert.equal(weekday[d.dayOfWeek()], 'fri')
+    })
+    it('1582-10-15 GC', function () {
+      var d = new julian.Calendar(1582, 10, 15)
+      assert.equal(d.isGregorian(), true)
+    })
+    it('1582-10-14 JC', function () {
+      var d = new julian.Calendar(1582, 10, 14)
+      assert.equal(d.isGregorian(), false)
+    })
+    it('1582-10-15 GC using Date', function () {
+      var d = new julian.Calendar(new Date('1582-10-15T00:00:00Z'))
+      assert.equal(d.isGregorian(), true)
+    })
+  })
+  describe('CalendarGregorian', function () {
+    it('can convert date to Julian Calendar', function () {
+      var d = new julian.CalendarGregorian(1582, 10, 15)
+      assert.deepEqual(d.toJulian().getDate(), { year: 1582, month: 10, day: 5 })
+    })
+  })
+  describe('CalendarJulian', function () {
+    it('can convert date to Gregorian Calendar', function () {
+      var d = new julian.CalendarJulian(1582, 10, 5)
+      assert.deepEqual(d.toGregorian().getDate(), { year: 1582, month: 10, day: 15 })
+    })
+  })
 })

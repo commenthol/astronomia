@@ -19,17 +19,26 @@ const int = Math.trunc
 /** 1582-10-05 Julian Date is 1st Gregorian Date (1582-10-15) */
 const GREGORIAN0JD = M.GREGORIAN0JD = 2299160.5
 
-const DAYSOFYEAR = [0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+const DAYS_OF_YEAR = [0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+const SECS_OF_DAY = 86400 // 24 * 60 * 60
 
 /**
  * Base class for CalendarJulian and CalendarGregorian
  * Respects the start of the Gregorian Calendar at `GREGORIAN0JD`
  */
 class Calendar {
+	/**
+   * @param {number|Date} year - If `Date` is given then year, month, day is taken from that. Shortcut to `new Calendar().fromDate(date)`
+   * @param {number} month
+   * @param {number} day
+   */
   constructor (year, month = 1, day = 1) {
     this.year = year
     this.month = month
     this.day = day
+    if (year instanceof Date) {
+      this.fromDate(year)
+    }
   }
 
   getDate () {
@@ -41,11 +50,10 @@ class Calendar {
   }
 
   getTime () {
-    let t = new sexa.Time()
-    t.time = this.day * 24 * 60 * 60
+    let t = new sexa.Time(this.day * SECS_OF_DAY)
     let [neg, h, m, _s] = t.toHMS() // eslint-disable-line no-unused-vars
     let [s, ms] = base.modf(_s)
-    ms = Math.round(ms * 1000)
+    ms = Math.trunc(ms * 1000)
     return {
       hour: h % 24,
       minute: m,
@@ -105,7 +113,7 @@ class Calendar {
    */
   toYear () {
     let [d, f] = base.modf(this.day) // eslint-disable-line no-unused-vars
-    let n = this.dayOfYear() + f - 1
+    let n = this.dayOfYear() - 1 + f
     let days = this.isLeapYear() ? 366 : 365
     let decYear = this.year + (n / days)
     return decYear
@@ -143,6 +151,22 @@ class Calendar {
     let dT = deltat.deltaT(this.toYear()) // in seconds
     this.day += dT / 86400
     return this.toJD()
+  }
+
+  /**
+   * set date to midnight UTC
+   */
+  midnight () {
+    this.day = Math.floor(this.day)
+    return this
+  }
+
+  /**
+   * set date to noon UTC
+   */
+  noon () {
+    this.day = Math.floor(this.day) + 0.5
+    return this
   }
 
   /**
@@ -518,7 +542,7 @@ M.DayOfYear = function (y, m, d, leap) {
   if (leap && m > 1) {
     k = 1
   }
-  return k + DAYSOFYEAR[m] + int(d)
+  return k + DAYS_OF_YEAR[m] + int(d)
 }
 
 /**
@@ -535,12 +559,12 @@ M.DayOfYearToCalendar = function (n, leap) {
     k = 1
   }
   for (month = 1; month <= 12; month++) {
-    if (k + DAYSOFYEAR[month] > n) {
+    if (k + DAYS_OF_YEAR[month] > n) {
       month = month - 1
       break
     }
   }
-  var day = n - k - DAYSOFYEAR[month]
+  var day = n - k - DAYS_OF_YEAR[month]
   return {month, day}
 }
 
