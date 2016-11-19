@@ -27,7 +27,7 @@ const SECS_OF_DAY = 86400 // 24 * 60 * 60
  * Respects the start of the Gregorian Calendar at `GREGORIAN0JD`
  */
 class Calendar {
-	/**
+  /**
    * @param {number|Date} year - If `Date` is given then year, month, day is taken from that. Shortcut to `new Calendar().fromDate(date)`
    * @param {number} month
    * @param {number} day

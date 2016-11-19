@@ -73,7 +73,7 @@ describe('#coord', function () {
     assert.equal(new sexa.Angle(g.lat).toDegString(4), '6°.0463') // 6.0463
   })
 
-  // revers transform does not fit yet
+  // reverse transform does not fit yet
   it.skip('Equatorial.toGalactic reverse transform', function () {
     var eq0 = new coord.Equatorial(
       new sexa.RA(17, 48, 59.74).rad(),

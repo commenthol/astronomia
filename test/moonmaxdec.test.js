@@ -39,7 +39,7 @@ describe('moonmaxdec', function () {
     var date = new julian.CalendarJulian().fromJD(max.jde)
 
     assert.equal(max.jde.toFixed(4), 1719672.1412)
-    assert.equal(date.toISOString(), '-0004-03-16T15:23:23.990Z')
+    assert.equal(date.toISOString(), '-0004-03-16T15:23:23.989Z')
     assert.equal((δ * 180 / Math.PI).toFixed(4), 28.9739)
     assert.equal(new sexa.Angle(δ).toString(0), '28°58′26″')
   })
