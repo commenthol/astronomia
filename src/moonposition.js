@@ -9,6 +9,8 @@
  */
 
 const base = require('./base')
+const {asin, sin} = Math
+const D2R = Math.PI / 180
 
 const M = exports
 const EARTH_RADIUS = 6378.137 // km
@@ -21,17 +23,15 @@ const EARTH_RADIUS = 6378.137 // km
  */
 M.parallax = function (distance) {
   // p. 337
-  return Math.asin(EARTH_RADIUS / distance)
+  return asin(EARTH_RADIUS / distance)
 }
 
-const p = Math.PI / 180
-
 function dmf (T) {
-  let d = base.horner(T, 297.8501921 * p, 445267.1114034 * p, -0.0018819 * p, p / 545868, -p / 113065000)
-  let m = base.horner(T, 357.5291092 * p, 35999.0502909 * p, -0.0001535 * p, p / 24490000)
-  let m_ = base.horner(T, 134.9633964 * p, 477198.8675055 * p,
-    0.0087414 * p, p / 69699, -p / 14712000)
-  let f = base.horner(T, 93.272095 * p, 483202.0175233 * p, -0.0036539 * p, -p / 3526000, p / 863310000)
+  let d = base.horner(T, 297.8501921 * D2R, 445267.1114034 * D2R, -0.0018819 * D2R, D2R / 545868, -D2R / 113065000)
+  let m = base.horner(T, 357.5291092 * D2R, 35999.0502909 * D2R, -0.0001535 * D2R, D2R / 24490000)
+  let m_ = base.horner(T, 134.9633964 * D2R, 477198.8675055 * D2R,
+    0.0087414 * D2R, D2R / 69699, -D2R / 14712000)
+  let f = base.horner(T, 93.272095 * D2R, 483202.0175233 * D2R, -0.0036539 * D2R, -D2R / 3526000, D2R / 863310000)
   return [d, m, m_, f]
 }
 
@@ -43,45 +43,45 @@ function dmf (T) {
  *
  * @param {number} jde - Julian ephemeris day
  * @returns {base.Coord}
- *  {number} lon - Geocentric longitude, in radians.
- *  {number} lat - Geocentric latitude, in radians.
- *  {number} range - Distance between centers of the Earth and Moon, in km.
+ *  {number} lon - Geocentric longitude λ, in radians.
+ *  {number} lat - Geocentric latitude β, in radians.
+ *  {number} range - Distance Δ between centers of the Earth and Moon, in km.
  */
 M.position = function (jde) {
   let T = base.J2000Century(jde)
-  let l_ = base.horner(T, 218.3164477 * p, 481267.88123421 * p, -0.0015786 * p, p / 538841, -p / 65194000)
+  let l_ = base.horner(T, 218.3164477 * D2R, 481267.88123421 * D2R, -0.0015786 * D2R, D2R / 538841, -D2R / 65194000)
   let [d, m, m_, f] = dmf(T)
-  let a1 = 119.75 * p + 131.849 * p * T
-  let a2 = 53.09 * p + 479264.29 * p * T
-  let a3 = 313.45 * p + 481266.484 * p * T
+  let a1 = 119.75 * D2R + 131.849 * D2R * T
+  let a2 = 53.09 * D2R + 479264.29 * D2R * T
+  let a3 = 313.45 * D2R + 481266.484 * D2R * T
   let e = base.horner(T, 1, -0.002516, -0.0000074)
   let e2 = e * e
-  let Σl = 3958 * Math.sin(a1) + 1962 * Math.sin(l_ - f) + 318 * Math.sin(a2)
+  let Σl = 3958 * sin(a1) + 1962 * sin(l_ - f) + 318 * sin(a2)
   let Σr = 0.0
-  let Σb = -2235 * Math.sin(l_) + 382 * Math.sin(a3) + 175 * Math.sin(a1 - f) +
-    175 * Math.sin(a1 + f) + 127 * Math.sin(l_ - m_) - 115 * Math.sin(l_ + m_)
+  let Σb = -2235 * sin(l_) + 382 * sin(a3) + 175 * sin(a1 - f) +
+    175 * sin(a1 + f) + 127 * sin(l_ - m_) - 115 * sin(l_ + m_)
   ta.forEach((r) => {
-    let [sa, ca] = base.sincos(d * r.d + m * r.m + m_ * r.m_ + f * r.f)
+    let [sina, cosa] = base.sincos(d * r.d + m * r.m + m_ * r.m_ + f * r.f)
     switch (r.m) {
       case 0:
-        Σl += r.Σl * sa
-        Σr += r.Σr * ca
+        Σl += r.Σl * sina
+        Σr += r.Σr * cosa
         break
       case -1:
       case 1:
-        Σl += r.Σl * sa * e
-        Σr += r.Σr * ca * e
+        Σl += r.Σl * sina * e
+        Σr += r.Σr * cosa * e
         break
       case -2:
       case 2:
-        Σl += r.Σl * sa * e2
-        Σr += r.Σr * ca * e2
+        Σl += r.Σl * sina * e2
+        Σr += r.Σr * cosa * e2
         break
     }
   })
 
   tb.forEach((r) => {
-    let sb = Math.sin(d * r.d + m * r.m + m_ * r.m_ + f * r.f)
+    let sb = sin(d * r.d + m * r.m + m_ * r.m_ + f * r.f)
     switch (r.m) {
       case 0:
         Σb += r.Σb * sb
@@ -96,8 +96,8 @@ M.position = function (jde) {
         break
     }
   })
-  let lon = base.pmod(l_, 2 * Math.PI) + Σl * 1e-6 * p
-  let lat = Σb * 1e-6 * p
+  let lon = base.pmod(l_, 2 * Math.PI) + Σl * 1e-6 * D2R
+  let lat = Σb * 1e-6 * D2R
   let range = 385000.56 + Σr * 1e-3
   return new base.Coord(lon, lat, range)
 }
@@ -181,8 +181,8 @@ const ta = (function () {
   ]
   return ta.map((row) => {
     let o = {}
-      ;['d', 'm', 'm_', 'f', 'Σl', 'Σr'].map((p, i) => {
-        o[p] = row[i]
+      ;['d', 'm', 'm_', 'f', 'Σl', 'Σr'].map((D2R, i) => {
+        o[D2R] = row[i]
       })
     return o
   })
@@ -268,8 +268,8 @@ const tb = (function () {
   ]
   return tb.map((row) => {
     let o = {}
-      ;['d', 'm', 'm_', 'f', 'Σb'].map((p, i) => {
-        o[p] = row[i]
+      ;['d', 'm', 'm_', 'f', 'Σb'].map((D2R, i) => {
+        o[D2R] = row[i]
       })
     return o
   })
@@ -282,7 +282,16 @@ const tb = (function () {
  * @returns result in radians.
  */
 M.node = function (jde) {
-  return base.pmod(base.horner(base.J2000Century(jde), 125.0445479 * p, -1934.1362891 * p, 0.0020754 * p, p / 467441, -p / 60616000), 2 * Math.PI)
+  return base.pmod(
+    base.horner(
+      base.J2000Century(jde),
+      125.0445479 * D2R,
+      -1934.1362891 * D2R,
+      0.0020754 * D2R,
+      D2R / 467441,
+      -D2R / 60616000
+    ), 2 * Math.PI
+  )
 }
 
 /**
@@ -292,8 +301,16 @@ M.node = function (jde) {
  * @returns result in radians.
  */
 M.perigee = function (jde) {
-  return base.pmod(base.horner(base.J2000Century(jde), 83.3532465 * p,
-    4069.0137287 * p, -0.01032 * p, -p / 80053, p / 18999000), 2 * Math.PI)
+  return base.pmod(
+    base.horner(
+      base.J2000Century(jde),
+      83.3532465 * D2R,
+      4069.0137287 * D2R,
+      -0.01032 * D2R,
+      -D2R / 80053,
+      D2R / 18999000
+    ), 2 * Math.PI
+  )
 }
 
 /**
@@ -307,9 +324,9 @@ M.perigee = function (jde) {
 M.trueNode = function (jde) {
   let [d, m, m_, f] = dmf(base.J2000Century(jde))
   return M.node(jde) +
-    -1.4979 * p * Math.sin(2 * (d - f)) +
-    -0.15 * p * Math.sin(m) +
-    -0.1226 * p * Math.sin(2 * d) +
-    0.1176 * p * Math.sin(2 * f) +
-    -0.0801 * p * Math.sin(2 * (m_ - f))
+    -1.4979 * D2R * sin(2 * (d - f)) +
+    -0.15 * D2R * sin(m) +
+    -0.1226 * D2R * sin(2 * d) +
+    0.1176 * D2R * sin(2 * f) +
+    -0.0801 * D2R * sin(2 * (m_ - f))
 }

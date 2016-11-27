@@ -12,6 +12,7 @@ const base = require('./base')
 const coord = require('./coord')
 const nutation = require('./nutation')
 const solar = require('./solar')
+const {cos, sin, tan} = Math
 
 const M = exports
 
@@ -37,7 +38,7 @@ M.e = function (jde, earth) {
   let ε = nutation.meanObliquity(jde) + Δε
   let eq = new coord.Ecliptic(λ, lat).toEquatorial(ε)
   // (28.1) p. 183
-  let E = L0 - 0.0057183 * Math.PI / 180 - eq.ra + Δψ * Math.cos(ε)
+  let E = L0 - 0.0057183 * Math.PI / 180 - eq.ra + Δψ * cos(ε)
   return base.pmod(E + Math.PI, 2 * Math.PI) - Math.PI
 }
 
@@ -60,15 +61,15 @@ const l0 = function (τ) {
  */
 M.eSmart = function (jde) {
   let ε = nutation.meanObliquity(jde)
-  let t = Math.tan(ε * 0.5)
+  let t = tan(ε * 0.5)
   let y = t * t
   let T = base.J2000Century(jde)
   let L0 = l0(T * 0.1)
   let e = solar.eccentricity(T)
   let M = solar.meanAnomaly(T)
-  let [s2L0, c2L0] = base.sincos(2 * L0)
-  let sM = Math.sin(M)
+  let [sin2L0, cos2L0] = base.sincos(2 * L0)
+  let sinM = sin(M)
   // (28.3) p. 185
-  return y * s2L0 - 2 * e * sM + 4 * e * y * sM * c2L0 -
-    y * y * s2L0 * c2L0 - 1.25 * e * e * Math.sin(2 * M)
+  return y * sin2L0 - 2 * e * sinM + 4 * e * y * sinM * cos2L0 -
+    y * y * sin2L0 * cos2L0 - 1.25 * e * e * sin(2 * M)
 }

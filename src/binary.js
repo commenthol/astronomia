@@ -8,6 +8,7 @@
  * Binary: Chapter 57, Binary Stars
  */
 const base = require('./base')
+const {atan, atan2, cos, sqrt, tan} = Math
 
 const M = exports
 
@@ -40,16 +41,16 @@ M.meanAnomaly = function (year, T, P) { // (year, T, P float64)  float64
  *  {Number} ρ is the angular distance in arc seconds.
  */
 M.position = function (a, e, i, Ω, ω, E) { // (a, e, i, Ω, ω, E float64)  (θ, ρ float64)
-  let r = a * (1 - e * Math.cos(E))
-  let ν = 2 * Math.atan(Math.sqrt((1 + e) / (1 - e)) * Math.tan(E / 2))
-  let [sνω, cνω] = base.sincos(ν + ω)
-  let ci = Math.cos(i)
-  let num = sνω * ci
-  let θ = Math.atan2(num, cνω) + Ω
+  let r = a * (1 - e * cos(E))
+  let ν = 2 * atan(sqrt((1 + e) / (1 - e)) * tan(E / 2))
+  let [sinνω, cosνω] = base.sincos(ν + ω)
+  let cosi = cos(i)
+  let num = sinνω * cosi
+  let θ = atan2(num, cosνω) + Ω
   if (θ < 0) {
     θ += 2 * Math.PI
   }
-  let ρ = r * Math.sqrt(num * num + cνω * cνω)
+  let ρ = r * sqrt(num * num + cosνω * cosνω)
   return [θ, ρ]
 }
 
@@ -63,12 +64,12 @@ M.position = function (a, e, i, Ω, ω, E) { // (a, e, i, Ω, ω, E float64)  (�
  * @returns {Number} apparent eccenticity of a binary star
  */
 M.apparentEccentricity = function (e, i, ω) { // (e, i, ω float64)  float64
-  let ci = Math.cos(i)
-  let [sω, cω] = base.sincos(ω)
-  let A = (1 - e * e * cω * cω) * ci * ci
-  let B = e * e * sω * cω * ci
-  let C = 1 - e * e * sω * sω
+  let cosi = cos(i)
+  let [sinω, cosω] = base.sincos(ω)
+  let A = (1 - e * e * cosω * cosω) * cosi * cosi
+  let B = e * e * sinω * cosω * cosi
+  let C = 1 - e * e * sinω * sinω
   let d = A - C
-  let sD = Math.sqrt(d * d + 4 * B * B)
-  return Math.sqrt(2 * sD / (A + C + sD))
+  let sqrtD = sqrt(d * d + 4 * B * B)
+  return sqrt(2 * sqrtD / (A + C + sqrtD))
 }

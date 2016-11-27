@@ -187,12 +187,12 @@ describe('#Sunrise', function () {
       var last = ''
       for (var i = 0; i < 366; i++) {
         var date = new julian.Calendar().fromJD(j + i)
-        var lat = 89.7
+        var lat = 89.9
         var lon = 0
         var sr = new Sunrise(date, lat, -lon)
         var res
         try {
-          res = sr.set().toDate().toISOString()
+          res = sr.rise().toDate().toISOString()
         } catch (e) {
           res = 'NaN'
         }

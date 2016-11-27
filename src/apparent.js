@@ -13,6 +13,7 @@ const coord = require('./coord')
 const nutation = require('./nutation')
 const precess = require('./precess')
 const solar = require('./solar')
+const {cos, tan} = Math
 
 const M = exports
 
@@ -28,13 +29,13 @@ const M = exports
 */
 M.nutation = function (α, δ, jd) { // (α, δ, jd float64)  (Δα1, Δδ1 float64)
   let ε = nutation.meanObliquity(jd)
-  let [sε, cε] = base.sincos(ε)
+  let [sinε, cosε] = base.sincos(ε)
   let [Δψ, Δε] = nutation.nutation(jd)
-  let [sα, cα] = base.sincos(α)
-  let tδ = Math.tan(δ)
+  let [sinα, cosα] = base.sincos(α)
+  let tanδ = tan(δ)
     // (23.1) p. 151
-  let Δα1 = (cε + sε * sα * tδ) * Δψ - cα * tδ * Δε
-  let Δδ1 = sε * cα * Δψ + sα * Δε
+  let Δα1 = (cosε + sinε * sinα * tanδ) * Δψ - cosα * tanδ * Δε
+  let Δδ1 = sinε * cosα * Δψ + sinα * Δε
   return [Δα1, Δδ1]
 }
 
@@ -61,10 +62,10 @@ M.eclipticAberration = function (λ, β, jd) { // (λ, β, jd float64)  (Δλ, �
   let π = M.perihelion(T)
   let [sβ, cβ] = base.sincos(β)
   let [ssλ, csλ] = base.sincos(lon - λ)
-  let [sπλ, cπλ] = base.sincos(π - λ)
+  let [sinπλ, cosπλ] = base.sincos(π - λ)
     // (23.2) p. 151
-  let Δλ = κ * (e * cπλ - csλ) / cβ
-  let Δβ = -κ * sβ * (ssλ - e * sπλ)
+  let Δλ = κ * (e * cosπλ - csλ) / cβ
+  let Δβ = -κ * sβ * (ssλ - e * sinπλ)
   return [Δλ, Δβ]
 }
 
@@ -78,18 +79,17 @@ M.aberration = function (α, δ, jd) { // (α, δ, jd float64)  (Δα2, Δδ2 fl
   let {lon, ano} = solar.true(T) // eslint-disable-line no-unused-vars
   let e = solar.eccentricity(T)
   let π = M.perihelion(T)
-  let [sα, cα] = base.sincos(α)
-  let [sδ, cδ] = base.sincos(δ)
-  let [ss, cs] = base.sincos(lon)
-  let [sπ, cπ] = base.sincos(π)
-  let cε = Math.cos(ε)
-  let tε = Math.tan(ε)
-  let q1 = cα * cε
+  let [sinα, cosα] = base.sincos(α)
+  let [sinδ, cosδ] = base.sincos(δ)
+  let [sins, coss] = base.sincos(lon)
+  let [sinπ, cosπ] = base.sincos(π)
+  let cosε = cos(ε)
+  let q1 = cosα * cosε
   // (23.3) p. 152
-  let Δα2 = κ * (e * (q1 * cπ + sα * sπ) - (q1 * cs + sα * ss)) / cδ
-  let q2 = cε * (tε * cδ - sα * sδ)
-  let q3 = cα * sδ
-  let Δδ2 = κ * (e * (cπ * q2 + sπ * q3) - (cs * q2 + ss * q3))
+  let Δα2 = κ * (e * (q1 * cosπ + sinα * sinπ) - (q1 * coss + sinα * sins)) / cosδ
+  let q2 = cosε * (tan(ε) * cosδ - sinα * sinδ)
+  let q3 = cosα * sinδ
+  let Δδ2 = κ * (e * (cosπ * q2 + sinπ * q3) - (coss * q2 + sins * q3))
   return [Δα2, Δδ2]
 }
 
@@ -140,10 +140,10 @@ M.aberrationRonVondrak = function (α, δ, jd) { // (α, δ, jd float64)  (Δα,
     Yp += y
     Zp += z
   }
-  let [sα, cα] = base.sincos(α)
-  let [sδ, cδ] = base.sincos(δ)
+  let [sinα, cosα] = base.sincos(α)
+  let [sinδ, cosδ] = base.sincos(δ)
     // (23.4) p. 156
-  return [(Yp * cα - Xp * sα) / (c * cδ), -((Xp * cα + Yp * sα) * sδ - Zp * cδ) / c]
+  return [(Yp * cosα - Xp * sinα) / (c * cosδ), -((Xp * cosα + Yp * sinα) * sinδ - Zp * cosδ) / c]
 }
 
 const c = 17314463350 // unit is 1e-8 AU / day
@@ -151,156 +151,156 @@ const c = 17314463350 // unit is 1e-8 AU / day
 // r = {T, L2, L3, L4, L5, L6, L7, L8, Lp, D, Mp, F}
 const rvTerm = [
   function (r) { // 1
-    let [sA, cA] = base.sincos(r.L3)
-    return [(-1719914 - 2 * r.T) * sA - 25 * cA,
-      (25 - 13 * r.T) * sA + (1578089 + 156 * r.T) * cA,
-      (10 + 32 * r.T) * sA + (684185 - 358 * r.T) * cA
+    let [sinA, cosA] = base.sincos(r.L3)
+    return [(-1719914 - 2 * r.T) * sinA - 25 * cosA,
+      (25 - 13 * r.T) * sinA + (1578089 + 156 * r.T) * cosA,
+      (10 + 32 * r.T) * sinA + (684185 - 358 * r.T) * cosA
     ]
   },
   function (r) { // 2
-    let [sA, cA] = base.sincos(2 * r.L3)
-    return [(6434 + 141 * r.T) * sA + (28007 - 107 * r.T) * cA,
-      (25697 - 95 * r.T) * sA + (-5904 - 130 * r.T) * cA,
-      (11141 - 48 * r.T) * sA + (-2559 - 55 * r.T) * cA
+    let [sinA, cosA] = base.sincos(2 * r.L3)
+    return [(6434 + 141 * r.T) * sinA + (28007 - 107 * r.T) * cosA,
+      (25697 - 95 * r.T) * sinA + (-5904 - 130 * r.T) * cosA,
+      (11141 - 48 * r.T) * sinA + (-2559 - 55 * r.T) * cosA
     ]
   },
   function (r) { // 3
-    let [sA, cA] = base.sincos(r.L5)
-    return [715 * sA, 6 * sA - 657 * cA, -15 * sA - 282 * cA]
+    let [sinA, cosA] = base.sincos(r.L5)
+    return [715 * sinA, 6 * sinA - 657 * cosA, -15 * sinA - 282 * cosA]
   },
   function (r) { // 4
-    let [sA, cA] = base.sincos(r.Lp)
-    return [715 * sA, -656 * cA, -285 * cA]
+    let [sinA, cosA] = base.sincos(r.Lp)
+    return [715 * sinA, -656 * cosA, -285 * cosA]
   },
   function (r) { // 5
-    let [sA, cA] = base.sincos(3 * r.L3)
-    return [(486 - 5 * r.T) * sA + (-236 - 4 * r.T) * cA,
-      (-216 - 4 * r.T) * sA + (-446 + 5 * r.T) * cA, -94 * sA - 193 * cA
+    let [sinA, cosA] = base.sincos(3 * r.L3)
+    return [(486 - 5 * r.T) * sinA + (-236 - 4 * r.T) * cosA,
+      (-216 - 4 * r.T) * sinA + (-446 + 5 * r.T) * cosA, -94 * sinA - 193 * cosA
     ]
   },
   function (r) { // 6
-    let [sA, cA] = base.sincos(r.L6)
-    return [159 * sA, 2 * sA - 147 * cA, -6 * sA - 61 * cA]
+    let [sinA, cosA] = base.sincos(r.L6)
+    return [159 * sinA, 2 * sinA - 147 * cosA, -6 * sinA - 61 * cosA]
   },
   function (r) { // 7
-    let cA = Math.cos(r.F)
-    return [0, 26 * cA, -59 * cA]
+    let cosA = Math.cos(r.F)
+    return [0, 26 * cosA, -59 * cosA]
   },
   function (r) { // 8
-    let [sA, cA] = base.sincos(r.Lp + r.Mp)
-    return [39 * sA, -36 * cA, -16 * cA]
+    let [sinA, cosA] = base.sincos(r.Lp + r.Mp)
+    return [39 * sinA, -36 * cosA, -16 * cosA]
   },
   function (r) { // 9
-    let [sA, cA] = base.sincos(2 * r.L5)
-    return [33 * sA - 10 * cA, -9 * sA - 30 * cA, -5 * sA - 13 * cA]
+    let [sinA, cosA] = base.sincos(2 * r.L5)
+    return [33 * sinA - 10 * cosA, -9 * sinA - 30 * cosA, -5 * sinA - 13 * cosA]
   },
   function (r) { // 10
-    let [sA, cA] = base.sincos(2 * r.L3 - r.L5)
-    return [31 * sA + cA, sA - 28 * cA, -12 * cA]
+    let [sinA, cosA] = base.sincos(2 * r.L3 - r.L5)
+    return [31 * sinA + cosA, sinA - 28 * cosA, -12 * cosA]
   },
   function (r) { // 11
-    let [sA, cA] = base.sincos(3 * r.L3 - 8 * r.L4 + 3 * r.L5)
-    return [8 * sA - 28 * cA, 25 * sA + 8 * cA, 11 * sA + 3 * cA]
+    let [sinA, cosA] = base.sincos(3 * r.L3 - 8 * r.L4 + 3 * r.L5)
+    return [8 * sinA - 28 * cosA, 25 * sinA + 8 * cosA, 11 * sinA + 3 * cosA]
   },
   function (r) { // 12
-    let [sA, cA] = base.sincos(5 * r.L3 - 8 * r.L4 + 3 * r.L5)
-    return [8 * sA - 28 * cA, -25 * sA - 8 * cA, -11 * sA + -3 * cA]
+    let [sinA, cosA] = base.sincos(5 * r.L3 - 8 * r.L4 + 3 * r.L5)
+    return [8 * sinA - 28 * cosA, -25 * sinA - 8 * cosA, -11 * sinA + -3 * cosA]
   },
   function (r) { // 13
-    let [sA, cA] = base.sincos(2 * r.L2 - r.L3)
-    return [21 * sA, -19 * cA, -8 * cA]
+    let [sinA, cosA] = base.sincos(2 * r.L2 - r.L3)
+    return [21 * sinA, -19 * cosA, -8 * cosA]
   },
   function (r) { // 14
-    let [sA, cA] = base.sincos(r.L2)
-    return [-19 * sA, 17 * cA, 8 * cA]
+    let [sinA, cosA] = base.sincos(r.L2)
+    return [-19 * sinA, 17 * cosA, 8 * cosA]
   },
   function (r) { // 15
-    let [sA, cA] = base.sincos(r.L7)
-    return [17 * sA, -16 * cA, -7 * cA]
+    let [sinA, cosA] = base.sincos(r.L7)
+    return [17 * sinA, -16 * cosA, -7 * cosA]
   },
   function (r) { // 16
-    let [sA, cA] = base.sincos(r.L3 - 2 * r.L5)
-    return [16 * sA, 15 * cA, sA + 7 * cA]
+    let [sinA, cosA] = base.sincos(r.L3 - 2 * r.L5)
+    return [16 * sinA, 15 * cosA, sinA + 7 * cosA]
   },
   function (r) { // 17
-    let [sA, cA] = base.sincos(r.L8)
-    return [16 * sA, sA - 15 * cA, -3 * sA - 6 * cA]
+    let [sinA, cosA] = base.sincos(r.L8)
+    return [16 * sinA, sinA - 15 * cosA, -3 * sinA - 6 * cosA]
   },
   function (r) { // 18
-    let [sA, cA] = base.sincos(r.L3 + r.L5)
-    return [11 * sA - cA, -sA - 10 * cA, -sA - 5 * cA]
+    let [sinA, cosA] = base.sincos(r.L3 + r.L5)
+    return [11 * sinA - cosA, -sinA - 10 * cosA, -sinA - 5 * cosA]
   },
   function (r) { // 19
-    let [sA, cA] = base.sincos(2 * r.L2 - 2 * r.L3)
-    return [-11 * cA, -10 * sA, -4 * sA]
+    let [sinA, cosA] = base.sincos(2 * r.L2 - 2 * r.L3)
+    return [-11 * cosA, -10 * sinA, -4 * sinA]
   },
   function (r) { // 20
-    let [sA, cA] = base.sincos(r.L3 - r.L5)
-    return [-11 * sA - 2 * cA, -2 * sA + 9 * cA, -sA + 4 * cA]
+    let [sinA, cosA] = base.sincos(r.L3 - r.L5)
+    return [-11 * sinA - 2 * cosA, -2 * sinA + 9 * cosA, -sinA + 4 * cosA]
   },
   function (r) { // 21
-    let [sA, cA] = base.sincos(4 * r.L3)
-    return [-7 * sA - 8 * cA, -8 * sA + 6 * cA, -3 * sA + 3 * cA]
+    let [sinA, cosA] = base.sincos(4 * r.L3)
+    return [-7 * sinA - 8 * cosA, -8 * sinA + 6 * cosA, -3 * sinA + 3 * cosA]
   },
   function (r) { // 22
-    let [sA, cA] = base.sincos(3 * r.L3 - 2 * r.L5)
-    return [-10 * sA, 9 * cA, 4 * cA]
+    let [sinA, cosA] = base.sincos(3 * r.L3 - 2 * r.L5)
+    return [-10 * sinA, 9 * cosA, 4 * cosA]
   },
   function (r) { // 23
-    let [sA, cA] = base.sincos(r.L2 - 2 * r.L3)
-    return [-9 * sA, -9 * cA, -4 * cA]
+    let [sinA, cosA] = base.sincos(r.L2 - 2 * r.L3)
+    return [-9 * sinA, -9 * cosA, -4 * cosA]
   },
   function (r) { // 24
-    let [sA, cA] = base.sincos(2 * r.L2 - 3 * r.L3)
-    return [-9 * sA, -8 * cA, -4 * cA]
+    let [sinA, cosA] = base.sincos(2 * r.L2 - 3 * r.L3)
+    return [-9 * sinA, -8 * cosA, -4 * cosA]
   },
   function (r) { // 25
-    let [sA, cA] = base.sincos(2 * r.L6)
-    return [-9 * cA, -8 * sA, -3 * sA]
+    let [sinA, cosA] = base.sincos(2 * r.L6)
+    return [-9 * cosA, -8 * sinA, -3 * sinA]
   },
   function (r) { // 26
-    let [sA, cA] = base.sincos(2 * r.L2 - 4 * r.L3)
-    return [-9 * cA, 8 * sA, 3 * sA]
+    let [sinA, cosA] = base.sincos(2 * r.L2 - 4 * r.L3)
+    return [-9 * cosA, 8 * sinA, 3 * sinA]
   },
   function (r) { // 27
-    let [sA, cA] = base.sincos(3 * r.L3 - 2 * r.L4)
-    return [8 * sA, -8 * cA, -3 * cA]
+    let [sinA, cosA] = base.sincos(3 * r.L3 - 2 * r.L4)
+    return [8 * sinA, -8 * cosA, -3 * cosA]
   },
   function (r) { // 28
-    let [sA, cA] = base.sincos(r.Lp + 2 * r.D - r.Mp)
-    return [8 * sA, -7 * cA, -3 * cA]
+    let [sinA, cosA] = base.sincos(r.Lp + 2 * r.D - r.Mp)
+    return [8 * sinA, -7 * cosA, -3 * cosA]
   },
   function (r) { // 29
-    let [sA, cA] = base.sincos(8 * r.L2 - 12 * r.L3)
-    return [-4 * sA - 7 * cA, -6 * sA + 4 * cA, -3 * sA + 2 * cA]
+    let [sinA, cosA] = base.sincos(8 * r.L2 - 12 * r.L3)
+    return [-4 * sinA - 7 * cosA, -6 * sinA + 4 * cosA, -3 * sinA + 2 * cosA]
   },
   function (r) { // 30
-    let [sA, cA] = base.sincos(8 * r.L2 - 14 * r.L3)
-    return [-4 * sA - 7 * cA, 6 * sA - 4 * cA, 3 * sA - 2 * cA]
+    let [sinA, cosA] = base.sincos(8 * r.L2 - 14 * r.L3)
+    return [-4 * sinA - 7 * cosA, 6 * sinA - 4 * cosA, 3 * sinA - 2 * cosA]
   },
   function (r) { // 31
-    let [sA, cA] = base.sincos(2 * r.L4)
-    return [-6 * sA - 5 * cA, -4 * sA + 5 * cA, -2 * sA + 2 * cA]
+    let [sinA, cosA] = base.sincos(2 * r.L4)
+    return [-6 * sinA - 5 * cosA, -4 * sinA + 5 * cosA, -2 * sinA + 2 * cosA]
   },
   function (r) { // 32
-    let [sA, cA] = base.sincos(3 * r.L2 - 4 * r.L3)
-    return [-sA - cA, -2 * sA - 7 * cA, sA - 4 * cA]
+    let [sinA, cosA] = base.sincos(3 * r.L2 - 4 * r.L3)
+    return [-sinA - cosA, -2 * sinA - 7 * cosA, sinA - 4 * cosA]
   },
   function (r) { // 33
-    let [sA, cA] = base.sincos(2 * r.L3 - 2 * r.L5)
-    return [4 * sA - 6 * cA, -5 * sA - 4 * cA, -2 * sA - 2 * cA]
+    let [sinA, cosA] = base.sincos(2 * r.L3 - 2 * r.L5)
+    return [4 * sinA - 6 * cosA, -5 * sinA - 4 * cosA, -2 * sinA - 2 * cosA]
   },
   function (r) { // 34
-    let [sA, cA] = base.sincos(3 * r.L2 - 3 * r.L3)
-    return [-7 * cA, -6 * sA, -3 * sA]
+    let [sinA, cosA] = base.sincos(3 * r.L2 - 3 * r.L3)
+    return [-7 * cosA, -6 * sinA, -3 * sinA]
   },
   function (r) { // 35
-    let [sA, cA] = base.sincos(2 * r.L3 - 2 * r.L4)
-    return [5 * sA - 5 * cA, -4 * sA - 5 * cA, -2 * sA - 2 * cA]
+    let [sinA, cosA] = base.sincos(2 * r.L3 - 2 * r.L4)
+    return [5 * sinA - 5 * cosA, -4 * sinA - 5 * cosA, -2 * sinA - 2 * cosA]
   },
   function (r) { // 36
-    let [sA, cA] = base.sincos(r.Lp - 2 * r.D)
-    return [5 * sA, -5 * cA, -2 * cA]
+    let [sinA, cosA] = base.sincos(r.Lp - 2 * r.D)
+    return [5 * sinA, -5 * cosA, -2 * cosA]
   }
 ]
 

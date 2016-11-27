@@ -11,6 +11,8 @@
  * 10°C, and yellow light.
  */
 const sexa = require('./sexagesimal')
+const {sin, tan} = Math
+const D2R = Math.PI / 180
 
 const M = exports
 
@@ -30,7 +32,7 @@ const gt15app2 = new sexa.Angle(false, 0, 0, 0.0824).rad()
  */
 M.gt15True = function (h0) { // (h0 float64)  float64
   // (16.1) p. 105
-  let t = Math.tan(Math.PI / 2 - h0)
+  let t = tan(Math.PI / 2 - h0)
   return gt15true1 * t - gt15true2 * t * t * t
 }
 
@@ -45,7 +47,7 @@ M.gt15True = function (h0) { // (h0 float64)  float64
  */
 M.gt15Apparent = function (h) { // (h float64)  float64
   // (16.2) p. 105
-  let t = Math.tan(Math.PI / 2 - h)
+  let t = tan(Math.PI / 2 - h)
   return gt15app1 * t - gt15app2 * t * t * t
 }
 
@@ -61,11 +63,10 @@ M.gt15Apparent = function (h) { // (h float64)  float64
  */
 M.bennett = function (h0) { // (h0 float64)  float64
   // (16.3) p. 106
-  const cRad = Math.PI / 180
-  const c1 = cRad / 60
-  const c731 = 7.31 * cRad * cRad
-  const c44 = 4.4 * cRad
-  return c1 / Math.tan(h0 + c731 / (h0 + c44))
+  const c1 = D2R / 60
+  const c731 = 7.31 * D2R * D2R
+  const c44 = 4.4 * D2R
+  return c1 / tan(h0 + c731 / (h0 + c44))
 }
 
 /**
@@ -77,13 +78,12 @@ M.bennett = function (h0) { // (h0 float64)  float64
  * Results are accurate to 0.015 arc min.  Result unit is radians.
  */
 M.bennett2 = function (h0) { // (h0 float64)  float64
-  const cRad = Math.PI / 180
-  const cMin = 60 / cRad
+  const cMin = 60 / D2R
   const c06 = 0.06 / cMin
-  const c147 = 14.7 * cMin * cRad
-  const c13 = 13 * cRad
+  const c147 = 14.7 * cMin * D2R
+  const c13 = 13 * D2R
   let R = M.bennett(h0)
-  return R - c06 * Math.sin(c147 * R + c13)
+  return R - c06 * sin(c147 * R + c13)
 }
 
 /**
@@ -99,9 +99,8 @@ M.bennett2 = function (h0) { // (h0 float64)  float64
  */
 M.saemundsson = function (h) { // (h float64)  float64
   // (16.4) p. 106
-  const cRad = Math.PI / 180
-  const c102 = 1.02 * cRad / 60
-  const c103 = 10.3 * cRad * cRad
-  const c511 = 5.11 * cRad
-  return c102 / Math.tan(h + c103 / (h + c511))
+  const c102 = 1.02 * D2R / 60
+  const c103 = 10.3 * D2R * D2R
+  const c511 = 5.11 * D2R
+  return c102 / tan(h + c103 / (h + c511))
 }

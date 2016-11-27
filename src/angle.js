@@ -20,6 +20,7 @@
 
 const base = require('./base')
 const interp = require('./interpolation')
+const {abs, acos, asin, atan2, cos, hypot, sin, sqrt, tan} = Math
 
 const M = exports
 
@@ -34,13 +35,13 @@ const M = exports
  * @return {Number} angular separation between two celestial bodies
  */
 M.sep = function (c1, c2) {
-  let [sd1, cd1] = base.sincos(c1.dec)
-  let [sd2, cd2] = base.sincos(c2.dec)
-  let cd = sd1 * sd2 + cd1 * cd2 * Math.cos(c1.ra - c2.ra) // (17.1) p. 109
+  let [sind1, cosd1] = base.sincos(c1.dec)
+  let [sind2, cosd2] = base.sincos(c2.dec)
+  let cd = sind1 * sind2 + cosd1 * cosd2 * cos(c1.ra - c2.ra) // (17.1) p. 109
   if (cd < base.CosSmallAngle) {
-    return Math.acos(cd)
+    return acos(cd)
   }
-  return Math.hypot((c2.ra - c1.ra) * cd1, c2.dec - c1.dec) // (17.2) p. 109
+  return hypot((c2.ra - c1.ra) * cosd1, c2.dec - c1.dec) // (17.2) p. 109
 }
 
 /**
@@ -95,14 +96,14 @@ M.minSepRect = function (jd1, jd3, cs1, cs2) {
     throw interp.ErrorNot3
   }
   let uv = function (c1, c2) {
-    let [sd1, cd1] = base.sincos(c1.dec)
+    let [sind1, cosd1] = base.sincos(c1.dec)
     let Δr = c2.ra - c1.ra
-    let tΔr = Math.tan(Δr)
-    let thΔr = Math.tan(Δr / 2)
-    let K = 1 / (1 + sd1 * sd1 * tΔr * thΔr)
-    let sΔd = Math.sin(c2.dec - c1.dec)
-    let u = -K * (1 - (sd1 / cd1) * sΔd) * cd1 * tΔr
-    let v = K * (sΔd + sd1 * cd1 * tΔr * thΔr)
+    let tanΔr = tan(Δr)
+    let tanhΔr = tan(Δr / 2)
+    let K = 1 / (1 + sind1 * sind1 * tanΔr * tanhΔr)
+    let sinΔd = sin(c2.dec - c1.dec)
+    let u = -K * (1 - (sind1 / cosd1) * sinΔd) * cosd1 * tanΔr
+    let v = K * (sinΔd + sind1 * cosd1 * tanΔr * tanhΔr)
     return [u, v]
   }
   let us = new Array(3).fill(0)
@@ -125,8 +126,8 @@ M.minSepRect = function (jd1, jd3, cs1, cs2) {
   for (var limit = 0; limit < 10; limit++) {
     u = u3.interpolateN(n)
     v = v3.interpolateN(n)
-    if (Math.abs(dn) < 1e-5) {
-      return Math.hypot(u, v) // success
+    if (abs(dn) < 1e-5) {
+      return hypot(u, v) // success
     }
     let up = up0 + n * up1
     let vp = vp0 + n * vp1
@@ -155,8 +156,8 @@ M.hav = function (a) {
  */
 M.sepHav = function (c1, c2) {
   // using (17.5) p. 115
-  return 2 * Math.asin(Math.sqrt(M.hav(c2.dec - c1.dec) +
-    Math.cos(c1.dec) * Math.cos(c2.dec) * M.hav(c2.ra - c1.ra)))
+  return 2 * asin(sqrt(M.hav(c2.dec - c1.dec) +
+    cos(c1.dec) * cos(c2.dec) * M.hav(c2.ra - c1.ra)))
 }
 
 /**
@@ -177,13 +178,13 @@ M.minSepHav = function (jd1, jd3, cs1, cs2) {
  * @return {Number} angular separation between two celestial bodies
  */
 M.sepPauwels = function (c1, c2) {
-  let [sd1, cd1] = base.sincos(c1.dec)
-  let [sd2, cd2] = base.sincos(c2.dec)
-  let cdr = Math.cos(c2.ra - c1.ra)
-  let x = cd1 * sd2 - sd1 * cd2 * cdr
-  let y = cd2 * Math.sin(c2.ra - c1.ra)
-  let z = sd1 * sd2 + cd1 * cd2 * cdr
-  return Math.atan2(Math.hypot(x, y), z)
+  let [sind1, cosd1] = base.sincos(c1.dec)
+  let [sind2, cosd2] = base.sincos(c2.dec)
+  let cosdr = cos(c2.ra - c1.ra)
+  let x = cosd1 * sind2 - sind1 * cosd2 * cosdr
+  let y = cosd2 * sin(c2.ra - c1.ra)
+  let z = sind1 * sind2 + cosd1 * cosd2 * cosdr
+  return atan2(hypot(x, y), z)
 }
 
 /**
@@ -216,8 +217,8 @@ M.minSepPauwels = function (jd1, jd3, cs1, cs2) {
  * @return {Number} position angle (p)
  */
 M.relativePosition = function (c1, c2) {
-  let [sΔr, cΔr] = base.sincos(c2.ra - c1.ra)
-  let [sd2, cd2] = base.sincos(c2.dec)
-  let p = Math.atan2(sΔr, cd2 * Math.tan(c1.dec) - sd2 * cΔr)
+  let [sinΔr, cosΔr] = base.sincos(c2.ra - c1.ra)
+  let [sind2, cosd2] = base.sincos(c2.dec)
+  let p = atan2(sinΔr, cosd2 * tan(c1.dec) - sind2 * cosΔr)
   return p
 }

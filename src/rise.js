@@ -16,8 +16,18 @@ const interp = require('./interpolation')
 const julian = require('./julian')
 const sexa = require('./sexagesimal')
 const sidereal = require('./sidereal')
+const {acos, asin, cos, sin} = Math
+
+const SECS_PER_DEGREE = 240 // = 86400 / 360
+const SECS_PER_DAY = 86400
+const D2R = Math.PI / 180
 
 const M = exports
+
+const errorAboveHorizon = base.errorCode('always above horizon', -1)
+const errorBelowHorizon = base.errorCode('always below horizon', 1)
+M.errorAboveHorizon = errorAboveHorizon
+M.errorBelowHorizon = errorBelowHorizon
 
 /**
  * mean refraction of the atmosphere
@@ -85,27 +95,17 @@ M.stdh0Lunar = (π, refraction) => {
 M.Stdh0Lunar = M.stdh0Lunar // for backward-compatibility
 
 /**
- * ErrorCircumpolar returned by Times when the object does not rise and
- * set on the day of interest.
- */
-const errorCircumpolar = new Error('Circumpolar')
-
-const SECS_PER_DEGREE = 240 // = 86400 / 360
-const SECS_PER_DAY = 86400
-const D2R = Math.PI / 180
-
-/**
  * @return {number} local angle in radians
  */
 M.hourAngle = function (lat, h0, δ) {
   // approximate local hour angle
-  let [sLat, cLat] = base.sincos(lat)
-  let [sδ, cδ] = base.sincos(δ)
-  let cosH = (Math.sin(h0) - sLat * sδ) / (cLat * cδ) // (15.1) p. 102
-  if (cosH < -1 || cosH > 1) {
-    throw errorCircumpolar
+  let cosH = (sin(h0) - sin(lat) * sin(δ)) / (cos(lat) * cos(δ)) // (15.1) p. 102
+  if (cosH < -1) {
+    throw errorAboveHorizon
+  } else if (cosH > 1) {
+    throw errorBelowHorizon
   }
-  let H = Math.acos(cosH)
+  let H = acos(cosH)
   return H
 }
 
@@ -218,10 +218,8 @@ M.times = function (p, ΔT, h0, Th0, α3, δ3) { // (p globe.Coord, ΔT, h0, Th0
     let th0 = _th0(Th0, m)
     let H = -1 * _mt(p.lon, α, th0)
     let Hrad = (H / SECS_PER_DEGREE) * D2R
-    let [sδ, cδ] = base.sincos(δ)
-    let [sH, cH] = base.sincos(Hrad)
-    let h = Math.asin(((sLat * sδ) + (cLat * cδ * cH))) // formula 13.6
-    let Δm = (SECS_PER_DAY * (h - h0) / (cδ * cLat * sH * 2 * Math.PI)) // formula p103 3
+    let h = asin(((sLat * sin(δ)) + (cLat * cos(δ) * cos(Hrad)))) // formula 13.6
+    let Δm = (SECS_PER_DAY * (h - h0) / (cos(δ) * cLat * sin(Hrad) * 2 * Math.PI)) // formula p103 3
     return m + Δm
   }
 
@@ -272,10 +270,11 @@ class PlanetRise {
   }
 
   times () {
-    let body = new Array(3)
-    body[0] = elliptic.position(this.planet, this.earth, this.jde - 1)
-    body[1] = elliptic.position(this.planet, this.earth, this.jde)
-    body[2] = elliptic.position(this.planet, this.earth, this.jde + 1)
+    let body = [
+      elliptic.position(this.planet, this.earth, this.jde - 1),
+      elliptic.position(this.planet, this.earth, this.jde),
+      elliptic.position(this.planet, this.earth, this.jde + 1)
+    ]
     let Th0 = sidereal.apparent0UT(this.jd)
     let rs = M.times(
       {lat: this.lat, lon: this.lon}, this.ΔT, this.refraction,

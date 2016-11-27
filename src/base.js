@@ -352,3 +352,9 @@ M.round = function (float, precision) {
   precision = precision == undefined ? 14 : precision // eslint-disable-line eqeqeq
   return parseFloat(float.toFixed(precision), 10)
 }
+
+M.errorCode = function (msg, code) {
+  let err = new Error(msg)
+  err.code = code
+  return err
+}

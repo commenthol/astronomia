@@ -10,6 +10,8 @@
 
 const base = require('./base')
 const solar = require('./solar')
+const {abs, cos, sin} = Math
+const D2R = Math.PI / 180
 
 const M = exports
 
@@ -137,13 +139,13 @@ M.december = function (y) {
 function eq (y, c) {
   let J0 = base.horner(y * 0.001, c)
   let T = base.J2000Century(J0)
-  let W = 35999.373 * Math.PI / 180 * T - 2.47 * Math.PI / 180
-  let Δλ = 1 + 0.0334 * Math.cos(W) + 0.0007 * Math.cos(2 * W)
+  let W = 35999.373 * D2R * T - 2.47 * D2R
+  let Δλ = 1 + 0.0334 * cos(W) + 0.0007 * cos(2 * W)
   let S = 0
   let i
   for (i = terms.length - 1; i >= 0; i--) {
     let t = terms[i]
-    S += t.a * Math.cos((t.b + t.c * T) * Math.PI / 180)
+    S += t.a * cos((t.b + t.c * T) * D2R)
   }
   return J0 + 0.00001 * S / Δλ
 }
@@ -253,9 +255,9 @@ function eq2 (year, planet, lon, c) {
 
   for (;;) {
     let a = solar.apparentVSOP87(planet, J0)
-    let c = 58 * Math.sin(lon - a.lon) // (27.1) p. 180
+    let c = 58 * sin(lon - a.lon) // (27.1) p. 180
     J0 += c
-    if (Math.abs(c) < 0.000005) {
+    if (abs(c) < 0.000005) {
       break
     }
   }
