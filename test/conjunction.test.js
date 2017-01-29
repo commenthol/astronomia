@@ -80,7 +80,7 @@ describe('#conjunction', function () {
     // date in TD
     assert.equal(cal.toDate().toISOString(), '1991-08-07T05:42:40.908Z')
     // compute UT = TD - ΔT
-    assert.equal(cal.deltaT(true).toDate().toISOString(), '1991-08-07T05:41:42.904Z')
+    assert.equal(cal.deltaT(true).toDate().toISOString(), '1991-08-07T05:41:42.903Z')
 
     assert.equal(new sexa.Angle(Δδ).toString(0), '2°8′22″')
   })
@@ -150,7 +150,7 @@ describe('#conjunction', function () {
     // date in TD
     assert.equal(cal.toDate().toISOString(), '1996-02-18T06:36:55.352Z')
     // compute UT = TD - ΔT
-    assert.equal(cal.deltaT(true).toDate().toISOString(), '1996-02-18T06:35:53.633Z')
+    assert.equal(cal.deltaT(true).toDate().toISOString(), '1996-02-18T06:35:53.634Z')
 
     assert.equal(new sexa.Angle(dd).toString(0), '0°3′38″')
   })

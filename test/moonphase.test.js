@@ -32,7 +32,7 @@ describe('#moonphase', function () {
       assert.equal(jde.toFixed(5), 2443192.65118)
       assert.equal(julian.JDToDate(jde).toISOString(), '1977-02-18T03:37:42.183Z')
       // Example 10.a p.78
-      assert.equal(julian.JDEToDate(jde).toISOString(), '1977-02-18T03:36:54.536Z')
+      assert.equal(julian.JDEToDate(jde).toISOString(), '1977-02-18T03:36:54.534Z')
     })
 
     it('last', function () {

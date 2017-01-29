@@ -20,23 +20,24 @@ describe('#deltat', function () {
     {date: [1860,  1,  1], exp:    7.350},
     {date: [1900,  1,  1], exp:   -2.700},
     {date: [1940,  1,  1], exp:   24.350},
-    {date: [1973,  1, 31], exp:   43.467},
-    {date: [1973,  2,  1], exp:   43.470},
-    {date: [1977,  2, 18], exp:   47.647}, // Example 10.a, p. 78.
-    {date: [1992,  1,  1], exp:   58.308},
-    {date: [1994,  1,  1], exp:   59.984},
-    {date: [1996,  1,  1], exp:   61.628},
-    {date: [1998,  1,  1], exp:   62.965},
-    {date: [2000,  1,  1], exp:   63.828},
-    {date: [2005,  1,  1], exp:   64.688},
-    {date: [2010,  1,  1], exp:   66.070},
-    {date: [2015,  1,  1], exp:   67.644},
-    {date: [2016,  1,  1], exp:   68.103},
-    {date: [2017,  1,  1], exp:   68.592}, // might change on new deltat data set
-    {date: [2017,  1,  7], exp:   68.600},
-    {date: [2018,  1,  1], exp:   69.200},
-    {date: [2019,  1,  1], exp:   69.800},
-    {date: [2020,  1,  1], exp:   70.000},
+    {date: [1973,  1, 31], exp:   43.4667},
+    {date: [1973,  2,  1], exp:   43.4724},
+    {date: [1973,  3,  1], exp:   43.5648},
+    {date: [1977,  2, 18], exp:   47.6484055}, // 47.647 // Example 10.a, p. 78.
+    {date: [1992,  1,  1], exp:   58.3091688},
+    {date: [1994,  1,  1], exp:   59.9844565},
+    {date: [1996,  1,  1], exp:   61.6286619},
+    {date: [1998,  1,  1], exp:   62.9658714},
+    {date: [2000,  1,  1], exp:   63.8285245},
+    {date: [2005,  1,  1], exp:   64.6876331},
+    {date: [2010,  1,  1], exp:   66.0699234},
+    {date: [2015,  1,  1], exp:   67.6439181},
+    {date: [2016,  1,  1], exp:   68.1024218},
+    {date: [2017,  1,  1], exp:   68.5928165},
+    {date: [2017,  7,  1], exp:   68.8293574}, // might change on new deltat data set
+    {date: [2018,  1,  1], exp:   69.100},
+    {date: [2019,  1,  1], exp:   69.600},
+    {date: [2020,  1,  1], exp:   70.200},
     {date: [2024, 12, 31], exp:   73.000},
     {date: [2025,  1,  1], exp:   73.000},
     {date: [2049, 12, 31], exp:   92.999},
@@ -56,7 +57,8 @@ describe('#deltat', function () {
         it(year + '-' + month + '-' + day, function () {
           var cal = new julian.Calendar(year, month, day)
           var res = deltat.deltaT(cal.toYear())
-          assert.equal(res.toFixed(3), t.exp)
+          var err = Math.abs(t.exp - res)
+          assert.ok(err < 1e-3, 'error is greater 1ms ' + err + ' - expected: ' + res)
         })
       }
     })

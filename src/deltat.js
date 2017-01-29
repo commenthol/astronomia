@@ -34,6 +34,7 @@
 const base = require('./base')
 const interp = require('./interpolation')
 const deltat = require('../data/deltat')
+const {Calendar, LeapYearGregorian} = require('./julian')
 
 const M = exports
 
@@ -63,8 +64,8 @@ M.deltaT = function (dyear) {
     ΔT = base.horner((dyear - 1600), 120, -0.9808, -0.01532, 1 / 7129)
   } else if (dyear < deltat.data.first) {
     ΔT = interpolate(dyear, deltat.historic)
-  } else if (dyear < deltat.data.last) {
-    ΔT = interpolate(dyear, deltat.data)
+  } else if (dyear < deltat.data.last - 0.25) { // -0.25 ~= do not consider last 3 months in dataset
+    ΔT = interpolateData(dyear, deltat.data)
   } else if (dyear < deltat.prediction.last) {
     ΔT = interpolate(dyear, deltat.prediction)
   } else if (dyear < 2050) {
@@ -89,4 +90,51 @@ function interpolate (dyear, data) {
     data.first, data.last, data.table
   )
   return d3.interpolateX(dyear)
+}
+
+/**
+ * interpolation of dataset from finals2000A with is one entry per month
+ * linear interpolation over whole dataset is inaccurate as points per month
+ * are not equidistant. Therefore points are approximated using 2nd diff. interpolation
+ * from current month using the following two points
+ *
+ * @private
+ * @param {Number} dyear - julian year
+ * @returns {Number} ΔT in seconds.
+ */
+function interpolateData (dyear, data) {
+  let [fyear, fmonth] = data.firstYM
+  let {year, month, first, last} = monthOfYear(dyear)
+  let pos = 12 * (year - fyear) + (month - fmonth)
+  let table = data.table.slice(pos, pos + 3)
+  let d3 = new interp.Len3(first, last, table)
+  return d3.interpolateX(dyear)
+}
+
+/**
+* Get month of Year from fraction. Fraction differs at leap years.
+* @private
+* @param {Number} dyear - decimal year
+* @return {Object} `{year: Number, month: Number, first: Number, last}`
+*/
+function monthOfYear (dyear) {
+  if (!monthOfYear.data) { // memoize yearly fractions per month
+    monthOfYear.data = {0: [], 1: []}
+    for (let m = 0; m <= 12; m++) {
+      monthOfYear.data[0][m] = new Calendar(1999, m, 1).toYear() - 1999 // non leap year
+      monthOfYear.data[1][m] = new Calendar(2000, m, 1).toYear() - 2000 // leap year
+    }
+  }
+  let year = dyear | 0
+  let f = dyear - year
+  let d = LeapYearGregorian(year) ? 1 : 0
+  let data = monthOfYear.data[d]
+
+  let month = 12 // TODO loop could be improved
+  while (month > 0 && data[month] > f) {
+    month--
+  }
+  let first = year + data[month]
+  let last = month < 11 ? year + data[month + 2] : year + 1 + data[(month + 2) % 12]
+  return {year, month, first, last}
 }

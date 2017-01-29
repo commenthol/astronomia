@@ -19,7 +19,7 @@ describe('#apsis', function () {
     var j = apsis.apogee(1988.75)
     assert.equal(j.toFixed(4), 2447442.3543) // JDE
     var date = julian.JDEToDate(j)
-    assert.equal(date.toISOString(), '1988-10-07T20:29:15.382Z')
+    assert.equal(date.toISOString(), '1988-10-07T20:29:15.380Z')
   })
 
   it('apogeeParallax', function () {
