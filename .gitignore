@@ -2,9 +2,7 @@ node_modules/
 coverage/
 output/
 attic/
-lib/
 tmp/
 *.log
 *.tgz
 .nyc_output
-
