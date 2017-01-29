@@ -179,7 +179,7 @@ describe('#julian', function () {
         var d = new Date('1977-02-18T03:37:40Z') // is in fact a jde
         var jde = julian.DateToJD(d)
         var res = julian.JDEToDate(jde)
-        assert.equal(res.toISOString(), '1977-02-18T03:36:52.353Z')
+        assert.equal(res.toISOString(), '1977-02-18T03:36:52.351Z')
       })
     })
   })
@@ -258,6 +258,26 @@ describe('#julian', function () {
       it('1977-12-31', function () {
         var res = new julian.CalendarGregorian(1977, 12, 31.999).toYear()
         assert.equal(res, 1977.999997260274)
+      })
+    })
+
+    describe('CalendarGregorian.fromYear', function () {
+      it('1977-02-14', function () {
+        var res = new julian.CalendarGregorian().fromYear(1977.12055)
+        assert.deepEqual(res.getDate(), {year: 1977, month: 2, day: 14})
+      })
+      it('1977-01-01', function () {
+        var res = new julian.CalendarGregorian().fromYear(1977.0)
+        assert.deepEqual(res.getDate(), {year: 1977, month: 1, day: 1})
+      })
+      it('1977-12-31', function () {
+        var res = new julian.CalendarGregorian().fromYear(1977.999997260274)
+        assert.deepEqual(res.getDate(), {year: 1977, month: 12, day: 31})
+      })
+      it('1977-02-01', function () {
+        var y = new julian.CalendarGregorian(1977, 2, 1).toYear(y)
+        var res = new julian.CalendarGregorian().fromYear(y)
+        assert.deepEqual(res.getDate(), {year: 1977, month: 2, day: 1})
       })
     })
 

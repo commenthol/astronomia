@@ -119,6 +119,24 @@ class Calendar {
     return decYear
   }
 
+  /**
+   * converts a decimal year to a calendar date
+   * @param {number} decimal year
+   */
+  fromYear (year) {
+    let [y, f] = base.modf(year)
+    this.year = y
+    let days = this.isLeapYear() ? 366 : 365
+    let dayOfYear = base.round(f * days, 5)
+    let m = 12
+    while (m > 0 && DAYS_OF_YEAR[m] > dayOfYear) {
+      m--
+    }
+    this.month = m
+    this.day = 1 + dayOfYear - DAYS_OF_YEAR[this.month]
+    return this
+  }
+
   isLeapYear () {
     if (this.isGregorian()) {
       return M.LeapYearGregorian(this.year)
