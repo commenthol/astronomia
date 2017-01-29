@@ -8,7 +8,6 @@
 const fs = require('fs')
 const path = require('path')
 const serialize = require('serialize-to-js').serializeToModule
-const base = require('..').base
 const julian = require('..').julian
 
 const attic = path.resolve(__dirname, '../attic')
@@ -40,29 +39,6 @@ DataSet.prototype = {
     if (this.data[year]) {
       return this.data[year][month]
     }
-  },
-  toData: function () {
-    var data = {table: []}
-    var year
-    var month
-
-    data.first = toYear(this.first.year, this.first.month)
-    data.last = toYear(this.last.year, this.last.month)
-
-    year = this.first.year
-    for (month = this.first.month; month <= 12; month++) {
-      data.table.push(this.get(year, month))
-    }
-    for (year += 1; year < this.last.year; year++) {
-      for (month = 1; month <= 12; month++) {
-        data.table.push(this.get(year, month))
-      }
-    }
-    year = this.last.year
-    for (month = 1; month <= this.last.month; month++) {
-      data.table.push(this.get(year, month))
-    }
-    return data
   },
   _add: function (year, month, obj) {
     if (!this.data[year]) this.data[year] = {}
@@ -207,6 +183,38 @@ Object.assign(Data.prototype, DataSet.prototype, {
     }
 
     return this
+  },
+  toData: function () {
+    var _this = this
+    var data = {table: []}
+    var year
+    var month
+
+    data.first = toYear(this.first.year, this.first.month)
+    data.firstYM = [this.first.year, this.first.month]
+    data.last = toYear(this.last.year, this.last.month)
+    data.lastYM = [this.last.year, this.last.month]
+
+    function push (year, month) {
+      var dt = _this.get(year, month)
+      data.table.push(dt)
+      console.log([year, month, dt].join('\t'))
+    }
+
+    year = this.first.year
+    for (month = this.first.month; month <= 12; month++) {
+      push(year, month)
+    }
+    for (year += 1; year < this.last.year; year++) {
+      for (month = 1; month <= 12; month++) {
+        push(year, month)
+      }
+    }
+    year = this.last.year
+    for (month = 1; month <= this.last.month; month++) {
+      push(year, month)
+    }
+    return data
   }
 })
 
@@ -269,9 +277,7 @@ function toFloat (num) {
 }
 
 function toYear (year, month) {
-  return base.JDEToJulianYear(
-    julian.CalendarGregorianToJD(year, month, 1)
-  )
+  return new julian.CalendarGregorian(year, month, 1).toYear()
 }
 
 module.exports = {
