@@ -34,7 +34,6 @@
 const base = require('./base')
 const interp = require('./interpolation')
 const deltat = require('../data/deltat')
-const {Calendar, LeapYearGregorian} = require('./julian')
 
 const M = exports
 
@@ -118,6 +117,7 @@ function interpolateData (dyear, data) {
 * @return {Object} `{year: Number, month: Number, first: Number, last}`
 */
 function monthOfYear (dyear) {
+  const {Calendar, LeapYearGregorian} = require('./julian') // need to include this here due to cyclic require
   if (!monthOfYear.data) { // memoize yearly fractions per month
     monthOfYear.data = {0: [], 1: []}
     for (let m = 0; m <= 12; m++) {
