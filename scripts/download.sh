@@ -50,7 +50,7 @@ EOS
 
 ## convert DeltaT data
 function deltat_conv () {
-  node $cwd/deltat.js
+  node $cwd/deltat.js > $target/deltat.txt
 }
 
 function help () {

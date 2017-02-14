@@ -38,7 +38,7 @@
     "eslint-plugin-standard": "^2",
     "nyc": "^10.1.2",
     "rimraf": "^2.5.4",
-    "serialize-to-js": "^0.5.0"
+    "serialize-to-js": "^1.0.0"
   },
   "repository": {
     "type": "git",
