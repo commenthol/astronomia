@@ -76,12 +76,19 @@ class Angle {
   }
 
   /**
+  * toDMS converts to parsed sexagesimal angle component.
+  */
+  toDMS () {
+    return M.degToDMS(this.deg())
+  }
+
+  /**
    * Print angle in degree using `d°m´s.ss″`
    * @param {Number} precision - precision of `s.ss`
    * @returns {String}
    */
   toString (precision) {
-    var [neg, d, m, s] = M.degToDMS(this.deg())
+    var [neg, d, m, s] = this.toDMS()
     s = round(s, precision).toString().replace(/^0\./, '.')
     var str = (neg ? '-' : '') +
       (d + '°') +
@@ -156,7 +163,7 @@ class HourAngle extends Angle {
    * @returns {String}
    */
   toString (precision) {
-    var [neg, h, m, s] = M.degToDMS(this.deg())
+    var [neg, h, m, s] = this.toDMS()
     s = round(s, precision).toString().replace(/^0\./, '.')
     var str = (neg ? '-' : '') +
       (h + 'ʰ') +
