@@ -275,7 +275,7 @@ describe('#julian', function () {
         assert.deepEqual(res.getDate(), {year: 1977, month: 12, day: 31})
       })
       it('1977-02-01', function () {
-        var y = new julian.CalendarGregorian(1977, 2, 1).toYear(y)
+        var y = new julian.CalendarGregorian(1977, 2, 1).toYear()
         var res = new julian.CalendarGregorian().fromYear(y)
         assert.deepEqual(res.getDate(), {year: 1977, month: 2, day: 1})
       })

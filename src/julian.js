@@ -425,8 +425,8 @@ M.isJDCalendarGregorian = function (jd) {
  */
 M.isCalendarGregorian = function (year, month = 1, day = 1) {
   return (year > 1582 ||
-    year === 1582 && month > 10 ||
-    year === 1582 && month === 10 && day >= 15
+    (year === 1582 && month > 10) ||
+    (year === 1582 && month === 10 && day >= 15)
   )
 }
 

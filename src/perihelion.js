@@ -1,3 +1,4 @@
+/* eslint standard/no-callback-literal:0 */
 /**
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
@@ -173,7 +174,6 @@ const ap2 = function (p, y, d, v, a, f, cb) {
           return
         }
         cb([j2, r2])
-        return
       })
     })
   } else {
@@ -212,7 +212,7 @@ const ap2a = function (j1, d, a, v, cb) {
         return true
       }
     }
-    if (rr[0] < rr[2] === a) {
+    if ((rr[0] < rr[2]) === a) {
       j0 = j1
       j1 = j2
       j2 += d

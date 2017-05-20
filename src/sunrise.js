@@ -102,8 +102,8 @@ class Sunrise {
       let step = (isSet ? -1 : 1)
       let doy = this.date.dayOfYear()
       if ( // overlap with march, september equinoxes
-        this.lat > 0 && (doy > 76 && doy < 267) ||  // northern hemisphere
-        this.lat < 0 && (doy < 83 || doy > 262)     // southern hemisphere
+        (this.lat > 0 && (doy > 76 && doy < 267)) ||  // northern hemisphere
+        (this.lat < 0 && (doy < 83 || doy > 262))     // southern hemisphere
       ) {
         step = -step
       }
