@@ -33,7 +33,9 @@ const sexa = require('./sexagesimal')
 
 const M = exports
 
-/** Ecliptic coordinates are referenced to the plane of the ecliptic. */
+/**
+* Ecliptic coordinates are referenced to the plane of the ecliptic.
+*/
 class Ecliptic {
   /**
    * IMPORTANT: Longitudes are measured *positively* westwards
@@ -131,15 +133,15 @@ class Equatorial {
    * @returns {Galactic}
    */
   toGalactic () {
-    let [sdα, cdα] = base.sincos(galacticNorth.ra - this.ra)
-    let [sgδ, cgδ] = base.sincos(galacticNorth.dec)
+    let [sdα, cdα] = base.sincos(galacticNorth1950.ra - this.ra)
+    let [sgδ, cgδ] = base.sincos(galacticNorth1950.dec)
     let [sδ, cδ] = base.sincos(this.dec)
     let x = Math.atan2(sdα, cdα * sgδ - (sδ / cδ) * cgδ) // (13.7) p. 94
-    let lon = (Math.PI + galacticLon0 - x) % (2 * Math.PI) // (13.8) p. 94
+    // (galactic0Lon1950 + 1.5*math.Pi) = magic number of 303 deg
+    let lon = (galactic0Lon1950 + 1.5 * Math.PI - x) % (2 * Math.PI) // (13.8) p. 94
     let lat = Math.asin(sδ * sgδ + cδ * cgδ * cdα)
     return new Galactic(lon, lat)
   }
-
 }
 M.Equatorial = Equatorial
 
@@ -169,7 +171,7 @@ class Horizontal {
     let [sh, ch] = base.sincos(this.alt)
     let [sφ, cφ] = base.sincos(g.lat)
     let H = Math.atan2(sA, cA * sφ + sh / ch * cφ)
-    let ra = base.pmod(sexa.Time(st).rad() - g.lon - H, 2 * Math.PI)
+    let ra = base.pmod(new sexa.Time(st).rad() - g.lon - H, 2 * Math.PI)
     let dec = Math.asin(sφ * sh - cφ * ch * cA)
     return new Equatorial(ra, dec)
   }
@@ -197,11 +199,13 @@ class Galactic {
    * @returns {Equatorial} (right ascension, declination)
    */
   toEquatorial () {
-    var [sdLon, cdLon] = base.sincos(this.lon - galacticLon0)
-    var [sgδ, cgδ] = base.sincos(galacticNorth.dec)
+    // (-galactic0Lon1950 - math.Pi/2) = magic number of -123 deg
+    var [sdLon, cdLon] = base.sincos(this.lon - galactic0Lon1950 - Math.PI / 2)
+    var [sgδ, cgδ] = base.sincos(galacticNorth1950.dec)
     var [sb, cb] = base.sincos(this.lat)
     var y = Math.atan2(sdLon, cdLon * sgδ - (sb / cb) * cgδ)
-    var ra = base.pmod(y + galacticNorth.ra, 2 * Math.PI)
+    // (galacticNorth1950.RA.Rad() - math.Pi) = magic number of 12.25 deg
+    var ra = base.pmod(y + galacticNorth1950.ra - Math.PI, 2 * Math.PI)
     var dec = Math.asin(sb * sgδ + cb * cgδ * cdLon)
     return new Equatorial(ra, dec)
   }
@@ -209,20 +213,18 @@ class Galactic {
 M.Galactic = Galactic
 
 /**
- * GalToEq converts galactic coordinates to equatorial coordinates.
- *
- * Resulting equatorial coordinates will be referred to the standard equinox of
- * B1950.0.  For subsequent conversion to other epochs, see package precess and
- * utility functions in package meeus.
- * @param {Galactic} g
- * @returns {Equatorial}
- */
-
-/** equatorial coords for galactic north */
-var galacticNorth = M.galacticNorth = new Equatorial(
+* equatorial coords for galactic north
+* IAU B1950.0 coordinates of galactic North Pole
+*/
+const galacticNorth1950 = M.galacticNorth1950 = M.galacticNorth = new Equatorial(
   new sexa.RA(12, 49, 0).rad(),
   27.4 * Math.PI / 180
 )
 
-/** Galactic Longitude 0° */
-var galacticLon0 = M.galacticLon0 = 123 * Math.PI / 180
+/**
+* Galactic Longitude 0°
+* Meeus gives 33 as the origin of galactic longitudes relative to the
+* ascending node of of the galactic equator.  33 + 90 = 123, the IAU
+* value for origin relative to the equatorial pole.
+*/
+const galactic0Lon1950 = M.galactic0Lon1950 = M.galacticLon0 = 33 * Math.PI / 180
