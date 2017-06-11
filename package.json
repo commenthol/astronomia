@@ -2,66 +2,31 @@
   "name": "astronomia",
   "version": "1.3.4",
   "description": "An astronomical library",
+  "keywords": [
+    "astronomy",
+    "julian",
+    "meeus",
+    "planetposition"
+  ],
+  "homepage": "https://github.com/commenthol/astronomia",
+  "bugs": {
+    "url": "https://github.com/commenthol/astronomia"
+  },
+  "license": "MIT",
+  "author": "commenthol <commenthol@gmail.com>",
   "main": "lib",
   "jsnext:main": "src",
-  "scripts": {
-    "dist": "npm run clean && npm run lint && npm run transpile && npm run test",
-    "test": "mocha -R dot",
-    "cover": "nyc npm test && nyc report --reporter=html",
-    "lint": "eslint '**/*.js'",
-    "transpile": "babel -d lib src",
-    "clean": "rimraf doc coverage .nyc_output"
-  },
-  "author": "commenthol <commenthol@gmail.com>",
-  "maintainers": "commenthol <commenthol@gmail.com>",
-  "license": "MIT",
-  "engines": {
-    "node": ">=0.12"
-  },
-  "dependencies": {
-    "lodash.padstart": "^4.6.1"
-  },
-  "devDependencies": {
-    "babel-core": "^6",
-    "babel-polyfill": "^6",
-    "babel-preset-es2015": "^6",
-    "babel-preset-stage-0": "^6",
-    "babel-preset-stage-1": "^6",
-    "babel-preset-stage-2": "^6",
-    "mocha": "^3"
-  },
-  "optionalDependencies": {
-    "babel-cli": "^6",
-    "eslint": "^3",
-    "eslint-config-standard": "^10",
-    "eslint-plugin-promise": "^3",
-    "eslint-plugin-standard": "^3",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-node": "^4.2.2",
-    "nyc": "^10.3.2",
-    "rimraf": "^2.6.1",
-    "serialize-to-js": "^1.1.1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/commenthol/astronomia.git"
   },
-  "bugs": {
-    "url": "https://github.com/commenthol/astronomia"
-  },
-  "homepage": "https://github.com/commenthol/astronomia",
-  "keywords": [
-    "astronomy",
-    "meeus",
-    "julian",
-    "planetposition"
-  ],
-  "eslintConfig": {
-    "extends": "standard",
-    "plugins": [
-      "standard"
-    ],
-    "rules": {}
+  "scripts": {
+    "clean": "rimraf lib doc coverage .nyc_output",
+    "cover": "nyc npm test && nyc report --reporter=html",
+    "dist": "npm run clean && npm run lint && npm run transpile && npm run test",
+    "lint": "eslint '**/*.js'",
+    "test": "mocha -R dot",
+    "transpile": "babel -d lib src"
   },
   "babel": {
     "presets": [
@@ -70,5 +35,38 @@
       "stage-1",
       "stage-2"
     ]
-  }
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "plugins": [
+      "standard"
+    ]
+  },
+  "dependencies": {
+    "lodash.padstart": "^4.6.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-polyfill": "^6",
+    "babel-preset-es2015": "^6",
+    "babel-preset-stage-0": "^6",
+    "babel-preset-stage-1": "^6",
+    "babel-preset-stage-2": "^6",
+    "mocha": "^3.4.2"
+  },
+  "optionalDependencies": {
+    "eslint": "^3",
+    "eslint-config-standard": "^10",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-promise": "^3",
+    "eslint-plugin-standard": "^3",
+    "nyc": "^11.0.2",
+    "rimraf": "^2.6.1",
+    "serialize-to-js": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=0.12"
+  },
+  "maintainers": "commenthol <commenthol@gmail.com>"
 }
