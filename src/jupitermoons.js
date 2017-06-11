@@ -24,6 +24,8 @@ const k = [17295, 21819, 27558, 36548]
 
 /**
  * XY used for returning coordinates of moons.
+ * @param {number} x - in units of Jupiter radii
+ * @param {number} y - in units of Jupiter radii
  */
 function XY (x, y) {
   this.x = x
@@ -92,7 +94,7 @@ M.positions = function (jde) {
 /**
  * Positions computes positions of moons of Jupiter.
  *
- * High accuracy method based on theory "E5."  Results returned in
+ * High accuracy method based on theory "E5"  Results returned in
  * argument pos, which must not be undefined.  Returned coordinates in units
  * of Jupiter radii.
  *
@@ -102,17 +104,7 @@ M.positions = function (jde) {
  * @param {Array} [pos] - reference to array of positions (same as return value)
  * @return {Array} x, y - coordinates of the 4 Satellites of jupiter
  */
-M.e5 = function (jde, earth, jupiter, pos) { // (jde float64, earth, jupiter *pp.V87Planet, pos *[4]XY)
-  // I'll interject that I don't trust the results of this function.
-  // There is obviously a great chance of typographic errors.
-  // My Y results for the test case of the example don't agree with
-  // Meeus's well at all, but do agree with the results from the less
-  // accurate method.  This would seem to indicate a typo in Meeus's
-  // computer implementation.  On the other hand, while my X results
-  // agree reasonably well with his, our X results for satellite III
-  // don't agree well with the result from the less accurate method,
-  // perhaps indicating a typo in the presented algorithm.
-
+M.e5 = function (jde, earth, jupiter, pos) {
   pos = pos || new Array(4)
 
   // variables assigned in following block
@@ -332,41 +324,41 @@ M.e5 = function (jde, earth, jupiter, pos) { // (jde float64, earth, jupiter *pp
   ;(function () {
     let L = [L1, L2, L3, L4]
     let B = [
-      Math.atan(0.0006393 * p * Math.sin(L1 - ω1) +
-        0.0001825 * p * Math.sin(L1 - ω2) +
-        0.0000329 * p * Math.sin(L1 - ω3) +
-        -0.0000311 * p * Math.sin(L1 - ψ) +
-        0.0000093 * p * Math.sin(L1 - ω4) +
-        0.0000075 * p * Math.sin(3 * L1 - 4 * l2 - 1.9927 * Σ1 + ω2) +
-        0.0000046 * p * Math.sin(L1 + ψ - 2 * Π - 2 * G)),
-      Math.atan(0.0081004 * p * Math.sin(L2 - ω2) +
-        0.0004512 * p * Math.sin(L2 - ω3) +
-        -0.0003284 * p * Math.sin(L2 - ψ) +
-        0.0001160 * p * Math.sin(L2 - ω4) +
-        0.0000272 * p * Math.sin(l1 - 2 * l3 + 1.0146 * Σ2 + ω2) +
-        -0.0000144 * p * Math.sin(L2 - ω1) +
-        0.0000143 * p * Math.sin(L2 + ψ - 2 * Π - 2 * G) +
-        0.0000035 * p * Math.sin(L2 - ψ + G) +
-        -0.0000028 * p * Math.sin(l1 - 2 * l3 + 1.0146 * Σ2 + ω3)),
-      Math.atan(0.0032402 * p * Math.sin(L3 - ω3) +
-        -0.0016911 * p * Math.sin(L3 - ψ) +
-        0.0006847 * p * Math.sin(L3 - ω4) +
-        -0.0002797 * p * Math.sin(L3 - ω2) +
-        0.0000321 * p * Math.sin(L3 + ψ - 2 * Π - 2 * G) +
-        0.0000051 * p * Math.sin(L3 - ψ + G) +
-        -0.0000045 * p * Math.sin(L3 - ψ - G) +
-        -0.0000045 * p * Math.sin(L3 + ψ - 2 * Π) +
-        0.0000037 * p * Math.sin(L3 + ψ - 2 * Π - 3 * G) +
-        0.000003 * p * Math.sin(2 * l2 - 3 * L3 + 4.03 * Σ3 + ω2) +
-        -0.0000021 * p * Math.sin(2 * l2 - 3 * L3 + 4.03 * Σ3 + ω3)),
-      Math.atan(-0.0076579 * p * Math.sin(L4 - ψ) +
-        0.0044134 * p * Math.sin(L4 - ω4) +
-        -0.0005112 * p * Math.sin(L4 - ω3) +
-        0.0000773 * p * Math.sin(L4 + ψ - 2 * Π - 2 * G) +
-        0.0000104 * p * Math.sin(L4 - ψ + G) +
-        -0.0000102 * p * Math.sin(L4 - ψ - G) +
-        0.0000088 * p * Math.sin(L4 + ψ - 2 * Π - 3 * G) +
-        -0.0000038 * p * Math.sin(L4 + ψ - 2 * Π - G))
+      Math.atan(0.0006393 * Math.sin(L1 - ω1) +
+        0.0001825 * Math.sin(L1 - ω2) +
+        0.0000329 * Math.sin(L1 - ω3) +
+        -0.0000311 * Math.sin(L1 - ψ) +
+        0.0000093 * Math.sin(L1 - ω4) +
+        0.0000075 * Math.sin(3 * L1 - 4 * l2 - 1.9927 * Σ1 + ω2) +
+        0.0000046 * Math.sin(L1 + ψ - 2 * Π - 2 * G)),
+      Math.atan(0.0081004 * Math.sin(L2 - ω2) +
+        0.0004512 * Math.sin(L2 - ω3) +
+        -0.0003284 * Math.sin(L2 - ψ) +
+        0.0001160 * Math.sin(L2 - ω4) +
+        0.0000272 * Math.sin(l1 - 2 * l3 + 1.0146 * Σ2 + ω2) +
+        -0.0000144 * Math.sin(L2 - ω1) +
+        0.0000143 * Math.sin(L2 + ψ - 2 * Π - 2 * G) +
+        0.0000035 * Math.sin(L2 - ψ + G) +
+        -0.0000028 * Math.sin(l1 - 2 * l3 + 1.0146 * Σ2 + ω3)),
+      Math.atan(0.0032402 * Math.sin(L3 - ω3) +
+        -0.0016911 * Math.sin(L3 - ψ) +
+        0.0006847 * Math.sin(L3 - ω4) +
+        -0.0002797 * Math.sin(L3 - ω2) +
+        0.0000321 * Math.sin(L3 + ψ - 2 * Π - 2 * G) +
+        0.0000051 * Math.sin(L3 - ψ + G) +
+        -0.0000045 * Math.sin(L3 - ψ - G) +
+        -0.0000045 * Math.sin(L3 + ψ - 2 * Π) +
+        0.0000037 * Math.sin(L3 + ψ - 2 * Π - 3 * G) +
+        0.000003 * Math.sin(2 * l2 - 3 * L3 + 4.03 * Σ3 + ω2) +
+        -0.0000021 * Math.sin(2 * l2 - 3 * L3 + 4.03 * Σ3 + ω3)),
+      Math.atan(-0.0076579 * Math.sin(L4 - ψ) +
+        0.0044134 * Math.sin(L4 - ω4) +
+        -0.0005112 * Math.sin(L4 - ω3) +
+        0.0000773 * Math.sin(L4 + ψ - 2 * Π - 2 * G) +
+        0.0000104 * Math.sin(L4 - ψ + G) +
+        -0.0000102 * Math.sin(L4 - ψ - G) +
+        0.0000088 * Math.sin(L4 + ψ - 2 * Π - 3 * G) +
+        -0.0000038 * Math.sin(L4 + ψ - 2 * Π - G))
     ]
     R = [
       5.90569 * (1 +
