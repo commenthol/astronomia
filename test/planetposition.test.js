@@ -44,4 +44,18 @@ describe('#planetposition', function () {
       assert.equal(res.range, 0.7246016739689574)
     })
   })
+
+  describe('toFK5', function () {
+    it('Venus at 1992-12-20', function () {
+      // Meeus provides no worked example for the FK5 conversion given by
+      // formula 32.3, p. 219.  This at least displays the result when applied
+      // to the position of Example 32.a on that page.
+      var jd = julian.CalendarGregorianToJD(1992, 12, 20)
+      var planet = new planetposition.Planet(venusData)
+      var pos = planet.position(jd)
+      var fk5 = planetposition.toFK5(pos.lon, pos.lat, jd)
+      assert.equal(new sexa.Angle(fk5.lon).toDegString(5), '26°.11409')
+      assert.equal(new sexa.Angle(fk5.lat).toDegString(5), '-2°.6206')
+    })
+  })
 })

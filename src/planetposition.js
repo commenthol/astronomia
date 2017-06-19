@@ -25,6 +25,7 @@
  */
 
 const base = require('./base')
+const sexa = require('./sexagesimal')
 const coord = require('./coord')
 const precess = require('./precess')
 
@@ -128,8 +129,8 @@ M.Planet = Planet
 /**
  * ToFK5 converts ecliptic longitude and latitude from dynamical frame to FK5.
  *
- * @param {Number} lon - ecliptic longitude
- * @param {Number} lat - ecliptic latitude
+ * @param {Number} lon - ecliptic longitude in radians
+ * @param {Number} lat - ecliptic latitude in radians
  * @param {Number} jde - Julian ephemeris day
  * @return {base.Coord}
  *    {Number} lon - FK5 longitude
@@ -138,11 +139,11 @@ M.Planet = Planet
 M.toFK5 = function (lon, lat, jde) {
   // formula 32.3, p. 219.
   let T = base.J2000Century(jde)
-  let Lp = lon - 1.397 * Math.PI / 180 * T - 0.00031 * Math.PI / 180 * T * T
+  // let Lp = lon - 1.397 * Math.PI / 180 * T - 0.00031 * Math.PI / 180 * T * T
+  let Lp = lon - sexa.angleFromDeg((1.397 + 0.00031 * T) * T)
   let [sLp, cLp] = base.sincos(Lp)
   // (32.3) p. 219
-  let L5 = lon + -0.09033 / 3600 * Math.PI / 180 +
-    0.03916 / 3600 * Math.PI / 180 * (cLp + sLp) * Math.tan(lat)
-  let B5 = lat + 0.03916 / 3600 * Math.PI / 180 * (cLp - sLp)
+  let L5 = lon + sexa.angleFromSec(-0.09033 + 0.03916 * (cLp + sLp) * Math.tan(lat))
+  let B5 = lat + sexa.angleFromSec(0.03916 * (cLp - sLp))
   return new base.Coord(L5, B5)
 }

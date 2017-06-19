@@ -16,9 +16,6 @@ const solar = require('./solar')
 const julian = require('./julian')
 const rise = require('./rise')
 
-const R2D = 180 / Math.PI
-const D2R = Math.PI / 180
-
 const stdh0 = {
   sunrise:          new sexa.Angle(true, 0, 50, 0).rad(),
   sunriseEnd:       new sexa.Angle(true, 0, 18, 0).rad(),
@@ -47,24 +44,24 @@ class Sunrise {
   constructor (date, lat, lon, refraction) {
     this.date = date
     this.jde = date.midnight().toJDE()
-    this.lat = lat * D2R
-    this.lon = lon * D2R
+    this.lat = sexa.angleFromDeg(lat)
+    this.lon = sexa.angleFromDeg(lon)
     this.refraction = refraction
   }
 
   _calcNoon (jde) {
-    let etime = eqtime.eSmart(jde) * R2D * 240 // in seconds
-    let delta = this.lon * R2D * 240 // in seconds
+    let etime = sexa.secFromHourAngle(eqtime.eSmart(jde))
+    let delta = sexa.secFromHourAngle(this.lon)
     let time = 43200 /* noon */ + delta - etime // in seconds
     return base.pmod(time / 86400, 86400)
   }
 
   _calcRiseOrSet (jde, h0, isSet) {
-    let etime = eqtime.eSmart(jde) * R2D * 240 // in seconds
+    let etime = sexa.secFromHourAngle(eqtime.eSmart(jde))
     let solarDec = solar.apparentEquatorial(jde).dec
     let ha = rise.hourAngle(this.lat, h0, solarDec)
     if (isSet) ha = -ha
-    let delta = (ha - this.lon) * R2D * 240 // in seconds
+    let delta = sexa.secFromHourAngle(ha - this.lon)
     let time = 43200 /* noon */ - delta - etime // in seconds
     return time / 86400
   }

@@ -343,6 +343,14 @@ class Time {
 }
 M.Time = Time
 
+// units
+M.angleFromDeg = (deg) => deg * Math.PI / 180
+M.angleFromMin = (min) => min / 60 * Math.PI / 180
+M.angleFromSec = (sec) => sec / 3600 * Math.PI / 180
+M.degFromAngle = (angle) => angle * 180 / Math.PI
+M.secFromAngle = (angle) => angle * 3600 * 180 / Math.PI
+M.secFromHourAngle = (ha) => ha * 240 * 180 / Math.PI
+
 /**
  * separate fix `i` from fraction `f`
  * @private
