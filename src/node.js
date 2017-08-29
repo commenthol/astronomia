@@ -36,8 +36,8 @@ M.ellipticDescending = function (axis, ecc, argP, timeP) { // (axis, ecc, argP, 
   return M.el(Math.PI - argP, axis, ecc, timeP)
 }
 
-M.el = function (ν, axis, ecc, timeP) { // (ν, axis, ecc, timeP float64)  (jde, r float64)
-  let E = 2 * Math.atan(Math.sqrt((1 - ecc) / (1 + ecc)) * Math.tan(ν * 0.5))
+M.el = function (gn, axis, ecc, timeP) { // (gn, axis, ecc, timeP float64)  (jde, r float64)
+  let E = 2 * Math.atan(Math.sqrt((1 - ecc) / (1 + ecc)) * Math.tan(gn * 0.5))
   let [sE, cE] = base.sincos(E)
   let M = E - ecc * sE
   let n = base.K / axis / Math.sqrt(axis)
@@ -70,8 +70,8 @@ M.parabolicDescending = function (q, argP, timeP) { // (q, argP, timeP float64) 
   return M.pa(Math.PI - argP, q, timeP)
 }
 
-M.pa = function (ν, q, timeP) { // (ν, q, timeP float64)  (jde, r float64)
-  let s = Math.tan(ν * 0.5)
+M.pa = function (gn, q, timeP) { // (gn, q, timeP float64)  (jde, r float64)
+  let s = Math.tan(gn * 0.5)
   let jde = timeP + 27.403895 * s * (s * s + 3) * q * Math.sqrt(q)
   let r = q * (1 + s * s)
   return [jde, r]

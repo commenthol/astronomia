@@ -13,7 +13,7 @@
  * full VSOP87 as implemented in package planetposition.
  *
  * 2. Higher accuracy correction for aberration (using the formula for
- * variation Δλ on p. 168) is not implemented.  Results for example 25.b
+ * variation gDgl on p. 168) is not implemented.  Results for example 25.b
  * already match the full VSOP87 values on p. 165 even with the low accuracy
  * correction for aberration, thus there are no more significant digits that
  * would check a more accurate result.  Also the size of the formula presents
@@ -52,7 +52,7 @@ M.true = function (T) {
  * meanAnomaly returns the mean anomaly of Earth at the given T.
  *
  * @param {Number} T - number of Julian centuries since J2000. See base.J2000Century.
- * @returns {Number} Result is in radians and is not normalized to the range 0..2π.
+ * @returns {Number} Result is in radians and is not normalized to the range 0..2gp.
  */
 M.meanAnomaly = function (T) {
   // (25.3) p. 163
@@ -91,9 +91,9 @@ M.radius = function (T) {
  * @returns {Number} apparent longitude of the Sun referenced to the true equinox of date.
  */
 M.apparentLongitude = function (T) {
-  let Ω = node(T)
+  let gw = node(T)
   let {lon, ano} = M.true(T) // eslint-disable-line
-  return lon - 0.00569 * Math.PI / 180 - 0.00478 * Math.PI / 180 * Math.sin(Ω)
+  return lon - 0.00569 * Math.PI / 180 - 0.00478 * Math.PI / 180 * Math.sin(gw)
 }
 
 /**
@@ -128,12 +128,12 @@ M.true2000 = function (T) {
  */
 M.trueEquatorial = function (jde) {
   let {lon, ano} = M.true(base.J2000Century(jde)) // eslint-disable-line
-  let ε = nutation.meanObliquity(jde)
+  let ge = nutation.meanObliquity(jde)
   let [ss, cs] = base.sincos(lon)
-  let [sε, cε] = base.sincos(ε)
+  let [sge, cge] = base.sincos(ge)
   // (25.6, 25.7) p. 165
-  let ra = Math.atan2(cε * ss, cs)
-  let dec = sε * ss
+  let ra = Math.atan2(cge * ss, cs)
+  let dec = sge * ss
   return new base.Coord(ra, dec)
 }
 
@@ -147,13 +147,13 @@ M.trueEquatorial = function (jde) {
  */
 M.apparentEquatorial = function (jde) {
   let T = base.J2000Century(jde)
-  let λ = M.apparentLongitude(T)
-  let ε = nutation.meanObliquity(jde)
-  let [sλ, cλ] = base.sincos(λ)
+  let gl = M.apparentLongitude(T)
+  let ge = nutation.meanObliquity(jde)
+  let [sgl, cgl] = base.sincos(gl)
   // (25.8) p. 165
-  let [sε, cε] = base.sincos(ε + 0.00256 * Math.PI / 180 * Math.cos(node(T)))
-  let ra = Math.atan2(cε * sλ, cλ)
-  let dec = Math.asin(sε * sλ)
+  let [sge, cge] = base.sincos(ge + 0.00256 * Math.PI / 180 * Math.cos(node(T)))
+  let ra = Math.atan2(cge * sgl, cgl)
+  let dec = Math.asin(sge * sgl)
   return new base.Coord(ra, dec)
 }
 
@@ -174,13 +174,13 @@ M.trueVSOP87 = function (planet, jde) {
   let {lon, lat, range} = planet.position(jde)
   let s = lon + Math.PI
     // FK5 correction.
-  let λp = base.horner(base.J2000Century(jde),
+  let glp = base.horner(base.J2000Century(jde),
     s, -1.397 * Math.PI / 180, -0.00031 * Math.PI / 180)
-  let [sλp, cλp] = base.sincos(λp)
-  let Δβ = 0.03916 / 3600 * Math.PI / 180 * (cλp - sλp)
+  let [sglp, cglp] = base.sincos(glp)
+  let gDgb = 0.03916 / 3600 * Math.PI / 180 * (cglp - sglp)
   // (25.9) p. 166
   lon = base.pmod(s - 0.09033 / 3600 * Math.PI / 180, 2 * Math.PI)
-  lat = Δβ - lat
+  lat = gDgb - lat
   return new base.Coord(lon, lat, range)
 }
 
@@ -200,9 +200,9 @@ M.trueVSOP87 = function (planet, jde) {
 M.apparentVSOP87 = function (planet, jde) {
   // note: see duplicated code in ApparentEquatorialVSOP87.
   let {lon, lat, range} = M.trueVSOP87(planet, jde)
-  let Δψ = nutation.nutation(jde)[0]
+  let gDgps = nutation.nutation(jde)[0]
   let a = M.aberration(range)
-  lon = lon + Δψ + a
+  lon = lon + gDgps + a
   return new base.Coord(lon, lat, range)
 }
 
@@ -220,14 +220,14 @@ M.apparentVSOP87 = function (planet, jde) {
  *   {Number} range - range in AU
  */
 M.apparentEquatorialVSOP87 = function (planet, jde) {
-  // note: duplicate code from ApparentVSOP87 so we can keep Δε.
+  // note: duplicate code from ApparentVSOP87 so we can keep gDge.
   // see also duplicate code in time.E().
   let {lon, lat, range} = M.trueVSOP87(planet, jde)
-  let [Δψ, Δε] = nutation.nutation(jde)
+  let [gDgps, gDge] = nutation.nutation(jde)
   let a = M.aberration(range)
-  let λ = lon + Δψ + a
-  let ε = nutation.meanObliquity(jde) + Δε
-  let {ra, dec} = new coord.Ecliptic(λ, lat).toEquatorial(ε)
+  let gl = lon + gDgps + a
+  let ge = nutation.meanObliquity(jde) + gDge
+  let {ra, dec} = new coord.Ecliptic(gl, lat).toEquatorial(ge)
   return new base.Coord(ra, dec, range)
 }
 

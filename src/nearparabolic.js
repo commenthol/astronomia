@@ -29,7 +29,7 @@ class Elements {
   /**
    * AnomalyDistance returns true anomaly and distance for near-parabolic orbits.
    *
-   * True anomaly ν returned in radians. Distance r returned in AU.
+   * True anomaly gn returned in radians. Distance r returned in AU.
    * An error is returned if the algorithm fails to converge.
    */
   anomalyDistance (jde) {
@@ -90,13 +90,13 @@ class Elements {
         }
       }
     }
-    let ν = 2 * Math.atan(s) // line 66
-    let r = this.pDis * (1 + this.ecc) / (1 + this.ecc * Math.cos(ν)) // line 68
-    if (ν < 0) { // line 70
-      ν += 2 * Math.PI
+    let gn = 2 * Math.atan(s) // line 66
+    let r = this.pDis * (1 + this.ecc) / (1 + this.ecc * Math.cos(gn)) // line 68
+    if (gn < 0) { // line 70
+      gn += 2 * Math.PI
     }
     return {
-      ano: ν,
+      ano: gn,
       dist: r,
       err: null
     }

@@ -69,7 +69,7 @@ describe('#conjunction', function () {
     try {
       var a = conjunction.planetary(day1, day5, cs1, cs2)
       var day = a[0]
-      var Δδ = a[1]
+      var gDgd = a[1]
     } catch (e) {
       err = e
     }
@@ -79,10 +79,10 @@ describe('#conjunction', function () {
     var cal = new julian.CalendarGregorian(1991, 8, day)
     // date in TD
     assert.equal(cal.toDate().toISOString(), '1991-08-07T05:42:40.908Z')
-    // compute UT = TD - ΔT
+    // compute UT = TD - gDT
     assert.equal(cal.deltaT(true).toDate().toISOString(), '1991-08-07T05:41:42.903Z')
 
-    assert.equal(new sexa.Angle(Δδ).toString(0), '2°8′22″')
+    assert.equal(new sexa.Angle(gDgd).toString(0), '2°8′22″')
   })
 
   it('stellar', function () {
@@ -132,8 +132,8 @@ describe('#conjunction', function () {
       new sexa.Angle(true, 9, 22, 58.54 - pmd * dc).rad()
     )
 
-    assert.equal(new sexa.RA(c1.ra).toString(3), '15ʰ17ᵐ.446ˢ')      // α′ = 15ʰ17ᵐ0ˢ.446
-    assert.equal(new sexa.Angle(c1.dec).toString(2), '-9°22′58.47″')  // δ′ = -9°22′58″.47
+    assert.equal(new sexa.RA(c1.ra).toString(3), '15ʰ17ᵐ.446ˢ')      // ga′ = 15ʰ17ᵐ0ˢ.446
+    assert.equal(new sexa.Angle(c1.dec).toString(2), '-9°22′58.47″')  // gd′ = -9°22′58″.47
 
     var err
     try {
@@ -149,7 +149,7 @@ describe('#conjunction', function () {
     var cal = new julian.CalendarGregorian(1996, 2, day)
     // date in TD
     assert.equal(cal.toDate().toISOString(), '1996-02-18T06:36:55.352Z')
-    // compute UT = TD - ΔT
+    // compute UT = TD - gDT
     assert.equal(cal.deltaT(true).toDate().toISOString(), '1996-02-18T06:35:53.634Z')
 
     assert.equal(new sexa.Angle(dd).toString(0), '0°3′38″')

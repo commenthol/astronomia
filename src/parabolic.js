@@ -29,7 +29,7 @@ class Elements {
    *
    * @param {Number} jde - Julian ephemeris day
    * @returns {Object} {ano, dist}
-   *   {Number} ano - True anomaly ν in radians.
+   *   {Number} ano - True anomaly gn in radians.
    *   {Number} dist - Distance r returned in AU.
    */
   anomalyDistance (jde) {
@@ -37,10 +37,10 @@ class Elements {
     let G = W * 0.5
     let Y = Math.cbrt(G + Math.sqrt(G * G + 1))
     let s = Y - 1 / Y
-    let ν = 2 * Math.atan(s)
+    let gn = 2 * Math.atan(s)
     let r = this.pDis * (1 + s * s)
     return {
-      ano: ν,
+      ano: gn,
       dist: r
     }
   }

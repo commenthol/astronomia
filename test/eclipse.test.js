@@ -32,7 +32,7 @@ describe('#eclipse', function () {
     // Partial eclipse magnitude:       0.740
     // Non-central
     // Time of maximum eclipse:  2449129.0978
-    // Minimum distance, γ:           +1.1348
+    // Minimum distance, gg:           +1.1348
     // Umbral radius, u:              +0.0097
     // Penumbral radius:              +0.5558
   })
@@ -63,7 +63,7 @@ describe('#eclipse', function () {
     // Total eclipse
     // Central
     // Time of maximum eclipse:  2455034.6088
-    // Minimum distance, γ:           +0.0695
+    // Minimum distance, gg:           +0.0695
     // Umbral radius, u:              -0.0157
     // Penumbral radius:              +0.5304
   })
@@ -106,8 +106,8 @@ describe('#eclipse', function () {
     // Penumbral eclipse
     // Magnitude:                     +0.4625
     // Time of maximum eclipse:  2441849.3687
-    // Minimum distance, γ:           -1.3249
-    // Penumbral radius, ρ:           +1.3045
+    // Minimum distance, gg:           -1.3249
+    // Penumbral radius, gr:           +1.3045
     // Penumbral semiduration:        101 min
   })
 
@@ -149,9 +149,9 @@ describe('#eclipse', function () {
     // Total eclipse
     // Magnitude:                     +1.1868
     // Time of maximum eclipse:  2450708.2835
-    // Minimum distance, γ:           -0.3791
-    // Umbral radius, σ:              +0.7534
-    // Penumbral radius, ρ:           +1.2717
+    // Minimum distance, gg:           -0.3791
+    // Umbral radius, gs:              +0.7534
+    // Penumbral radius, gr:           +1.2717
     // Totality semiduration:          30 min
     // Partial phase semiduration:     98 min
     // Penumbral semiduration:        153 min

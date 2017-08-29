@@ -189,8 +189,8 @@ class Calendar {
 
   /**
    * @param {Boolean} td - if `true` calendar instance is in TD; date gets converted to UT
-   *   true  - `UT = TD - ΔT`
-   *   false - `TD = UT + ΔT`
+   *   true  - `UT = TD - gDT`
+   *   false - `TD = UT + gDT`
    */
   deltaT (td) {
     let dT = deltat.deltaT(this.toYear()) // in seconds
@@ -363,8 +363,8 @@ M.JDToCalendar = function (jd, isJulian) {
   var [z, f] = base.modf(jd + 0.5)
   var a = z
   if (!isJulian) {
-    var α = base.floorDiv(z * 100 - 186721625, 3652425)
-    a = z + 1 + α - base.floorDiv(α, 4)
+    var ga = base.floorDiv(z * 100 - 186721625, 3652425)
+    a = z + 1 + ga - base.floorDiv(ga, 4)
   }
   var b = a + 1524
   var c = base.floorDiv(b * 100 - 12210, 36525)
@@ -456,9 +456,9 @@ M.DateToJD = function (date) {
 
 /**
  * JDEToDate converts a Julian ephemeris day `jde` to a Date Object (Gregorian Calendar)
- * To obtain "Universal Time" (UT) from "Dynamical Time" (TD) the correction ΔT (in seconds) gets applied
+ * To obtain "Universal Time" (UT) from "Dynamical Time" (TD) the correction gDT (in seconds) gets applied
  * ```
- * UT = TD - ΔT
+ * UT = TD - gDT
  * ```
  * If your use case does not require such accuracy converting `jde` using `JDToDate` is fine.
  *
@@ -476,9 +476,9 @@ M.JDEToDate = function (jde) {
 
 /**
  * DateToJDE converts a Date Object (Gregorian Calendar) to a Julian ephemeris day `jde`
- * To obtain "Dynamical Time" (TD) from "Universal Time" (UT) the correction ΔT (in seconds) gets applied
+ * To obtain "Dynamical Time" (TD) from "Universal Time" (UT) the correction gDT (in seconds) gets applied
  * ```
- * TD = UT + ΔT
+ * TD = UT + gDT
  * ```
  * If your use case does not require such accuracy converting `Date` using `DateToJD` is fine.
  *

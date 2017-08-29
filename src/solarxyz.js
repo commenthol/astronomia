@@ -24,12 +24,12 @@ const M = exports
 M.position = function (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z float64)
   // (26.1) p. 171
   let {lon, lat, range} = solar.trueVSOP87(earth, jde)
-  let [sε, cε] = base.sincos(nutation.meanObliquity(jde))
+  let [sge, cge] = base.sincos(nutation.meanObliquity(jde))
   let [ss, cs] = base.sincos(lon)
-  let sβ = Math.sin(lat)
+  let sgb = Math.sin(lat)
   let x = range * cs
-  let y = range * (ss * cε - sβ * sε)
-  let z = range * (ss * sε + sβ * cε)
+  let y = range * (ss * cge - sgb * sge)
+  let z = range * (ss * sge + sgb * cge)
   return {x, y, z}
 }
 
@@ -66,13 +66,13 @@ M.positionJ2000 = function (earth, jde) {
 M.xyz = function (earth, jde) {
   let {lon, lat, range} = earth.position2000(jde)
   let s = lon + Math.PI
-  let β = -lat
+  let gb = -lat
   let [ss, cs] = base.sincos(s)
-  let [sβ, cβ] = base.sincos(β)
+  let [sgb, cgb] = base.sincos(gb)
   // (26.2) p. 172
-  let x = range * cβ * cs
-  let y = range * cβ * ss
-  let z = range * sβ
+  let x = range * cgb * cs
+  let y = range * cgb * ss
+  let z = range * sgb
   return {x, y, z}
 }
 
@@ -98,9 +98,9 @@ M.positionB1950 = function (earth, jde) { // (e *pp.V87Planet, jde float64)  (x,
   }
 }
 
-const ζt = [2306.2181, 0.30188, 0.017998]
+const gzt = [2306.2181, 0.30188, 0.017998]
 const zt = [2306.2181, 1.09468, 0.018203]
-const θt = [2004.3109, -0.42665, -0.041833]
+const gtht = [2004.3109, -0.42665, -0.041833]
 
 /**
  * PositionEquinox returns rectangular coordinates referenced to an arbitrary epoch.
@@ -122,21 +122,21 @@ M.positionEquinox = function (earth, jde, epoch) {
   let y0 = xyz.y
   let z0 = xyz.z
   let t = (epoch - 2000) * 0.01
-  let ζ = base.horner(t, ζt) * t * Math.PI / 180 / 3600
+  let gz = base.horner(t, gzt) * t * Math.PI / 180 / 3600
   let z = base.horner(t, zt) * t * Math.PI / 180 / 3600
-  let θ = base.horner(t, θt) * t * Math.PI / 180 / 3600
-  let [sζ, cζ] = base.sincos(ζ)
+  let gth = base.horner(t, gtht) * t * Math.PI / 180 / 3600
+  let [sgz, cgz] = base.sincos(gz)
   let [sz, cz] = base.sincos(z)
-  let [sθ, cθ] = base.sincos(θ)
-  let xx = cζ * cz * cθ - sζ * sz
-  let xy = sζ * cz + cζ * sz * cθ
-  let xz = cζ * sθ
-  let yx = -cζ * sz - sζ * cz * cθ
-  let yy = cζ * cz - sζ * sz * cθ
-  let yz = -sζ * sθ
-  let zx = -cz * sθ
-  let zy = -sz * sθ
-  let zz = cθ
+  let [sgth, cgth] = base.sincos(gth)
+  let xx = cgz * cz * cgth - sgz * sz
+  let xy = sgz * cz + cgz * sz * cgth
+  let xz = cgz * sgth
+  let yx = -cgz * sz - sgz * cz * cgth
+  let yy = cgz * cz - sgz * sz * cgth
+  let yz = -sgz * sgth
+  let zx = -cz * sgth
+  let zy = -sz * sgth
+  let zz = cgth
   return {
     x: xx * x0 + yx * y0 + zx * z0,
     y: xy * x0 + yy * y0 + zy * z0,

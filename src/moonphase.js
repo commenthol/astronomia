@@ -130,7 +130,7 @@ class Mp {
     this.M_ = base.horner(this.T, 201.5643 * p, 385.81693528 * p / ck,
       0.0107582 * p, 0.00001238 * p, -0.000000058 * p)
     this.F = base.horner(this.T, 160.7108 * p, 390.67050284 * p / ck, -0.0016118 * p, -0.00000227 * p, 0.000000011 * p)
-    this.Ω = base.horner(this.T, 124.7746 * p, -1.56375588 * p / ck,
+    this.gw = base.horner(this.T, 124.7746 * p, -1.56375588 * p / ck,
       0.0020672 * p, 0.00000215 * p)
     this.A[0] = 299.7 * p + 0.107408 * p * this.k - 0.009173 * this.T * this.T
     this.A[1] = 251.88 * p + 0.016321 * p * this.k
@@ -164,7 +164,7 @@ class Mp {
       c[11] * Math.sin(this.M + 2 * this.F) * this.E +
       c[12] * Math.sin(this.M - 2 * this.F) * this.E +
       c[13] * Math.sin(2 * this.M_ - this.M) * this.E +
-      c[14] * Math.sin(this.Ω) +
+      c[14] * Math.sin(this.gw) +
       c[15] * Math.sin(this.M_ + 2 * this.M) +
       c[16] * Math.sin(2 * (this.M_ - this.F)) +
       c[17] * Math.sin(3 * this.M) +
@@ -194,7 +194,7 @@ class Mp {
       0.00032 * Math.sin(this.M - 2 * this.F) * this.E +
       -0.00028 * Math.sin(this.M_ + 2 * this.M) * this.E * this.E +
       0.00027 * Math.sin(2 * this.M_ + this.M) * this.E +
-      -0.00017 * Math.sin(this.Ω) +
+      -0.00017 * Math.sin(this.gw) +
       -0.00005 * Math.sin(this.M_ - this.M - 2 * this.F) +
       0.00004 * Math.sin(2 * this.M_ + 2 * this.F) +
       -0.00004 * Math.sin(this.M_ + this.M + 2 * this.F) +

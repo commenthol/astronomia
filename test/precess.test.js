@@ -52,8 +52,8 @@ describe('#precess', function () {
       var epochFrom = 2000.0
       var epochTo = 1978.0
       var res = precess.approxAnnualPrecession(eq, epochFrom, epochTo)
-      assert.equal(new sexa.HourAngle(res.ra).toString(3), '0ʰ0ᵐ3.207ˢ') // Δα
-      assert.equal(new sexa.Angle(res.dec).toString(2), '-0°0′17.71″') // Δδ
+      assert.equal(new sexa.HourAngle(res.ra).toString(3), '0ʰ0ᵐ3.207ˢ') // gDga
+      assert.equal(new sexa.Angle(res.dec).toString(2), '-0°0′17.71″') // gDgd
     })
 
     it('approxPosition', function () {
@@ -64,9 +64,9 @@ describe('#precess', function () {
       )
       var epochFrom = 2000.0
       var epochTo = 1978.0
-      var mα = new sexa.HourAngle(true, 0, 0, 0.0169).rad()
-      var mδ = new sexa.Angle(false, 0, 0, 0.006).rad()
-      eq = precess.approxPosition(eq, epochFrom, epochTo, mα, mδ)
+      var mga = new sexa.HourAngle(true, 0, 0, 0.0169).rad()
+      var mgd = new sexa.Angle(false, 0, 0, 0.006).rad()
+      eq = precess.approxPosition(eq, epochFrom, epochTo, mga, mgd)
       assert.equal(new sexa.RA(eq.ra).toString(1), '10ʰ7ᵐ12.1ˢ')
       assert.equal(new sexa.Angle(eq.dec).toString(0), '12°4′32″')
     })
@@ -92,7 +92,7 @@ describe('#precess', function () {
       // Test with proper motion of Regulus, with equatorial motions given
       // in Example 21.a, p. 132, and ecliptic motions given in table 21.A,
       // p. 138.
-      var ε = nutation.meanObliquity(base.J2000)
+      var ge = nutation.meanObliquity(base.J2000)
       var ecl = precess.properMotion(
         new sexa.HourAngle(true, 0, 0, 0.0169).rad(), // eq motions from p. 132.
         new sexa.Angle(false, 0, 0, 0.006).rad(),
@@ -100,7 +100,7 @@ describe('#precess', function () {
         new coord.Equatorial( // eq coordinates from p. 132.
           new sexa.RA(10, 8, 22.3).rad(), // RA
           new sexa.Angle(false, 11, 58, 2).rad() // Dec
-        ).toEcliptic(ε)
+        ).toEcliptic(ge)
       )
       var d = Math.abs((ecl.lon - new sexa.Angle(true, 0, 0, 0.2348).rad()) / ecl.lon)
       assert.ok(d * 169 < 1, 'lon: 169 = significant digits of given lon')
@@ -115,8 +115,8 @@ describe('#precess', function () {
       new sexa.RA(2, 31, 48.704).rad(),
       new sexa.Angle(false, 89, 15, 50.72).rad()
     )
-    var mα = new sexa.HourAngle(false, 0, 0, 0.19877).rad()
-    var mδ = new sexa.Angle(true, 0, 0, 0.0152).rad()
+    var mga = new sexa.HourAngle(false, 0, 0, 0.19877).rad()
+    var mgd = new sexa.Angle(true, 0, 0, 0.0152).rad()
 
     var testcases = [
       [base.BesselianYearToJDE(1900), '1ʰ22ᵐ33.9ˢ', '88°46′26.18″'],
@@ -127,7 +127,7 @@ describe('#precess', function () {
     testcases.forEach(function (tc, idx) {
       it('testcase #' + idx, function () {
         var epochTo = base.JDEToJulianYear(tc[0])
-        var eqTo = precess.position(eqFrom, 2000.0, epochTo, mα, mδ)
+        var eqTo = precess.position(eqFrom, 2000.0, epochTo, mga, mgd)
         assert.equal(new sexa.RA(eqTo.ra).toString(2), tc[1])
         assert.equal(new sexa.Angle(eqTo.dec).toString(2), tc[2])
       })
@@ -140,8 +140,8 @@ describe('#precess', function () {
       new sexa.RA(2, 31, 48.704).rad(),
       new sexa.Angle(false, 89, 15, 50.72).rad()
     )
-    var mα = new sexa.HourAngle(false, 0, 0, 0.19877).rad()
-    var mδ = new sexa.Angle(false, 0, 0, -0.0152).rad()
+    var mga = new sexa.HourAngle(false, 0, 0, 0.19877).rad()
+    var mgd = new sexa.Angle(false, 0, 0, -0.0152).rad()
     var epochs = [
       base.JDEToJulianYear(base.B1900),
       2050,
@@ -155,7 +155,7 @@ describe('#precess', function () {
 
     epochs.forEach(function (epochTo, idx) {
       it('testcase #' + idx, function () {
-        var eqTo = precess.position(eqFrom, 2000, epochTo, mα, mδ)
+        var eqTo = precess.position(eqFrom, 2000, epochTo, mga, mgd)
         assert.equal(new sexa.RA(eqTo.ra).toString(2), exp[idx][0])
         assert.equal(new sexa.Angle(eqTo.dec).toString(2), exp[idx][1])
       })
@@ -189,10 +189,10 @@ describe('#precess', function () {
       ele = p.reduceElements(ele)
 
       assert.equal(ele.inc * 180 / Math.PI, 47.13795835860312)   // i
-      assert.equal((ele.node * 180 / Math.PI).toFixed(13), 48.6036896626305) // Ω
+      assert.equal((ele.node * 180 / Math.PI).toFixed(13), 48.6036896626305) // gw
       /* 48.603689662630515 in node <6.9.1 */
       /* 48.60368966263054 in node 7.0.1 */
-      assert.equal(ele.peri * 180 / Math.PI, 151.47823843361917) // ω
+      assert.equal(ele.peri * 180 / Math.PI, 151.47823843361917) // gwa
     })
   })
 

@@ -16,17 +16,17 @@ const M = exports
 // Nutation: Chapter 22, Nutation and the Obliquity of the Ecliptic.
 
 /**
- * Nutation returns nutation in longitude (Δψ) and nutation in obliquity (Δε)
+ * Nutation returns nutation in longitude (gDgps) and nutation in obliquity (gDge)
  * for a given JDE.
  *
- * JDE = UT + ΔT, see package.
+ * JDE = UT + gDT, see package.
  *
  * Computation is by 1980 IAU theory, with terms < .0003″ neglected.
  *
  * Result units are radians.
  *
  * @param {number} jde - Julian ephemeris day
- * @return {number[]} [Δψ, Δε] - [longitude, obliquity] in radians
+ * @return {number[]} [gDgps, gDge] - [longitude, obliquity] in radians
  */
 M.nutation = function (jde) {
   var T = base.J2000Century(jde)
@@ -38,49 +38,49 @@ M.nutation = function (jde) {
     134.96298, 477198.867398, 0.0086972, 1.0 / 5620) * Math.PI / 180
   var F = base.horner(T,
     93.27191, 483202.017538, -0.0036825, 1.0 / 327270) * Math.PI / 180
-  var Ω = base.horner(T,
+  var gw = base.horner(T,
     125.04452, -1934.136261, 0.0020708, 1.0 / 450000) * Math.PI / 180
-  var Δψ = 0
-  var Δε = 0
+  var gDgps = 0
+  var gDge = 0
   // sum in reverse order to accumulate smaller terms first
   for (var i = table22A.length - 1; i >= 0; i--) {
     var row = table22A[i]
-    var arg = row.d * D + row.m * M + row.n * N + row.f * F + row.ω * Ω
+    var arg = row.d * D + row.m * M + row.n * N + row.f * F + row.gwa * gw
     var [s, c] = base.sincos(arg)
-    Δψ += s * (row.s0 + row.s1 * T)
-    Δε += c * (row.c0 + row.c1 * T)
+    gDgps += s * (row.s0 + row.s1 * T)
+    gDge += c * (row.c0 + row.c1 * T)
   }
-  Δψ *= 0.0001 / 3600 * (Math.PI / 180)
-  Δε *= 0.0001 / 3600 * (Math.PI / 180)
-  return [Δψ, Δε] // (Δψ, Δε float)
+  gDgps *= 0.0001 / 3600 * (Math.PI / 180)
+  gDge *= 0.0001 / 3600 * (Math.PI / 180)
+  return [gDgps, gDge] // (gDgps, gDge float)
 }
 /**
- * ApproxNutation returns a fast approximation of nutation in longitude (Δψ)
- * and nutation in obliquity (Δε) for a given JDE.
+ * ApproxNutation returns a fast approximation of nutation in longitude (gDgps)
+ * and nutation in obliquity (gDge) for a given JDE.
  *
- * Accuracy is 0.5″ in Δψ, 0.1″ in Δε.
+ * Accuracy is 0.5″ in gDgps, 0.1″ in gDge.
  *
  * Result units are radians.
  *
  * @param {number} jde - Julian ephemeris day
- * @return {number[]} [Δψ, Δε] - [longitude, obliquity] in radians
+ * @return {number[]} [gDgps, gDge] - [longitude, obliquity] in radians
  */
 M.approxNutation = function (jde) {
   var T = (jde - base.J2000) / 36525
-  var Ω = (125.04452 - 1934.136261 * T) * Math.PI / 180
+  var gw = (125.04452 - 1934.136261 * T) * Math.PI / 180
   var L = (280.4665 + 36000.7698 * T) * Math.PI / 180
   var N = (218.3165 + 481267.8813 * T) * Math.PI / 180
-  var [sΩ, cΩ] = base.sincos(Ω)
+  var [sgw, cgw] = base.sincos(gw)
   var [s2L, c2L] = base.sincos(2 * L)
   var [s2N, c2N] = base.sincos(2 * N)
-  var [s2Ω, c2Ω] = base.sincos(2 * Ω)
-  var Δψ = (-17.2 * sΩ - 1.32 * s2L - 0.23 * s2N + 0.21 * s2Ω) / 3600 * (Math.PI / 180)
-  var Δε = (9.2 * cΩ + 0.57 * c2L + 0.1 * c2N - 0.09 * c2Ω) / 3600 * (Math.PI / 180)
-  return [Δψ, Δε] // (Δψ, Δε float)
+  var [s2gw, c2gw] = base.sincos(2 * gw)
+  var gDgps = (-17.2 * sgw - 1.32 * s2L - 0.23 * s2N + 0.21 * s2gw) / 3600 * (Math.PI / 180)
+  var gDge = (9.2 * cgw + 0.57 * c2L + 0.1 * c2N - 0.09 * c2gw) / 3600 * (Math.PI / 180)
+  return [gDgps, gDge] // (gDgps, gDge float)
 }
 
 /**
- * MeanObliquity returns mean obliquity (ε₀) following the IAU 1980
+ * MeanObliquity returns mean obliquity (ge₀) following the IAU 1980
  * polynomial.
  *
  * Accuracy is 1″ over the range 1000 to 3000 years and 10″ over the range
@@ -89,7 +89,7 @@ M.approxNutation = function (jde) {
  * Result unit is radians.
  *
  * @param {number} jde - Julian ephemeris day
- * @return {number} mean obliquity (ε₀)
+ * @return {number} mean obliquity (ge₀)
  */
 M.meanObliquity = function (jde) {
   // (22.2) p. 147
@@ -103,7 +103,7 @@ M.meanObliquity = function (jde) {
 }
 
 /**
- * MeanObliquityLaskar returns mean obliquity (ε₀) following the Laskar
+ * MeanObliquityLaskar returns mean obliquity (ge₀) following the Laskar
  * 1986 polynomial.
  *
  * Accuracy over the range 1000 to 3000 years is .01″.
@@ -114,7 +114,7 @@ M.meanObliquity = function (jde) {
  * Result unit is radians.
  *
  * @param {number} jde - Julian ephemeris day
- * @return {number} mean obliquity (ε₀)
+ * @return {number} mean obliquity (ge₀)
  */
 M.meanObliquityLaskar = function (jde) {
   // (22.3) p. 147
@@ -144,13 +144,13 @@ M.meanObliquityLaskar = function (jde) {
  * @return {number} nutation in right ascension
  */
 M.nutationInRA = function (jde) {
-  var [Δψ, Δε] = M.nutation(jde)
-  var ε0 = M.meanObliquity(jde)
-  return Δψ * Math.cos(ε0 + Δε)
+  var [gDgps, gDge] = M.nutation(jde)
+  var ge0 = M.meanObliquity(jde)
+  return gDgps * Math.cos(ge0 + gDge)
 }
 
 var table22A = (function () {
-  const PROPS = 'd,m,n,f,ω,s0,s1,c0,c1'.split(',')
+  const PROPS = 'd,m,n,f,gwa,s0,s1,c0,c1'.split(',')
   const tab = [
     [0, 0, 0, 0, 1, -171996, -174.2, 92025, 8.9],
     [-2, 0, 0, 2, 2, -13187, -1.6, 5736, -3.1],

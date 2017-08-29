@@ -72,8 +72,8 @@ describe('#apsis', function () {
     var per = apsis.perigee(y)
     var dist = moonposition.position(per).range
     var par = moonposition.parallax(dist)
-    var Δ = Math.abs(perPar - par) / Math.PI * 180 * 3600 // difference in arc seconds
-    assert.ok(Δ < 0.1, Δ + ' should be less than 0.1')
+    var gD = Math.abs(perPar - par) / Math.PI * 180 * 3600 // difference in arc seconds
+    assert.ok(gD < 0.1, gD + ' should be less than 0.1')
   })
 
   it('apogeeDistance', function () {
@@ -92,7 +92,7 @@ describe('#apsis', function () {
     var apo = apsis.apogee(y)
     var dist = moonposition.position(apo).range
     var par = moonposition.parallax(dist)
-    var Δ = Math.abs(apoPar - par) / Math.PI * 180 * 3600 // difference in arc seconds
-    assert.ok(Δ < 0.1, Δ + ' should be less than 0.1')
+    var gD = Math.abs(apoPar - par) / Math.PI * 180 * 3600 // difference in arc seconds
+    assert.ok(gD < 0.1, gD + ' should be less than 0.1')
   })
 })

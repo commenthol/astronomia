@@ -101,9 +101,9 @@ M.error = function (r1, d1, r2, d2, r0, d0) { // (r1, d1, r2, d2, r0, d0 float64
  *
  * The algorithm is by B. Pessens.
  *
- * @returns {Number[]} [ψ, ω]
- *  {Number} ψ - angle between great circles defined by three points.
- *  {Number} ω - error angle of three nearly co-linear points
+ * @returns {Number[]} [gps, gw]
+ *  {Number} gps - angle between great circles defined by three points.
+ *  {Number} gw - error angle of three nearly co-linear points
  */
 M.angleError = function (r1, d1, r2, d2, r3, d3) {
   let [sr1, cr1] = base.sincos(r1)
@@ -127,9 +127,9 @@ M.angleError = function (r1, d1, r2, d2, r3, d3) {
   let n1 = a1 * b2 - a2 * b1
   let n2 = a2 * b3 - a3 * b2
   let n3 = a1 * b3 - a3 * b1
-  let ψ = Math.acos((l1 * l2 + m1 * m2 + n1 * n2) /
+  let gps = Math.acos((l1 * l2 + m1 * m2 + n1 * n2) /
     (Math.sqrt(l1 * l1 + m1 * m1 + n1 * n1) * Math.sqrt(l2 * l2 + m2 * m2 + n2 * n2)))
-  let ω = Math.asin((a2 * l3 + b2 * m3 + c2 * n3) /
+  let gw = Math.asin((a2 * l3 + b2 * m3 + c2 * n3) /
     (Math.sqrt(a2 * a2 + b2 * b2 + c2 * c2) * Math.sqrt(l3 * l3 + m3 * m3 + n3 * n3)))
-  return [ψ, ω]
+  return [gps, gw]
 }

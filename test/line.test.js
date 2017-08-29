@@ -37,46 +37,46 @@ describe('#line', function () {
 
   it('angle', function () {
     // Example p. 123.0
-    var rδ = new sexa.RA(5, 32, 0.40).rad()
-    var dδ = new sexa.Angle(true, 0, 17, 56.9).rad()
-    var rε = new sexa.RA(5, 36, 12.81).rad()
-    var dε = new sexa.Angle(true, 1, 12, 7.0).rad()
-    var rζ = new sexa.RA(5, 40, 45.52).rad()
-    var dζ = new sexa.Angle(true, 1, 56, 33.3).rad()
+    var rgd = new sexa.RA(5, 32, 0.40).rad()
+    var dgd = new sexa.Angle(true, 0, 17, 56.9).rad()
+    var rge = new sexa.RA(5, 36, 12.81).rad()
+    var dge = new sexa.Angle(true, 1, 12, 7.0).rad()
+    var rgz = new sexa.RA(5, 40, 45.52).rad()
+    var dgz = new sexa.Angle(true, 1, 56, 33.3).rad()
 
-    var n = line.angle(rδ, dδ, rε, dε, rζ, dζ)
+    var n = line.angle(rgd, dgd, rge, dge, rgz, dgz)
     assert.equal((n * 180 / Math.PI).toFixed(4), 172.4830) // degrees
     assert.equal(new sexa.Angle(n).toString(0), '172°28′59″')
   })
 
   it('error', function () {
     // Example p. 124.0
-    var rδ = new sexa.RA(5, 32, 0.40).rad()
-    var dδ = new sexa.Angle(true, 0, 17, 56.9).rad()
-    var rε = new sexa.RA(5, 36, 12.81).rad()
-    var dε = new sexa.Angle(true, 1, 12, 7.0).rad()
-    var rζ = new sexa.RA(5, 40, 45.52).rad()
-    var dζ = new sexa.Angle(true, 1, 56, 33.3).rad()
+    var rgd = new sexa.RA(5, 32, 0.40).rad()
+    var dgd = new sexa.Angle(true, 0, 17, 56.9).rad()
+    var rge = new sexa.RA(5, 36, 12.81).rad()
+    var dge = new sexa.Angle(true, 1, 12, 7.0).rad()
+    var rgz = new sexa.RA(5, 40, 45.52).rad()
+    var dgz = new sexa.Angle(true, 1, 56, 33.3).rad()
 
-    var ω = line.error(rζ, dζ, rδ, dδ, rε, dε)
-    var e = new sexa.Angle(ω)
+    var gw = line.error(rgz, dgz, rgd, dgd, rge, dge)
+    var e = new sexa.Angle(gw)
     assert.equal(e.toDegString(6), '0°.089876')
-    assert.equal((ω * 180 / Math.PI * 3600).toFixed(0), 324)
+    assert.equal((gw * 180 / Math.PI * 3600).toFixed(0), 324)
   })
 
   it('angleError()', function () {
     // Example p. 125.0
-    var rδ = new sexa.RA(5, 32, 0.40).rad()
-    var dδ = new sexa.Angle(true, 0, 17, 56.9).rad()
-    var rε = new sexa.RA(5, 36, 12.81).rad()
-    var dε = new sexa.Angle(true, 1, 12, 7.0).rad()
-    var rζ = new sexa.RA(5, 40, 45.52).rad()
-    var dζ = new sexa.Angle(true, 1, 56, 33.3).rad()
+    var rgd = new sexa.RA(5, 32, 0.40).rad()
+    var dgd = new sexa.Angle(true, 0, 17, 56.9).rad()
+    var rge = new sexa.RA(5, 36, 12.81).rad()
+    var dge = new sexa.Angle(true, 1, 12, 7.0).rad()
+    var rgz = new sexa.RA(5, 40, 45.52).rad()
+    var dgz = new sexa.Angle(true, 1, 56, 33.3).rad()
 
-    var res = line.angleError(rδ, dδ, rε, dε, rζ, dζ)
+    var res = line.angleError(rgd, dgd, rge, dge, rgz, dgz)
     var n = res[0]
-    var ω = res[1]
+    var gw = res[1]
     assert.equal(new sexa.Angle(n).toString(0), '7°31′1″')
-    assert.equal(new sexa.Angle(ω).toString(0), '-0°5′24″')
+    assert.equal(new sexa.Angle(gw).toString(0), '-0°5′24″')
   })
 })

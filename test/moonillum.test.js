@@ -34,9 +34,9 @@ describe('#moonillum', function () {
   it('phaseAngleEcliptic', function () {
     var pos = moonposition.position(j)
     var T = base.J2000Century(j)
-    var λ0 = solar.apparentLongitude(T)
+    var gl0 = solar.apparentLongitude(T)
     var R = solar.radius(T) * base.AU
-    var i = moonillum.phaseAngleEcliptic(pos, new base.Coord(λ0, 0, R))
+    var i = moonillum.phaseAngleEcliptic(pos, new base.Coord(gl0, 0, R))
     var ref = 69.0756 * Math.PI / 180
     var err = Math.abs((i - ref) / ref)
     assert.ok(err < 1e-4)
@@ -44,8 +44,8 @@ describe('#moonillum', function () {
 
   it('phaseAngleEcliptic2', function () {
     var pos = moonposition.position(j)
-    var λ0 = solar.apparentLongitude(base.J2000Century(j))
-    var i = moonillum.phaseAngleEcliptic2(pos, new base.Coord(λ0))
+    var gl0 = solar.apparentLongitude(base.J2000Century(j))
+    var i = moonillum.phaseAngleEcliptic2(pos, new base.Coord(gl0))
     var k = base.illuminated(i)
     var ref = 0.6775
     var err = Math.abs(k - ref)

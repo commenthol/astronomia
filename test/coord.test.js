@@ -20,10 +20,10 @@ describe('#coord', function () {
     )
     var obl = 23.4392911 * Math.PI / 180
     var ecl = eq.toEcliptic(obl)
-    var λ = new sexa.Angle(ecl.lon).toDegString(5)
-    var β = new sexa.Angle(ecl.lat).toDegString(5)
-    assert.equal(λ, '113°.21563')
-    assert.equal(β, '6°.68417')
+    var gl = new sexa.Angle(ecl.lon).toDegString(5)
+    var gb = new sexa.Angle(ecl.lat).toDegString(5)
+    assert.equal(gl, '113°.21563')
+    assert.equal(gb, '6°.68417')
   })
 
   it('Equatorial.toEcliptic.toEquatorial', function () {

@@ -40,8 +40,8 @@ class Ecliptic {
   /**
    * IMPORTANT: Longitudes are measured *positively* westwards
    * e.g. Washington D.C. +77°04; Vienna -16°23'
-   * @param {Number} lon - Longitude (λ) in radians
-   * @param {Number} lat - Latitude (β) in radians
+   * @param {Number} lon - Longitude (gl) in radians
+   * @param {Number} lat - Latitude (gb) in radians
    */
   constructor (lon, lat) {
     if (typeof lon === 'object') {
@@ -54,18 +54,18 @@ class Ecliptic {
 
   /**
    * converts ecliptic coordinates to equatorial coordinates.
-   * @param {Number} ε - Obliquity
+   * @param {Number} ge - Obliquity
    * @returns {Equatorial}
    */
-  toEquatorial (ε) {
-    let [εsin, εcos] = base.sincos(ε)
-    let [sβ, cβ] = base.sincos(this.lat)
-    let [sλ, cλ] = base.sincos(this.lon)
-    let ra = Math.atan2(sλ * εcos - (sβ / cβ) * εsin, cλ) // (13.3) p. 93
+  toEquatorial (ge) {
+    let [gesin, gecos] = base.sincos(ge)
+    let [sgb, cgb] = base.sincos(this.lat)
+    let [sgl, cgl] = base.sincos(this.lon)
+    let ra = Math.atan2(sgl * gecos - (sgb / cgb) * gesin, cgl) // (13.3) p. 93
     if (ra < 0) {
       ra += 2 * Math.PI
     }
-    let dec = Math.asin(sβ * εcos + cβ * εsin * sλ) // (13.4) p. 93
+    let dec = Math.asin(sgb * gecos + cgb * gesin * sgl) // (13.4) p. 93
     return new Equatorial(ra, dec)
   }
 }
@@ -76,8 +76,8 @@ M.Ecliptic = Ecliptic
  */
 class Equatorial {
   /**
-   * @param {Number} ra - (float) Right ascension (α) in radians
-   * @param {Number} dec - (float) Declination (δ) in radians
+   * @param {Number} ra - (float) Right ascension (ga) in radians
+   * @param {Number} dec - (float) Declination (gd) in radians
    */
   constructor (ra = 0, dec = 0) {
     this.ra = ra
@@ -86,15 +86,15 @@ class Equatorial {
 
   /**
    * EqToEcl converts equatorial coordinates to ecliptic coordinates.
-   * @param {Number} ε - Obliquity
+   * @param {Number} ge - Obliquity
    * @returns {Ecliptic}
    */
-  toEcliptic (ε) {
-    let [εsin, εcos] = base.sincos(ε)
-    let [sα, cα] = base.sincos(this.ra)
-    let [sδ, cδ] = base.sincos(this.dec)
-    let lon = Math.atan2(sα * εcos + (sδ / cδ) * εsin, cα) // (13.1) p. 93
-    let lat = Math.asin(sδ * εcos - cδ * εsin * sα)        // (13.2) p. 93
+  toEcliptic (ge) {
+    let [gesin, gecos] = base.sincos(ge)
+    let [sga, cga] = base.sincos(this.ra)
+    let [sgd, cgd] = base.sincos(this.dec)
+    let lon = Math.atan2(sga * gecos + (sgd / cgd) * gesin, cga) // (13.1) p. 93
+    let lat = Math.asin(sgd * gecos - cgd * gesin * sga)        // (13.2) p. 93
     return new Ecliptic(lon, lat)
   }
 
@@ -115,10 +115,10 @@ class Equatorial {
   toHorizontal (g, st) {
     let H = new sexa.Time(st).rad() - g.lon - this.ra
     let [sH, cH] = base.sincos(H)
-    let [sφ, cφ] = base.sincos(g.lat)
-    let [sδ, cδ] = base.sincos(this.dec)
-    let azimuth = Math.atan2(sH, cH * sφ - (sδ / cδ) * cφ) // (13.5) p. 93
-    let altitude = Math.asin(sφ * sδ + cφ * cδ * cH) // (13.6) p. 93
+    let [sgf, cgf] = base.sincos(g.lat)
+    let [sgd, cgd] = base.sincos(this.dec)
+    let azimuth = Math.atan2(sH, cH * sgf - (sgd / cgd) * cgf) // (13.5) p. 93
+    let altitude = Math.asin(sgf * sgd + cgf * cgd * cH) // (13.6) p. 93
     return new Horizontal(azimuth, altitude)
   }
 
@@ -133,13 +133,13 @@ class Equatorial {
    * @returns {Galactic}
    */
   toGalactic () {
-    let [sdα, cdα] = base.sincos(galacticNorth1950.ra - this.ra)
-    let [sgδ, cgδ] = base.sincos(galacticNorth1950.dec)
-    let [sδ, cδ] = base.sincos(this.dec)
-    let x = Math.atan2(sdα, cdα * sgδ - (sδ / cδ) * cgδ) // (13.7) p. 94
+    let [sdga, cdga] = base.sincos(galacticNorth1950.ra - this.ra)
+    let [sggd, cggd] = base.sincos(galacticNorth1950.dec)
+    let [sgd, cgd] = base.sincos(this.dec)
+    let x = Math.atan2(sdga, cdga * sggd - (sgd / cgd) * cggd) // (13.7) p. 94
     // (galactic0Lon1950 + 1.5*math.Pi) = magic number of 303 deg
     let lon = (galactic0Lon1950 + 1.5 * Math.PI - x) % (2 * Math.PI) // (13.8) p. 94
-    let lat = Math.asin(sδ * sgδ + cδ * cgδ * cdα)
+    let lat = Math.asin(sgd * sggd + cgd * cggd * cdga)
     return new Galactic(lon, lat)
   }
 }
@@ -169,10 +169,10 @@ class Horizontal {
   toEquatorial (g, st) {
     let [sA, cA] = base.sincos(this.az)
     let [sh, ch] = base.sincos(this.alt)
-    let [sφ, cφ] = base.sincos(g.lat)
-    let H = Math.atan2(sA, cA * sφ + sh / ch * cφ)
+    let [sgf, cgf] = base.sincos(g.lat)
+    let H = Math.atan2(sA, cA * sgf + sh / ch * cgf)
     let ra = base.pmod(new sexa.Time(st).rad() - g.lon - H, 2 * Math.PI)
-    let dec = Math.asin(sφ * sh - cφ * ch * cA)
+    let dec = Math.asin(sgf * sh - cgf * ch * cA)
     return new Equatorial(ra, dec)
   }
 }
@@ -201,12 +201,12 @@ class Galactic {
   toEquatorial () {
     // (-galactic0Lon1950 - math.Pi/2) = magic number of -123 deg
     var [sdLon, cdLon] = base.sincos(this.lon - galactic0Lon1950 - Math.PI / 2)
-    var [sgδ, cgδ] = base.sincos(galacticNorth1950.dec)
+    var [sggd, cggd] = base.sincos(galacticNorth1950.dec)
     var [sb, cb] = base.sincos(this.lat)
-    var y = Math.atan2(sdLon, cdLon * sgδ - (sb / cb) * cgδ)
+    var y = Math.atan2(sdLon, cdLon * sggd - (sb / cb) * cggd)
     // (galacticNorth1950.RA.Rad() - math.Pi) = magic number of 12.25 deg
     var ra = base.pmod(y + galacticNorth1950.ra - Math.PI, 2 * Math.PI)
-    var dec = Math.asin(sb * sgδ + cb * cgδ * cdLon)
+    var dec = Math.asin(sb * sggd + cb * cggd * cdLon)
     return new Equatorial(ra, dec)
   }
 }

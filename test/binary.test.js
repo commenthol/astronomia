@@ -12,11 +12,11 @@ describe('#binary', function () {
     var E = kepler.kepler1(0.2763, M, 6)
     var a = binary.position(0.907, 0.2763, 59.025 * Math.PI / 180,
     23.717 * Math.PI / 180, 219.907 * Math.PI / 180, E)
-    var θ = a[0]
-    var ρ = a[1]
+    var gth = a[0]
+    var gr = a[1]
     assert.equal((M * 180 / Math.PI).toFixed(3), 37.788)
-    assert.equal((θ * 180 / Math.PI).toFixed(1), 318.4)
-    assert.equal(ρ.toFixed(3), 0.411)
+    assert.equal((gth * 180 / Math.PI).toFixed(1), 318.4)
+    assert.equal(gr.toFixed(3), 0.411)
   })
 
   it('apparentEccentricity', function () {

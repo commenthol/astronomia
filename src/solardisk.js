@@ -25,7 +25,7 @@ const M = exports
  * All results in radians.
  */
 M.ephemeris = function (jd, earth) { // (jd float64, e *pp.V87Planet)  (P, B0, L0 float64)
-  let θ = (jd - 2398220) * 2 * Math.PI / 25.38
+  let gth = (jd - 2398220) * 2 * Math.PI / 25.38
   let I = 7.25 * Math.PI / 180
   let K = 73.6667 * Math.PI / 180 +
     1.3958333 * Math.PI / 180 * (jd - 2396758) / base.JulianCentury
@@ -33,21 +33,21 @@ M.ephemeris = function (jd, earth) { // (jd float64, e *pp.V87Planet)  (P, B0, L
   let solarPos = solar.trueVSOP87(earth, jd)
   let L = solarPos.lon
   let R = solarPos.range
-  let [Δψ, Δε] = nutation.nutation(jd)
-  let ε0 = nutation.meanObliquity(jd)
-  let ε = ε0 + Δε
-  let λ = L - 20.4898 / 3600 * Math.PI / 180 / R
-  let λp = λ + Δψ
+  let [gDgps, gDge] = nutation.nutation(jd)
+  let ge0 = nutation.meanObliquity(jd)
+  let ge = ge0 + gDge
+  let gl = L - 20.4898 / 3600 * Math.PI / 180 / R
+  let glp = gl + gDgps
 
-  let [sλK, cλK] = base.sincos(λ - K)
+  let [sglK, cglK] = base.sincos(gl - K)
   let [sI, cI] = base.sincos(I)
 
-  let tx = -Math.cos(λp) * Math.tan(ε)
-  let ty = -cλK * Math.tan(I)
+  let tx = -Math.cos(glp) * Math.tan(ge)
+  let ty = -cglK * Math.tan(I)
   var P = Math.atan(tx) + Math.atan(ty)
-  var B0 = Math.asin(sλK * sI)
-  let η = Math.atan2(-sλK * cI, -cλK)
-  var L0 = base.pmod(η - θ, 2 * Math.PI)
+  var B0 = Math.asin(sglK * sI)
+  let gh = Math.atan2(-sglK * cI, -cglK)
+  var L0 = base.pmod(gh - gth, 2 * Math.PI)
   return [P, B0, L0]
 }
 

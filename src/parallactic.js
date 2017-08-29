@@ -15,16 +15,16 @@ const M = exports
 /**
  * ParallacticAngle returns parallactic angle of a celestial object.
  *
- *  φ is geographic latitude of observer.
- *  δ is declination of observed object.
+ *  gf is geographic latitude of observer.
+ *  gd is declination of observed object.
  *  H is hour angle of observed object.
  *
  * All angles including result are in radians.
  */
-M.parallacticAngle = function (φ, δ, H) { // (φ, δ, H float64)  float64
-  let [sδ, cδ] = base.sincos(δ)
+M.parallacticAngle = function (gf, gd, H) { // (gf, gd, H float64)  float64
+  let [sgd, cgd] = base.sincos(gd)
   let [sH, cH] = base.sincos(H)
-  return Math.atan2(sH, Math.tan(φ) * cδ - sδ * cH) // (14.1) p. 98
+  return Math.atan2(sH, Math.tan(gf) * cgd - sgd * cH) // (14.1) p. 98
 }
 
 /**
@@ -32,8 +32,8 @@ M.parallacticAngle = function (φ, δ, H) { // (φ, δ, H float64)  float64
  *
  * The hour angle is not needed as an input and the math inside simplifies.
  */
-M.parallacticAngleOnHorizon = function (φ, δ) { // (φ, δ float64)  float64
-  return Math.acos(Math.sin(φ) / Math.cos(δ))
+M.parallacticAngleOnHorizon = function (gf, gd) { // (gf, gd float64)  float64
+  return Math.acos(Math.sin(gf) / Math.cos(gd))
 }
 
 /**
@@ -41,24 +41,24 @@ M.parallacticAngleOnHorizon = function (φ, δ) { // (φ, δ float64)  float64
  * the horizon at a given local sidereal time as observed from a given
  * geographic latitude.
  *
- *  ε is obliquity of the ecliptic.
- *  φ is geographic latitude of observer.
- *  θ is local sidereal time expressed as an hour angle.
+ *  ge is obliquity of the ecliptic.
+ *  gf is geographic latitude of observer.
+ *  gth is local sidereal time expressed as an hour angle.
  *
- *  λ1 and λ2 are ecliptic longitudes where the ecliptic intersects the horizon.
+ *  gl1 and gl2 are ecliptic longitudes where the ecliptic intersects the horizon.
  *  I is the angle at which the ecliptic intersects the horizon.
  *
  * All angles, arguments and results, are in radians.
  */
-M.eclipticAtHorizon = function (ε, φ, θ) { // (ε, φ, θ float64)  (λ1, λ2, I float64)
-  let [sε, cε] = base.sincos(ε)
-  let [sφ, cφ] = base.sincos(φ)
-  let [sθ, cθ] = base.sincos(θ)
-  let λ = Math.atan2(-cθ, sε * (sφ / cφ) + cε * sθ) // (14.2) p. 99
-  if (λ < 0) {
-    λ += Math.PI
+M.eclipticAtHorizon = function (ge, gf, gth) { // (ge, gf, gth float64)  (gl1, gl2, I float64)
+  let [sge, cge] = base.sincos(ge)
+  let [sgf, cgf] = base.sincos(gf)
+  let [sgth, cgth] = base.sincos(gth)
+  let gl = Math.atan2(-cgth, sge * (sgf / cgf) + cge * sgth) // (14.2) p. 99
+  if (gl < 0) {
+    gl += Math.PI
   }
-  return [λ, λ + Math.PI, Math.acos(cε * sφ - sε * cφ * sθ)] // (14.3) p. 99
+  return [gl, gl + Math.PI, Math.acos(cge * sgf - sge * cgf * sgth)] // (14.3) p. 99
 }
 
 /**
@@ -68,27 +68,27 @@ M.eclipticAtHorizon = function (ε, φ, θ) { // (ε, φ, θ float64)  (λ1, λ2
  * (The function name EclipticAtEquator is for consistency with the Meeus text,
  * and works if you consider the equator a nominal parallel of latitude.)
  *
- *  λ is ecliptic longitude.
- *  ε is obliquity of the ecliptic.
+ *  gl is ecliptic longitude.
+ *  ge is obliquity of the ecliptic.
  *
  * All angles in radians.
  */
-M.eclipticAtEquator = function (λ, ε) { // (λ, ε float64)  float64
-  return Math.atan(-Math.cos(λ) * Math.tan(ε))
+M.eclipticAtEquator = function (gl, ge) { // (gl, ge float64)  float64
+  return Math.atan(-Math.cos(gl) * Math.tan(ge))
 }
 
 /**
  * DiurnalPathAtHorizon computes the angle of the path a celestial object
  * relative to the horizon at the time of its rising or setting.
  *
- *  δ is declination of the object.
- *  φ is geographic latitude of observer.
+ *  gd is declination of the object.
+ *  gf is geographic latitude of observer.
  *
  * All angles in radians.
  */
-M.diurnalPathAtHorizon = function (δ, φ) { // (δ, φ float64)  (J float64)
-  let tφ = Math.tan(φ)
-  let b = Math.tan(δ) * tφ
+M.diurnalPathAtHorizon = function (gd, gf) { // (gd, gf float64)  (J float64)
+  let tgf = Math.tan(gf)
+  let b = Math.tan(gd) * tgf
   let c = Math.sqrt(1 - b * b)
-  return Math.atan(c * Math.cos(δ) / tφ)
+  return Math.atan(c * Math.cos(gd) / tgf)
 }
