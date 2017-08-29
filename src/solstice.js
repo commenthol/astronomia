@@ -140,14 +140,14 @@ function eq (y, c) {
   let J0 = base.horner(y * 0.001, c)
   let T = base.J2000Century(J0)
   let W = 35999.373 * D2R * T - 2.47 * D2R
-  let Δλ = 1 + 0.0334 * cos(W) + 0.0007 * cos(2 * W)
+  let gDgl = 1 + 0.0334 * cos(W) + 0.0007 * cos(2 * W)
   let S = 0
   let i
   for (i = terms.length - 1; i >= 0; i--) {
     let t = terms[i]
     S += t.a * cos((t.b + t.c * T) * D2R)
   }
-  return J0 + 0.00001 * S / Δλ
+  return J0 + 0.00001 * S / gDgl
 }
 
 /**

@@ -11,17 +11,17 @@ describe('#globe', function () {
   it('parallaxConstants', function () {
     // Example 11.a, p 82.
     // phi = geographic latitude of Palomar
-    var φ = new sexa.Angle(false, 33, 21, 22).rad()
-    var res = globe.Earth76.parallaxConstants(φ, 1706)
-    // ρ sin φ′ = +0.546861
-    // ρ cos φ′ = +0.836339
+    var gf = new sexa.Angle(false, 33, 21, 22).rad()
+    var res = globe.Earth76.parallaxConstants(gf, 1706)
+    // gr sin gf′ = +0.546861
+    // gr cos gf′ = +0.836339
     assert.deepEqual(res, [ 0.5468608240604509, 0.8363392323525684 ])
   })
 
   it('geocentricLatitudeDifference', function () {
     // p. 83
-    var φ0 = new sexa.Angle(false, 45, 5, 46.36).rad()
-    var diff = globe.geocentricLatitudeDifference(φ0)
+    var gf0 = new sexa.Angle(false, 45, 5, 46.36).rad()
+    var diff = globe.geocentricLatitudeDifference(gf0)
     var res = new sexa.Angle(diff).toString(2)
     assert.equal(res, '0°11′32.73″')
   })
@@ -29,24 +29,24 @@ describe('#globe', function () {
   describe('Radius functions', function () {
     var rp
     var rm
-    var φ
+    var gf
 
     it('radiusAtLatitude', function () {
       // Example 11.b p 84.
-      φ = 42 * Math.PI / 180
-      rp = globe.Earth76.radiusAtLatitude(φ)
+      gf = 42 * Math.PI / 180
+      rp = globe.Earth76.radiusAtLatitude(gf)
       // Rp = 4747.001 km
       assert.equal(base.round(rp, 3), 4747.001)
     })
 
     it('RotationRate1996_5', function () {
-      var ωRp = rp * globe.RotationRate1996_5
-      // linear velocity = ωRp = 0.34616 km/second
-      assert.equal(base.round(ωRp, 5), 0.34616)
+      var gwRp = rp * globe.RotationRate1996_5
+      // linear velocity = gwRp = 0.34616 km/second
+      assert.equal(base.round(gwRp, 5), 0.34616)
     })
 
     it('radiusOfCurvature', function () {
-      rm = globe.Earth76.radiusOfCurvature(φ)
+      rm = globe.Earth76.radiusOfCurvature(gf)
       // Rm = 6364.033 km
       assert.equal(base.round(rm, 3), 6364.033)
     })

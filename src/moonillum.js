@@ -32,23 +32,23 @@ M.phaseAngleEquatorial = function (cMoon, cSun) {
  * cos elongation from equatorial coordinates
  * @private
  */
-function cosEq (α, δ, α0, δ0) {
-  let [sδ, cδ] = base.sincos(δ)
-  let [sδ0, cδ0] = base.sincos(δ0)
-  return sδ0 * sδ + cδ0 * cδ * Math.cos(α0 - α)
+function cosEq (ga, gd, ga0, gd0) {
+  let [sgd, cgd] = base.sincos(gd)
+  let [sgd0, cgd0] = base.sincos(gd0)
+  return sgd0 * sgd + cgd0 * cgd * Math.cos(ga0 - ga)
 }
 
 /**
  * phase angle from cos elongation and distances
  * @private
- * @param {number} Δ
+ * @param {number} gD
  * @param {number} R
- * @param {number} cψ
+ * @param {number} cgps
  * @returns {number}
  */
-function pa (Δ, R, cψ) {
-  let sψ = Math.sin(Math.acos(cψ))
-  let i = Math.atan(R * sψ / (Δ - R * cψ))
+function pa (gD, R, cgps) {
+  let sgps = Math.sin(Math.acos(cgps))
+  let i = Math.atan(R * sgps / (gD - R * cgps))
   if (i < 0) {
     i += Math.PI
   }
@@ -60,8 +60,8 @@ function pa (Δ, R, cψ) {
  *
  * Less accurate than phaseAngleEquatorial.
  *
- * Arguments α, δ are geocentric right ascension and declination of the Moon;
- * α0, δ0  are coordinates of the Sun.  Angles must be in radians.
+ * Arguments ga, gd are geocentric right ascension and declination of the Moon;
+ * ga0, gd0  are coordinates of the Sun.  Angles must be in radians.
  *
  * @param {base.Coord} cMoon - eocentric right ascension and declination of the Moon
  * @param {base.Coord} cSun - coordinates of the Sun
@@ -88,8 +88,8 @@ M.phaseAngleEcliptic = function (cMoon, cSun) {
  * cos elongation from ecliptic coordinates
  * @private
  */
-function cosEcl (λ, β, λ0) { // (λ, β, λ0 float64)  float64
-  return Math.cos(β) * Math.cos(λ - λ0)
+function cosEcl (gl, gb, gl0) { // (gl, gb, gl0 float64)  float64
+  return Math.cos(gb) * Math.cos(gl - gl0)
 }
 
 /**

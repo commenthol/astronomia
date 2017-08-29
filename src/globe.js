@@ -41,21 +41,21 @@ class Ellipsoid {
   }
 
   /**
-   * parallaxConstants computes parallax constants ρ sin φ′ and ρ cos φ′.
+   * parallaxConstants computes parallax constants gr sin gf′ and gr cos gf′.
    *
-   * Arguments are geographic latitude φ in radians and height h
+   * Arguments are geographic latitude gf in radians and height h
    * in meters above the ellipsoid.
    *
-   * @param {number} φ - geographic latitude in radians
+   * @param {number} gf - geographic latitude in radians
    * @param {number} h - height in meters above the ellipsoid
-   * @return {number[]} [ρ sin φ′, ρ cos φ] parallax constants
+   * @return {number[]} [gr sin gf′, gr cos gf] parallax constants
    */
-  parallaxConstants (φ, h) {
+  parallaxConstants (gf, h) {
     var boa = 1 - this.flat
-    var su = Math.sin(Math.atan(boa * Math.tan(φ)))
-    var cu = Math.cos(Math.atan(boa * Math.tan(φ)))
-    var s = Math.sin(φ)
-    var c = Math.cos(φ)
+    var su = Math.sin(Math.atan(boa * Math.tan(gf)))
+    var cu = Math.cos(Math.atan(boa * Math.tan(gf)))
+    var s = Math.sin(gf)
+    var c = Math.cos(gf)
     var hoa = h * 1e-3 / this.radius
     // (s, c float)
     return [su * boa + hoa * s, cu + hoa * c]
@@ -65,39 +65,39 @@ class Ellipsoid {
    * rho is distance from Earth center to a point on the ellipsoid.
    *
    * Result unit is fraction of the equatorial radius.
-   * @param {number} φ - geographic latitude in radians
+   * @param {number} gf - geographic latitude in radians
    * @returns {number} // TODO
    */
-  rho (φ) {
+  rho (gf) {
     // Magic numbers...
-    return 0.9983271 + 0.0016764 * Math.cos(2 * φ) - 0.0000035 * Math.cos(4 * φ)
+    return 0.9983271 + 0.0016764 * Math.cos(2 * gf) - 0.0000035 * Math.cos(4 * gf)
   }
 
   /**
    * radiusAtLatitude returns the radius of the circle that is the parallel of
-   * latitude at φ.
+   * latitude at gf.
    *
    * Result unit is Km.
    *
-   * @param {number} φ
+   * @param {number} gf
    * @return {number} radius in km
    */
-  radiusAtLatitude (φ) {
-    var s = Math.sin(φ)
-    var c = Math.cos(φ)
+  radiusAtLatitude (gf) {
+    var s = Math.sin(gf)
+    var c = Math.cos(gf)
     return this.A() * c / Math.sqrt(1 - (2 - this.flat) * this.flat * s * s)
   }
 
   /**
-   * radiusOfCurvature of meridian at latitude φ.
+   * radiusOfCurvature of meridian at latitude gf.
    *
    * Result unit is Km.
    *
-   * @param {number} φ
+   * @param {number} gf
    * @return {number} radius in km
    */
-  radiusOfCurvature (φ) {
-    var s = Math.sin(φ)
+  radiusOfCurvature (gf) {
+    var s = Math.sin(gf)
     var e2 = (2 - this.flat) * this.flat
     return this.A() * (1 - e2) / Math.pow(1 - e2 * s * s, 1.5)
   }
@@ -119,12 +119,12 @@ class Ellipsoid {
     // From AA, ch 11, p 84.
     var [s2f, c2f] = sincos2((c1.lat + c2.lat) / 2)
     var [s2g, c2g] = sincos2((c1.lat - c2.lat) / 2)
-    var [s2λ, c2λ] = sincos2((c1.lon - c2.lon) / 2)
-    var s = s2g * c2λ + c2f * s2λ
-    var c = c2g * c2λ + s2f * s2λ
-    var ω = Math.atan(Math.sqrt(s / c))
-    var r = Math.sqrt(s * c) / ω
-    var d = 2 * ω * this.radius
+    var [s2gl, c2gl] = sincos2((c1.lon - c2.lon) / 2)
+    var s = s2g * c2gl + c2f * s2gl
+    var c = c2g * c2gl + s2f * s2gl
+    var gw = Math.atan(Math.sqrt(s / c))
+    var r = Math.sqrt(s * c) / gw
+    var d = 2 * gw * this.radius
     var h1 = (3 * r - 1) / (2 * c)
     var h2 = (3 * r + 1) / (2 * s)
     return d * (1 + this.flat * (h1 * s2f * c2g - h2 * c2f * s2g))
@@ -173,17 +173,17 @@ M.oneDegreeOfLatitude = function (rm) {
 
 /**
  * geocentricLatitudeDifference returns geographic latitude - geocentric
- * latitude (φ - φ′) with given geographic latitude (φ).
+ * latitude (gf - gf′) with given geographic latitude (gf).
  *
  * Units are radians.
- * @param {number} φ
+ * @param {number} gf
  * @returns {number} difference in Deg
  */
-M.geocentricLatitudeDifference = function (φ) {
+M.geocentricLatitudeDifference = function (gf) {
   // This appears to be an approximation with hard coded magic numbers.
   // No explanation is given in the text. The ellipsoid is not specified.
   // Perhaps the approximation works well enough for all ellipsoids?
-  return (692.73 * Math.sin(2 * φ) - 1.16 * Math.sin(4 * φ)) * Math.PI / (180 * 3600)
+  return (692.73 * Math.sin(2 * gf) - 1.16 * Math.sin(4 * gf)) * Math.PI / (180 * 3600)
 }
 
 /**
@@ -193,8 +193,8 @@ M.geocentricLatitudeDifference = function (φ) {
  */
 class Coord {
   /**
-   * @param {number} lat - latitude (φ) in radians
-   * @param {number} lon - longitude (ψ, or L) in radians (measured positively westward)
+   * @param {number} lat - latitude (gf) in radians
+   * @param {number} lon - longitude (gps, or L) in radians (measured positively westward)
    */
   constructor (lat = 0, lon = 0) {
     this.lat = lat

@@ -81,25 +81,25 @@ M.stdh0LunarMean = (refraction) => {
 }
 M.Stdh0LunarMean = M.stdh0LunarMean() // for backward-compatibility
 /**
- * Stdh0Lunar is the standard altitude of the Moon considering π, the
+ * Stdh0Lunar is the standard altitude of the Moon considering gp, the
  * Moon's horizontal parallax.
- * @param {number} π - the Moon's horizontal parallax
+ * @param {number} gp - the Moon's horizontal parallax
  * @param {number} [refraction] - optional value for refraction in radians if
  *        omitted than meanRefraction is used
  * @return {number} altitude of Moon in radians
  */
-M.stdh0Lunar = (π, refraction) => {
+M.stdh0Lunar = (gp, refraction) => {
   refraction = refraction || M.meanRefraction
-  return M.stdh0.lunar * π - refraction
+  return M.stdh0.lunar * gp - refraction
 }
 M.Stdh0Lunar = M.stdh0Lunar // for backward-compatibility
 
 /**
  * @return {number} local angle in radians
  */
-M.hourAngle = function (lat, h0, δ) {
+M.hourAngle = function (lat, h0, gd) {
   // approximate local hour angle
-  let cosH = (sin(h0) - sin(lat) * sin(δ)) / (cos(lat) * cos(δ)) // (15.1) p. 102
+  let cosH = (sin(h0) - sin(lat) * sin(gd)) / (cos(lat) * cos(gd)) // (15.1) p. 102
   if (cosH < -1) {
     throw errorAboveHorizon
   } else if (cosH > 1) {
@@ -111,13 +111,13 @@ M.hourAngle = function (lat, h0, δ) {
 
 /**
  * @param {number} lon - longitude in radians
- * @param {number} α - right ascension in radians
+ * @param {number} ga - right ascension in radians
  * @param {number} th0 - sidereal.apparent0UT in seconds of day `[0...86400[`
  * @return {number} time of transit in seconds of day `[0, 86400[`
  */
-function _mt (lon, α, th0) {
-  // let mt = (((lon + α) * 180 / Math.PI - (th0 * 360 / 86400)) * 86400 / 360)
-  let mt = (lon + α) * SECS_PER_DEGREE * 180 / Math.PI - th0
+function _mt (lon, ga, th0) {
+  // let mt = (((lon + ga) * 180 / Math.PI - (th0 * 360 / 86400)) * 86400 / 360)
+  let mt = (lon + ga) * SECS_PER_DEGREE * 180 / Math.PI - th0
   return mt
 }
 
@@ -156,18 +156,18 @@ function _compatibility (rs) {
  * @param {number} Th0 - is apparent sidereal time at 0h UT at Greenwich in seconds
  *        (range 0...86400) must be the time on the day of interest, in seconds.
  *        See sidereal.apparent0UT
- * @param {Array<number>} α3 - slices of three right ascensions
- * @param {Array<number>} δ3 - slices of three declinations.
- *        α3, δ3 must be values at 0h dynamical time for the day before, the day of,
+ * @param {Array<number>} ga3 - slices of three right ascensions
+ * @param {Array<number>} gd3 - slices of three declinations.
+ *        ga3, gd3 must be values at 0h dynamical time for the day before, the day of,
  *        and the day after the day of interest.  Units are radians.
  * @return Result units are seconds and are in the range [0,86400)
  * @throws Error
  */
-M.approxTimes = function (p, h0, Th0, α, δ) {
-  let H0 = M.hourAngle(p.lat, h0, δ) * SECS_PER_DEGREE * 180 / Math.PI // in degrees per day === seconds
+M.approxTimes = function (p, h0, Th0, ga, gd) {
+  let H0 = M.hourAngle(p.lat, h0, gd) * SECS_PER_DEGREE * 180 / Math.PI // in degrees per day === seconds
   // approximate transit, rise, set times.
   // (15.2) p. 102.0
-  let mt = _mt(p.lon, α, Th0)
+  let mt = _mt(p.lon, ga, Th0)
   let rs = {}
   rs.transit = base.pmod(mt, SECS_PER_DAY)
   rs.rise = base.pmod(mt - H0, SECS_PER_DAY)
@@ -183,44 +183,44 @@ M.approxTimes = function (p, h0, Th0, α, δ) {
  * a number of values computed from the day.
  *
  * @param {coord.Globe} p - is geographic coordinates of observer.
- * @param {number} ΔT - is delta T in seconds
+ * @param {number} gDT - is delta T in seconds
  * @param {number} h0 - is "standard altitude" of the body in radians
  * @param {number} Th0 - is apparent sidereal time at 0h UT at Greenwich in seconds
  *        (range 0...86400) must be the time on the day of interest, in seconds.
  *        See sidereal.apparent0UT
- * @param {Array<number>} α3 - slices of three right ascensions
- * @param {Array<number>} δ3 - slices of three declinations.
- *        α3, δ3 must be values at 0h dynamical time for the day before, the day of,
+ * @param {Array<number>} ga3 - slices of three right ascensions
+ * @param {Array<number>} gd3 - slices of three declinations.
+ *        ga3, gd3 must be values at 0h dynamical time for the day before, the day of,
  *        and the day after the day of interest.  Units are radians.
  *
  * @return Result units are seconds and are in the range [0,86400)
  * @throws Error
  */
-M.times = function (p, ΔT, h0, Th0, α3, δ3) { // (p globe.Coord, ΔT, h0, Th0 float64, α3, δ3 []float64)  (mRise, mTransit, mSet float64, err error)
-  let rs = M.approxTimes(p, h0, Th0, α3[1], δ3[1])
-  let d3α = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, α3)
-  let d3δ = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, δ3)
+M.times = function (p, gDT, h0, Th0, ga3, gd3) { // (p globe.Coord, gDT, h0, Th0 float64, ga3, gd3 []float64)  (mRise, mTransit, mSet float64, err error)
+  let rs = M.approxTimes(p, h0, Th0, ga3[1], gd3[1])
+  let d3ga = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, ga3)
+  let d3gd = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, gd3)
 
   // adjust mTransit
-  let ut = rs.transit + ΔT
-  let α = d3α.interpolateX(ut)
+  let ut = rs.transit + gDT
+  let ga = d3ga.interpolateX(ut)
   let th0 = _th0(Th0, rs.transit)
-  let H = -1 * _mt(p.lon, α, th0) // in secs // Hmeus = 0...360
+  let H = -1 * _mt(p.lon, ga, th0) // in secs // Hmeus = 0...360
   rs.transit -= H
 
   // adjust mRise, mSet
   let [sLat, cLat] = base.sincos(p.lat)
 
   let adjustRS = function (m) {
-    let ut = m + ΔT
-    let α = d3α.interpolateX(ut)
-    let δ = d3δ.interpolateX(ut)
+    let ut = m + gDT
+    let ga = d3ga.interpolateX(ut)
+    let gd = d3gd.interpolateX(ut)
     let th0 = _th0(Th0, m)
-    let H = -1 * _mt(p.lon, α, th0)
+    let H = -1 * _mt(p.lon, ga, th0)
     let Hrad = (H / SECS_PER_DEGREE) * D2R
-    let h = asin(((sLat * sin(δ)) + (cLat * cos(δ) * cos(Hrad)))) // formula 13.6
-    let Δm = (SECS_PER_DAY * (h - h0) / (cos(δ) * cLat * sin(Hrad) * 2 * Math.PI)) // formula p103 3
-    return m + Δm
+    let h = asin(((sLat * sin(gd)) + (cLat * cos(gd) * cos(Hrad)))) // formula 13.6
+    let gDm = (SECS_PER_DAY * (h - h0) / (cos(gd) * cLat * sin(Hrad) * 2 * Math.PI)) // formula p103 3
+    return m + gDm
   }
 
   rs.rise = adjustRS(rs.rise)
@@ -254,7 +254,7 @@ class PlanetRise {
     this.lon = lon * D2R
     let cal = new julian.Calendar().fromJD(this.jd)
     this.jde = cal.toJDE()
-    this.ΔT = deltat.deltaT(cal.toYear())
+    this.gDT = deltat.deltaT(cal.toYear())
     this.earth = earth
     this.planet = planet
   }
@@ -277,7 +277,7 @@ class PlanetRise {
     ]
     let Th0 = sidereal.apparent0UT(this.jd)
     let rs = M.times(
-      {lat: this.lat, lon: this.lon}, this.ΔT, this.refraction,
+      {lat: this.lat, lon: this.lon}, this.gDT, this.refraction,
       Th0, this._toArr(body, 'ra'), this._toArr(body, 'dec')
     )
     return this._rsToJD(rs)

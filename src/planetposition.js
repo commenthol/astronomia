@@ -93,10 +93,10 @@ class Planet {
    */
   position2000 (jde) {
     let T = base.J2000Century(jde)
-    let τ = T * 0.1
-    let lon = base.pmod(sum(τ, this.series.L), 2 * Math.PI)
-    let lat = sum(τ, this.series.B)
-    let range = sum(τ, this.series.R)
+    let gt = T * 0.1
+    let lon = base.pmod(sum(gt, this.series.L), 2 * Math.PI)
+    let lat = sum(gt, this.series.B)
+    let range = sum(gt, this.series.R)
     return new base.Coord(lon, lat, range)
   }
 

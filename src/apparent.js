@@ -22,27 +22,27 @@ const M = exports
  * of an object.
  *
  * Results are invalid for objects very near the celestial poles.
- * @param {Number} α - right ascension
- * @param {Number} δ - declination
+ * @param {Number} ga - right ascension
+ * @param {Number} gd - declination
  * @param {Number} jd - Julian Day
- * @return {Number[]} [Δα1, Δδ1] -
+ * @return {Number[]} [gDga1, gDgd1] -
 */
-M.nutation = function (α, δ, jd) { // (α, δ, jd float64)  (Δα1, Δδ1 float64)
-  let ε = nutation.meanObliquity(jd)
-  let [sinε, cosε] = base.sincos(ε)
-  let [Δψ, Δε] = nutation.nutation(jd)
-  let [sinα, cosα] = base.sincos(α)
-  let tanδ = tan(δ)
+M.nutation = function (ga, gd, jd) { // (ga, gd, jd float64)  (gDga1, gDgd1 float64)
+  let ge = nutation.meanObliquity(jd)
+  let [singe, cosge] = base.sincos(ge)
+  let [gDgps, gDge] = nutation.nutation(jd)
+  let [singa, cosga] = base.sincos(ga)
+  let tangd = tan(gd)
     // (23.1) p. 151
-  let Δα1 = (cosε + sinε * sinα * tanδ) * Δψ - cosα * tanδ * Δε
-  let Δδ1 = sinε * cosα * Δψ + sinα * Δε
-  return [Δα1, Δδ1]
+  let gDga1 = (cosge + singe * singa * tangd) * gDgps - cosga * tangd * gDge
+  let gDgd1 = singe * cosga * gDgps + singa * gDge
+  return [gDga1, gDgd1]
 }
 
 /**
- * κ is the constant of aberration in radians.
+ * gk is the constant of aberration in radians.
  */
-const κ = 20.49552 * Math.PI / 180 / 3600
+const gk = 20.49552 * Math.PI / 180 / 3600
 
 /**
  * longitude of perihelian of Earth's orbit.
@@ -55,42 +55,42 @@ M.perihelion = function (T) { // (T float64)  float64
  * EclipticAberration returns corrections due to aberration for ecliptic
  * coordinates of an object.
  */
-M.eclipticAberration = function (λ, β, jd) { // (λ, β, jd float64)  (Δλ, Δβ float64)
+M.eclipticAberration = function (gl, gb, jd) { // (gl, gb, jd float64)  (gDgl, gDgb float64)
   let T = base.J2000Century(jd)
   let {lon, ano} = solar.true(T) // eslint-disable-line no-unused-vars
   let e = solar.eccentricity(T)
-  let π = M.perihelion(T)
-  let [sβ, cβ] = base.sincos(β)
-  let [ssλ, csλ] = base.sincos(lon - λ)
-  let [sinπλ, cosπλ] = base.sincos(π - λ)
+  let gp = M.perihelion(T)
+  let [sgb, cgb] = base.sincos(gb)
+  let [ssgl, csgl] = base.sincos(lon - gl)
+  let [singpgl, cosgpgl] = base.sincos(gp - gl)
     // (23.2) p. 151
-  let Δλ = κ * (e * cosπλ - csλ) / cβ
-  let Δβ = -κ * sβ * (ssλ - e * sinπλ)
-  return [Δλ, Δβ]
+  let gDgl = gk * (e * cosgpgl - csgl) / cgb
+  let gDgb = -gk * sgb * (ssgl - e * singpgl)
+  return [gDgl, gDgb]
 }
 
 /**
  * Aberration returns corrections due to aberration for equatorial
  * coordinates of an object.
  */
-M.aberration = function (α, δ, jd) { // (α, δ, jd float64)  (Δα2, Δδ2 float64)
-  let ε = nutation.meanObliquity(jd)
+M.aberration = function (ga, gd, jd) { // (ga, gd, jd float64)  (gDga2, gDgd2 float64)
+  let ge = nutation.meanObliquity(jd)
   let T = base.J2000Century(jd)
   let {lon, ano} = solar.true(T) // eslint-disable-line no-unused-vars
   let e = solar.eccentricity(T)
-  let π = M.perihelion(T)
-  let [sinα, cosα] = base.sincos(α)
-  let [sinδ, cosδ] = base.sincos(δ)
+  let gp = M.perihelion(T)
+  let [singa, cosga] = base.sincos(ga)
+  let [singd, cosgd] = base.sincos(gd)
   let [sins, coss] = base.sincos(lon)
-  let [sinπ, cosπ] = base.sincos(π)
-  let cosε = cos(ε)
-  let q1 = cosα * cosε
+  let [singp, cosgp] = base.sincos(gp)
+  let cosge = cos(ge)
+  let q1 = cosga * cosge
   // (23.3) p. 152
-  let Δα2 = κ * (e * (q1 * cosπ + sinα * sinπ) - (q1 * coss + sinα * sins)) / cosδ
-  let q2 = cosε * (tan(ε) * cosδ - sinα * sinδ)
-  let q3 = cosα * sinδ
-  let Δδ2 = κ * (e * (cosπ * q2 + sinπ * q3) - (coss * q2 + sins * q3))
-  return [Δα2, Δδ2]
+  let gDga2 = gk * (e * (q1 * cosgp + singa * singp) - (q1 * coss + singa * sins)) / cosgd
+  let q2 = cosge * (tan(ge) * cosgd - singa * singd)
+  let q3 = cosga * singd
+  let gDgd2 = gk * (e * (cosgp * q2 + singp * q3) - (coss * q2 + sins * q3))
+  return [gDga2, gDgd2]
 }
 
 /**
@@ -100,13 +100,13 @@ M.aberration = function (α, δ, jd) { // (α, δ, jd float64)  (Δα2, Δδ2 fl
  * proper motion, precession, nutation, and aberration.  Result is in
  * eqTo.  EqFrom and eqTo must be non-nil, but may point to the same struct.
  */
-M.position = function (eqFrom, epochFrom, epochTo, mα, mδ) { // (eqFrom, eqTo *coord.Equatorial, epochFrom, epochTo float64, mα sexa.HourAngle, mδ sexa.Angle)  *coord.Equatorial
-  let eqTo = precess.position(eqFrom, epochFrom, epochTo, mα, mδ)
+M.position = function (eqFrom, epochFrom, epochTo, mga, mgd) { // (eqFrom, eqTo *coord.Equatorial, epochFrom, epochTo float64, mga sexa.HourAngle, mgd sexa.Angle)  *coord.Equatorial
+  let eqTo = precess.position(eqFrom, epochFrom, epochTo, mga, mgd)
   let jd = base.JulianYearToJDE(epochTo)
-  let [Δα1, Δδ1] = M.nutation(eqTo.ra, eqTo.dec, jd)
-  let [Δα2, Δδ2] = M.aberration(eqTo.ra, eqTo.dec, jd)
-  eqTo.ra += Δα1 + Δα2
-  eqTo.dec += Δδ1 + Δδ2
+  let [gDga1, gDgd1] = M.nutation(eqTo.ra, eqTo.dec, jd)
+  let [gDga2, gDgd2] = M.aberration(eqTo.ra, eqTo.dec, jd)
+  eqTo.ra += gDga1 + gDga2
+  eqTo.dec += gDgd1 + gDgd2
   return eqTo
 }
 
@@ -114,7 +114,7 @@ M.position = function (eqFrom, epochFrom, epochTo, mα, mδ) { // (eqFrom, eqTo 
  * AberrationRonVondrak uses the Ron-Vondrák expression to compute corrections
  * due to aberration for equatorial coordinates of an object.
  */
-M.aberrationRonVondrak = function (α, δ, jd) { // (α, δ, jd float64)  (Δα, Δδ float64)
+M.aberrationRonVondrak = function (ga, gd, jd) { // (ga, gd, jd float64)  (gDga, gDgd float64)
   let T = base.J2000Century(jd)
   let r = {
     T: T,
@@ -140,10 +140,10 @@ M.aberrationRonVondrak = function (α, δ, jd) { // (α, δ, jd float64)  (Δα,
     Yp += y
     Zp += z
   }
-  let [sinα, cosα] = base.sincos(α)
-  let [sinδ, cosδ] = base.sincos(δ)
+  let [singa, cosga] = base.sincos(ga)
+  let [singd, cosgd] = base.sincos(gd)
     // (23.4) p. 156
-  return [(Yp * cosα - Xp * sinα) / (c * cosδ), -((Xp * cosα + Yp * sinα) * sinδ - Zp * cosδ) / c]
+  return [(Yp * cosga - Xp * singa) / (c * cosgd), -((Xp * cosga + Yp * singa) * singd - Zp * cosgd) / c]
 }
 
 const c = 17314463350 // unit is 1e-8 AU / day
@@ -315,18 +315,18 @@ const rvTerm = [
  * Note the Ron-Vondrák expression is only valid for the epoch J2000.
  * EqFrom must be coordinates at epoch J2000.
  */
-M.positionRonVondrak = function (eqFrom, epochTo, mα, mδ) { // (eqFrom, eqTo *coord.Equatorial, epochTo float64, mα sexa.HourAngle, mδ sexa.Angle)  *coord.Equatorial
+M.positionRonVondrak = function (eqFrom, epochTo, mga, mgd) { // (eqFrom, eqTo *coord.Equatorial, epochTo float64, mga sexa.HourAngle, mgd sexa.Angle)  *coord.Equatorial
   let t = epochTo - 2000
   let eqTo = new coord.Equatorial()
-  eqTo.ra = eqFrom.ra + mα.rad() * t
-  eqTo.dec = eqFrom.dec + mδ.rad() * t
+  eqTo.ra = eqFrom.ra + mga.rad() * t
+  eqTo.dec = eqFrom.dec + mgd.rad() * t
   let jd = base.JulianYearToJDE(epochTo)
-  let [Δα, Δδ] = M.aberrationRonVondrak(eqTo.ra, eqTo.dec, jd)
-  eqTo.ra += Δα
-  eqTo.dec += Δδ
+  let [gDga, gDgd] = M.aberrationRonVondrak(eqTo.ra, eqTo.dec, jd)
+  eqTo.ra += gDga
+  eqTo.dec += gDgd
   eqTo = precess.position(eqTo, 2000, epochTo, 0, 0)
-  let [Δα1, Δδ1] = M.nutation(eqTo.ra, eqTo.dec, jd)
-  eqTo.ra += Δα1
-  eqTo.dec += Δδ1
+  let [gDga1, gDgd1] = M.nutation(eqTo.ra, eqTo.dec, jd)
+  eqTo.ra += gDga1
+  eqTo.dec += gDgd1
   return eqTo
 }

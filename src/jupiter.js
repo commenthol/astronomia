@@ -25,19 +25,19 @@ const M = exports
  * @return {Array}
  *    {number} DS - Planetocentric declination of the Sun.
  *    {number} DE - Planetocentric declination of the Earth.
- *    {number} ω1 - Longitude of the System I central meridian of the illuminated disk,
+ *    {number} gw1 - Longitude of the System I central meridian of the illuminated disk,
  *                  as seen from Earth.
- *    {number} ω2 - Longitude of the System II central meridian of the illuminated disk,
+ *    {number} gw2 - Longitude of the System II central meridian of the illuminated disk,
  *                  as seen from Earth.
  *    {number} P -  Geocentric position angle of Jupiter's northern rotation pole.
  */
-M.physical = function (jde, earth, jupiter) { // (jde float64, earth, jupiter *pp.V87Planet)  (DS, DE, ω1, ω2, P float64)
+M.physical = function (jde, earth, jupiter) { // (jde float64, earth, jupiter *pp.V87Planet)  (DS, DE, gw1, gw2, P float64)
   // Step 1.0
   let d = jde - 2433282.5
   let T1 = d / base.JulianCentury
   const p = Math.PI / 180
-  let α0 = 268 * p + 0.1061 * p * T1
-  let δ0 = 64.5 * p - 0.0164 * p * T1
+  let ga0 = 268 * p + 0.1061 * p * T1
+  let gd0 = 64.5 * p - 0.0164 * p * T1
   // Step 2.0
   let W1 = 17.71 * p + 877.90003539 * p * d
   let W2 = 16.838 * p + 870.27003539 * p * d
@@ -50,12 +50,12 @@ M.physical = function (jde, earth, jupiter) { // (jde float64, earth, jupiter *p
   // Steps 4-7.
   let [sl0, cl0] = base.sincos(l0)
   let sb0 = Math.sin(b0)
-  let Δ = 4.0 // surely better than 0.0
+  let gD = 4.0 // surely better than 0.0
 
   let l, b, r, x, y, z
   let f = function () {
-    let τ = base.lightTime(Δ)
-    let pos = jupiter.position(jde - τ)
+    let gt = base.lightTime(gD)
+    let pos = jupiter.position(jde - gt)
     l = pos.lon
     b = pos.lat
     r = pos.range
@@ -69,73 +69,73 @@ M.physical = function (jde, earth, jupiter) { // (jde float64, earth, jupiter *p
     y = r * cb * sl - R * sl0
     z = r * sb - R * sb0
     // (42.3) p. 289
-    Δ = Math.sqrt(x * x + y * y + z * z)
+    gD = Math.sqrt(x * x + y * y + z * z)
   }
   f()
   f()
 
   // Step 8.0
-  let ε0 = nutation.meanObliquity(jde)
+  let ge0 = nutation.meanObliquity(jde)
   // Step 9.0
-  let [sε0, cε0] = base.sincos(ε0)
+  let [sge0, cge0] = base.sincos(ge0)
   let [sl, cl] = base.sincos(l)
   let [sb, cb] = base.sincos(b)
-  let αs = Math.atan2(cε0 * sl - sε0 * sb / cb, cl)
-  let δs = Math.asin(cε0 * sb + sε0 * cb * sl)
+  let gas = Math.atan2(cge0 * sl - sge0 * sb / cb, cl)
+  let gds = Math.asin(cge0 * sb + sge0 * cb * sl)
   // Step 10.0
-  let [sδs, cδs] = base.sincos(δs)
-  let [sδ0, cδ0] = base.sincos(δ0)
-  let DS = Math.asin(-sδ0 * sδs - cδ0 * cδs * Math.cos(α0 - αs))
+  let [sgds, cgds] = base.sincos(gds)
+  let [sgd0, cgd0] = base.sincos(gd0)
+  let DS = Math.asin(-sgd0 * sgds - cgd0 * cgds * Math.cos(ga0 - gas))
   // Step 11.0
-  let u = y * cε0 - z * sε0
-  let v = y * sε0 + z * cε0
-  let α = Math.atan2(u, x)
-  let δ = Math.atan(v / Math.hypot(x, u))
-  let [sδ, cδ] = base.sincos(δ)
-  let [sα0α, cα0α] = base.sincos(α0 - α)
-  let ζ = Math.atan2(sδ0 * cδ * cα0α - sδ * cδ0, cδ * sα0α)
+  let u = y * cge0 - z * sge0
+  let v = y * sge0 + z * cge0
+  let ga = Math.atan2(u, x)
+  let gd = Math.atan(v / Math.hypot(x, u))
+  let [sgd, cgd] = base.sincos(gd)
+  let [sga0ga, cga0ga] = base.sincos(ga0 - ga)
+  let gz = Math.atan2(sgd0 * cgd * cga0ga - sgd * cgd0, cgd * sga0ga)
   // Step 12.0
-  let DE = Math.asin(-sδ0 * sδ - cδ0 * cδ * Math.cos(α0 - α))
+  let DE = Math.asin(-sgd0 * sgd - cgd0 * cgd * Math.cos(ga0 - ga))
   // Step 13.0
-  let ω1 = W1 - ζ - 5.07033 * p * Δ
-  let ω2 = W2 - ζ - 5.02626 * p * Δ
+  let gw1 = W1 - gz - 5.07033 * p * gD
+  let gw2 = W2 - gz - 5.02626 * p * gD
   // Step 14.0
-  let C = (2 * r * Δ + R * R - r * r - Δ * Δ) / (4 * r * Δ)
+  let C = (2 * r * gD + R * R - r * r - gD * gD) / (4 * r * gD)
   if (Math.sin(l - l0) < 0) {
     C = -C
   }
-  ω1 = base.pmod(ω1 + C, 2 * Math.PI)
-  ω2 = base.pmod(ω2 + C, 2 * Math.PI)
+  gw1 = base.pmod(gw1 + C, 2 * Math.PI)
+  gw2 = base.pmod(gw2 + C, 2 * Math.PI)
   // Step 15.0
-  let [Δψ, Δε] = nutation.nutation(jde)
-  let ε = ε0 + Δε
+  let [gDgps, gDge] = nutation.nutation(jde)
+  let ge = ge0 + gDge
   // Step 16.0
-  let [sε, cε] = base.sincos(ε)
-  let [sα, cα] = base.sincos(α)
-  α += 0.005693 * p * (cα * cl0 * cε + sα * sl0) / cδ
-  δ += 0.005693 * p * (cl0 * cε * (sε / cε * cδ - sα * sδ) + cα * sδ * sl0)
+  let [sge, cge] = base.sincos(ge)
+  let [sga, cga] = base.sincos(ga)
+  ga += 0.005693 * p * (cga * cl0 * cge + sga * sl0) / cgd
+  gd += 0.005693 * p * (cl0 * cge * (sge / cge * cgd - sga * sgd) + cga * sgd * sl0)
   // Step 17.0
-  let tδ = sδ / cδ
-  let Δα = (cε + sε * sα * tδ) * Δψ - cα * tδ * Δε
-  let Δδ = sε * cα * Δψ + sα * Δε
-  let αʹ = α + Δα
-  let δʹ = δ + Δδ
-  let [sα0, cα0] = base.sincos(α0)
-  let tδ0 = sδ0 / cδ0
-  let Δα0 = (cε + sε * sα0 * tδ0) * Δψ - cα0 * tδ0 * Δε
-  let Δδ0 = sε * cα0 * Δψ + sα0 * Δε
-  let α0ʹ = α0 + Δα0
-  let δ0ʹ = δ0 + Δδ0
+  let tgd = sgd / cgd
+  let gDga = (cge + sge * sga * tgd) * gDgps - cga * tgd * gDge
+  let gDgd = sge * cga * gDgps + sga * gDge
+  let gaʹ = ga + gDga
+  let gdʹ = gd + gDgd
+  let [sga0, cga0] = base.sincos(ga0)
+  let tgd0 = sgd0 / cgd0
+  let gDga0 = (cge + sge * sga0 * tgd0) * gDgps - cga0 * tgd0 * gDge
+  let gDgd0 = sge * cga0 * gDgps + sga0 * gDge
+  let ga0ʹ = ga0 + gDga0
+  let gd0ʹ = gd0 + gDgd0
   // Step 18.0
-  let [sδʹ, cδʹ] = base.sincos(δʹ)
-  let [sδ0ʹ, cδ0ʹ] = base.sincos(δ0ʹ)
-  let [sα0ʹαʹ, cα0ʹαʹ] = base.sincos(α0ʹ - αʹ)
+  let [sgdʹ, cgdʹ] = base.sincos(gdʹ)
+  let [sgd0ʹ, cgd0ʹ] = base.sincos(gd0ʹ)
+  let [sga0ʹgaʹ, cga0ʹgaʹ] = base.sincos(ga0ʹ - gaʹ)
   // (42.4) p. 290
-  let P = Math.atan2(cδ0ʹ * sα0ʹαʹ, sδ0ʹ * cδʹ - cδ0ʹ * sδʹ * cα0ʹαʹ)
+  let P = Math.atan2(cgd0ʹ * sga0ʹgaʹ, sgd0ʹ * cgdʹ - cgd0ʹ * sgdʹ * cga0ʹgaʹ)
   if (P < 0) {
     P += 2 * Math.PI
   }
-  return [DS, DE, ω1, ω2, P]
+  return [DS, DE, gw1, gw2, P]
 }
 
 /**
@@ -148,12 +148,12 @@ M.physical = function (jde, earth, jupiter) { // (jde float64, earth, jupiter *p
  * @return {Array}
  *    {number} DS - Planetocentric declination of the Sun.
  *    {number} DE - Planetocentric declination of the Earth.
- *    {number} ω1 - Longitude of the System I central meridian of the illuminated disk,
+ *    {number} gw1 - Longitude of the System I central meridian of the illuminated disk,
  *                  as seen from Earth.
- *    {number} ω2 - Longitude of the System II central meridian of the illuminated disk,
+ *    {number} gw2 - Longitude of the System II central meridian of the illuminated disk,
  *                  as seen from Earth.
  */
-M.physical2 = function (jde) { // (jde float64)  (DS, DE, ω1, ω2 float64)
+M.physical2 = function (jde) { // (jde float64)  (DS, DE, gw1, gw2 float64)
   let d = jde - base.J2000
   const p = Math.PI / 180
   let V = 172.74 * p + 0.00111588 * p * d
@@ -171,21 +171,21 @@ M.physical2 = function (jde) { // (jde float64)  (DS, DE, ω1, ω2 float64)
   let R = 1.00014 - 0.01671 * cM - 0.00014 * c2M
   let r = 5.20872 - 0.25208 * cN - 0.00611 * c2N
   let [sK, cK] = base.sincos(K)
-  let Δ = Math.sqrt(r * r + R * R - 2 * r * R * cK)
-  let ψ = Math.asin(R / Δ * sK)
-  let dd = d - Δ / 173
-  let ω1 = 210.98 * p + 877.8169088 * p * dd + ψ - B
-  let ω2 = 187.23 * p + 870.1869088 * p * dd + ψ - B
-  let C = Math.sin(ψ / 2)
+  let gD = Math.sqrt(r * r + R * R - 2 * r * R * cK)
+  let gps = Math.asin(R / gD * sK)
+  let dd = d - gD / 173
+  let gw1 = 210.98 * p + 877.8169088 * p * dd + gps - B
+  let gw2 = 187.23 * p + 870.1869088 * p * dd + gps - B
+  let C = Math.sin(gps / 2)
   C *= C
   if (sK > 0) {
     C = -C
   }
-  ω1 = base.pmod(ω1 + C, 2 * Math.PI)
-  ω2 = base.pmod(ω2 + C, 2 * Math.PI)
-  let λ = 34.35 * p + 0.083091 * p * d + 0.329 * p * sV + B
-  let DS = 3.12 * p * Math.sin(λ + 42.8 * p)
-  let DE = DS - 2.22 * p * Math.sin(ψ) * Math.cos(λ + 22 * p) -
-    1.3 * p * (r - Δ) / Δ * Math.sin(λ - 100.5 * p)
-  return [DS, DE, ω1, ω2]
+  gw1 = base.pmod(gw1 + C, 2 * Math.PI)
+  gw2 = base.pmod(gw2 + C, 2 * Math.PI)
+  let gl = 34.35 * p + 0.083091 * p * d + 0.329 * p * sV + B
+  let DS = 3.12 * p * Math.sin(gl + 42.8 * p)
+  let DE = DS - 2.22 * p * Math.sin(gps) * Math.cos(gl + 22 * p) -
+    1.3 * p * (r - gD) / gD * Math.sin(gl - 100.5 * p)
+  return [DS, DE, gw1, gw2]
 }

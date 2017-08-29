@@ -17,7 +17,7 @@ describe('#mars', function () {
     var re = mars.physical(2448935.500683, e, m)
     var DE = re[0]
     var DS = re[1]
-    var ω = re[2]
+    var gw = re[2]
     var P = re[3]
     var Q = re[4]
     var d = re[5]
@@ -26,7 +26,7 @@ describe('#mars', function () {
     var res = [
       toFixed(DE * 180 / Math.PI, 2),
       toFixed(DS * 180 / Math.PI, 2),
-      toFixed(ω * 180 / Math.PI, 2),
+      toFixed(gw * 180 / Math.PI, 2),
       toFixed(P * 180 / Math.PI, 2),
       toFixed(Q * 180 / Math.PI, 2),
       toFixed(d * 180 / Math.PI * 60 * 60, 2), // display as arc sec
@@ -36,7 +36,7 @@ describe('#mars', function () {
     var exp = [
       +12.44, // DE
       -2.76,  // DS
-      111.55, // ω
+      111.55, // gw
       347.64, // P
       279.91, // Q
       10.75,  // d

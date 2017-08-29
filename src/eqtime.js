@@ -27,26 +27,26 @@ const M = exports
  * @returns {Number} equation of time as an hour angle in radians.
  */
 M.e = function (jde, earth) {
-  let τ = base.J2000Century(jde) * 0.1
-  let L0 = l0(τ)
+  let gt = base.J2000Century(jde) * 0.1
+  let L0 = l0(gt)
   // code duplicated from solar.ApparentEquatorialVSOP87 so that
-  // we can keep Δψ and cε
+  // we can keep gDgps and cge
   let {lon, lat, range} = solar.trueVSOP87(earth, jde)
-  let [Δψ, Δε] = nutation.nutation(jde)
+  let [gDgps, gDge] = nutation.nutation(jde)
   let a = -20.4898 / 3600 * Math.PI / 180 / range
-  let λ = lon + Δψ + a
-  let ε = nutation.meanObliquity(jde) + Δε
-  let eq = new coord.Ecliptic(λ, lat).toEquatorial(ε)
+  let gl = lon + gDgps + a
+  let ge = nutation.meanObliquity(jde) + gDge
+  let eq = new coord.Ecliptic(gl, lat).toEquatorial(ge)
   // (28.1) p. 183
-  let E = L0 - 0.0057183 * Math.PI / 180 - eq.ra + Δψ * cos(ε)
+  let E = L0 - 0.0057183 * Math.PI / 180 - eq.ra + gDgps * cos(ge)
   return base.pmod(E + Math.PI, 2 * Math.PI) - Math.PI
 }
 
 /**
  * (28.2) p. 183
  */
-const l0 = function (τ) {
-  return base.horner(τ, 280.4664567, 360007.6982779, 0.03032028,
+const l0 = function (gt) {
+  return base.horner(gt, 280.4664567, 360007.6982779, 0.03032028,
     1.0 / 49931, -1.0 / 15300, -1.0 / 2000000) * Math.PI / 180
 }
 
@@ -60,8 +60,8 @@ const l0 = function (τ) {
  * @returns {Number} equation of time as an hour angle in radians.
  */
 M.eSmart = function (jde) {
-  let ε = nutation.meanObliquity(jde)
-  let t = tan(ε * 0.5)
+  let ge = nutation.meanObliquity(jde)
+  let t = tan(ge * 0.5)
   let y = t * t
   let T = base.J2000Century(jde)
   let L0 = l0(T * 0.1)

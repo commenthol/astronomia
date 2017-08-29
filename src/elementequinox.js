@@ -21,8 +21,8 @@ const M = exports
  * from one equinox to another.
  *
  * @param {Number} inc  - inclination
- * @param {Number} node - longitude of ascending node (Ω)
- * @param {Number} peri - argument of perihelion (ω)
+ * @param {Number} node - longitude of ascending node (gw)
+ * @param {Number} peri - argument of perihelion (gwa)
  */
 class Elements {
   constructor (inc, node, peri) {

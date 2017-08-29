@@ -43,9 +43,9 @@ function dmf (T) {
  *
  * @param {number} jde - Julian ephemeris day
  * @returns {base.Coord}
- *  {number} lon - Geocentric longitude λ, in radians.
- *  {number} lat - Geocentric latitude β, in radians.
- *  {number} range - Distance Δ between centers of the Earth and Moon, in km.
+ *  {number} lon - Geocentric longitude gl, in radians.
+ *  {number} lat - Geocentric latitude gb, in radians.
+ *  {number} range - Distance gD between centers of the Earth and Moon, in km.
  */
 M.position = function (jde) {
   let T = base.J2000Century(jde)
@@ -56,26 +56,26 @@ M.position = function (jde) {
   let a3 = 313.45 * D2R + 481266.484 * D2R * T
   let e = base.horner(T, 1, -0.002516, -0.0000074)
   let e2 = e * e
-  let Σl = 3958 * sin(a1) + 1962 * sin(l_ - f) + 318 * sin(a2)
-  let Σr = 0.0
-  let Σb = -2235 * sin(l_) + 382 * sin(a3) + 175 * sin(a1 - f) +
+  let gSl = 3958 * sin(a1) + 1962 * sin(l_ - f) + 318 * sin(a2)
+  let gSr = 0.0
+  let gSb = -2235 * sin(l_) + 382 * sin(a3) + 175 * sin(a1 - f) +
     175 * sin(a1 + f) + 127 * sin(l_ - m_) - 115 * sin(l_ + m_)
   ta.forEach((r) => {
     let [sina, cosa] = base.sincos(d * r.d + m * r.m + m_ * r.m_ + f * r.f)
     switch (r.m) {
       case 0:
-        Σl += r.Σl * sina
-        Σr += r.Σr * cosa
+        gSl += r.gSl * sina
+        gSr += r.gSr * cosa
         break
       case -1:
       case 1:
-        Σl += r.Σl * sina * e
-        Σr += r.Σr * cosa * e
+        gSl += r.gSl * sina * e
+        gSr += r.gSr * cosa * e
         break
       case -2:
       case 2:
-        Σl += r.Σl * sina * e2
-        Σr += r.Σr * cosa * e2
+        gSl += r.gSl * sina * e2
+        gSr += r.gSr * cosa * e2
         break
     }
   })
@@ -84,21 +84,21 @@ M.position = function (jde) {
     let sb = sin(d * r.d + m * r.m + m_ * r.m_ + f * r.f)
     switch (r.m) {
       case 0:
-        Σb += r.Σb * sb
+        gSb += r.gSb * sb
         break
       case -1:
       case 1:
-        Σb += r.Σb * sb * e
+        gSb += r.gSb * sb * e
         break
       case -2:
       case 2:
-        Σb += r.Σb * sb * e2
+        gSb += r.gSb * sb * e2
         break
     }
   })
-  let lon = base.pmod(l_, 2 * Math.PI) + Σl * 1e-6 * D2R
-  let lat = Σb * 1e-6 * D2R
-  let range = 385000.56 + Σr * 1e-3
+  let lon = base.pmod(l_, 2 * Math.PI) + gSl * 1e-6 * D2R
+  let lat = gSb * 1e-6 * D2R
+  let range = 385000.56 + gSr * 1e-3
   return new base.Coord(lon, lat, range)
 }
 
@@ -181,7 +181,7 @@ const ta = (function () {
   ]
   return ta.map((row) => {
     let o = {}
-      ;['d', 'm', 'm_', 'f', 'Σl', 'Σr'].map((D2R, i) => {
+      ;['d', 'm', 'm_', 'f', 'gSl', 'gSr'].map((D2R, i) => {
         o[D2R] = row[i]
       })
     return o
@@ -268,7 +268,7 @@ const tb = (function () {
   ]
   return tb.map((row) => {
     let o = {}
-      ;['d', 'm', 'm_', 'f', 'Σb'].map((D2R, i) => {
+      ;['d', 'm', 'm_', 'f', 'gSb'].map((D2R, i) => {
         o[D2R] = row[i]
       })
     return o

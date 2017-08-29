@@ -11,20 +11,20 @@ var sexa = require('..').sexagesimal
 describe('#apparent', function () {
   it('nutation', function () {
     // Example 23.a, p. 152
-    var α = new sexa.RA(2, 46, 11.331).rad()
-    var δ = new sexa.Angle(false, 49, 20, 54.54).rad()
+    var ga = new sexa.RA(2, 46, 11.331).rad()
+    var gd = new sexa.Angle(false, 49, 20, 54.54).rad()
     var jd = julian.CalendarGregorianToJD(2028, 11, 13.19)
-    var res = apparent.nutation(α, δ, jd)
+    var res = apparent.nutation(ga, gd, jd)
     assert.equal(new sexa.Angle(res[0]).toString(3), '0°0′15.843″')
     assert.equal(new sexa.Angle(res[1]).toString(3), '0°0′6.217″')
   })
 
   it('aberration', function () {
     // Example 23.a, p. 152
-    var α = new sexa.RA(2, 46, 11.331).rad()
-    var δ = new sexa.Angle(false, 49, 20, 54.54).rad()
+    var ga = new sexa.RA(2, 46, 11.331).rad()
+    var gd = new sexa.Angle(false, 49, 20, 54.54).rad()
     var jd = julian.CalendarGregorianToJD(2028, 11, 13.19)
-    var res = apparent.aberration(α, δ, jd)
+    var res = apparent.aberration(ga, gd, jd)
     assert.equal(new sexa.Angle(res[0]).toString(3), '0°0′30.045″')
     assert.equal(new sexa.Angle(res[1]).toString(3), '0°0′6.697″')
   })
@@ -46,10 +46,10 @@ describe('#apparent', function () {
 
   it('aberrationRonVondrak', function () {
     // Example 23.b, p. 156
-    var α = new sexa.RA(2, 44, 12.9747).rad()
-    var δ = new sexa.Angle(false, 49, 13, 39.896).rad()
+    var ga = new sexa.RA(2, 44, 12.9747).rad()
+    var gd = new sexa.Angle(false, 49, 13, 39.896).rad()
     var jd = julian.CalendarGregorianToJD(2028, 11, 13.19)
-    var res = apparent.aberrationRonVondrak(α, δ, jd)
+    var res = apparent.aberrationRonVondrak(ga, gd, jd)
     assert.equal(res[0].toFixed(9), '0.000145252') // radian
     assert.equal(res[1].toFixed(9), '0.000032723') // radian
   })

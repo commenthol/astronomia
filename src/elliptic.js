@@ -26,9 +26,9 @@ const M = exports
  * Argument p must be a valid V87Planet object for the observed planet.
  * Argument earth must be a valid V87Planet object for Earth.
  *
- * Results are right ascension and declination, α and δ in radians.
+ * Results are right ascension and declination, ga and gd in radians.
  */
-M.position = function (planet, earth, jde) { // (p, earth *pp.V87Planet, jde float64)  (α, δ float64)
+M.position = function (planet, earth, jde) { // (p, earth *pp.V87Planet, jde float64)  (ga, gd float64)
   let x
   let y
   let z
@@ -37,8 +37,8 @@ M.position = function (planet, earth, jde) { // (p, earth *pp.V87Planet, jde flo
   let [sB0, cB0] = base.sincos(B0)
   let [sL0, cL0] = base.sincos(L0)
 
-  function pos (τ = 0) {
-    let pos = planet.position(jde - τ)
+  function pos (gt = 0) {
+    let pos = planet.position(jde - gt)
     let [L, B, R] = [pos.lon, pos.lat, pos.range]
     let [sB, cB] = base.sincos(B)
     let [sL, cL] = base.sincos(L)
@@ -48,23 +48,23 @@ M.position = function (planet, earth, jde) { // (p, earth *pp.V87Planet, jde flo
   }
 
   pos()
-  let Δ = Math.sqrt(x * x + y * y + z * z) // (33.4) p. 224
-  let τ = base.lightTime(Δ)
-  // repeating with jde-τ
-  pos(τ)
+  let gD = Math.sqrt(x * x + y * y + z * z) // (33.4) p. 224
+  let gt = base.lightTime(gD)
+  // repeating with jde-gt
+  pos(gt)
 
-  let λ = Math.atan2(y, x)                // (33.1) p. 223
-  let β = Math.atan2(z, Math.hypot(x, y)) // (33.2) p. 223
-  let [Δλ, Δβ] = apparent.eclipticAberration(λ, β, jde)
-  let fk5 = planetposition.toFK5(λ + Δλ, β + Δβ, jde)
-  λ = fk5.lon
-  β = fk5.lat
-  let [Δψ, Δε] = nutation.nutation(jde)
-  λ += Δψ
-  let ε = nutation.meanObliquity(jde) + Δε
-  return new coord.Ecliptic(λ, β).toEquatorial(ε)
+  let gl = Math.atan2(y, x)                // (33.1) p. 223
+  let gb = Math.atan2(z, Math.hypot(x, y)) // (33.2) p. 223
+  let [gDgl, gDgb] = apparent.eclipticAberration(gl, gb, jde)
+  let fk5 = planetposition.toFK5(gl + gDgl, gb + gDgb, jde)
+  gl = fk5.lon
+  gb = fk5.lat
+  let [gDgps, gDge] = nutation.nutation(jde)
+  gl += gDgps
+  let ge = nutation.meanObliquity(jde) + gDge
+  return new coord.Ecliptic(gl, gb).toEquatorial(ge)
   // Meeus gives a formula for elongation but doesn't spell out how to
-  // obtaion term λ0 and doesn't give an example solution.
+  // obtaion term gl0 and doesn't give an example solution.
 }
 
 /**
@@ -75,8 +75,8 @@ class Elements {
   Axis  float64 // Semimajor axis, a, in AU
   Ecc   float64 // Eccentricity, e
   Inc   float64 // Inclination, i, in radians
-  ArgP  float64 // Argument of perihelion, ω, in radians
-  Node  float64 // Longitude of ascending node, Ω, in radians
+  ArgP  float64 // Argument of perihelion, gwa, in radians
+  Node  float64 // Longitude of ascending node, gw, in radians
   TimeP float64 // Time of perihelion, T, as jde
   */
   constructor (axis, ecc, inc, argP, node, timeP) {
@@ -97,23 +97,23 @@ class Elements {
    *
    * Argument e must be a valid V87Planet object for Earth.
    *
-   * Results are right ascension and declination α and δ, and elongation ψ,
+   * Results are right ascension and declination ga and gd, and elongation gps,
    * all in radians.
    */
-  position (jde, earth) { // (α, δ, ψ float64) {
+  position (jde, earth) { // (ga, gd, gps float64) {
     // (33.6) p. 227
     let n = base.K / this.axis / Math.sqrt(this.axis)
-    const sε = base.SOblJ2000
-    const cε = base.COblJ2000
-    let [sΩ, cΩ] = base.sincos(this.node)
+    const sge = base.SOblJ2000
+    const cge = base.COblJ2000
+    let [sgw, cgw] = base.sincos(this.node)
     let [si, ci] = base.sincos(this.inc)
     // (33.7) p. 228
-    let F = cΩ
-    let G = sΩ * cε
-    let H = sΩ * sε
-    let P = -sΩ * ci
-    let Q = cΩ * ci * cε - si * sε
-    let R = cΩ * ci * sε + si * cε
+    let F = cgw
+    let G = sgw * cge
+    let H = sgw * sge
+    let P = -sgw * ci
+    let Q = cgw * ci * cge - si * sge
+    let R = cgw * ci * sge + si * cge
     // (33.8) p. 229
     let A = Math.atan2(F, P)
     let B = Math.atan2(G, Q)
@@ -130,12 +130,12 @@ class Elements {
       } catch (e) {
         E = kepler.kepler3(this.ecc, M)
       }
-      let ν = kepler.true(E, this.ecc)
+      let gn = kepler.true(E, this.ecc)
       let r = kepler.radius(E, this.ecc, this.axis)
       // (33.9) p. 229
-      let x = r * a * Math.sin(A + this.argP + ν)
-      let y = r * b * Math.sin(B + this.argP + ν)
-      let z = r * c * Math.sin(C + this.argP + ν)
+      let x = r * a * Math.sin(A + this.argP + gn)
+      let y = r * b * Math.sin(B + this.argP + gn)
+      let z = r * c * Math.sin(C + this.argP + gn)
       return {x, y, z}
     }
     return M.astrometricJ2000(f, jde, earth)
@@ -154,35 +154,35 @@ M.Elements = Elements
  *
  * Results are J2000 right ascention, declination, and elongation.
  */
-M.astrometricJ2000 = function (f, jde, earth) { // (f func(float64)  (x, y, z float64), jde float64, e *pp.V87Planet) (α, δ, ψ float64)
+M.astrometricJ2000 = function (f, jde, earth) { // (f func(float64)  (x, y, z float64), jde float64, e *pp.V87Planet) (ga, gd, gps float64)
   let sol = solarxyz.positionJ2000(earth, jde)
   let [X, Y, Z] = [sol.x, sol.y, sol.z]
-  let ξ
-  let η
-  let ζ
-  let Δ
+  let gks
+  let gh
+  let gz
+  let gD
 
-  function fn (τ = 0) {
+  function fn (gt = 0) {
     // (33.10) p. 229
-    let {x, y, z} = f(jde - τ)
-    ξ = X + x
-    η = Y + y
-    ζ = Z + z
-    Δ = Math.sqrt(ξ * ξ + η * η + ζ * ζ)
+    let {x, y, z} = f(jde - gt)
+    gks = X + x
+    gh = Y + y
+    gz = Z + z
+    gD = Math.sqrt(gks * gks + gh * gh + gz * gz)
   }
 
   fn()
-  let τ = base.lightTime(Δ)
-  fn(τ)
+  let gt = base.lightTime(gD)
+  fn(gt)
 
-  let α = Math.atan2(η, ξ)
-  if (α < 0) {
-    α += 2 * Math.PI
+  let ga = Math.atan2(gh, gks)
+  if (ga < 0) {
+    ga += 2 * Math.PI
   }
-  let δ = Math.asin(ζ / Δ)
+  let gd = Math.asin(gz / gD)
   let R0 = Math.sqrt(X * X + Y * Y + Z * Z)
-  let ψ = Math.acos((ξ * X + η * Y + ζ * Z) / R0 / Δ)
-  return new base.Coord(α, δ, undefined, ψ)
+  let gps = Math.acos((gks * X + gh * Y + gz * Z) / R0 / gD)
+  return new base.Coord(ga, gd, undefined, gps)
 }
 
 /**

@@ -29,10 +29,10 @@ M.heliocentric = function (jde) {
   let P = 238.96 + 144.96 * T
   for (var i in t37) {
     let t = t37[i]
-    let [sα, cα] = base.sincos((t.i * J + t.j * S + t.k * P) * Math.PI / 180)
-    l += t.lA * sα + t.lB * cα
-    b += t.bA * sα + t.bB * cα
-    r += t.rA * sα + t.rB * cα
+    let [sga, cga] = base.sincos((t.i * J + t.j * S + t.k * P) * Math.PI / 180)
+    l += t.lA * sga + t.lB * cga
+    b += t.bA * sga + t.bB * cga
+    r += t.rA * sga + t.rB * cga
   }
   l = (l + 238.958116 + 144.96 * T) * Math.PI / 180
   b = (b - 3.908239) * Math.PI / 180
@@ -44,8 +44,8 @@ M.heliocentric = function (jde) {
  * Astrometric returns J2000 astrometric coordinates of Pluto.
  */
 M.astrometric = function (jde, earth) {
-  const sε = base.SOblJ2000
-  const cε = base.COblJ2000
+  const sge = base.SOblJ2000
+  const cge = base.COblJ2000
   let f = function (jde) {
     var x, y, z
     let {lon, lat, range} = M.heliocentric(jde)
@@ -53,8 +53,8 @@ M.astrometric = function (jde, earth) {
     let [sb, cb] = base.sincos(lat)
     // (37.1) p. 264
     x = range * cl * cb
-    y = range * (sl * cb * cε - sb * sε)
-    z = range * (sl * cb * sε + sb * cε)
+    y = range * (sl * cb * cge - sb * sge)
+    z = range * (sl * cb * sge + sb * cge)
     return {x, y, z}
   }
   let c = elliptic.astrometricJ2000(f, jde, earth) // eslint-disable-line no-unused-vars

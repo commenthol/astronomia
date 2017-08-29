@@ -24,7 +24,7 @@ describe('#circle', function () {
     )
     var a = circle.smallest(c1, c2, c3)
     var d = a[0], t = a[1]
-    assert.equal(new sexa.Angle(d).toString(0), '2°18′38″') // Δ = 2°.31054 = 2°19′
+    assert.equal(new sexa.Angle(d).toString(0), '2°18′38″') // gD = 2°.31054 = 2°19′
     assert.equal(t, true) // type I
   })
 
@@ -44,7 +44,7 @@ describe('#circle', function () {
     )
     var a = circle.smallest(c1, c2, c3)
     var d = a[0], t = a[1]
-    assert.equal(new sexa.Angle(d).toString(0), '4°15′49″') // Δ = 4°.26363 = 4°16′
+    assert.equal(new sexa.Angle(d).toString(0), '4°15′49″') // gD = 4°.26363 = 4°16′
     assert.equal(t, false) // type II
   })
 })

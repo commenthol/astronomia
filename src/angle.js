@@ -28,7 +28,7 @@ const M = exports
  * `sep` returns the angular separation between two celestial bodies.
  *
  * The algorithm is numerically naïve, and while patched up a bit for
- * small separations, remains unstable for separations near π.
+ * small separations, remains unstable for separations near gp.
  *
  * @param {base.Coord} c1 - coordinate of celestial body 1
  * @param {base.Coord} c2 - coordinate of celestial body 2
@@ -97,13 +97,13 @@ M.minSepRect = function (jd1, jd3, cs1, cs2) {
   }
   let uv = function (c1, c2) {
     let [sind1, cosd1] = base.sincos(c1.dec)
-    let Δr = c2.ra - c1.ra
-    let tanΔr = tan(Δr)
-    let tanhΔr = tan(Δr / 2)
-    let K = 1 / (1 + sind1 * sind1 * tanΔr * tanhΔr)
-    let sinΔd = sin(c2.dec - c1.dec)
-    let u = -K * (1 - (sind1 / cosd1) * sinΔd) * cosd1 * tanΔr
-    let v = K * (sinΔd + sind1 * cosd1 * tanΔr * tanhΔr)
+    let gDr = c2.ra - c1.ra
+    let tangDr = tan(gDr)
+    let tanhgDr = tan(gDr / 2)
+    let K = 1 / (1 + sind1 * sind1 * tangDr * tanhgDr)
+    let singDd = sin(c2.dec - c1.dec)
+    let u = -K * (1 - (sind1 / cosd1) * singDd) * cosd1 * tangDr
+    let v = K * (singDd + sind1 * cosd1 * tangDr * tanhgDr)
     return [u, v]
   }
   let us = new Array(3).fill(0)
@@ -217,8 +217,8 @@ M.minSepPauwels = function (jd1, jd3, cs1, cs2) {
  * @return {Number} position angle (p)
  */
 M.relativePosition = function (c1, c2) {
-  let [sinΔr, cosΔr] = base.sincos(c2.ra - c1.ra)
+  let [singDr, cosgDr] = base.sincos(c2.ra - c1.ra)
   let [sind2, cosd2] = base.sincos(c2.dec)
-  let p = atan2(sinΔr, cosd2 * tan(c1.dec) - sind2 * cosΔr)
+  let p = atan2(singDr, cosd2 * tan(c1.dec) - sind2 * cosgDr)
   return p
 }

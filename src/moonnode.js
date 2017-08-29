@@ -46,10 +46,10 @@ function node (y, h) { // (y, h float64)  float64
     0.0001186 * p, 0.00000006 * p)
   let m_ = base.horner(T, 38.3776 * p, 355.52747313 * p / ck,
     0.0123499 * p, 0.000014627 * p, -0.000000069 * p)
-  let Ω = base.horner(T, 123.9767 * p, -1.44098956 * p / ck,
+  let gw = base.horner(T, 123.9767 * p, -1.44098956 * p / ck,
     0.0020608 * p, 0.00000214 * p, -0.000000016 * p)
   let V = base.horner(T, 299.75 * p, 132.85 * p, -0.009173 * p)
-  let P = Ω + 272.75 * p - 2.3 * p * T
+  let P = gw + 272.75 * p - 2.3 * p * T
   let E = base.horner(T, 1, -0.002516, -0.0000074)
   return base.horner(T, 2451565.1619, 27.212220817 / ck,
       0.0002762, 0.000000021, -0.000000000088) +
@@ -67,7 +67,7 @@ function node (y, h) { // (y, h float64)  float64
     0.0025 * Math.sin(4 * D) +
     0.0024 * Math.sin(D) +
     0.0022 * Math.sin(M + m_) * E +
-    0.0017 * Math.sin(Ω) +
+    0.0017 * Math.sin(gw) +
     0.0014 * Math.sin(4 * D - m_) +
     0.0005 * Math.sin(2 * D + M - m_) * E +
     0.0004 * Math.sin(2 * D - M + m_) * E +

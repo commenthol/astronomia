@@ -31,12 +31,12 @@ describe('elliptic', function () {
     })
     var j = julian.CalendarGregorianToJD(1990, 10, 6)
     var pos = k.position(j, earth)
-    var α = pos.ra // ascension
-    var δ = pos.dec // declination
-    var ψ = pos.elongation // elongation
-    assert.equal(new sexa.RA(α).toString(1), '10ʰ34ᵐ14.2ˢ')
-    assert.equal(new sexa.Angle(δ).toString(0), '19°9′31″')
-    assert.equal((ψ * 180 / Math.PI).toFixed(2), 40.51)
+    var ga = pos.ra // ascension
+    var gd = pos.dec // declination
+    var gps = pos.elongation // elongation
+    assert.equal(new sexa.RA(ga).toString(1), '10ʰ34ᵐ14.2ˢ')
+    assert.equal(new sexa.Angle(gd).toString(0), '19°9′31″')
+    assert.equal((gps * 180 / Math.PI).toFixed(2), 40.51)
   })
 
   it('velocity()', function () {

@@ -211,22 +211,22 @@ M.Coord = Coord
  * @returns {Number} position angle of the midpoint (in radians).
  */
 M.limb = function (equ, appSun) {
-  let α = equ.ra
-  let δ = equ.dec
-  let α0 = appSun.ra
-  let δ0 = appSun.dec
+  let ga = equ.ra
+  let gd = equ.dec
+  let ga0 = appSun.ra
+  let gd0 = appSun.dec
   // Mentioned in ch 41, p. 283.  Formula (48.5) p. 346
-  let sδ = Math.sin(δ)
-  let cδ = Math.cos(δ)
-  let sδ0 = Math.sin(δ0)
-  let cδ0 = Math.cos(δ0)
-  let sα0α = Math.sin(α0 - α)
-  let cα0α = Math.cos(α0 - α)
-  let χ = Math.atan2(cδ0 * sα0α, (sδ0 * cδ - cδ0 * sδ * cα0α))
-  if (χ < 0) {
-    χ += 2 * Math.PI
+  let sgd = Math.sin(gd)
+  let cgd = Math.cos(gd)
+  let sgd0 = Math.sin(gd0)
+  let cgd0 = Math.cos(gd0)
+  let sga0ga = Math.sin(ga0 - ga)
+  let cga0ga = Math.cos(ga0 - ga)
+  let gx = Math.atan2(cgd0 * sga0ga, (sgd0 * cgd - cgd0 * sgd * cga0ga))
+  if (gx < 0) {
+    gx += 2 * Math.PI
   }
-  return χ
+  return gx
 }
 
 // ---- math ----
@@ -304,11 +304,11 @@ M.cmp = function (a, b) {
 
 /**
  * shorthand function for Math.sin, Math.cos
- * @param {Number} ε
- * @returns {Number[]} [sin(ε), cos(ε)]
+ * @param {Number} ge
+ * @returns {Number[]} [sin(ge), cos(ge)]
  */
-M.sincos = function (ε) {
-  return [Math.sin(ε), Math.cos(ε)]
+M.sincos = function (ge) {
+  return [Math.sin(ge), Math.cos(ge)]
 }
 
 /**

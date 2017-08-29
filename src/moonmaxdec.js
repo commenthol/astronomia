@@ -19,7 +19,7 @@ const m = exports
  * Returned is the jde of the event nearest the given date and the declination
  * of the Moon at that time.
  */
-m.north = function (y) { // (y float64)  (jde, δ float64)
+m.north = function (y) { // (y float64)  (jde, gd float64)
   return max(y, nc)
 }
 
@@ -31,7 +31,7 @@ m.north = function (y) { // (y float64)  (jde, δ float64)
  * Returned is the jde of the event nearest the given date and the declination
  * of the Moon at that time.
  */
-m.south = function (y) { // (y float64)  (jde, δ float64)
+m.south = function (y) { // (y float64)  (jde, gd float64)
   return max(y, sc)
 }
 
@@ -41,7 +41,7 @@ const ck = 1 / 1336.86
 /**
  * @private
  */
-function max (y, c) { // (y float64, c *mc)  (jde, δ float64)
+function max (y, c) { // (y float64, c *mc)  (jde, gd float64)
   let k = (y - 2000.03) * 13.3686 // (52.1) p. 367
   k = Math.floor(k + 0.5)
   let T = k * ck
@@ -95,7 +95,7 @@ function max (y, c) { // (y float64, c *mc)  (jde, δ float64)
     c.tc[41] * Math.sin(2 * (D - f)) +
     c.tc[42] * Math.cos(2 * m_ + f) +
     c.tc[43] * Math.cos(3 * m_ + f)
-  let δ = 23.6961 * p - 0.013004 * p * T +
+  let gd = 23.6961 * p - 0.013004 * p * T +
     c.dc[0] * Math.sin(f) +
     c.dc[1] * Math.cos(2 * f) +
     c.dc[2] * Math.sin(2 * D - f) +
@@ -133,7 +133,7 @@ function max (y, c) { // (y float64, c *mc)  (jde, δ float64)
     c.dc[34] * Math.cos(m_) +
     c.dc[35] * Math.sin(2 * f) +
     c.dc[36] * Math.sin(m_ + f)
-  return {jde: jde, dec: c.s * δ}
+  return {jde: jde, dec: c.s * gd}
 }
 
 /**
