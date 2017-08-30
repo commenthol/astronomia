@@ -92,7 +92,7 @@ describe('#base', function () {
       it('direct', function () {
         // The direct function call loses precision as expected.
         var res = Math.sin(base.toRad(large))
-        assert.equal(res, 0.49999999995724154)
+        assert.equal(base.round(res), base.round(0.49999999995724154))
       })
 
       it('mathMod', function () {
@@ -133,7 +133,7 @@ describe('#base', function () {
         // Direct function call.  It's a number.  How correct is it?
         var res = Math.sin(base.toRad(W))
         // assert.equal(res, 0.04290970350270464) // Go
-        assert.equal(res, 0.04290970351724315)
+        assert.equal(base.round(res), base.round(0.04290970351724315))
       })
 
       it('Reduced', function () {

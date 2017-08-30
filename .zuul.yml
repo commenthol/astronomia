@@ -1,0 +1,29 @@
+ui: mocha-bdd
+scripts:
+  - node_modules/core-js/client/core.js
+browserify:
+  - transform: babelify
+browsers:
+  - name: chrome
+    version:
+      - 45
+      - latest
+  - name: firefox
+    version:
+      - 45
+      - latest
+  - name: safari
+    version:
+      - 10
+      - latest
+  - name: microsoftedge
+    version:
+      - 15
+      - latest
+  - name: internet explorer
+    version:
+      - 10
+      - 11
+  - name: iphone
+    version:
+      - latest

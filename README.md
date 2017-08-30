@@ -18,6 +18,19 @@ Additional algorithms not covered in the book have been added.
 npm install --save astronomia
 ```
 
+## Browser usage
+
+Make sure you add `<meta charset="UTF-8">` to your HTML or at least include your
+bundle with `<script src="your-bundle.js" charset="UTF-8"></script>` then
+this package runs in modern browsers.
+
+- Chrome: >=45
+- Firefox: >= 45
+- Safari: >=10
+- Mobile Safari: >=10
+- Edge: >=13
+- IE: >=10 (needs `core-js/es6` polyfill)
+
 ## Usage
 
 For documentation of the different packages please take a look at the source code as well as at the tests.
@@ -109,6 +122,10 @@ import base from 'astronomia/lib/base'
 to even run very long lasting tests, do
 
     SLOWTESTS=1 npm test
+
+In local browser
+
+    npm run zuul -- --local 3000
 
 ## Contribution and License Agreement
 
