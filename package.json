@@ -47,6 +47,7 @@
     "lodash.padstart": "^4.6.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.25.0",
     "babel-polyfill": "^6",
     "babel-preset-es2015": "^6",
