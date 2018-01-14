@@ -56,15 +56,13 @@
     "babel-preset-stage-2": "^6",
     "babelify": "^7.3.0",
     "core-js": "^2.5.0",
-    "mocha": "^3.4.2"
-  },
-  "optionalDependencies": {
     "eslint": "^3",
     "eslint-config-standard": "^10",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-node": "^5.0.0",
     "eslint-plugin-promise": "^3",
     "eslint-plugin-standard": "^3",
+    "mocha": "^3.4.2",
     "nyc": "^11.0.2",
     "rimraf": "^2.6.1",
     "serialize-to-js": "^1.1.1"

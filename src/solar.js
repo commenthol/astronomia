@@ -173,7 +173,7 @@ M.apparentEquatorial = function (jde) {
 M.trueVSOP87 = function (planet, jde) {
   let {lon, lat, range} = planet.position(jde)
   let s = lon + Math.PI
-    // FK5 correction.
+  // FK5 correction.
   let λp = base.horner(base.J2000Century(jde),
     s, -1.397 * Math.PI / 180, -0.00031 * Math.PI / 180)
   let [sλp, cλp] = base.sincos(λp)
