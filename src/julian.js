@@ -11,7 +11,6 @@
 const base = require('./base')
 const sexa = require('./sexagesimal')
 const deltat = require('./deltat')
-const _padstart = require('lodash.padstart')
 
 const M = exports
 const int = Math.trunc
@@ -614,5 +613,6 @@ function pad (num, len) {
   len = len || 2
   let neg = num < 0 ? '-' : ''
   num = Math.abs(num)
-  return neg + _padstart(num, len, '0')
+  const padded = ('0000' + num)
+  return neg + padded.substr(padded.length - len, len)
 }
