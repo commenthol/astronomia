@@ -98,23 +98,23 @@ describe('#perihelion', function () {
     // p. 271
     var v = new planetposition.Planet('saturn')
     sd
-    .filter(function (d) { return d.ap })
-    .forEach(function (d) {
-      it([d.y, d.m, d.d].join('-'), function () {
-        var yf = d.y + (d.m - 0.5) / 12
-        var res
-        if (d.ap === 'a') {
-          res = perihelion.aphelion2(v, yf, 1)
-        } else {
-          res = perihelion.perihelion2(v, yf, 1)
-        }
-        var o = julian.JDToCalendar(res[0])
-        assert.equal(o.year, d.y)
-        assert.equal(o.month, d.m)
-        assert.equal(Math.trunc(o.day), d.d)
-        assert.ok(Math.abs(res[1] - d.r) < 0.0001, d.r)
+      .filter(function (d) { return d.ap })
+      .forEach(function (d) {
+        it([d.y, d.m, d.d].join('-'), function () {
+          var yf = d.y + (d.m - 0.5) / 12
+          var res
+          if (d.ap === 'a') {
+            res = perihelion.aphelion2(v, yf, 1)
+          } else {
+            res = perihelion.perihelion2(v, yf, 1)
+          }
+          var o = julian.JDToCalendar(res[0])
+          assert.equal(o.year, d.y)
+          assert.equal(o.month, d.m)
+          assert.equal(Math.trunc(o.day), d.d)
+          assert.ok(Math.abs(res[1] - d.r) < 0.0001, d.r)
+        })
       })
-    })
   })
 
   describe('Uranus 2 async', function () {
@@ -136,26 +136,26 @@ describe('#perihelion', function () {
 
     var v = new planetposition.Planet('uranus')
     sd
-    .filter(function (d) { return d.ap })
-    .forEach(function (d) {
-      it([d.y, d.m, d.d].join('-'), function (done) {
-        function cb (res) {
-          var o = julian.JDToCalendar(res[0])
-          assert.equal(o.year, d.y)
-          assert.equal(o.month, d.m)
-          assert.equal(Math.trunc(o.day), d.d)
-          assert.ok(Math.abs(res[1] - d.r) < 0.0001, d.r)
-          done()
-        }
+      .filter(function (d) { return d.ap })
+      .forEach(function (d) {
+        it([d.y, d.m, d.d].join('-'), function (done) {
+          function cb (res) {
+            var o = julian.JDToCalendar(res[0])
+            assert.equal(o.year, d.y)
+            assert.equal(o.month, d.m)
+            assert.equal(Math.trunc(o.day), d.d)
+            assert.ok(Math.abs(res[1] - d.r) < 0.0001, d.r)
+            done()
+          }
 
-        var yf = d.y + (d.m - 0.5) / 12
-        if (d.ap === 'a') {
-          perihelion.aphelion2(v, yf, 1, cb)
-        } else {
-          perihelion.perihelion2(v, yf, 1, cb)
-        }
+          var yf = d.y + (d.m - 0.5) / 12
+          if (d.ap === 'a') {
+            perihelion.aphelion2(v, yf, 1, cb)
+          } else {
+            perihelion.perihelion2(v, yf, 1, cb)
+          }
+        })
       })
-    })
   })
 
   describe('Neptune 2 async', function () {
@@ -165,32 +165,32 @@ describe('#perihelion', function () {
       [
         slow(['p', 1876, 8, 28, 29.8148]), // p. 271
         slow(['a', 1959, 7, 13, 30.3317]), // p. 271
-        slow(['p', 2042, 9, 5, 29.8064])   // p. 272
+        slow(['p', 2042, 9, 5, 29.8064]) // p. 272
       ]
     )
 
     var v = new planetposition.Planet('neptune')
     sd
-    .filter(function (d) { return d.ap })
-    .forEach(function (d) {
-      it([d.y, d.m, d.d].join('-'), function (done) {
-        function cb (res) {
-          var o = julian.JDToCalendar(res[0])
-          assert.equal(o.year, d.y)
-          assert.equal(o.month, d.m)
-          assert.equal(Math.trunc(o.day), d.d)
-          assert.ok(Math.abs(res[1] - d.r) < 0.0001, d.r)
-          done()
-        }
+      .filter(function (d) { return d.ap })
+      .forEach(function (d) {
+        it([d.y, d.m, d.d].join('-'), function (done) {
+          function cb (res) {
+            var o = julian.JDToCalendar(res[0])
+            assert.equal(o.year, d.y)
+            assert.equal(o.month, d.m)
+            assert.equal(Math.trunc(o.day), d.d)
+            assert.ok(Math.abs(res[1] - d.r) < 0.0001, d.r)
+            done()
+          }
 
-        var yf = d.y + (d.m - 0.5) / 12
-        if (d.ap === 'a') {
-          perihelion.aphelion2(v, yf, 1, cb)
-        } else {
-          perihelion.perihelion2(v, yf, 1, cb)
-        }
+          var yf = d.y + (d.m - 0.5) / 12
+          if (d.ap === 'a') {
+            perihelion.aphelion2(v, yf, 1, cb)
+          } else {
+            perihelion.perihelion2(v, yf, 1, cb)
+          }
+        })
       })
-    })
   })
 
   describe('Earth 2 async', function () {
@@ -243,27 +243,27 @@ describe('#perihelion', function () {
 
     var v = new planetposition.Planet('earth')
     sd
-    .filter(function (d) { return d.ap })
-    .forEach(function (d) {
-      it([d.y, d.m, d.d].join('-'), function (done) {
-        function cb (res) {
-          var o = julian.JDToCalendar(res[0])
-          assert.equal(o.year, d.y)
-          assert.equal(o.month, d.m)
-          assert.equal(Math.trunc(o.day), d.d)
-          var hour = (o.day - Math.trunc(o.day)) * 24
-          assert.ok(Math.abs(hour - d.h) < 0.01, hour + '!~' + d.h)
-          assert.ok(Math.abs(res[1] - d.r) < 0.000001, res[1] + '!~' + d.r)
-          done()
-        }
+      .filter(function (d) { return d.ap })
+      .forEach(function (d) {
+        it([d.y, d.m, d.d].join('-'), function (done) {
+          function cb (res) {
+            var o = julian.JDToCalendar(res[0])
+            assert.equal(o.year, d.y)
+            assert.equal(o.month, d.m)
+            assert.equal(Math.trunc(o.day), d.d)
+            var hour = (o.day - Math.trunc(o.day)) * 24
+            assert.ok(Math.abs(hour - d.h) < 0.01, hour + '!~' + d.h)
+            assert.ok(Math.abs(res[1] - d.r) < 0.000001, res[1] + '!~' + d.r)
+            done()
+          }
 
-        var yf = d.y + (d.m - 0.5) / 12
-        if (d.ap === 'a') {
-          perihelion.aphelion2(v, yf, 0.0004, cb)
-        } else {
-          perihelion.perihelion2(v, yf, 0.0004, cb)
-        }
+          var yf = d.y + (d.m - 0.5) / 12
+          if (d.ap === 'a') {
+            perihelion.aphelion2(v, yf, 0.0004, cb)
+          } else {
+            perihelion.perihelion2(v, yf, 0.0004, cb)
+          }
+        })
       })
-    })
   })
 })

@@ -74,7 +74,7 @@ M.aaturnApparentPolar = function (Δ, B) { // (Δ, B float64)  float64
 M.moonTopocentric = function (Δ, δ, H, ρsφʹ, ρcφʹ) { // (Δ, δ, H, ρsφʹ, ρcφʹ float64)  float64
   const k = 0.272481
   let sπ = Math.sin(parallax.Horizontal(Δ))
-    // q computed by (40.6, 40.7) p. 280, ch 40.0
+  // q computed by (40.6, 40.7) p. 280, ch 40.0
   let [sδ, cδ] = base.sincos(δ)
   let [sH, cH] = base.sincos(H)
   let A = cδ * sH

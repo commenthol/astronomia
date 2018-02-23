@@ -53,7 +53,7 @@ M.position = function (planet, earth, jde) { // (p, earth *pp.V87Planet, jde flo
   // repeating with jde-τ
   pos(τ)
 
-  let λ = Math.atan2(y, x)                // (33.1) p. 223
+  let λ = Math.atan2(y, x) // (33.1) p. 223
   let β = Math.atan2(z, Math.hypot(x, y)) // (33.2) p. 223
   let [Δλ, Δβ] = apparent.eclipticAberration(λ, β, jde)
   let fk5 = planetposition.toFK5(λ + Δλ, β + Δβ, jde)

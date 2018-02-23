@@ -65,12 +65,12 @@ describe('#globe', function () {
   describe('distance functions', function () {
     // Example 11.c p 85.
     var c1 = new globe.Coord(
-      new sexa.Angle(false, 48, 50, 11).rad(),  // geographic latitude
-      new sexa.Angle(true, 2, 20, 14).rad()     // geographic longitude
+      new sexa.Angle(false, 48, 50, 11).rad(), // geographic latitude
+      new sexa.Angle(true, 2, 20, 14).rad() // geographic longitude
     )
     var c2 = new globe.Coord(
       new sexa.Angle(false, 38, 55, 17).rad(), // lat
-      new sexa.Angle(false, 77, 3, 56).rad()   // lon
+      new sexa.Angle(false, 77, 3, 56).rad() // lon
     )
     var d
 

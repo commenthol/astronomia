@@ -94,7 +94,7 @@ class Equatorial {
     let [sα, cα] = base.sincos(this.ra)
     let [sδ, cδ] = base.sincos(this.dec)
     let lon = Math.atan2(sα * εcos + (sδ / cδ) * εsin, cα) // (13.1) p. 93
-    let lat = Math.asin(sδ * εcos - cδ * εsin * sα)        // (13.2) p. 93
+    let lat = Math.asin(sδ * εcos - cδ * εsin * sα) // (13.2) p. 93
     return new Ecliptic(lon, lat)
   }
 

@@ -82,12 +82,12 @@ const g = function (k, jm, c1, c2) { // (k, jm, c1, c2 float64)  (eclipse bool, 
  */
 const TYPE = M.TYPE = {
   None: 0,
-  Partial: 1,       // for solar eclipses
-  Annular: 2,       // solar
-  AnnularTotal: 3,  // solar
-  Penumbral: 4,     // for lunar eclipses
-  Umbral: 5,        // lunar
-  Total: 6          // solar or lunar
+  Partial: 1, // for solar eclipses
+  Annular: 2, // solar
+  AnnularTotal: 3, // solar
+  Penumbral: 4, // for lunar eclipses
+  Umbral: 5, // lunar
+  Total: 6 // solar or lunar
 }
 
 /**
@@ -142,10 +142,10 @@ M.solar = function (year) { // (year float64)  (eclipseType int, central bool, j
   let central = aγ < 0.9972 // eclipse center touches Earth
 
   if (!central) {
-    eclipseType = TYPE.Partial    // most common case
-    if (aγ < 1.026) {            // umbral cone may touch earth
+    eclipseType = TYPE.Partial // most common case
+    if (aγ < 1.026) { // umbral cone may touch earth
       if (aγ < 0.9972 + Math.abs(u)) { // total or annular
-        eclipseType = TYPE.Total  // report total in both cases
+        eclipseType = TYPE.Total // report total in both cases
       }
     }
   } else if (u < 0) {

@@ -35,13 +35,13 @@ describe('#mars', function () {
     ]
     var exp = [
       +12.44, // DE
-      -2.76,  // DS
+      -2.76, // DS
       111.55, // ω
       347.64, // P
       279.91, // Q
-      10.75,  // d
+      10.75, // d
       0.9012, // k
-      1.06    // q
+      1.06 // q
     ]
     assert.deepEqual(res, exp)
   })

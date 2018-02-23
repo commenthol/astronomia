@@ -65,18 +65,18 @@ M.physical = function (jde, earth) {
 class Moon {
   constructor (jde) {
     this.jde = jde
-      // Δψ, F, Ω, p. 372.0
+    // Δψ, F, Ω, p. 372.0
     let [Δψ, Δε] = nutation.nutation(jde)
     this.Δψ = Δψ
     let T = base.J2000Century(jde)
     let F = this.F = base.horner(T, 93.272095 * p, 483202.0175233 * p, -0.0036539 * p, -p / 3526000, p / 863310000)
     this.Ω = base.horner(T, 125.0445479 * p, -1934.1362891 * p, 0.0020754 * p,
-        p / 467441, -p / 60616000)
-      // true ecliptic
+      p / 467441, -p / 60616000)
+    // true ecliptic
     this.ε = nutation.meanObliquity(jde) + Δε
     this.sε = Math.sin(this.ε)
     this.cε = Math.cos(this.ε)
-      // ρ, σ, τ, p. 372,373
+    // ρ, σ, τ, p. 372,373
     let D = base.horner(T, 297.8501921 * p, 445267.1114034 * p, -0.0018819 * p, p / 545868, -p / 113065000)
     let M = base.horner(T, 357.5291092 * p, 35999.0502909 * p, -0.0001535 * p, p / 24490000)
     let M_ = base.horner(T, 134.9633964 * p, 477198.8675055 * p,
@@ -181,7 +181,7 @@ class Moon {
   }
 
   sun (λ, β, Δ, earth) {
-    let {lon, lat, range} = solar.apparentVSOP87(earth, this.jde)  // eslint-disable-line no-unused-vars
+    let {lon, lat, range} = solar.apparentVSOP87(earth, this.jde) // eslint-disable-line no-unused-vars
     let ΔR = Δ / (range * base.AU)
     let λH = lon + Math.PI + ΔR * Math.cos(β) * Math.sin(lon - λ)
     let βH = ΔR * β

@@ -92,23 +92,23 @@ describe('#conjunction', function () {
 
     var cs2 = [
       new base.Coord(
-        new sexa.RA(15, 3, 51.937).rad(),   // 1996-02-07
+        new sexa.RA(15, 3, 51.937).rad(), // 1996-02-07
         new sexa.Angle(true, 8, 57, 34.51).rad()
       ),
       new base.Coord(
-        new sexa.RA(15, 9, 57.327).rad(),   // 1996-02-12
+        new sexa.RA(15, 9, 57.327).rad(), // 1996-02-12
         new sexa.Angle(true, 9, 9, 3.88).rad()
       ),
       new base.Coord(
-        new sexa.RA(15, 15, 37.898).rad(),  // 1996-02-17
+        new sexa.RA(15, 15, 37.898).rad(), // 1996-02-17
         new sexa.Angle(true, 9, 17, 37.94).rad()
       ),
       new base.Coord(
-        new sexa.RA(15, 20, 50.632).rad(),  // 1996-02-22
+        new sexa.RA(15, 20, 50.632).rad(), // 1996-02-22
         new sexa.Angle(true, 9, 23, 16.25).rad()
       ),
       new base.Coord(
-        new sexa.RA(15, 25, 32.695).rad(),  // 1996-02-27
+        new sexa.RA(15, 25, 32.695).rad(), // 1996-02-27
         new sexa.Angle(true, 9, 26, 1.01).rad()
       )
     ]
@@ -118,7 +118,7 @@ describe('#conjunction', function () {
     var dy = dt / base.JulianYear
     var dc = dy / 100
 
-    assert.equal(dy.toFixed(2), -3.87)   // -3.87 years
+    assert.equal(dy.toFixed(2), -3.87) // -3.87 years
     assert.equal(dc.toFixed(4), -0.0387) // -0.0387 century
 
     var pmr = -0.649 // sec/cen
@@ -132,8 +132,8 @@ describe('#conjunction', function () {
       new sexa.Angle(true, 9, 22, 58.54 - pmd * dc).rad()
     )
 
-    assert.equal(new sexa.RA(c1.ra).toString(3), '15ʰ17ᵐ.446ˢ')      // α′ = 15ʰ17ᵐ0ˢ.446
-    assert.equal(new sexa.Angle(c1.dec).toString(2), '-9°22′58.47″')  // δ′ = -9°22′58″.47
+    assert.equal(new sexa.RA(c1.ra).toString(3), '15ʰ17ᵐ.446ˢ') // α′ = 15ʰ17ᵐ0ˢ.446
+    assert.equal(new sexa.Angle(c1.dec).toString(2), '-9°22′58.47″') // δ′ = -9°22′58″.47
 
     var err
     try {

@@ -24,8 +24,8 @@ function Point (x, y) {
  * Line holds data to draw an hour line on the sundial.
  */
 function Line (hour, points) {
-  this.hour = hour            // 0 to 24
-  this.points = points || []  // One or more points corresponding to the hour.
+  this.hour = hour // 0 to 24
+  this.points = points || [] // One or more points corresponding to the hour.
 }
 
 var m = [-23.44, -20.15, -11.47, 0, 11.47, 20.15, 23.44]

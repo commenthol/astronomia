@@ -116,7 +116,7 @@ function cl (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V87Planet)
   var f2 = function () { // (Bʹ, P, aEdge, bEdge) {
     // Remainder of step 6.0
     var aEdge = 375.35 / 3600 * p / Δ // return value
-    var bEdge = aEdge * Math.abs(sB)  // return value
+    var bEdge = aEdge * Math.abs(sB) // return value
     // Step 8.0
     let sBʹ = si * cbʹ * slʹΩ - ci * sbʹ
     var Bʹ = Math.asin(sBʹ) // return value

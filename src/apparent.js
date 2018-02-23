@@ -33,7 +33,7 @@ M.nutation = function (α, δ, jd) { // (α, δ, jd float64)  (Δα1, Δδ1 floa
   let [Δψ, Δε] = nutation.nutation(jd)
   let [sinα, cosα] = base.sincos(α)
   let tanδ = tan(δ)
-    // (23.1) p. 151
+  // (23.1) p. 151
   let Δα1 = (cosε + sinε * sinα * tanδ) * Δψ - cosα * tanδ * Δε
   let Δδ1 = sinε * cosα * Δψ + sinα * Δε
   return [Δα1, Δδ1]
@@ -63,7 +63,7 @@ M.eclipticAberration = function (λ, β, jd) { // (λ, β, jd float64)  (Δλ, �
   let [sβ, cβ] = base.sincos(β)
   let [ssλ, csλ] = base.sincos(lon - λ)
   let [sinπλ, cosπλ] = base.sincos(π - λ)
-    // (23.2) p. 151
+  // (23.2) p. 151
   let Δλ = κ * (e * cosπλ - csλ) / cβ
   let Δβ = -κ * sβ * (ssλ - e * sinπλ)
   return [Δλ, Δβ]
@@ -133,7 +133,7 @@ M.aberrationRonVondrak = function (α, δ, jd) { // (α, δ, jd float64)  (Δα,
   let Xp = 0
   let Yp = 0
   let Zp = 0
-    // sum smaller terms first
+  // sum smaller terms first
   for (var i = 35; i >= 0; i--) {
     let [x, y, z] = rvTerm[i](r)
     Xp += x
@@ -142,7 +142,7 @@ M.aberrationRonVondrak = function (α, δ, jd) { // (α, δ, jd float64)  (Δα,
   }
   let [sinα, cosα] = base.sincos(α)
   let [sinδ, cosδ] = base.sincos(δ)
-    // (23.4) p. 156
+  // (23.4) p. 156
   return [(Yp * cosα - Xp * sinα) / (c * cosδ), -((Xp * cosα + Yp * sinα) * sinδ - Zp * cosδ) / c]
 }
 

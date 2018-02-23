@@ -213,7 +213,7 @@ class Mp {
       0.00002 * (Math.cos(this.M_ - this.M) -
         Math.cos(this.M_ + this.M) -
         Math.cos(2 * this.F)
-      )
+    )
   }
 
   // additional corrections

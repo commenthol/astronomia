@@ -182,8 +182,8 @@ const ta = (function () {
   return ta.map((row) => {
     let o = {}
       ;['d', 'm', 'm_', 'f', 'Σl', 'Σr'].map((D2R, i) => {
-        o[D2R] = row[i]
-      })
+      o[D2R] = row[i]
+    })
     return o
   })
 })()
@@ -269,8 +269,8 @@ const tb = (function () {
   return tb.map((row) => {
     let o = {}
       ;['d', 'm', 'm_', 'f', 'Σb'].map((D2R, i) => {
-        o[D2R] = row[i]
-      })
+      o[D2R] = row[i]
+    })
     return o
   })
 })()

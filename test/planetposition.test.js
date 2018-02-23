@@ -27,9 +27,9 @@ describe('#planetposition', function () {
       var planet = new planetposition.Planet(planetposition.venus)
       var res = planet.position2000(jd)
 
-      assert.equal(res.lon, 0.45749253478276586)    // rad
-      assert.equal(res.lat, -0.045729822980889484)  // rad
-      assert.equal(res.range, 0.7246016739689574)   // AU
+      assert.equal(res.lon, 0.45749253478276586) // rad
+      assert.equal(res.lat, -0.045729822980889484) // rad
+      assert.equal(res.range, 0.7246016739689574) // AU
     })
   })
 

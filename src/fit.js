@@ -30,7 +30,7 @@ M.linear = function (points) { // (p []struct{ X, Y float64 })  (a, b float64)
   }
   let n = points.length
   let d = n * sx2 - sx * sx
-    // (4.2) p. 36
+  // (4.2) p. 36
   let a = (n * sxy - sx * sy) / d
   let b = (sy * sx2 - sx * sxy) / d
   return [a, b]
@@ -88,7 +88,7 @@ M.quadratic = function (points) {
   let N = points.length
   // (4.5) p. 43
   let D = N * Q * S + 2 * P * Q * R - Q * Q * Q - P * P * S - N * R * R
-    // (4.6) p. 43
+  // (4.6) p. 43
   let a = (N * Q * V + P * R * T + P * Q * U - Q * Q * T - P * P * V - N * R * U) / D
   let b = (N * S * U + P * Q * V + Q * R * T - Q * Q * U - P * S * T - N * R * V) / D
   let c = (Q * S * T + Q * R * U + P * R * V - Q * Q * V - P * S * U - R * R * T) / D

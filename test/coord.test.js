@@ -49,7 +49,7 @@ describe('#coord', function () {
     // coordinates at Washington D.C. Longitude is measured positively westwards!
     var g = new globe.Coord(
       new sexa.Angle(false, 38, 55, 17).rad(), // lat
-      new sexa.Angle(false, 77, 3, 56).rad()   // lon
+      new sexa.Angle(false, 77, 3, 56).rad() // lon
     )
     var jd = julian.DateToJD(new Date(Date.UTC(1987, 3, 10, 19, 21, 0, 0)))
     var st = sidereal.apparent(jd)
@@ -68,7 +68,7 @@ describe('#coord', function () {
     // coordinates at Washington D.C. Longitude is measured positively westwards!
     var g = new globe.Coord(
       new sexa.Angle(false, 38, 55, 17).rad(), // lat
-      new sexa.Angle(false, 77, 3, 56).rad()   // lon
+      new sexa.Angle(false, 77, 3, 56).rad() // lon
     )
     var jd = julian.DateToJD(new Date(Date.UTC(1987, 3, 10, 19, 21, 0, 0)))
     var st = sidereal.apparent(jd)

@@ -80,13 +80,13 @@ describe('#sundial', function () {
     var hours = res.north.map(function (l) { return l.hour })
     assert.deepEqual(hours, [ 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ])
     assert.deepEqual(mapPoints(5, res.north), [
-        [2.6324, 0.7053], [2.2279, 0.597]
+      [2.6324, 0.7053], [2.2279, 0.597]
     ])
     assert.deepEqual(mapPoints(12, res.north), [
-        [0, -Infinity], [0, -4.9284], [0, -2.7253], [0, -2.3064]
+      [0, -Infinity], [0, -4.9284], [0, -2.7253], [0, -2.3064]
     ])
     assert.deepEqual(mapPoints(19, res.north), [
-        [-2.6324, 0.7053], [-2.2279, 0.597]
+      [-2.6324, 0.7053], [-2.2279, 0.597]
     ])
 
     hours = res.south.map(function (l) { return l.hour })

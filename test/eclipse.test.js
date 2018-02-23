@@ -85,12 +85,12 @@ describe('#eclipse', function () {
 
     assert.equal(res.type, exp.type)
     assert.equal(res.magnitude.toFixed(4), exp.magnitude) // Partial eclipse magnitude
-    assert.equal(res.jdeMax.toFixed(4), exp.jdeMax)   // Time of maximum eclipse
-    assert.equal(res.distance.toFixed(4), exp.distance)    // Minimum distance
+    assert.equal(res.jdeMax.toFixed(4), exp.jdeMax) // Time of maximum eclipse
+    assert.equal(res.distance.toFixed(4), exp.distance) // Minimum distance
     if (res.type >= eclipse.TYPE.Umbral) {
-      assert.equal(res.umbral.toFixed(4), exp.umbral)    // Umbral radius
+      assert.equal(res.umbral.toFixed(4), exp.umbral) // Umbral radius
     }
-    assert.equal(res.penumbral.toFixed(4), exp.penumbral)   // Penumbral radius
+    assert.equal(res.penumbral.toFixed(4), exp.penumbral) // Penumbral radius
 
     /* eslint-disable no-fallthrough */
     switch (res.type) {
@@ -128,12 +128,12 @@ describe('#eclipse', function () {
 
     assert.equal(res.type, exp.type)
     assert.equal(res.magnitude.toFixed(4), exp.magnitude) // Partial eclipse magnitude
-    assert.equal(res.jdeMax.toFixed(4), exp.jdeMax)   // Time of maximum eclipse
-    assert.equal(res.distance.toFixed(4), exp.distance)    // Minimum distance
+    assert.equal(res.jdeMax.toFixed(4), exp.jdeMax) // Time of maximum eclipse
+    assert.equal(res.distance.toFixed(4), exp.distance) // Minimum distance
     if (res.type >= eclipse.TYPE.Umbral) {
-      assert.equal(res.umbral.toFixed(4), exp.umbral)    // Umbral radius
+      assert.equal(res.umbral.toFixed(4), exp.umbral) // Umbral radius
     }
-    assert.equal(res.penumbral.toFixed(4), exp.penumbral)   // Penumbral radius
+    assert.equal(res.penumbral.toFixed(4), exp.penumbral) // Penumbral radius
 
     /* eslint-disable no-fallthrough */
     switch (res.type) {

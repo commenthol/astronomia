@@ -94,7 +94,7 @@ M.JewishCalendar = function (y) {
 
 const bigD = function (y) { // (y int)  int
   let C = base.floorDiv(y, 100)
-    // var S int
+  // var S int
   let S = 0
   if (y >= 1583) {
     S = int(base.floorDiv(3 * C - 5, 4))
@@ -107,7 +107,7 @@ const bigD = function (y) { // (y int)  int
   let iq = int(fq)
   let j = (iq + 3 * y + 5 * b + 2 - S) % 7
   let r = Q - fq
-    // var D int
+  // var D int
   let D
   if (j === 2 || j === 4 || j === 6) {
     D = iq + 23

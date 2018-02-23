@@ -70,7 +70,7 @@ M.approxAnnualPrecession = function (eqFrom, epochFrom, epochTo) {
   let [sa, ca] = base.sincos(eqFrom.ra)
   // (21.1) p. 132
   let Δαs = m + na * sa * Math.tan(eqFrom.dec) // seconds of RA
-  let Δδs = nd * ca                            // seconds of Dec
+  let Δδs = nd * ca // seconds of Dec
   let ra = new sexa.HourAngle(false, 0, 0, Δαs).rad()
   let dec = new sexa.Angle(false, 0, 0, Δδs).rad()
   return {ra, dec}
@@ -117,7 +117,7 @@ const s = d / 3600
 const ζT = [2306.2181 * s, 1.39656 * s, -0.000139 * s]
 const zT = [2306.2181 * s, 1.39656 * s, -0.000139 * s]
 const θT = [2004.3109 * s, -0.8533 * s, -0.000217 * s]
- // coefficients from (21.3) p. 134
+// coefficients from (21.3) p. 134
 const ζt = [2306.2181 * s, 0.30188 * s, 0.017998 * s]
 const zt = [2306.2181 * s, 1.09468 * s, 0.018203 * s]
 const θt = [2004.3109 * s, -0.42665 * s, -0.041833 * s]

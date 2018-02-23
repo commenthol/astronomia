@@ -240,7 +240,7 @@ M.longitude = function (year, planet, lon) {
   return eq2(year, planet, lon, c)
 }
 
- /**
+/**
   * Accurate calculation of solstices/ equinoxes
   * Result is accurate to one second of time.
   *

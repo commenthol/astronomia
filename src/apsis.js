@@ -118,11 +118,11 @@ class La {
     this.k = snap(y, h)
     this.T = this.k * ck // (50.3) p. 350
     this.D = base.horner(this.T, 171.9179 * D2R, 335.9106046 * D2R / ck,
-    -0.0100383 * D2R, -0.00001156 * D2R, 0.000000055 * D2R)
+      -0.0100383 * D2R, -0.00001156 * D2R, 0.000000055 * D2R)
     this.M = base.horner(this.T, 347.3477 * D2R, 27.1577721 * D2R / ck,
-    -0.000813 * D2R, -0.000001 * D2R)
+      -0.000813 * D2R, -0.000001 * D2R)
     this.F = base.horner(this.T, 316.6109 * D2R, 364.5287911 * D2R / ck,
-    -0.0125053 * D2R, -0.0000148 * D2R)
+      -0.0125053 * D2R, -0.0000148 * D2R)
     return this
   }
 

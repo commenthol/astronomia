@@ -127,7 +127,7 @@ class HourAngle extends Angle {
   * @param {Number} s - (float)
   */
   // constructor (neg, h, m, s) {
-    // super(neg, h, m, s)
+  // super(neg, h, m, s)
   // }
 
   /**

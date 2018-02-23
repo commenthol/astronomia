@@ -92,8 +92,8 @@ function _mean0UT (jd /* float */) {
  * @return {number}
  */
 M.apparent = function (jd) {
-  let s = _mean(jd)                     // seconds of time
-  let n = nutation.nutationInRA(jd)      // angle (radians) of RA
+  let s = _mean(jd) // seconds of time
+  let n = nutation.nutationInRA(jd) // angle (radians) of RA
   let ns = n * 3600 * 180 / Math.PI / 15 // convert RA to time in seconds
   return base.pmod(s + ns, 86400)
 }
@@ -111,7 +111,7 @@ M.apparent0UT = function (jd) {
   let [j0, f] = base.modf(jd + 0.5)
   let cen = (j0 - 0.5 - base.J2000) / 36525
   let s = base.horner(cen, ...iau82) + f * 1.00273790935 * 86400
-  let n = nutation.nutationInRA(j0)      // angle (radians) of RA
+  let n = nutation.nutationInRA(j0) // angle (radians) of RA
   let ns = n * 3600 * 180 / Math.PI / 15 // convert RA to time in seconds
   return base.pmod(s + ns, 86400)
 }

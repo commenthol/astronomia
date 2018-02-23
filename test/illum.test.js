@@ -20,14 +20,14 @@ describe('#illum', function () {
   it('phaseAngle2()', function () {
     // Example 41.a, p. 284
     var i = illum.phaseAngle2(26.10588 * Math.PI / 180, -2.62102 * Math.PI / 180, 0.724604,
-    88.35704 * Math.PI / 180, 0.983824, 0.910947)
+      88.35704 * Math.PI / 180, 0.983824, 0.910947)
     assert.equal(Math.cos(i).toFixed(5), 0.29312)
   })
 
   it('phaseAngle3()', function () {
     // Example 41.a, p. 284
     var i = illum.phaseAngle3(26.10588 * Math.PI / 180, -2.62102 * Math.PI / 180,
-    0.621794, -0.664905, -0.033138, 0.910947)
+      0.621794, -0.664905, -0.033138, 0.910947)
     assert.equal(Math.cos(i).toFixed(5), 0.29312)
   })
 
