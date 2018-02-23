@@ -10,7 +10,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const REGVSOP = /^\sVSOP87.*VARIABLE (\d) \((LBR|XYZ)\).*\*T\*\*(\d)\s+(\d+) TERMS/
+const REGVSOP = /^\sVSOP87.*VARIABLE (\d) \((LBR|XYZ)\).{1,20}\*T\*\*(\d)\s{1,20}(\d{1,20}) TERMS/
 
 // planet names in VSOP87 files
 const planets = [
