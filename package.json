@@ -43,9 +43,7 @@
       "standard"
     ]
   },
-  "dependencies": {
-    "lodash.padstart": "^4.6.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.25.0",
@@ -54,15 +52,15 @@
     "babel-preset-stage-0": "^6",
     "babel-preset-stage-1": "^6",
     "babel-preset-stage-2": "^6",
-    "babelify": "^7.3.0",
+    "babelify": "^8.0.0",
     "core-js": "^2.5.0",
-    "eslint": "^3",
+    "eslint": "^4",
     "eslint-config-standard": "^10",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3",
     "eslint-plugin-standard": "^3",
-    "mocha": "^3.4.2",
+    "mocha": "^5.0.1",
     "nyc": "^11.0.2",
     "rimraf": "^2.6.1",
     "serialize-to-js": "^1.1.1"
