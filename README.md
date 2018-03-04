@@ -112,7 +112,15 @@ ES6 Syntax
 // instead of
 import {base} from 'astronomia'
 // use
-import base from 'astronomia/lib/base'
+import base from 'astronomia/src/base'
+```
+
+To access dedicated VSOP87 data sets use e.g.
+
+```js
+const {vsop87Bvenus} = require('astronomia').data
+// or 
+const vsop87Bvenus = require('astronomia/data/vsop87Bvenus')
 ```
 
 ## Running tests
@@ -141,14 +149,9 @@ See [LICENSE][] for more info.
 
 ## References
 
-<!-- !ref -->
-
 * [LICENSE][LICENSE]
 * [meeus][meeus]
-* [VSOP87 dataset][VSOP87 dataset]
-
-<!-- ref! -->
+* [VSOP87 dataset](ftp://cdsarc.u-strasbg.fr/pub/cats/VI/81)
 
 [meeus]: https://github.com/soniakeys/meeus.git
 [LICENSE]: ./LICENSE
-[VSOP87 dataset]: ftp://cdsarc.u-strasbg.fr/pub/cats/VI/81

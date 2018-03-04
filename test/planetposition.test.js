@@ -6,7 +6,7 @@ var assert = require('assert')
 var julian = require('..').julian
 var sexa = require('..').sexagesimal
 var planetposition = require('..').planetposition
-var venusData = require('../data/vsop87Bvenus')
+var venusData = require('..').data.vsop87Bvenus
 
 describe('#planetposition', function () {
   describe('position2000', function () {

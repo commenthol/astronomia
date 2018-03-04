@@ -7,6 +7,7 @@ module.exports = {
   coord: require('./coord'),
   conjunction: require('./conjunction'),
   circle: require('./circle'),
+  data: require('../data'),
   deltat: require('./deltat'),
   elementequinox: require('./elementequinox'),
   elliptic: require('./elliptic'),
