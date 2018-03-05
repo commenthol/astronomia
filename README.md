@@ -151,7 +151,7 @@ See [LICENSE][] for more info.
 
 * [LICENSE][LICENSE]
 * [meeus][meeus]
-* [VSOP87 dataset](ftp://cdsarc.u-strasbg.fr/pub/cats/VI/81)
+* VSOP87 dataset ftp://cdsarc.u-strasbg.fr/pub/cats/VI/81
 
 [meeus]: https://github.com/soniakeys/meeus.git
 [LICENSE]: ./LICENSE
