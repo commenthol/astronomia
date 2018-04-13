@@ -26,23 +26,22 @@
  * slow for Neptune.  They are offered here though as a simple implementation
  * of Meeus's presentation in the book.
  */
-const base = require('./base')
-const interp = require('./interpolation')
-
-const M = exports
+import base from './base'
+import interp from './interpolation'
 
 /**
  * Planet constants for first argument of Perihelion and Aphelion functions.
  */
-M.mercury = 0
-M.venus = 1
-M.earth = 2
-M.mars = 3
-M.jupiter = 4
-M.saturn = 5
-M.uranus = 6
-M.neptune = 7
-M.embary = 8
+const planets = {}
+export const mercury = planets.mercury = 0
+export const venus = planets.venus = 1
+export const earth = planets.earth = 2
+export const mars = planets.mars = 3
+export const jupiter = planets.jupiter = 4
+export const saturn = planets.saturn = 5
+export const uranus = planets.uranus = 6
+export const neptune = planets.neptune = 7
+export const embary = planets.embary = 8
 
 /**
  * Perihelion returns an approximate jde of the perihelion event nearest the given time.
@@ -51,7 +50,7 @@ M.embary = 8
  * @param {Number} y - year number indicating a time near the perihelion event.
  * @returns {Number} jde - time of the event
  */
-M.perihelion = function (p, year) {
+export function perihelion (p, year) {
   return ap(p, year, false, pf)
 }
 
@@ -62,7 +61,7 @@ M.perihelion = function (p, year) {
  * @param {Number} y - year number indicating a time near the aphelion event.
  * @returns {Number} jde - time of the event
  */
-M.aphelion = function (p, year) {
+export function aphelion (p, year) {
   return ap(p, year, true, af)
 }
 
@@ -76,24 +75,24 @@ const af = function (x) { // (x float64)  float64
 
 const ap = function (p, y, a, f) { // (p int, y float64, a bool, f func(float64)  float64) float64
   let i = p
-  if (i === M.embary) {
-    i = M.earth
+  if (i === embary) {
+    i = earth
   }
-  let k = f(ka[i].a * (y - ka[i].b))
+  const k = f(ka[i].a * (y - ka[i].b))
   let j = base.horner(k, c[i])
-  if (p === M.earth) {
+  if (p === earth) {
     let c = ep
     if (a) {
       c = ea
     }
-    for (i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       j += c[i] * Math.sin((ec[i].a + ec[i].b * k) * Math.PI / 180)
     }
   }
   return j
 }
 
-var ka = [
+const ka = [
   {a: 4.15201, b: 2000.12}, // Mercury
   {a: 1.62549, b: 2000.53}, // ...
   {a: 0.99997, b: 2000.01},
@@ -104,7 +103,7 @@ var ka = [
   {a: 0.00607, b: 2047.5} // EMBary
 ]
 
-var c = [
+const c = [
   [2451590.257, 87.96934963],
   [2451738.233, 224.7008188, -0.0000000327],
   [2451547.507, 365.2596358, 0.0000000156],
@@ -115,7 +114,7 @@ var c = [
   [2468895.1, 60190.33, 0.03429]
 ]
 
-var ec = [
+const ec = [
   {a: 328.41, b: 132.788585},
   {a: 316.13, b: 584.903153},
   {a: 346.2, b: 450.380738},
@@ -123,8 +122,8 @@ var ec = [
   {a: 249.52, b: 329.653368}
 ]
 
-var ep = [1.278, -0.055, -0.091, -0.056, -0.045]
-var ea = [-1.352, 0.061, 0.062, 0.029, 0.031]
+const ep = [1.278, -0.055, -0.091, -0.056, -0.045]
+const ea = [-1.352, 0.061, 0.062, 0.029, 0.031]
 
 /**
  * Perihelion2 returns the perihelion event nearest the given time.
@@ -137,8 +136,8 @@ var ea = [-1.352, 0.061, 0.062, 0.029, 0.031]
  *   {Number} jde - time of the event
  *   {Number} r - the distance of the planet from the Sun in AU.
  */
-M.perihelion2 = function (planet, year, precision, cb) {
-  return ap2(M[planet.name], year, precision, planet, false, pf, cb)
+export function perihelion2 (planet, year, precision, cb) {
+  return ap2(planets[planet.name], year, precision, planet, false, pf, cb)
 }
 
 /**
@@ -152,8 +151,8 @@ M.perihelion2 = function (planet, year, precision, cb) {
  *   {Number} jde - time of the event
  *   {Number} r - the distance of the planet from the Sun in AU.
  */
-M.aphelion2 = function (planet, year, precision, cb) {
-  return ap2(M[planet.name], year, precision, planet, true, af, cb)
+export function aphelion2 (planet, year, precision, cb) {
+  return ap2(planets[planet.name], year, precision, planet, true, af, cb)
 }
 
 if (typeof setImmediate !== 'function') {
@@ -161,8 +160,8 @@ if (typeof setImmediate !== 'function') {
 }
 
 const ap2 = function (p, y, d, v, a, f, cb) {
-  let j1 = ap(p, y, a, f)
-  if (p !== M.neptune) {
+  const j1 = ap(p, y, a, f)
+  if (p !== neptune) {
     return ap2a(j1, d, a, v, cb)
   }
   // handle the double extrema of Neptune
@@ -177,8 +176,8 @@ const ap2 = function (p, y, d, v, a, f, cb) {
       })
     })
   } else {
-    let [j0, r0] = ap2a(j1 - 5000, d, a, v)
-    let [j2, r2] = ap2a(j1 + 5000, d, a, v)
+    const [j0, r0] = ap2a(j1 - 5000, d, a, v)
+    const [j2, r2] = ap2a(j1 + 5000, d, a, v)
     if ((r0 > r2) === a) {
       return [j0, r0]
     }
@@ -187,16 +186,16 @@ const ap2 = function (p, y, d, v, a, f, cb) {
 }
 
 const ap2a = function (j1, d, a, v, cb) {
-  var j0 = j1 - d
-  var j2 = j1 + d
-  var rr = new Array(3)
+  let j0 = j1 - d
+  let j2 = j1 + d
+  const rr = new Array(3)
   rr[1] = v.position2000(j1).range
   rr[0] = v.position2000(j0).range
   rr[2] = v.position2000(j2).range
 
   function end () {
-    let l = new interp.Len3(j0, j2, rr)
-    let [jde, r] = l.extremum()
+    const l = new interp.Len3(j0, j2, rr)
+    const [jde, r] = l.extremum()
     return [jde, r]
   }
 
@@ -241,4 +240,20 @@ const ap2a = function (j1, d, a, v, cb) {
       }
     }
   }
+}
+
+export default {
+  mercury,
+  venus,
+  earth,
+  mars,
+  jupiter,
+  saturn,
+  uranus,
+  neptune,
+  embary,
+  perihelion,
+  aphelion,
+  perihelion2,
+  aphelion2
 }

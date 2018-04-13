@@ -1,13 +1,8 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var planetposition = require('..').planetposition
-var julian = require('..').julian
-var solardisk = require('..').solardisk
+import assert from 'assert'
+import {planetposition, data, julian, solardisk} from '..'
 
 describe('#solardisk', function () {
-  var earth = new planetposition.Planet(planetposition.earth)
+  var earth = new planetposition.Planet(data.earth)
   var p = 180 / Math.PI
 
   it('ephemeris', function () {

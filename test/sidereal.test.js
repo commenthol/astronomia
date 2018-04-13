@@ -1,11 +1,5 @@
-/* globals describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var julian = require('..').julian
-var sexa = require('..').sexagesimal
-var sidereal = require('..').sidereal
+import assert from 'assert'
+import {julian, sidereal, sexagesimal as sexa} from '..'
 
 describe('#sidereal', function () {
   it('Mean', function () {

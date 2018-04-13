@@ -1,12 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var apparent = require('..').apparent
-var base = require('..').base
-var coord = require('..').coord
-var julian = require('..').julian
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {apparent, base, coord, julian, sexagesimal as sexa} from '..'
 
 describe('#apparent', function () {
   it('nutation', function () {

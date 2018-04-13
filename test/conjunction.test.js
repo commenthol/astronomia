@@ -1,11 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var base = require('..').base
-var conjunction = require('..').conjunction
-var julian = require('..').julian
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {base, conjunction, julian, sexagesimal as sexa} from '..'
 
 describe('#conjunction', function () {
   it('planetary', function () {

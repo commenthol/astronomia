@@ -1,7 +1,5 @@
-/* global describe, it */
-var assert = require('assert')
-
-var fit = require('..').fit
+import assert from 'assert'
+import {fit} from '..'
 
 describe('#fit', function () {
   it('linear', function () {

@@ -24,30 +24,18 @@
  * risk of typographical errors.
  */
 
-const base = require('./base')
-const sexa = require('./sexagesimal')
-const coord = require('./coord')
-const precess = require('./precess')
-
-const M = exports
-
-// planet names used in Planet
-M.mercury = 'mercury'
-M.venus = 'venus'
-M.earth = 'earth'
-M.mars = 'mars'
-M.jupiter = 'jupiter'
-M.saturn = 'saturn'
-M.uranus = 'uranus'
-M.neptune = 'neptune'
+import base from './base'
+import sexa from './sexagesimal'
+import coord from './coord'
+import precess from './precess'
 
 function sum (t, series) {
-  let coeffs = []
+  const coeffs = []
   Object.keys(series).forEach((x) => {
     coeffs[x] = 0
     let y = series[x].length - 1
     for (y; y >= 0; y--) {
-      let term = {
+      const term = {
         a: series[x][y][0],
         b: series[x][y][1],
         c: series[x][y][2]
@@ -55,32 +43,26 @@ function sum (t, series) {
       coeffs[x] += term.a * Math.cos(term.b + term.c * t)
     }
   })
-  let res = base.horner(t, coeffs)
+  const res = base.horner(t, coeffs)
   return res
 }
 
-class Planet {
+export class Planet {
   /**
    * VSOP87 representation of a Planet
    * @constructs Planet
-   * @param {string|object} planet - name of planet or data series
+   * @param {object} planet - planet data series
    * @example
    * ```js
    * // for use in browser
-   * const earthData = require('astronomia/data/vsop87Bearth')
-   * const earth = new planetposition.Planet(earthData)
-   * // otherwise
-   * const saturn = new planetposition.Planet(planetposition.saturn)
+   * import {data} from 'astronomia'
+   * const earth = new planetposition.Planet(data.vsop87Bearth)
    * ```
    */
   constructor (planet) {
-    if (typeof planet === 'string') {
-      this.name = planet.toLowerCase()
-      this.series = require('../data/vsop87B' + this.name)
-    } else {
-      this.name = planet.name
-      this.series = planet
-    }
+    if (typeof planet !== 'object') throw new TypeError('need planet vsop87 data')
+    this.name = planet.name
+    this.series = planet
   }
 
   /**
@@ -93,11 +75,11 @@ class Planet {
    *  {Number} range - heliocentric range in AU.
    */
   position2000 (jde) {
-    let T = base.J2000Century(jde)
-    let τ = T * 0.1
-    let lon = base.pmod(sum(τ, this.series.L), 2 * Math.PI)
-    let lat = sum(τ, this.series.B)
-    let range = sum(τ, this.series.R)
+    const T = base.J2000Century(jde)
+    const τ = T * 0.1
+    const lon = base.pmod(sum(τ, this.series.L), 2 * Math.PI)
+    const lat = sum(τ, this.series.B)
+    const range = sum(τ, this.series.R)
     return new base.Coord(lon, lat, range)
   }
 
@@ -112,11 +94,11 @@ class Planet {
    *  {Number} range - heliocentric range in AU.
    */
   position (jde) {
-    let {lat, lon, range} = this.position2000(jde)
-    let eclFrom = new coord.Ecliptic(lon, lat)
-    let epochFrom = 2000.0
-    let epochTo = base.JDEToJulianYear(jde)
-    let eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
+    const {lat, lon, range} = this.position2000(jde)
+    const eclFrom = new coord.Ecliptic(lon, lat)
+    const epochFrom = 2000.0
+    const epochTo = base.JDEToJulianYear(jde)
+    const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
     return new base.Coord(
       eclTo.lon,
       eclTo.lat,
@@ -124,7 +106,6 @@ class Planet {
     )
   }
 }
-M.Planet = Planet
 
 /**
  * ToFK5 converts ecliptic longitude and latitude from dynamical frame to FK5.
@@ -136,14 +117,19 @@ M.Planet = Planet
  *    {Number} lon - FK5 longitude
  *    {Number} lat - FK5 latitude
  */
-M.toFK5 = function (lon, lat, jde) {
+export function toFK5 (lon, lat, jde) {
   // formula 32.3, p. 219.
-  let T = base.J2000Century(jde)
-  // let Lp = lon - 1.397 * Math.PI / 180 * T - 0.00031 * Math.PI / 180 * T * T
-  let Lp = lon - sexa.angleFromDeg((1.397 + 0.00031 * T) * T)
-  let [sLp, cLp] = base.sincos(Lp)
+  const T = base.J2000Century(jde)
+  // const Lp = lon - 1.397 * Math.PI / 180 * T - 0.00031 * Math.PI / 180 * T * T
+  const Lp = lon - sexa.angleFromDeg((1.397 + 0.00031 * T) * T)
+  const [sLp, cLp] = base.sincos(Lp)
   // (32.3) p. 219
-  let L5 = lon + sexa.angleFromSec(-0.09033 + 0.03916 * (cLp + sLp) * Math.tan(lat))
-  let B5 = lat + sexa.angleFromSec(0.03916 * (cLp - sLp))
+  const L5 = lon + sexa.angleFromSec(-0.09033 + 0.03916 * (cLp + sLp) * Math.tan(lat))
+  const B5 = lat + sexa.angleFromSec(0.03916 * (cLp - sLp))
   return new base.Coord(L5, B5)
+}
+
+export default {
+  Planet,
+  toFK5
 }

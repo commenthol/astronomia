@@ -1,6 +1,6 @@
 {
   "name": "astronomia",
-  "version": "1.4.0",
+  "version": "1.4.1-0",
   "description": "An astronomical library",
   "keywords": [
     "astronomy",
@@ -10,22 +10,28 @@
   ],
   "homepage": "https://github.com/commenthol/astronomia",
   "bugs": {
-    "url": "https://github.com/commenthol/astronomia"
+    "url": "https://github.com/commenthol/astronomia/issues"
   },
   "license": "MIT",
   "author": "commenthol <commenthol@gmail.com>",
+  "contributors": [],
   "main": "lib",
   "module": "es",
+  "jsnext:main": "es",
+  "directories": {
+    "test": "test"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/commenthol/astronomia.git"
+    "url": "git+https://github.com/commenthol/astronomia.git"
   },
   "scripts": {
-    "all": "npm run clean && npm run lint && npm run build && npm run test",
+    "all": "npm run clean && npm run lint && npm run build && npm test",
     "build": "npm run build:cjs && npm run build:es5",
     "build:cjs": "babel -d lib src",
     "build:es5": "BABEL_ENV=es5 babel -d es src",
-    "clean": "rimraf lib doc coverage .nyc_output",
+    "clean": "rimraf lib es doc coverage .nyc_output",
+    "clean:all": "rimraf node_modules && npm run clean",
     "coverage": "nyc -r text -r html npm test",
     "lint": "eslint '**/*.js'",
     "prepublishOnly": "npm run all",
@@ -71,8 +77,9 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
     "babelify": "^8.0.0",
-    "core-js": "^2.5.3",
+    "core-js": "^2.5.4",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.9.0",

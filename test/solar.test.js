@@ -1,13 +1,5 @@
-/* globals describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var base = require('..').base
-var julian = require('..').julian
-var planetpos = require('..').planetposition
-var solar = require('..').solar
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {base, julian, planetposition, data, solar, sexagesimal as sexa} from '..'
 
 describe('#solar', function () {
   var jde = julian.CalendarGregorianToJD(1992, 10, 13)
@@ -16,7 +8,7 @@ describe('#solar', function () {
   it('apparentEquatorialVSOP87', function () {
     // Example 25.b, p. 169, but as this code uses the full VSOP87 theory,
     // results match those at bottom of p. 165.
-    var planet = new planetpos.Planet('earth')
+    var planet = new planetposition.Planet(data.earth)
     var res = solar.apparentEquatorialVSOP87(planet, jde)
 
     assert.equal(new sexa.RA(res.ra).toString(3), '13ʰ13ᵐ30.749ˢ')

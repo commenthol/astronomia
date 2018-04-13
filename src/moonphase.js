@@ -8,15 +8,14 @@
  * Moonphase: Chapter 49, Phases of the Moon
  */
 
-const base = require('./base')
-const M = exports
+import base from './base'
 
 const ck = 1 / 1236.85
 
 /**
  * mean synodial lunar month
  */
-M.meanLunarMonth = 29.530588861
+export const meanLunarMonth = 29.530588861
 
 // (49.1) p. 349
 function mean (T) {
@@ -26,7 +25,7 @@ function mean (T) {
 
 /** snap returns k at specified quarter q nearest year y. */
 function snap (y, q) {
-  let k = (y - 2000) * 12.3685 // (49.2) p. 350
+  const k = (y - 2000) * 12.3685 // (49.2) p. 350
   return Math.floor(k - q + 0.5) + q
 }
 
@@ -37,7 +36,7 @@ function snap (y, q) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-M.meanNew = function (year) {
+export function meanNew (year) {
   return mean(snap(year, 0) * ck)
 }
 
@@ -48,7 +47,7 @@ M.meanNew = function (year) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-M.meanFirst = function (year) {
+export function meanFirst (year) {
   return mean(snap(year, 0.25) * ck)
 }
 
@@ -59,7 +58,7 @@ M.meanFirst = function (year) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-M.meanFull = function (year) {
+export function meanFull (year) {
   return mean(snap(year, 0.5) * ck)
 }
 
@@ -70,7 +69,7 @@ M.meanFull = function (year) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-M.meanLast = function (year) {
+export function meanLast (year) {
   return mean(snap(year, 0.75) * ck)
 }
 
@@ -80,8 +79,8 @@ M.meanLast = function (year) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-M.new = function (year) {
-  let m = new Mp(year, 0)
+export function newMoon (year) {
+  const m = new Mp(year, 0)
   return mean(m.T) + m.nfc(nc) + m.a()
 }
 
@@ -91,8 +90,8 @@ M.new = function (year) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-M.first = function (year, month, day) {
-  let m = new Mp(year, 0.25)
+export function first (year, month, day) {
+  const m = new Mp(year, 0.25)
   return mean(m.T) + m.flc() + m.w() + m.a()
 }
 
@@ -102,8 +101,8 @@ M.first = function (year, month, day) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-M.full = function (year, month, day) {
-  let m = new Mp(year, 0.5)
+export function full (year, month, day) {
+  const m = new Mp(year, 0.5)
   return mean(m.T) + m.nfc(fc) + m.a()
 }
 
@@ -113,8 +112,8 @@ M.full = function (year, month, day) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-M.last = function (year, month, day) {
-  let m = new Mp(year, 0.75)
+export function last (year, month, day) {
+  const m = new Mp(year, 0.75)
   return mean(m.T) + m.flc() - m.w() + m.a()
 }
 
@@ -213,7 +212,7 @@ class Mp {
       0.00002 * (Math.cos(this.M_ - this.M) -
         Math.cos(this.M_ + this.M) -
         Math.cos(2 * this.F)
-    )
+      )
   }
 
   // additional corrections
@@ -227,7 +226,7 @@ class Mp {
 }
 
 // new coefficients
-var nc = [
+const nc = [
   -0.4072, 0.17241, 0.01608, 0.01039, 0.00739,
   -0.00514, 0.00208, -0.00111, -0.00057, 0.00056,
   -0.00042, 0.00042, 0.00038, -0.00024, -0.00017,
@@ -236,7 +235,7 @@ var nc = [
 ]
 
 // full coefficients
-var fc = [
+const fc = [
   -0.40614, 0.17302, 0.01614, 0.01043, 0.00734,
   -0.00515, 0.00209, -0.00111, -0.00057, 0.00056,
   -0.00042, 0.00042, 0.00038, -0.00024, -0.00017,
@@ -245,8 +244,21 @@ var fc = [
 ]
 
 // additional corrections
-var ac = [
+const ac = [
   0.000325, 0.000165, 0.000164, 0.000126, 0.00011,
   0.000062, 0.00006, 0.000056, 0.000047, 0.000042,
   0.000040, 0.000037, 0.000035, 0.000023
 ]
+
+export default {
+  meanLunarMonth,
+  meanNew,
+  meanFirst,
+  meanFull,
+  meanLast,
+  newMoon,
+  new: newMoon, // BACKWARDS-COMPATIBILITY
+  first,
+  full,
+  last
+}

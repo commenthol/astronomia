@@ -7,10 +7,8 @@
 /**
  * Binary: Chapter 57, Binary Stars
  */
-const base = require('./base')
+import base from './base'
 const {atan, atan2, cos, sqrt, tan} = Math
-
-const M = exports
 
 /**
  * computes mean anomaly for the given date.
@@ -20,8 +18,8 @@ const M = exports
  * @param {Number} P - is period of revolution in mean solar years
  * @returns {Number} mean anomaly in radians.
  */
-M.meanAnomaly = function (year, T, P) { // (year, T, P float64)  float64
-  let n = 2 * Math.PI / P
+export function meanAnomaly (year, T, P) { // (year, T, P float64)  float64
+  const n = 2 * Math.PI / P
   return base.pmod(n * (year - T), 2 * Math.PI)
 }
 
@@ -40,17 +38,17 @@ M.meanAnomaly = function (year, T, P) { // (year, T, P float64)  float64
  *  {Number} θ -is the apparent position angle in radians,
  *  {Number} ρ is the angular distance in arc seconds.
  */
-M.position = function (a, e, i, Ω, ω, E) { // (a, e, i, Ω, ω, E float64)  (θ, ρ float64)
-  let r = a * (1 - e * cos(E))
-  let ν = 2 * atan(sqrt((1 + e) / (1 - e)) * tan(E / 2))
-  let [sinνω, cosνω] = base.sincos(ν + ω)
-  let cosi = cos(i)
-  let num = sinνω * cosi
+export function position (a, e, i, Ω, ω, E) { // (a, e, i, Ω, ω, E float64)  (θ, ρ float64)
+  const r = a * (1 - e * cos(E))
+  const ν = 2 * atan(sqrt((1 + e) / (1 - e)) * tan(E / 2))
+  const [sinνω, cosνω] = base.sincos(ν + ω)
+  const cosi = cos(i)
+  const num = sinνω * cosi
   let θ = atan2(num, cosνω) + Ω
   if (θ < 0) {
     θ += 2 * Math.PI
   }
-  let ρ = r * sqrt(num * num + cosνω * cosνω)
+  const ρ = r * sqrt(num * num + cosνω * cosνω)
   return [θ, ρ]
 }
 
@@ -63,13 +61,19 @@ M.position = function (a, e, i, Ω, ω, E) { // (a, e, i, Ω, ω, E float64)  (�
  * @param {Number} ω - is longitude of periastron
  * @returns {Number} apparent eccenticity of a binary star
  */
-M.apparentEccentricity = function (e, i, ω) { // (e, i, ω float64)  float64
-  let cosi = cos(i)
-  let [sinω, cosω] = base.sincos(ω)
-  let A = (1 - e * e * cosω * cosω) * cosi * cosi
-  let B = e * e * sinω * cosω * cosi
-  let C = 1 - e * e * sinω * sinω
-  let d = A - C
-  let sqrtD = sqrt(d * d + 4 * B * B)
+export function apparentEccentricity (e, i, ω) { // (e, i, ω float64)  float64
+  const cosi = cos(i)
+  const [sinω, cosω] = base.sincos(ω)
+  const A = (1 - e * e * cosω * cosω) * cosi * cosi
+  const B = e * e * sinω * cosω * cosi
+  const C = 1 - e * e * sinω * sinω
+  const d = A - C
+  const sqrtD = sqrt(d * d + 4 * B * B)
   return sqrt(2 * sqrtD / (A + C + sqrtD))
+}
+
+export default {
+  meanAnomaly,
+  position,
+  apparentEccentricity
 }

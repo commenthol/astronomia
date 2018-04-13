@@ -1,11 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var julian = require('..').julian
-var sexa = require('..').sexagesimal
-var apsis = require('..').apsis
-var moonposition = require('..').moonposition
+import assert from 'assert'
+import {apsis, moonposition, julian, sexagesimal as sexa} from '..'
 
 describe('#apsis', function () {
   it('meanApogee', function () {

@@ -1,15 +1,11 @@
-/* globals describe, it */
 /* eslint
 no-multi-spaces: 0,
 key-spacing: 0,
 standard/array-bracket-even-spacing: 0
 */
 
-var assert = require('assert')
-var julian = require('..').julian
-var planetpos = require('..').planetposition
-var solstice = require('..').solstice
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {julian, planetposition, data, solstice, sexagesimal as sexa} from '..'
 
 describe('#solstice', function () {
   it('Example June', function () {
@@ -133,7 +129,7 @@ describe('#solstice', function () {
    * to construct the table but I have no way of knowing.
    */
   describe('Accurate', function () {
-    var planet = new planetpos.Planet('earth')
+    var planet = new planetposition.Planet(data.earth)
     var tests = (function () {
       // from table 27.F p.182 - meanError < 0.02
       /* var years = [
@@ -236,7 +232,7 @@ describe('#solstice', function () {
   })
 
   describe('Solar terms', function () {
-    var planet = new planetpos.Planet('earth')
+    var planet = new planetposition.Planet(data.vsop87Bearth)
 
     // Solarterms table for years 2014 - 2017
     // http://www.hko.gov.hk/gts/astron2015/Solar_Term_2014_e.htm

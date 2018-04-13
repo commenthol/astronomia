@@ -10,12 +10,10 @@
  * Globe contains functions concerning the surface of the Earth idealized as
  * an ellipsoid of revolution.
  */
-const M = exports
 
 /**
- * Ellipsoid represents an ellipsoid of revolution.
- */
-class Ellipsoid {
+ * Ellipsoid represents an ellipsoid of revolution. */
+export class Ellipsoid {
   /**
    * @param {number} radius - equatorial radius
    * @param {number} flat - ellipsiod flattening
@@ -51,12 +49,12 @@ class Ellipsoid {
    * @return {number[]} [ρ sin φ′, ρ cos φ] parallax constants
    */
   parallaxConstants (φ, h) {
-    var boa = 1 - this.flat
-    var su = Math.sin(Math.atan(boa * Math.tan(φ)))
-    var cu = Math.cos(Math.atan(boa * Math.tan(φ)))
-    var s = Math.sin(φ)
-    var c = Math.cos(φ)
-    var hoa = h * 1e-3 / this.radius
+    const boa = 1 - this.flat
+    const su = Math.sin(Math.atan(boa * Math.tan(φ)))
+    const cu = Math.cos(Math.atan(boa * Math.tan(φ)))
+    const s = Math.sin(φ)
+    const c = Math.cos(φ)
+    const hoa = h * 1e-3 / this.radius
     // (s, c float)
     return [su * boa + hoa * s, cu + hoa * c]
   }
@@ -83,8 +81,8 @@ class Ellipsoid {
    * @return {number} radius in km
    */
   radiusAtLatitude (φ) {
-    var s = Math.sin(φ)
-    var c = Math.cos(φ)
+    const s = Math.sin(φ)
+    const c = Math.cos(φ)
     return this.A() * c / Math.sqrt(1 - (2 - this.flat) * this.flat * s * s)
   }
 
@@ -97,8 +95,8 @@ class Ellipsoid {
    * @return {number} radius in km
    */
   radiusOfCurvature (φ) {
-    var s = Math.sin(φ)
-    var e2 = (2 - this.flat) * this.flat
+    const s = Math.sin(φ)
+    const e2 = (2 - this.flat) * this.flat
     return this.A() * (1 - e2) / Math.pow(1 - e2 * s * s, 1.5)
   }
 
@@ -117,23 +115,22 @@ class Ellipsoid {
    */
   distance (c1, c2) {
     // From AA, ch 11, p 84.
-    var [s2f, c2f] = sincos2((c1.lat + c2.lat) / 2)
-    var [s2g, c2g] = sincos2((c1.lat - c2.lat) / 2)
-    var [s2λ, c2λ] = sincos2((c1.lon - c2.lon) / 2)
-    var s = s2g * c2λ + c2f * s2λ
-    var c = c2g * c2λ + s2f * s2λ
-    var ω = Math.atan(Math.sqrt(s / c))
-    var r = Math.sqrt(s * c) / ω
-    var d = 2 * ω * this.radius
-    var h1 = (3 * r - 1) / (2 * c)
-    var h2 = (3 * r + 1) / (2 * s)
+    const [s2f, c2f] = sincos2((c1.lat + c2.lat) / 2)
+    const [s2g, c2g] = sincos2((c1.lat - c2.lat) / 2)
+    const [s2λ, c2λ] = sincos2((c1.lon - c2.lon) / 2)
+    const s = s2g * c2λ + c2f * s2λ
+    const c = c2g * c2λ + s2f * s2λ
+    const ω = Math.atan(Math.sqrt(s / c))
+    const r = Math.sqrt(s * c) / ω
+    const d = 2 * ω * this.radius
+    const h1 = (3 * r - 1) / (2 * c)
+    const h2 = (3 * r + 1) / (2 * s)
     return d * (1 + this.flat * (h1 * s2f * c2g - h2 * c2f * s2g))
   }
 }
-M.Ellipsoid = Ellipsoid
 
 /** IAU 1976 values.  Radius in Km. */
-M.Earth76 = new Ellipsoid(6378.14, 1 / 298.257)
+export const Earth76 = new Ellipsoid(6378.14, 1 / 298.257)
 
 /**
  * RotationRate1996_5 is the rotational angular velocity of the Earth
@@ -141,7 +138,7 @@ M.Earth76 = new Ellipsoid(6378.14, 1 / 298.257)
  *
  * Unit is radian/second.
  */
-M.RotationRate1996_5 = 7.292114992e-5
+export const RotationRate1996_5 = 7.292114992e-5 // eslint-disable-line camelcase
 
 /**
  * oneDegreeOfLongitude returns the length of one degree of longitude.
@@ -153,7 +150,7 @@ M.RotationRate1996_5 = 7.292114992e-5
  * @param {number} rp
  * @return {number} distance in Km
  */
-M.oneDegreeOfLongitude = function (rp) {
+export function oneDegreeOfLongitude (rp) {
   return rp * Math.PI / 180
 }
 
@@ -167,7 +164,7 @@ M.oneDegreeOfLongitude = function (rp) {
  * @param {number} rm
  * @return {number} distance in Km
  */
-M.oneDegreeOfLatitude = function (rm) {
+export function oneDegreeOfLatitude (rm) {
   return rm * Math.PI / 180
 }
 
@@ -179,7 +176,7 @@ M.oneDegreeOfLatitude = function (rm) {
  * @param {number} φ
  * @returns {number} difference in Deg
  */
-M.geocentricLatitudeDifference = function (φ) {
+export function geocentricLatitudeDifference (φ) {
   // This appears to be an approximation with hard coded magic numbers.
   // No explanation is given in the text. The ellipsoid is not specified.
   // Perhaps the approximation works well enough for all ellipsoids?
@@ -191,7 +188,7 @@ M.geocentricLatitudeDifference = function (φ) {
  *
  * Longitude is measured positively westward from the Greenwich meridian.
  */
-class Coord {
+export class Coord {
   /**
    * @param {number} lat - latitude (φ) in radians
    * @param {number} lon - longitude (ψ, or L) in radians (measured positively westward)
@@ -201,7 +198,6 @@ class Coord {
     this.lon = lon
   }
 }
-M.Coord = Coord
 
 /**
  * approxAngularDistance returns the cosine of the angle between two points.
@@ -213,11 +209,11 @@ M.Coord = Coord
  * @returns {number} cosine `cos` of the angle between two points.
  * Use `d = Math.acos(cos)` to obtain geocentric angular distance in radians
  */
-M.approxAngularDistance = function (p1, p2) {
-  var s1 = Math.sin(p1.lat)
-  var c1 = Math.cos(p1.lat)
-  var s2 = Math.sin(p2.lat)
-  var c2 = Math.cos(p2.lat)
+export function approxAngularDistance (p1, p2) {
+  const s1 = Math.sin(p1.lat)
+  const c1 = Math.cos(p1.lat)
+  const s2 = Math.sin(p2.lat)
+  const c2 = Math.cos(p2.lat)
   return s1 * s2 + c1 * c2 * Math.cos(p1.lon - p2.lon)
 }
 
@@ -230,7 +226,7 @@ M.approxAngularDistance = function (p1, p2) {
  * @param {number} d - geocentric angular distance in radians
  * @returns linear distance in Km
  */
-M.approxLinearDistance = function (d) {
+export function approxLinearDistance (d) {
   return 6371 * d
 }
 
@@ -238,7 +234,19 @@ M.approxLinearDistance = function (d) {
  * @private
  */
 function sincos2 (x) {
-  var s = Math.sin(x)
-  var c = Math.cos(x)
+  const s = Math.sin(x)
+  const c = Math.cos(x)
   return [s * s, c * c]
+}
+
+export default {
+  Ellipsoid,
+  Earth76,
+  RotationRate1996_5,
+  oneDegreeOfLongitude,
+  oneDegreeOfLatitude,
+  geocentricLatitudeDifference,
+  Coord,
+  approxAngularDistance,
+  approxLinearDistance
 }

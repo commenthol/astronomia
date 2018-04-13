@@ -1,9 +1,5 @@
-/* globals describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var elementequinox = require('..').elementequinox
+import assert from 'assert'
+import {elementequinox} from '..'
 
 describe('#elementequinox', function () {
   it('reduceB1950ToJ2000', function () {

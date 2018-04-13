@@ -1,11 +1,5 @@
-/* globals describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var base = require('..').base
-var sexa = require('..').sexagesimal
-var globe = require('..').globe
+import assert from 'assert'
+import {base, globe, sexagesimal as sexa} from '..'
 
 describe('#globe', function () {
   it('parallaxConstants', function () {

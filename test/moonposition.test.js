@@ -1,11 +1,5 @@
-/* global describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var base = require('..').base
-var julian = require('..').julian
-var moonposition = require('..').moonposition
+import assert from 'assert'
+import {base, julian, moonposition} from '..'
 
 var R2D = 180 / Math.PI
 

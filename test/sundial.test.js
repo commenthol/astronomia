@@ -1,7 +1,7 @@
 /* global describe, it */
 
-var assert = require('assert')
-var sundial = require('..').sundial
+import assert from 'assert'
+import {sundial} from '..'
 
 const p = Math.PI / 180
 

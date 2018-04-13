@@ -1,11 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var julian = require('..').julian
-var node = require('..').node
-var perihelion = require('..').perihelion
-var planetelements = require('..').planetelements
+import assert from 'assert'
+import {julian, node, perihelion, planetelements} from '..'
 
 describe('#node', function () {
   it('EllipticAscending()', function () {

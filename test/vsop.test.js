@@ -1,16 +1,12 @@
-/* globals describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var VSOP = require('../lib/vsop87')
+import assert from 'assert'
+import {VSOP} from '../lib/vsop87'
 
 it.disable = function () {}
 
 describe('#VSOP87', function () {
   it.disable('can load EARTH data', function (done) {
     // disables as requires VSOP87B.ear in package
-    var earth = new VSOP('EARTH')
+    var earth = new VSOP('EARTH', [__dirname, '..', 'attic'].join('/'))
     earth.load(function () {
       assert.equal(typeof earth.data.L, 'object')
       assert.equal(typeof earth.data.B, 'object')

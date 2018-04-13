@@ -10,15 +10,13 @@
  * Partial: Various formulas and algorithms are unimplemented for lack of
  * examples or test cases.
  */
-const apparent = require('./apparent')
-const base = require('./base')
-const coord = require('./coord')
-const kepler = require('./kepler')
-const nutation = require('./nutation')
-const planetposition = require('./planetposition')
-const solarxyz = require('./solarxyz')
-
-const M = exports
+import apparent from './apparent'
+import base from './base'
+import coord from './coord'
+import kepler from './kepler'
+import nutation from './nutation'
+import planetposition from './planetposition'
+import solarxyz from './solarxyz'
 
 /**
  * Position returns observed equatorial coordinates of a planet at a given time.
@@ -28,40 +26,40 @@ const M = exports
  *
  * Results are right ascension and declination, α and δ in radians.
  */
-M.position = function (planet, earth, jde) { // (p, earth *pp.V87Planet, jde float64)  (α, δ float64)
+export function position (planet, earth, jde) { // (p, earth *pp.V87Planet, jde float64)  (α, δ float64)
   let x
   let y
   let z
-  let posEarth = earth.position(jde)
-  let [L0, B0, R0] = [posEarth.lon, posEarth.lat, posEarth.range]
-  let [sB0, cB0] = base.sincos(B0)
-  let [sL0, cL0] = base.sincos(L0)
+  const posEarth = earth.position(jde)
+  const [L0, B0, R0] = [posEarth.lon, posEarth.lat, posEarth.range]
+  const [sB0, cB0] = base.sincos(B0)
+  const [sL0, cL0] = base.sincos(L0)
 
   function pos (τ = 0) {
-    let pos = planet.position(jde - τ)
-    let [L, B, R] = [pos.lon, pos.lat, pos.range]
-    let [sB, cB] = base.sincos(B)
-    let [sL, cL] = base.sincos(L)
+    const pos = planet.position(jde - τ)
+    const [L, B, R] = [pos.lon, pos.lat, pos.range]
+    const [sB, cB] = base.sincos(B)
+    const [sL, cL] = base.sincos(L)
     x = R * cB * cL - R0 * cB0 * cL0
     y = R * cB * sL - R0 * cB0 * sL0
     z = R * sB - R0 * sB0
   }
 
   pos()
-  let Δ = Math.sqrt(x * x + y * y + z * z) // (33.4) p. 224
-  let τ = base.lightTime(Δ)
+  const Δ = Math.sqrt(x * x + y * y + z * z) // (33.4) p. 224
+  const τ = base.lightTime(Δ)
   // repeating with jde-τ
   pos(τ)
 
   let λ = Math.atan2(y, x) // (33.1) p. 223
   let β = Math.atan2(z, Math.hypot(x, y)) // (33.2) p. 223
-  let [Δλ, Δβ] = apparent.eclipticAberration(λ, β, jde)
-  let fk5 = planetposition.toFK5(λ + Δλ, β + Δβ, jde)
+  const [Δλ, Δβ] = apparent.eclipticAberration(λ, β, jde)
+  const fk5 = planetposition.toFK5(λ + Δλ, β + Δβ, jde)
   λ = fk5.lon
   β = fk5.lat
-  let [Δψ, Δε] = nutation.nutation(jde)
+  const [Δψ, Δε] = nutation.nutation(jde)
   λ += Δψ
-  let ε = nutation.meanObliquity(jde) + Δε
+  const ε = nutation.meanObliquity(jde) + Δε
   return new coord.Ecliptic(λ, β).toEquatorial(ε)
   // Meeus gives a formula for elongation but doesn't spell out how to
   // obtaion term λ0 and doesn't give an example solution.
@@ -70,7 +68,7 @@ M.position = function (planet, earth, jde) { // (p, earth *pp.V87Planet, jde flo
 /**
  * Elements holds keplerian elements.
  */
-class Elements {
+export class Elements {
   /*
   Axis  float64 // Semimajor axis, a, in AU
   Ecc   float64 // Eccentricity, e
@@ -102,46 +100,45 @@ class Elements {
    */
   position (jde, earth) { // (α, δ, ψ float64) {
     // (33.6) p. 227
-    let n = base.K / this.axis / Math.sqrt(this.axis)
+    const n = base.K / this.axis / Math.sqrt(this.axis)
     const sε = base.SOblJ2000
     const cε = base.COblJ2000
-    let [sΩ, cΩ] = base.sincos(this.node)
-    let [si, ci] = base.sincos(this.inc)
+    const [sΩ, cΩ] = base.sincos(this.node)
+    const [si, ci] = base.sincos(this.inc)
     // (33.7) p. 228
-    let F = cΩ
-    let G = sΩ * cε
-    let H = sΩ * sε
-    let P = -sΩ * ci
-    let Q = cΩ * ci * cε - si * sε
-    let R = cΩ * ci * sε + si * cε
+    const F = cΩ
+    const G = sΩ * cε
+    const H = sΩ * sε
+    const P = -sΩ * ci
+    const Q = cΩ * ci * cε - si * sε
+    const R = cΩ * ci * sε + si * cε
     // (33.8) p. 229
-    let A = Math.atan2(F, P)
-    let B = Math.atan2(G, Q)
-    let C = Math.atan2(H, R)
-    let a = Math.hypot(F, P)
-    let b = Math.hypot(G, Q)
-    let c = Math.hypot(H, R)
+    const A = Math.atan2(F, P)
+    const B = Math.atan2(G, Q)
+    const C = Math.atan2(H, R)
+    const a = Math.hypot(F, P)
+    const b = Math.hypot(G, Q)
+    const c = Math.hypot(H, R)
 
-    let f = (jde) => { // (x, y, z float64) {
-      let M = n * (jde - this.timeP)
+    const f = (jde) => { // (x, y, z float64) {
+      const M = n * (jde - this.timeP)
       let E
       try {
         E = kepler.kepler2b(this.ecc, M, 15)
       } catch (e) {
         E = kepler.kepler3(this.ecc, M)
       }
-      let ν = kepler.true(E, this.ecc)
-      let r = kepler.radius(E, this.ecc, this.axis)
+      const ν = kepler.trueAnomaly(E, this.ecc)
+      const r = kepler.radius(E, this.ecc, this.axis)
       // (33.9) p. 229
-      let x = r * a * Math.sin(A + this.argP + ν)
-      let y = r * b * Math.sin(B + this.argP + ν)
-      let z = r * c * Math.sin(C + this.argP + ν)
+      const x = r * a * Math.sin(A + this.argP + ν)
+      const y = r * b * Math.sin(B + this.argP + ν)
+      const z = r * c * Math.sin(C + this.argP + ν)
       return {x, y, z}
     }
-    return M.astrometricJ2000(f, jde, earth)
+    return astrometricJ2000(f, jde, earth)
   }
 }
-M.Elements = Elements
 
 /**
  * AstrometricJ2000 is a utility function for computing astrometric coordinates.
@@ -154,9 +151,9 @@ M.Elements = Elements
  *
  * Results are J2000 right ascention, declination, and elongation.
  */
-M.astrometricJ2000 = function (f, jde, earth) { // (f func(float64)  (x, y, z float64), jde float64, e *pp.V87Planet) (α, δ, ψ float64)
-  let sol = solarxyz.positionJ2000(earth, jde)
-  let [X, Y, Z] = [sol.x, sol.y, sol.z]
+export function astrometricJ2000 (f, jde, earth) { // (f func(float64)  (x, y, z float64), jde float64, e *pp.V87Planet) (α, δ, ψ float64)
+  const sol = solarxyz.positionJ2000(earth, jde)
+  const [X, Y, Z] = [sol.x, sol.y, sol.z]
   let ξ
   let η
   let ζ
@@ -164,7 +161,7 @@ M.astrometricJ2000 = function (f, jde, earth) { // (f func(float64)  (x, y, z fl
 
   function fn (τ = 0) {
     // (33.10) p. 229
-    let {x, y, z} = f(jde - τ)
+    const {x, y, z} = f(jde - τ)
     ξ = X + x
     η = Y + y
     ζ = Z + z
@@ -172,16 +169,16 @@ M.astrometricJ2000 = function (f, jde, earth) { // (f func(float64)  (x, y, z fl
   }
 
   fn()
-  let τ = base.lightTime(Δ)
+  const τ = base.lightTime(Δ)
   fn(τ)
 
   let α = Math.atan2(η, ξ)
   if (α < 0) {
     α += 2 * Math.PI
   }
-  let δ = Math.asin(ζ / Δ)
-  let R0 = Math.sqrt(X * X + Y * Y + Z * Z)
-  let ψ = Math.acos((ξ * X + η * Y + ζ * Z) / R0 / Δ)
+  const δ = Math.asin(ζ / Δ)
+  const R0 = Math.sqrt(X * X + Y * Y + Z * Z)
+  const ψ = Math.acos((ξ * X + η * Y + ζ * Z) / R0 / Δ)
   return new base.Coord(α, δ, undefined, ψ)
 }
 
@@ -193,7 +190,7 @@ M.astrometricJ2000 = function (f, jde, earth) { // (f func(float64)  (x, y, z fl
  *
  * Result is in Km/sec.
  */
-M.velocity = function (a, r) { // (a, r float64)  float64
+export function velocity (a, r) { // (a, r float64)  float64
   return 42.1219 * Math.sqrt(1 / r - 0.5 / a)
 }
 
@@ -204,7 +201,7 @@ M.velocity = function (a, r) { // (a, r float64)  float64
  *
  * Result is in Km/sec.
  */
-M.vAphelion = function (a, e) { // (a, e float64)  float64
+export function vAphelion (a, e) { // (a, e float64)  float64
   return 29.7847 * Math.sqrt((1 - e) / (1 + e) / a)
 }
 
@@ -215,7 +212,7 @@ M.vAphelion = function (a, e) { // (a, e float64)  float64
  *
  * Result is in Km/sec.
  */
-M.vPerihelion = function (a, e) { // (a, e float64)  float64
+export function vPerihelion (a, e) { // (a, e float64)  float64
   return 29.7847 * Math.sqrt((1 + e) / (1 - e) / a)
 }
 
@@ -227,8 +224,8 @@ M.vPerihelion = function (a, e) { // (a, e float64)  float64
  *
  * Result is in units used for semimajor axis, typically AU.
  */
-M.length1 = function (a, e) { // (a, e float64)  float64
-  let b = a * Math.sqrt(1 - e * e)
+export function length1 (a, e) { // (a, e float64)  float64
+  const b = a * Math.sqrt(1 - e * e)
   return Math.PI * (3 * (a + b) - Math.sqrt((a + 3 * b) * (3 * a + b)))
 }
 
@@ -240,13 +237,13 @@ M.length1 = function (a, e) { // (a, e float64)  float64
  *
  * Result is in units used for semimajor axis, typically AU.
  */
-M.length2 = function (a, e) { // (a, e float64)  float64
-  let b = a * Math.sqrt(1 - e * e)
-  let s = a + b
-  let p = a * b
-  let A = s * 0.5
-  let G = Math.sqrt(p)
-  let H = 2 * p / s
+export function length2 (a, e) { // (a, e float64)  float64
+  const b = a * Math.sqrt(1 - e * e)
+  const s = a + b
+  const p = a * b
+  const A = s * 0.5
+  const G = Math.sqrt(p)
+  const H = 2 * p / s
   return Math.PI * (21 * A - 2 * G - 3 * H) * 0.125
 }
 
@@ -259,13 +256,13 @@ M.length2 = function (a, e) { // (a, e float64)  float64
  */
 /* As Meeus notes, Length4 converges faster.  There is no reason to use
 this function
-M.length3 = function (a, e) { // (a, e float64)  float64
-  let sum0 = 1.0
-  let e2 = e * e
-  let term = e2 * 0.25
-  let sum1 = 1.0 - term
-  let nf = 1.0
-  let df = 2.0
+export function length3 (a, e) { // (a, e float64)  float64
+  const sum0 = 1.0
+  const e2 = e * e
+  const term = e2 * 0.25
+  const sum1 = 1.0 - term
+  const nf = 1.0
+  const df = 2.0
   while (sum1 !== sum0) {
     term *= nf
     nf += 2
@@ -284,10 +281,10 @@ M.length3 = function (a, e) { // (a, e float64)  float64
  *
  * Result is exact, and in units used for semimajor axis, typically AU.
  */
-M.length4 = function (a, e) { // (a, e float64)  float64
-  let b = a * Math.sqrt(1 - e * e)
-  let m = (a - b) / (a + b)
-  let m2 = m * m
+export function length4 (a, e) { // (a, e float64)  float64
+  const b = a * Math.sqrt(1 - e * e)
+  const m = (a - b) / (a + b)
+  const m2 = m * m
   let sum0 = 1.0
   let term = m2 * 0.25
   let sum1 = 1.0 + term
@@ -301,4 +298,17 @@ M.length4 = function (a, e) { // (a, e float64)  float64
     sum1 += term
   }
   return 2 * Math.PI * a * sum0 / (1 + m)
+}
+
+export default {
+  position,
+  Elements,
+  astrometricJ2000,
+  velocity,
+  vAphelion,
+  vPerihelion,
+  length1,
+  length2,
+  // length3,
+  length4
 }

@@ -1,15 +1,11 @@
-/* globals describe, it */
 /* eslint
 no-multi-spaces: 0,
 key-spacing: 0,
 standard/array-bracket-even-spacing: 0
 */
 
-'use strict'
-
-var assert = require('assert')
-var base = require('..').base
-var julian = require('..').julian
+import assert from 'assert'
+import {base, julian} from '..'
 
 describe('#julian', function () {
   describe('Gregorian', function () {

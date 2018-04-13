@@ -9,12 +9,12 @@
 
 /* eslint key-spacing: 0 */
 
-const base = require('./base')
-const eqtime = require('./eqtime')
-const sexa = require('./sexagesimal')
-const solar = require('./solar')
-const julian = require('./julian')
-const rise = require('./rise')
+import base from './base'
+import eqtime from './eqtime'
+import sexa from './sexagesimal'
+import solar from './solar'
+import julian from './julian'
+import rise from './rise'
 
 const stdh0 = {
   sunrise:          new sexa.Angle(true, 0, 50, 0).rad(),
@@ -32,7 +32,7 @@ const stdh0NauticalTwilight = (refraction) => rise.refraction(stdh0.nauticalTwil
 const stdh0Night = (refraction) => rise.refraction(stdh0.night, refraction)
 const stdh0GoldenHour = (refraction) => rise.refraction(stdh0.goldenHour, refraction)
 
-class Sunrise {
+export class Sunrise {
   /**
    * Computes time of sunrise, sunset for a given day `date` of an observer on earth given by latitude and longitude.
    * Methods may return `undefined` instead of `julian.Calendar` for latitudes very near the poles.
@@ -50,19 +50,19 @@ class Sunrise {
   }
 
   _calcNoon (jde) {
-    let etime = sexa.secFromHourAngle(eqtime.eSmart(jde))
-    let delta = sexa.secFromHourAngle(this.lon)
-    let time = 43200 /* noon */ + delta - etime // in seconds
+    const etime = sexa.secFromHourAngle(eqtime.eSmart(jde))
+    const delta = sexa.secFromHourAngle(this.lon)
+    const time = 43200 /* noon */ + delta - etime // in seconds
     return base.pmod(time / 86400, 86400)
   }
 
   _calcRiseOrSet (jde, h0, isSet) {
-    let etime = sexa.secFromHourAngle(eqtime.eSmart(jde))
-    let solarDec = solar.apparentEquatorial(jde).dec
+    const etime = sexa.secFromHourAngle(eqtime.eSmart(jde))
+    const solarDec = solar.apparentEquatorial(jde).dec
     let ha = rise.hourAngle(this.lat, h0, solarDec)
     if (isSet) ha = -ha
-    let delta = sexa.secFromHourAngle(ha - this.lon)
-    let time = 43200 /* noon */ - delta - etime // in seconds
+    const delta = sexa.secFromHourAngle(ha - this.lon)
+    const time = 43200 /* noon */ - delta - etime // in seconds
     return time / 86400
   }
 
@@ -89,7 +89,7 @@ class Sunrise {
 
   _calc (h0, isSet) {
     let t
-    let jde = this.jde
+    const jde = this.jde
     // calc 2times for higher accuracy
     try {
       t = this._calcRiseOrSet(jde, h0, isSet)
@@ -97,7 +97,7 @@ class Sunrise {
       return new julian.Calendar().fromJDE(jde + t)
     } catch (e) {
       let step = (isSet ? -1 : 1)
-      let doy = this.date.dayOfYear()
+      const doy = this.date.dayOfYear()
       if ( // overlap with march, september equinoxes
         (this.lat > 0 && (doy > 76 && doy < 267)) || // northern hemisphere
         (this.lat < 0 && (doy < 83 || doy > 262)) // southern hemisphere
@@ -113,7 +113,7 @@ class Sunrise {
    * @return {julian.Calendar} time of noon
    */
   noon () {
-    let jde = this.jde
+    const jde = this.jde
     // calc 2times for higher accuracy
     let t = this._calcNoon(jde + this.lon / (2 * Math.PI))
     t = this._calcNoon(jde + t)
@@ -219,4 +219,7 @@ class Sunrise {
     return this._calc(stdh0GoldenHour(this.refraction), false)
   }
 }
-module.exports = Sunrise
+
+export default {
+  Sunrise
+}

@@ -7,10 +7,9 @@
 /**
  * Solarxyz: Chapter 26, Rectangular Coordinates of the Sun.
  */
-const base = require('./base')
-const nutation = require('./nutation')
-const solar = require('./solar')
-const M = exports
+import base from './base'
+import nutation from './nutation'
+import solar from './solar'
 
 /**
  * Position returns rectangular coordinates referenced to the mean equinox of date.
@@ -21,15 +20,15 @@ const M = exports
  *   {Number} y
  *   {Number} z
  */
-M.position = function (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z float64)
+export function position (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z float64)
   // (26.1) p. 171
-  let {lon, lat, range} = solar.trueVSOP87(earth, jde)
-  let [sε, cε] = base.sincos(nutation.meanObliquity(jde))
-  let [ss, cs] = base.sincos(lon)
-  let sβ = Math.sin(lat)
-  let x = range * cs
-  let y = range * (ss * cε - sβ * sε)
-  let z = range * (ss * sε + sβ * cε)
+  const {lon, lat, range} = solar.trueVSOP87(earth, jde)
+  const [sε, cε] = base.sincos(nutation.meanObliquity(jde))
+  const [ss, cs] = base.sincos(lon)
+  const sβ = Math.sin(lat)
+  const x = range * cs
+  const y = range * (ss * cε - sβ * sε)
+  const z = range * (ss * sε + sβ * cε)
   return {x, y, z}
 }
 
@@ -39,8 +38,8 @@ M.position = function (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z
  * @param {Number} jde - Julian ephemeris day
  * @return {Number} geometric longitude referenced to equinox J2000.
  */
-M.longitudeJ2000 = function (earth, jde) {
-  let lon = earth.position2000(jde).lon
+export function longitudeJ2000 (earth, jde) {
+  const lon = earth.position2000(jde).lon
   return base.pmod(lon + Math.PI - 0.09033 / 3600 * Math.PI / 180, 2 * Math.PI)
 }
 
@@ -53,8 +52,8 @@ M.longitudeJ2000 = function (earth, jde) {
  *   {Number} y
  *   {Number} z
  */
-M.positionJ2000 = function (earth, jde) {
-  let {x, y, z} = M.xyz(earth, jde)
+export function positionJ2000 (earth, jde) {
+  const {x, y, z} = xyz(earth, jde)
   // (26.3) p. 174
   return {
     x: x + 0.00000044036 * y - 0.000000190919 * z,
@@ -63,16 +62,16 @@ M.positionJ2000 = function (earth, jde) {
   }
 }
 
-M.xyz = function (earth, jde) {
-  let {lon, lat, range} = earth.position2000(jde)
-  let s = lon + Math.PI
-  let β = -lat
-  let [ss, cs] = base.sincos(s)
-  let [sβ, cβ] = base.sincos(β)
+export function xyz (earth, jde) {
+  const {lon, lat, range} = earth.position2000(jde)
+  const s = lon + Math.PI
+  const β = -lat
+  const [ss, cs] = base.sincos(s)
+  const [sβ, cβ] = base.sincos(β)
   // (26.2) p. 172
-  let x = range * cβ * cs
-  let y = range * cβ * ss
-  let z = range * sβ
+  const x = range * cβ * cs
+  const y = range * cβ * ss
+  const z = range * sβ
   return {x, y, z}
 }
 
@@ -89,8 +88,8 @@ M.xyz = function (earth, jde) {
  *   {Number} y
  *   {Number} z
  */
-M.positionB1950 = function (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z float64)
-  let {x, y, z} = M.xyz(earth, jde)
+export function positionB1950 (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z float64)
+  const {x, y, z} = xyz(earth, jde)
   return {
     x: 0.999925702634 * x + 0.012189716217 * y + 0.000011134016 * z,
     y: -0.011179418036 * x + 0.917413998946 * y - 0.397777041885 * z,
@@ -116,30 +115,39 @@ const θt = [2004.3109, -0.42665, -0.041833]
  *   {Number} y
  *   {Number} z
  */
-M.positionEquinox = function (earth, jde, epoch) {
-  let xyz = M.positionJ2000(earth, jde)
-  let x0 = xyz.x
-  let y0 = xyz.y
-  let z0 = xyz.z
-  let t = (epoch - 2000) * 0.01
-  let ζ = base.horner(t, ζt) * t * Math.PI / 180 / 3600
-  let z = base.horner(t, zt) * t * Math.PI / 180 / 3600
-  let θ = base.horner(t, θt) * t * Math.PI / 180 / 3600
-  let [sζ, cζ] = base.sincos(ζ)
-  let [sz, cz] = base.sincos(z)
-  let [sθ, cθ] = base.sincos(θ)
-  let xx = cζ * cz * cθ - sζ * sz
-  let xy = sζ * cz + cζ * sz * cθ
-  let xz = cζ * sθ
-  let yx = -cζ * sz - sζ * cz * cθ
-  let yy = cζ * cz - sζ * sz * cθ
-  let yz = -sζ * sθ
-  let zx = -cz * sθ
-  let zy = -sz * sθ
-  let zz = cθ
+export function positionEquinox (earth, jde, epoch) {
+  const xyz = positionJ2000(earth, jde)
+  const x0 = xyz.x
+  const y0 = xyz.y
+  const z0 = xyz.z
+  const t = (epoch - 2000) * 0.01
+  const ζ = base.horner(t, ζt) * t * Math.PI / 180 / 3600
+  const z = base.horner(t, zt) * t * Math.PI / 180 / 3600
+  const θ = base.horner(t, θt) * t * Math.PI / 180 / 3600
+  const [sζ, cζ] = base.sincos(ζ)
+  const [sz, cz] = base.sincos(z)
+  const [sθ, cθ] = base.sincos(θ)
+  const xx = cζ * cz * cθ - sζ * sz
+  const xy = sζ * cz + cζ * sz * cθ
+  const xz = cζ * sθ
+  const yx = -cζ * sz - sζ * cz * cθ
+  const yy = cζ * cz - sζ * sz * cθ
+  const yz = -sζ * sθ
+  const zx = -cz * sθ
+  const zy = -sz * sθ
+  const zz = cθ
   return {
     x: xx * x0 + yx * y0 + zx * z0,
     y: xy * x0 + yy * y0 + zy * z0,
     z: xz * x0 + yz * y0 + zz * z0
   }
+}
+
+export default {
+  position,
+  longitudeJ2000,
+  positionJ2000,
+  xyz,
+  positionB1950,
+  positionEquinox
 }

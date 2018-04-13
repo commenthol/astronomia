@@ -1,13 +1,11 @@
-/* globals describe it */
 /* eslint
 no-multi-spaces: 0,
 key-spacing: 0,
 standard/array-bracket-even-spacing: 0
 */
 
-var assert = require('assert')
-var julian = require('..').julian
-var deltat = require('..').deltat
+import assert from 'assert'
+import {julian, deltat} from '..'
 
 describe('#deltat', function () {
   var tests = [

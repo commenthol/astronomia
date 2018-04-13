@@ -1,11 +1,5 @@
-/* globals describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var julian = require('..').julian
-var sexa = require('..').sexagesimal
-var nutation = require('..').nutation
+import assert from 'assert'
+import {nutation, julian, sexagesimal as sexa} from '..'
 
 describe('#nutation', function () {
   it('Nutation', function () {

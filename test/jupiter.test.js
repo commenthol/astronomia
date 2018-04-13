@@ -1,14 +1,10 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var jupiter = require('..').jupiter
-var planetposition = require('..').planetposition
+import assert from 'assert'
+import {jupiter, data, planetposition} from '..'
 
 describe('#jupiter', function () {
   it('physical()', function () {
-    var earth = new planetposition.Planet('earth')
-    var jupiterP = new planetposition.Planet('jupiter')
+    var earth = new planetposition.Planet(data.earth)
+    var jupiterP = new planetposition.Planet(data.jupiter)
     // Example 43.a, p. 295
     var res = jupiter.physical(2448972.50068, earth, jupiterP)
     // [DS, DE, ω1, ω2, P]

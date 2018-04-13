@@ -1,14 +1,14 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var planetposition = require('..').planetposition
-var saturnring = require('..').saturnring
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {
+  planetposition,
+  data,
+  saturnring,
+  sexagesimal as sexa
+} from '..'
 
 describe('#saturnring', function () {
-  var earth = new planetposition.Planet(planetposition.earth)
-  var saturn = new planetposition.Planet(planetposition.saturn)
+  var earth = new planetposition.Planet(data.earth)
+  var saturn = new planetposition.Planet(data.saturn)
 
   it('ring()', function () {
     // Example 45.a, p. 320

@@ -1,10 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var julian = require('..').julian
-var line = require('..').line
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {julian, line, sexagesimal as sexa} from '..'
 
 describe('#line', function () {
   it('time', function () {

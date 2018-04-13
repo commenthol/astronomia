@@ -1,16 +1,11 @@
-/* global describe, it */
+import assert from 'assert'
 
-var assert = require('assert')
-
-var eqtime = require('..').eqtime
-var julian = require('..').julian
-var planetpos = require('..').planetposition
-var sexa = require('..').sexagesimal
+import {eqtime, data, julian, planetposition, sexagesimal as sexa} from '..'
 
 describe('#eqtime', function () {
   it('e', function () {
     // Example 28.a, p. 184
-    var earth = new planetpos.Planet('earth')
+    var earth = new planetposition.Planet(data.earth)
     var j = julian.CalendarGregorianToJD(1992, 10, 13)
     var eq = eqtime.e(j, earth)
     assert.equal(new sexa.HourAngle(eq).toString(1), '0ʰ13ᵐ42.6ˢ')

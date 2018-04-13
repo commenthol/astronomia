@@ -1,18 +1,16 @@
 /* eslint one-var:0 no-multi-spaces:0 */
-/* global describe, it */
 
-'use strict'
-
-var assert = require('assert')
-
-// var base = require('..').base
-var deltat = require('..').deltat
-var globe = require('..').globe
-var julian = require('..').julian
-var planet = require('..').planetposition
-var rise = require('..').rise
-var sidereal = require('..').sidereal
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {
+  rise,
+  deltat,
+  globe,
+  julian,
+  planetposition,
+  data,
+  sidereal,
+  sexagesimal as sexa
+} from '..'
 
 describe('#rise', function () {
   var coord = {
@@ -86,8 +84,8 @@ describe('#rise', function () {
   describe('PlanetRise', function () {
     var lat = coord.lat.deg()
     var lon = coord.lon.deg()
-    var earth = new planet.Planet(planet.earth)
-    var venus = new planet.Planet(planet.venus)
+    var earth = new planetposition.Planet(data.vsop87Bearth)
+    var venus = new planetposition.Planet(data.vsop87Bvenus)
 
     it('using approxTimes', function () {
       // Example 15.a, p. 103.0

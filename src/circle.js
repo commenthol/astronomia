@@ -7,7 +7,6 @@
 /**
  * Circle: Chapter 20, Smallest Circle containing three Celestial Bodies.
  */
-const M = exports
 
 /**
  * Smallest finds the smallest circle containing three points.
@@ -24,11 +23,11 @@ const M = exports
  *  {Number} typeI - true - Two points on circle, one interior.
  *                   false - All three points on circle.
  */
-M.smallest = function (c1, c2, c3) {
+export function smallest (c1, c2, c3) {
   // Using haversine formula
-  let cd1 = Math.cos(c1.dec)
-  let cd2 = Math.cos(c2.dec)
-  let cd3 = Math.cos(c3.dec)
+  const cd1 = Math.cos(c1.dec)
+  const cd2 = Math.cos(c2.dec)
+  const cd3 = Math.cos(c3.dec)
   let a = 2 * Math.asin(Math.sqrt(hav(c2.dec - c1.dec) + cd1 * cd2 * hav(c2.ra - c1.ra)))
   let b = 2 * Math.asin(Math.sqrt(hav(c3.dec - c2.dec) + cd2 * cd3 * hav(c3.ra - c2.ra)))
   let c = 2 * Math.asin(Math.sqrt(hav(c1.dec - c3.dec) + cd3 * cd1 * hav(c1.ra - c3.ra)))
@@ -54,4 +53,8 @@ const noswap = function (a, b) {
  */
 const hav = function (a) {
   return 0.5 * (1 - Math.cos(a))
+}
+
+export default {
+  smallest
 }

@@ -1,8 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var kepler = require('..').kepler
+import assert from 'assert'
+import {kepler} from '..'
 
 describe('#kepler', function () {
   it('kepler1', function () {

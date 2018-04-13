@@ -1,11 +1,7 @@
 /* eslint comma-dangle: 0 */
-/* global describe, it */
 
-var assert = require('assert')
-
-var julian = require('..').julian
-var perihelion = require('..').perihelion
-var planetposition = require('..').planetposition
+import assert from 'assert'
+import {julian, perihelion, data, planetposition} from '..'
 
 function toObj (props, table) {
   return table.map(function (row) {
@@ -68,12 +64,12 @@ describe('#perihelion', function () {
 
   it('JS2', function () {
     // p. 270
-    var planet = new planetposition.Planet('jupiter')
+    var planet = new planetposition.Planet(data.jupiter)
     var j = perihelion.aphelion2(planet, 1981.5, 1)[0]
     assert.equal(new julian.CalendarGregorian().fromJD(j).toDate().toISOString(),
       '1981-07-28T06:08:00.824Z'
     )
-    planet = new planetposition.Planet('saturn')
+    planet = new planetposition.Planet(data.saturn)
     var s = perihelion.perihelion2(planet, 1944.5, 1)[0]
     assert.equal(new julian.CalendarGregorian().fromJD(s).toDate().toISOString(),
       '1944-09-08T02:34:29.611Z'
@@ -96,7 +92,7 @@ describe('#perihelion', function () {
     )
 
     // p. 271
-    var v = new planetposition.Planet('saturn')
+    var v = new planetposition.Planet(data.saturn)
     sd
       .filter(function (d) { return d.ap })
       .forEach(function (d) {
@@ -134,7 +130,7 @@ describe('#perihelion', function () {
       ]
     )
 
-    var v = new planetposition.Planet('uranus')
+    var v = new planetposition.Planet(data.uranus)
     sd
       .filter(function (d) { return d.ap })
       .forEach(function (d) {
@@ -169,7 +165,7 @@ describe('#perihelion', function () {
       ]
     )
 
-    var v = new planetposition.Planet('neptune')
+    var v = new planetposition.Planet(data.neptune)
     sd
       .filter(function (d) { return d.ap })
       .forEach(function (d) {
@@ -241,7 +237,7 @@ describe('#perihelion', function () {
       ]
     )
 
-    var v = new planetposition.Planet('earth')
+    var v = new planetposition.Planet(data.earth)
     sd
       .filter(function (d) { return d.ap })
       .forEach(function (d) {

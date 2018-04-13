@@ -7,8 +7,8 @@
  * Converts VSOP87 data files to javascript modules
  */
 
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
 
 const REGVSOP = /^\sVSOP87.*VARIABLE (\d) \((LBR|XYZ)\).{1,20}\*T\*\*(\d)\s{1,20}(\d{1,20}) TERMS/
 
@@ -31,7 +31,7 @@ const toFloat = function (f) {
   return parseFloat(f, 10)
 }
 
-class VSOP {
+export class VSOP {
   /**
    * load VSOP87 planet data from VSOP87 files
    * Data can be obtained from ftp://cdsarc.u-strasbg.fr/pub/cats/VI%2F81/
@@ -60,8 +60,8 @@ class VSOP {
 
   /** load data from file */
   load (cb) {
-    var ext = this._getExt()
-    var filename = path.resolve(this.dirname, 'VSOP87' + this.type + '.' + ext)
+    const ext = this._getExt()
+    const filename = path.resolve(this.dirname, 'VSOP87' + this.type + '.' + ext)
     fs.readFile(filename, 'utf8', (err, data) => {
       if (!err) {
         this.parse(data)
@@ -72,9 +72,9 @@ class VSOP {
 
   /** sync loading */
   loadSync () {
-    var ext = this._getExt()
-    var filename = path.resolve(this.dirname, 'VSOP87' + this.type + '.' + ext)
-    var data = fs.readFileSync(filename, 'utf8')
+    const ext = this._getExt()
+    const filename = path.resolve(this.dirname, 'VSOP87' + this.type + '.' + ext)
+    const data = fs.readFileSync(filename, 'utf8')
     this.parse(data)
   }
 
@@ -84,13 +84,13 @@ class VSOP {
    */
   parse (data) {
     this.data = {}
-    var lines = data.split(/\n/)
-    var varName
-    var ref
+    const lines = data.split(/\n/)
+    let varName
+    let ref
 
     lines.forEach((line) => {
       if (REGVSOP.test(line)) {
-        var [, varCnt, type, pos] = line.match(REGVSOP)
+        const [, varCnt, type, pos] = line.match(REGVSOP)
         varName = type.split('')[varCnt - 1]
         if (!this.data[varName]) this.data[varName] = {}
         ref = this.data[varName][pos] = []
@@ -119,4 +119,7 @@ class VSOP {
     return this.data
   }
 }
-module.exports = VSOP
+
+export default {
+  VSOP
+}

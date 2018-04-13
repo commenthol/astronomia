@@ -1,11 +1,5 @@
-/* global describe, it */
-
-'use strict'
-
-var assert = require('assert')
-
-var julian = require('..').julian
-var moonnode = require('..').moonnode
+import assert from 'assert'
+import {julian, moonnode} from '..'
 
 describe('#moonnode', function () {
   it('ascending', function () {

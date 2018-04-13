@@ -1,9 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var julian = require('..').julian
-var planetelements = require('..').planetelements
+import assert from 'assert'
+import {julian, planetelements} from '..'
 
 describe('#planetelements', function () {
   it('mean()', function () {

@@ -8,10 +8,8 @@
  * Sidereal: Chapter 12, Sidereal Time at Greenwich.
  */
 
-const base = require('./base')
-const nutation = require('./nutation')
-
-const M = exports
+import base from './base'
+import nutation from './nutation'
 
 /**
  * JDToCFrac returns values for use in computing sidereal time at Greenwich.
@@ -24,8 +22,8 @@ const M = exports
  * @param {number} jd - Julian Days
  * @return {number[]} [century, fraction] century and fraction of jd after 0h UT
  */
-M.JDToCFrac = function (jd) {
-  let [j0, f] = base.modf(jd + 0.5)
+export function JDToCFrac (jd) {
+  const [j0, f] = base.modf(jd + 0.5)
   return [base.J2000Century(j0 - 0.5), f] // (cen, dayFrac /* float */)
 }
 
@@ -36,7 +34,7 @@ M.JDToCFrac = function (jd) {
  * Coefficients are those adopted in 1982 by the International Astronomical
  * Union and are given in (12.2) p. 87.
  */
-let iau82 = M.iau82 = [24110.54841, 8640184.812866, 0.093104, 0.0000062]
+export const iau82 = [24110.54841, 8640184.812866, 0.093104, 0.0000062]
 
 /**
  * Mean returns mean sidereal time at Greenwich for a given JD.
@@ -47,7 +45,7 @@ let iau82 = M.iau82 = [24110.54841, 8640184.812866, 0.093104, 0.0000062]
  * @param {number} jd - Julian Days
  * @return {number}
  */
-M.mean = function (jd) {
+export function mean (jd) {
   return base.pmod(_mean(jd), 86400)
 }
 
@@ -55,7 +53,7 @@ M.mean = function (jd) {
  * @private
  */
 function _mean (jd) {
-  let [s, f] = _mean0UT(jd)
+  const [s, f] = _mean0UT(jd)
   return s + f * 1.00273790935 * 86400
 }
 
@@ -67,8 +65,8 @@ function _mean (jd) {
  * @param {number} jd - Julian Days
  * @return {number}
  */
-M.mean0UT = function (jd /* float */) {
-  let [s, _] = _mean0UT(jd) // eslint-disable-line
+export function mean0UT (jd /* float */) {
+  const [s, _] = _mean0UT(jd) // eslint-disable-line
   return base.pmod(s, 86400)
 }
 
@@ -76,7 +74,7 @@ M.mean0UT = function (jd /* float */) {
  * @private
  */
 function _mean0UT (jd /* float */) {
-  let [cen, f] = M.JDToCFrac(jd)
+  const [cen, f] = JDToCFrac(jd)
   // (12.2) p. 87
   return [base.horner(cen, ...iau82), f] // (sidereal, dayFrac /* float */)
 }
@@ -91,10 +89,10 @@ function _mean0UT (jd /* float */) {
  * @param {number} jd - Julian Days
  * @return {number}
  */
-M.apparent = function (jd) {
-  let s = _mean(jd) // seconds of time
-  let n = nutation.nutationInRA(jd) // angle (radians) of RA
-  let ns = n * 3600 * 180 / Math.PI / 15 // convert RA to time in seconds
+export function apparent (jd) {
+  const s = _mean(jd) // seconds of time
+  const n = nutation.nutationInRA(jd) // angle (radians) of RA
+  const ns = n * 3600 * 180 / Math.PI / 15 // convert RA to time in seconds
   return base.pmod(s + ns, 86400)
 }
 
@@ -107,11 +105,20 @@ M.apparent = function (jd) {
  * @param {number} jd - Julian Days
  * @return {number}
  */
-M.apparent0UT = function (jd) {
-  let [j0, f] = base.modf(jd + 0.5)
-  let cen = (j0 - 0.5 - base.J2000) / 36525
-  let s = base.horner(cen, ...iau82) + f * 1.00273790935 * 86400
-  let n = nutation.nutationInRA(j0) // angle (radians) of RA
-  let ns = n * 3600 * 180 / Math.PI / 15 // convert RA to time in seconds
+export function apparent0UT (jd) {
+  const [j0, f] = base.modf(jd + 0.5)
+  const cen = (j0 - 0.5 - base.J2000) / 36525
+  const s = base.horner(cen, ...iau82) + f * 1.00273790935 * 86400
+  const n = nutation.nutationInRA(j0) // angle (radians) of RA
+  const ns = n * 3600 * 180 / Math.PI / 15 // convert RA to time in seconds
   return base.pmod(s + ns, 86400)
+}
+
+export default {
+  JDToCFrac,
+  iau82,
+  mean,
+  mean0UT,
+  apparent,
+  apparent0UT
 }

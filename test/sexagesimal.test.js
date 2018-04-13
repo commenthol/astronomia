@@ -1,9 +1,5 @@
-/* globals describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {sexagesimal as sexa} from '..'
 
 describe('#sexagesimal', function () {
   describe('functions', function () {

@@ -13,9 +13,7 @@
  * `base.limb` is the function mentioned at the bottom of p. 283.0
  */
 
-const base = require('./base')
-
-const M = exports
+import base from './base'
 
 /**
  * PhaseAngle computes the phase angle of a planet.
@@ -25,7 +23,7 @@ const M = exports
  *
  * Result in radians.
  */
-M.phaseAngle = function (r, Δ, R) { // (r, Δ, R float64)  float64
+export function phaseAngle (r, Δ, R) { // (r, Δ, R float64)  float64
   return Math.acos((r * r + Δ * Δ - R * R) / (2 * r * Δ))
 }
 
@@ -35,9 +33,9 @@ M.phaseAngle = function (r, Δ, R) { // (r, Δ, R float64)  float64
  * Argument r is planet's distance to Sun, Δ its distance to Earth, and R
  * the distance from Sun to Earth.  All distances in AU.
  */
-M.fraction = function (r, Δ, R) { // (r, Δ, R float64)  float64
+export function fraction (r, Δ, R) { // (r, Δ, R float64)  float64
   // (41.2) p. 283
-  let s = r + Δ
+  const s = r + Δ
   return (s * s - R * R) / (4 * r * Δ)
 }
 
@@ -50,7 +48,7 @@ M.fraction = function (r, Δ, R) { // (r, Δ, R float64)  float64
  *
  * The phase angle result is in radians.
  */
-M.phaseAngle2 = function (L, B, R, L0, R0, Δ) { // (L, B, R, L0, R0, Δ float64)  float64
+export function phaseAngle2 (L, B, R, L0, R0, Δ) { // (L, B, R, L0, R0, Δ float64)  float64
   // (41.3) p. 283
   return Math.acos((R - R0 * Math.cos(B) * Math.cos(L - L0)) / Δ)
 }
@@ -64,10 +62,10 @@ M.phaseAngle2 = function (L, B, R, L0, R0, Δ) { // (L, B, R, L0, R0, Δ float64
  *
  * The phase angle result is in radians.
  */
-M.phaseAngle3 = function (L, B, x, y, z, Δ) { // (L, B, x, y, z, Δ float64)  float64
+export function phaseAngle3 (L, B, x, y, z, Δ) { // (L, B, x, y, z, Δ float64)  float64
   // (41.4) p. 283
-  let [sL, cL] = base.sincos(L)
-  let [sB, cB] = base.sincos(B)
+  const [sL, cL] = base.sincos(L)
+  const [sB, cB] = base.sincos(B)
   return Math.acos((x * cB * cL + y * cB * sL + z * sB) / Δ)
 }
 
@@ -76,14 +74,14 @@ const p = Math.PI / 180
 /**
  * FractionVenus computes an approximation of the illumanted fraction of Venus.
  */
-M.fractionVenus = function (jde) { // (jde float64)  float64
-  let T = base.J2000Century(jde)
-  let V = 261.51 * p + 22518.443 * p * T
-  let M = 177.53 * p + 35999.05 * p * T
-  let N = 50.42 * p + 58517.811 * p * T
-  let W = V + 1.91 * p * Math.sin(M) + 0.78 * p * Math.sin(N)
-  let Δ = Math.sqrt(1.52321 + 1.44666 * Math.cos(W))
-  let s = 0.72333 + Δ
+export function fractionVenus (jde) { // (jde float64)  float64
+  const T = base.J2000Century(jde)
+  const V = 261.51 * p + 22518.443 * p * T
+  const M = 177.53 * p + 35999.05 * p * T
+  const N = 50.42 * p + 58517.811 * p * T
+  const W = V + 1.91 * p * Math.sin(M) + 0.78 * p * Math.sin(N)
+  const Δ = Math.sqrt(1.52321 + 1.44666 * Math.cos(W))
+  const s = 0.72333 + Δ
   return (s * s - 1) / 2.89332 / Δ
 }
 
@@ -93,8 +91,8 @@ M.fractionVenus = function (jde) { // (jde float64)  float64
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
  */
-M.mercury = function (r, Δ, i) { // (r, Δ, i float64)  float64
-  let s = i - 50 * p
+export function mercury (r, Δ, i) { // (r, Δ, i float64)  float64
+  const s = i - 50 * p
   return 1.16 + 5 * Math.log10(r * Δ) + 0.02838 / p * s + 0.0001023 / p / p * s * s
 }
 
@@ -104,7 +102,7 @@ M.mercury = function (r, Δ, i) { // (r, Δ, i float64)  float64
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
  */
-M.venus = function (r, Δ, i) { // (r, Δ, i float64)  float64
+export function venus (r, Δ, i) { // (r, Δ, i float64)  float64
   return -4 + 5 * Math.log10(r * Δ) + (0.01322 / p + 0.0000004247 / p / p / p * i * i) * i
 }
 
@@ -114,7 +112,7 @@ M.venus = function (r, Δ, i) { // (r, Δ, i float64)  float64
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
  */
-M.mars = function (r, Δ, i) { // (r, Δ, i float64)  float64
+export function mars (r, Δ, i) { // (r, Δ, i float64)  float64
   return -1.3 + 5 * Math.log10(r * Δ) + 0.01486 / p * i
 }
 
@@ -123,7 +121,7 @@ M.mars = function (r, Δ, i) { // (r, Δ, i float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
  */
-M.jupiter = function (r, Δ) { // (r, Δ float64)  float64
+export function jupiter (r, Δ) { // (r, Δ float64)  float64
   return -8.93 + 5 * Math.log10(r * Δ)
 }
 
@@ -136,8 +134,8 @@ M.jupiter = function (r, Δ) { // (r, Δ float64)  float64
  * of the Sun and the Earth, measured in the plane of the ring.
  * You can use saturndisk.Disk() to obtain B and ΔU.
  */
-M.saturn = function (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
-  let s = Math.sin(Math.abs(B))
+export function saturn (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
+  const s = Math.sin(Math.abs(B))
   return -8.68 + 5 * Math.log10(r * Δ) + 0.044 / p * Math.abs(ΔU) - 2.6 * s + 1.25 * s * s
 }
 
@@ -146,7 +144,7 @@ M.saturn = function (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
  */
-M.uranus = function (r, Δ) { // (r, Δ float64)  float64
+export function uranus (r, Δ) { // (r, Δ float64)  float64
   return -6.85 + 5 * Math.log10(r * Δ)
 }
 
@@ -155,7 +153,7 @@ M.uranus = function (r, Δ) { // (r, Δ float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
  */
-M.neptune = function (r, Δ) { // (r, Δ float64)  float64
+export function neptune (r, Δ) { // (r, Δ float64)  float64
   return -7.05 + 5 * Math.log10(r * Δ)
 }
 
@@ -167,7 +165,7 @@ M.neptune = function (r, Δ) { // (r, Δ float64)  float64
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
  */
-M.mercury84 = function (r, Δ, i) { // (r, Δ, i float64)  float64
+export function mercury84 (r, Δ, i) { // (r, Δ, i float64)  float64
   return base.horner(i, -0.42 + 5 * Math.log10(r * Δ),
     0.038 / p, -0.000273 / p / p, 0.000002 / p / p / p)
 }
@@ -180,7 +178,7 @@ M.mercury84 = function (r, Δ, i) { // (r, Δ, i float64)  float64
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
  */
-M.venus84 = function (r, Δ, i) { // (r, Δ, i float64)  float64
+export function venus84 (r, Δ, i) { // (r, Δ, i float64)  float64
   return base.horner(i, -4.4 + 5 * Math.log10(r * Δ),
     0.0009 / p, -0.000239 / p / p, 0.00000065 / p / p / p)
 }
@@ -193,7 +191,7 @@ M.venus84 = function (r, Δ, i) { // (r, Δ, i float64)  float64
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
  */
-M.mars84 = function (r, Δ, i) { // (r, Δ, i float64)  float64
+export function mars84 (r, Δ, i) { // (r, Δ, i float64)  float64
   return -1.52 + 5 * Math.log10(r * Δ) + 0.016 / p * i
 }
 
@@ -205,7 +203,7 @@ M.mars84 = function (r, Δ, i) { // (r, Δ, i float64)  float64
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
  */
-M.jupiter84 = function (r, Δ, i) { // (r, Δ, i float64)  float64
+export function jupiter84 (r, Δ, i) { // (r, Δ, i float64)  float64
   return -9.4 + 5 * Math.log10(r * Δ) + 0.005 / p * i
 }
 
@@ -219,8 +217,8 @@ M.jupiter84 = function (r, Δ, i) { // (r, Δ, i float64)  float64
  * Saturn's ring. ΔU is the difference between the Saturnicentric longitudes
  * of the Sun and the Earth, measured in the plane of the ring.
  */
-M.saturn84 = function (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
-  let s = Math.sin(Math.abs(B))
+export function saturn84 (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
+  const s = Math.sin(Math.abs(B))
   return -8.88 + 5 * Math.log10(r * Δ) + 0.044 / p * Math.abs(ΔU) - 2.6 * s + 1.25 * s * s
 }
 
@@ -231,7 +229,7 @@ M.saturn84 = function (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
  */
-M.uranus84 = function (r, Δ) { // (r, Δ float64)  float64
+export function uranus84 (r, Δ) { // (r, Δ float64)  float64
   return -7.19 + 5 * Math.log10(r * Δ)
 }
 
@@ -242,7 +240,7 @@ M.uranus84 = function (r, Δ) { // (r, Δ float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
  */
-M.neptune84 = function (r, Δ) { // (r, Δ float64)  float64
+export function neptune84 (r, Δ) { // (r, Δ float64)  float64
   return -6.87 + 5 * Math.log10(r * Δ)
 }
 
@@ -253,6 +251,29 @@ M.neptune84 = function (r, Δ) { // (r, Δ float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
  */
-M.pluto84 = function (r, Δ) { // (r, Δ float64)  float64
+export function pluto84 (r, Δ) { // (r, Δ float64)  float64
   return -1 + 5 * Math.log10(r * Δ)
+}
+
+export default {
+  phaseAngle,
+  fraction,
+  phaseAngle2,
+  phaseAngle3,
+  fractionVenus,
+  mercury,
+  venus,
+  mars,
+  jupiter,
+  saturn,
+  uranus,
+  neptune,
+  mercury84,
+  venus84,
+  mars84,
+  jupiter84,
+  saturn84,
+  uranus84,
+  neptune84,
+  pluto84
 }

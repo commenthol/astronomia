@@ -23,10 +23,9 @@
  * month and day of month as input.
  */
 
-const base = require('./base')
-const julian = require('./julian')
+import base from './base'
+import julian from './julian'
 
-const M = exports
 const int = Math.trunc
 
 /**
@@ -43,9 +42,9 @@ const int = Math.trunc
  *  months: (int) Number of months in this year.
  *  days:   (int) Number of days in this year.
  */
-M.JewishCalendar = function (y) {
-  let A = y + 3760
-  let D = bigD(y)
+export function JewishCalendar (y) {
+  const A = y + 3760
+  const D = bigD(y)
   let mP = 3
   let dP = D
   if (dP > 31) {
@@ -79,7 +78,7 @@ M.JewishCalendar = function (y) {
   // on D, so difference in D is difference in day numbers of year.  Result
   // is sum of this number and the number of days in the Western calandar
   // year.
-  let y1 = y + 1
+  const y1 = y + 1
   let lf = julian.LeapYearGregorian
   if (y1 < 1583) {
     lf = julian.LeapYearJulian
@@ -93,21 +92,21 @@ M.JewishCalendar = function (y) {
 }
 
 const bigD = function (y) { // (y int)  int
-  let C = base.floorDiv(y, 100)
-  // var S int
+  const C = base.floorDiv(y, 100)
+  // const S int
   let S = 0
   if (y >= 1583) {
     S = int(base.floorDiv(3 * C - 5, 4))
   }
-  let a = (12 * y + 12) % 19
-  let b = y % 4
-  let Q = -1.904412361576 + 1.554241796621 * (a) + 0.25 * (b) -
+  const a = (12 * y + 12) % 19
+  const b = y % 4
+  const Q = -1.904412361576 + 1.554241796621 * (a) + 0.25 * (b) -
     0.003177794022 * (y) + (S)
-  let fq = Math.floor(Q)
-  let iq = int(fq)
-  let j = (iq + 3 * y + 5 * b + 2 - S) % 7
-  let r = Q - fq
-  // var D int
+  const fq = Math.floor(Q)
+  const iq = int(fq)
+  const j = (iq + 3 * y + 5 * b + 2 - S) % 7
+  const r = Q - fq
+  // const D int
   let D
   if (j === 2 || j === 4 || j === 6) {
     D = iq + 23
@@ -128,17 +127,17 @@ const bigD = function (y) { // (y int)  int
  * @param {Number} d - day
  * @returns {Number} jd - Julian day
  */
-M.MoslemToJD = function (y, m, d) { // (y, m, d int)  (jY, jDN int)
-  let N = d + base.floorDiv(295001 * (m - 1) + 9900, 10000)
-  let Q = base.floorDiv(y, 30)
-  let R = y % 30
-  let A = base.floorDiv(11 * R + 3, 30)
-  let W = 404 * Q + 354 * R + 208 + A
-  let Q1 = base.floorDiv(W, 1461)
-  let Q2 = W % 1461
-  let G = 621 + 28 * Q + 4 * Q1
-  let K = base.floorDiv(Q2 * 10000, 3652422)
-  let E = base.floorDiv(3652422 * K, 10000)
+export function MoslemToJD (y, m, d) { // (y, m, d int)  (jY, jDN int)
+  const N = d + base.floorDiv(295001 * (m - 1) + 9900, 10000)
+  const Q = base.floorDiv(y, 30)
+  const R = y % 30
+  const A = base.floorDiv(11 * R + 3, 30)
+  const W = 404 * Q + 354 * R + 208 + A
+  const Q1 = base.floorDiv(W, 1461)
+  const Q2 = W % 1461
+  const G = 621 + 28 * Q + 4 * Q1
+  const K = base.floorDiv(Q2 * 10000, 3652422)
+  const E = base.floorDiv(3652422 * K, 10000)
   let J = Q2 - E + N - 1
   let X = G + K
   if (J > 366 && X % 4 === 0) {
@@ -148,7 +147,7 @@ M.MoslemToJD = function (y, m, d) { // (y, m, d int)  (jY, jDN int)
     J -= 365
     X++
   }
-  let jd = base.floorDiv(36525 * (X - 1), 100) + 1721423 + J
+  const jd = base.floorDiv(36525 * (X - 1), 100) + 1721423 + J
   return jd
 }
 
@@ -157,8 +156,8 @@ M.MoslemToJD = function (y, m, d) { // (y, m, d int)  (jY, jDN int)
  * @param {Number} year
  * @returns {Boolean} true if leap year
  */
-M.MoslemLeapYear = function (year) { // (y int)  bool
-  let R = year % 30
+export function MoslemLeapYear (year) { // (y int)  bool
+  const R = year % 30
   return (11 * R + 3) % 30 > 18
 }
 
@@ -170,33 +169,33 @@ M.MoslemLeapYear = function (year) { // (y int)  bool
  * @param {Number} d - julian day
  * @returns {Array} [my, mm, md]
  */
-M.JulianToMoslem = function (y, m, d) { // (y, m, d int)  (my, mm, md int)
+export function JulianToMoslem (y, m, d) { // (y, m, d int)  (my, mm, md int)
   let W = 2
   if (y % 4 === 0) {
     W = 1
   }
-  let N = base.floorDiv(275 * m, 9) - W * base.floorDiv(m + 9, 12) + d - 30
-  let A = int(y - 623)
-  let B = base.floorDiv(A, 4)
-  let C2 = (function (A) {
-    let C = A % 4
-    let C1 = 365.25001 * (C)
-    let C2 = Math.floor(C1)
+  const N = base.floorDiv(275 * m, 9) - W * base.floorDiv(m + 9, 12) + d - 30
+  const A = int(y - 623)
+  const B = base.floorDiv(A, 4)
+  const C2 = (function (A) {
+    const C = A % 4
+    const C1 = 365.25001 * (C)
+    const C2 = Math.floor(C1)
     if (C1 - C2 > 0.5) {
       return int(C2) + 1
     }
     return int(C2)
   })(A)
-  let Dp = 1461 * B + 170 + C2
-  let Q = base.floorDiv(Dp, 10631)
-  let R = Dp % 10631
-  let J = base.floorDiv(R, 354)
-  let K = R % 354
-  let O = base.floorDiv(11 * J + 14, 30)
+  const Dp = 1461 * B + 170 + C2
+  const Q = base.floorDiv(Dp, 10631)
+  const R = Dp % 10631
+  const J = base.floorDiv(R, 354)
+  const K = R % 354
+  const O = base.floorDiv(11 * J + 14, 30)
   let my = 30 * Q + J + 1
   let JJ = K - O + N - 1
   let days = 354
-  if (M.MoslemLeapYear(y)) {
+  if (MoslemLeapYear(y)) {
     days++
   }
   if (JJ > days) {
@@ -209,7 +208,7 @@ M.JulianToMoslem = function (y, m, d) { // (y, m, d int)  (my, mm, md int)
     mm = 12
     md = 30
   } else {
-    let S = base.floorDiv((JJ - 1) * 10, 295)
+    const S = base.floorDiv((JJ - 1) * 10, 295)
     mm = 1 + S
     md = base.floorDiv(10 * JJ - 295 * S, 10)
   }
@@ -241,6 +240,14 @@ const mmonths = [
 /**
  * String returns the Romanization of the month ("Muḥarram", "Ṣafar", ...).
  */
-M.moslemMonth = function (m) {
+export function moslemMonth (m) {
   return mmonths[m]
+}
+
+export default {
+  JewishCalendar,
+  MoslemToJD,
+  MoslemLeapYear,
+  JulianToMoslem,
+  moslemMonth
 }

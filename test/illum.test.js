@@ -1,8 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var illum = require('..').illum
+import assert from 'assert'
+import {illum} from '..'
 
 describe('#illum', function () {
   it('phaseAngle()', function () {

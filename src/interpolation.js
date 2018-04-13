@@ -23,9 +23,7 @@
  * For an example of a selection function, see len3ForInterpolateX. This
  * was useful for computing Delta T.
  */
-const base = require('./base')
-
-const M = exports
+import base from './base'
 
 const int = Math.trunc
 
@@ -33,20 +31,20 @@ const int = Math.trunc
  * Error values returned by functions and methods in this package.
  * Defined here to help testing for specific errors.
  */
-const errorNot3 = M.errorNot3 = new Error('Argument y must be length 3')
-const errorNot4 = M.errorNot4 = new Error('Argument y must be length 4')
-const errorNot5 = M.errorNot5 = new Error('Argument y must be length 5')
-const errorNoXRange = M.errorNoXRange = new Error('Argument x3 (or x5) cannot equal x1')
-const errorNOutOfRange = M.errorNOutOfRange = new Error('Interpolating factor n must be in range -1 to 1')
-const errorNoExtremum = M.errorNoExtremum = new Error('No extremum in table')
-const errorExtremumOutside = M.errorExtremumOutside = new Error('Extremum falls outside of table')
-const errorZeroOutside = M.errorZeroOutside = new Error('Zero falls outside of table')
-const errorNoConverge = M.errorNoConverge = new Error('Failure to converge')
+export const errorNot3 = new Error('Argument y must be length 3')
+export const errorNot4 = new Error('Argument y must be length 4')
+export const errorNot5 = new Error('Argument y must be length 5')
+export const errorNoXRange = new Error('Argument x3 (or x5) cannot equal x1')
+export const errorNOutOfRange = new Error('Interpolating factor n must be in range -1 to 1')
+export const errorNoExtremum = new Error('No extremum in table')
+export const errorExtremumOutside = new Error('Extremum falls outside of table')
+export const errorZeroOutside = new Error('Zero falls outside of table')
+export const errorNoConverge = new Error('Failure to converge')
 
 /**
  * Len3 allows second difference interpolation.
  */
-class Len3 {
+export class Len3 {
   /**
    * NewLen3 prepares a Len3 object from a table of three rows of x and y values.
    *
@@ -82,7 +80,7 @@ class Len3 {
    * InterpolateX interpolates for a given x value.
    */
   interpolateX (x) {
-    let n = (2 * x - this.xSum) / this.xDiff
+    const n = (2 * x - this.xSum) / this.xDiff
     return this.interpolateN(n)
   }
 
@@ -91,8 +89,8 @@ class Len3 {
    * restricting x to the range x1 to x3 given to the constructor NewLen3.
    */
   interpolateXStrict (x) {
-    let n = (2 * x - this.xSum) / this.xDiff
-    let y = this.interpolateNStrict(n, true)
+    const n = (2 * x - this.xSum) / this.xDiff
+    const y = this.interpolateNStrict(n, true)
     return y
   }
 
@@ -131,12 +129,12 @@ class Len3 {
     if (this.c === 0) {
       throw errorNoExtremum
     }
-    let n = this.abSum / (-2 * this.c) // (3.5), p. 25
+    const n = this.abSum / (-2 * this.c) // (3.5), p. 25
     if (n < -1 || n > 1) {
       throw errorExtremumOutside
     }
-    let x = 0.5 * (this.xSum + this.xDiff * n)
-    let y = this.y[1] - (this.abSum * this.abSum) / (8 * this.c) // (3.4), p. 25
+    const x = 0.5 * (this.xSum + this.xDiff * n)
+    const y = this.y[1] - (this.abSum * this.abSum) / (8 * this.c) // (3.4), p. 25
     return [x, y]
   }
 
@@ -172,7 +170,7 @@ class Len3 {
         return -2 * this.y[1] / (this.abSum + this.c * n0)
       }
     }
-    let [n0, ok] = iterate(0, f)
+    const [n0, ok] = iterate(0, f)
     if (!ok) {
       throw errorNoConverge
     }
@@ -182,7 +180,6 @@ class Len3 {
     return 0.5 * (this.xSum + this.xDiff * n0) // success
   }
 }
-M.Len3 = Len3
 
 /**
  * Len3ForInterpolateX is a special purpose Len3 constructor.
@@ -199,10 +196,10 @@ M.Len3 = Len3
  * @param {Number[]} y - is all y values in the table.  y.length should be >= 3.0
  * @returns {Number} interpolation value
  */
-M.len3ForInterpolateX = function (x, x1, xN, y) {
+export function len3ForInterpolateX (x, x1, xN, y) {
   let y3 = y
   if (y.length > 3) {
-    let interval = (xN - x1) / (y.length - 1)
+    const interval = (xN - x1) / (y.length - 1)
     if (interval === 0) {
       throw errorNoXRange
     }
@@ -227,9 +224,9 @@ M.len3ForInterpolateX = function (x, x1, xN, y) {
  *   {Number} n1
  *   {Boolean} ok - if `false` failure to converge
  */
-const iterate = M.iterate = function (n0, f) {
-  for (var limit = 0; limit < 50; limit++) {
-    let n1 = f(n0)
+export const iterate = function (n0, f) {
+  for (let limit = 0; limit < 50; limit++) {
+    const n1 = f(n0)
     if (!isFinite(n1) || isNaN(n1)) {
       break // failure to converge
     }
@@ -246,7 +243,7 @@ const iterate = M.iterate = function (n0, f) {
  * @param {Number[]} y - 4 values
  * @returns {Number} interpolation result
  */
-M.len4Half = function (y) {
+export function len4Half (y) {
   if (y.length !== 4) {
     throw errorNot4
   }
@@ -257,7 +254,7 @@ M.len4Half = function (y) {
 /**
  * Len5 allows fourth Difference interpolation.
  */
-class Len5 {
+export class Len5 {
   /**
    * NewLen5 prepares a Len5 object from a table of five rows of x and y values.
    *
@@ -305,7 +302,7 @@ class Len5 {
    * InterpolateX interpolates for (a given x value.
    */
   interpolateX (x) {
-    let n = (4 * x - 2 * this.xSum) / this.xDiff
+    const n = (4 * x - 2 * this.xSum) / this.xDiff
     return this.interpolateN(n)
   }
 
@@ -314,8 +311,8 @@ class Len5 {
    * restricting x to the range x1 to x5 given to the the constructor NewLen5.
    */
   interpolateXStrict (x) {
-    let n = (4 * x - 2 * this.xSum) / this.xDiff
-    let y = this.interpolateNStrict(n)
+    const n = (4 * x - 2 * this.xSum) / this.xDiff
+    const y = this.interpolateNStrict(n)
     return y
   }
 
@@ -351,17 +348,17 @@ class Len5 {
    */
   extremum () {
     // (3.9) p. 29
-    let nCoeff = [
+    const nCoeff = [
       6 * (this.b + this.c) - this.h - this.j,
       0,
       3 * (this.h + this.k),
       2 * this.k
     ]
-    let den = this.k - 12 * this.f
+    const den = this.k - 12 * this.f
     if (den === 0) {
       throw errorExtremumOutside
     }
-    let [n0, ok] = iterate(0, function (n0) {
+    const [n0, ok] = iterate(0, function (n0) {
       return base.horner(n0, ...nCoeff) / den
     })
     if (!ok) {
@@ -370,8 +367,8 @@ class Len5 {
     if (n0 < -2 || n0 > 2) {
       throw errorExtremumOutside
     }
-    let x = 0.5 * this.xSum + 0.25 * this.xDiff * n0
-    let y = base.horner(n0, ...this.interpCoeff)
+    const x = 0.5 * this.xSum + 0.25 * this.xDiff * n0
+    const y = base.horner(n0, ...this.interpCoeff)
     return [x, y]
   }
 
@@ -394,45 +391,44 @@ class Len5 {
    * NewLen5.
    */
   zero (strong) {
-    var f
+    let f
     if (strong) {
       // (3.11), p. 29
-      let M = this.k / 24
-      let N = (this.h + this.j) / 12
-      let P = this.f / 2 - M
-      let Q = (this.b + this.c) / 2 - N
-      let numCoeff = [this.y3, Q, P, N, M]
-      let denCoeff = [Q, 2 * P, 3 * N, 4 * M]
+      const M = this.k / 24
+      const N = (this.h + this.j) / 12
+      const P = this.f / 2 - M
+      const Q = (this.b + this.c) / 2 - N
+      const numCoeff = [this.y3, Q, P, N, M]
+      const denCoeff = [Q, 2 * P, 3 * N, 4 * M]
       f = function (n0) {
         return n0 -
           base.horner(n0, ...numCoeff) / base.horner(n0, ...denCoeff)
       }
     } else {
       // (3.10), p. 29
-      let numCoeff = [
+      const numCoeff = [
         -24 * this.y3,
         0,
         this.k - 12 * this.f,
         -2 * (this.h + this.j),
         -this.k
       ]
-      let den = 12 * (this.b + this.c) - 2 * (this.h + this.j)
+      const den = 12 * (this.b + this.c) - 2 * (this.h + this.j)
       f = function (n0) {
         return base.horner(n0, ...numCoeff) / den
       }
     }
-    let [n0, ok] = iterate(0, f)
+    const [n0, ok] = iterate(0, f)
     if (!ok) {
       throw errorNoConverge
     }
     if (n0 > 2 || n0 < -2) {
       throw errorZeroOutside
     }
-    let x = 0.5 * this.xSum + 0.25 * this.xDiff * n0
+    const x = 0.5 * this.xSum + 0.25 * this.xDiff * n0
     return x
   }
 }
-M.Len5 = Len5
 
 /**
  * Lagrange performs interpolation with unequally-spaced abscissae.
@@ -446,15 +442,15 @@ M.Len5 = Len5
  * @param {Array} table - `[[x0, y0], ... [xN, yN]]` of x, y values
  * @returns {Number} interpolation result `y` of `x`
  */
-M.lagrange = function (x, table) {
+export function lagrange (x, table) {
   // method of BASIC program, p. 33.0
   let sum = 0
   table.forEach((ti, i) => {
-    let xi = ti[0]
+    const xi = ti[0]
     let prod = 1.0
     table.forEach((tj, j) => {
       if (i !== j) {
-        let xj = tj[0]
+        const xj = tj[0]
         prod *= (x - xj) / (xi - xj)
       }
     })
@@ -476,23 +472,23 @@ M.lagrange = function (x, table) {
  * @param {Array} table - `[[x0, y0], ... [xN, yN]]`
  * @returns {Array} - polynomial array
  */
-M.lagrangePoly = function (table) {
+export function lagrangePoly (table) {
   // Method not fully described by Meeus, but needed for (numerical solution
   // to Example 3.g.
-  let sum = new Array(table.length).fill(0)
-  let prod = new Array(table.length).fill(0)
-  let last = table.length - 1
-  for (var i = 0; i < table.length; i++) {
-    let xi = table[i][0] || table[i].x || 0
-    let yi = table[i][1] || table[i].y || 0
+  const sum = new Array(table.length).fill(0)
+  const prod = new Array(table.length).fill(0)
+  const last = table.length - 1
+  for (let i = 0; i < table.length; i++) {
+    const xi = table[i][0] || table[i].x || 0
+    const yi = table[i][1] || table[i].y || 0
     prod[last] = 1
     let den = 1.0
     let n = last
-    for (var j = 0; j < table.length; j++) {
+    for (let j = 0; j < table.length; j++) {
       if (i !== j) {
-        let xj = table[j][0] || table[j].x || 0
+        const xj = table[j][0] || table[j].x || 0
         prod[n - 1] = prod[n] * -xj
-        for (var k = n; k < last; k++) {
+        for (let k = n; k < last; k++) {
           prod[k] -= prod[k + 1] * xj
         }
         n--
@@ -509,8 +505,8 @@ M.lagrangePoly = function (table) {
 /**
  * Linear Interpolation of x
  */
-M.linear = function (x, x1, xN, y) {
-  let interval = (xN - x1) / (y.length - 1)
+export function linear (x, x1, xN, y) {
+  const interval = (xN - x1) / (y.length - 1)
   if (interval === 0) {
     throw errorNoXRange
   }
@@ -520,7 +516,27 @@ M.linear = function (x, x1, xN, y) {
   } else if (nearestX > y.length - 2) {
     nearestX = y.length - 2
   }
-  let y2 = y.slice(nearestX, nearestX + 2)
-  let x01 = x1 + nearestX * interval
+  const y2 = y.slice(nearestX, nearestX + 2)
+  const x01 = x1 + nearestX * interval
   return y2[0] + (y[1] - y[0]) * (x - x01) / interval
+}
+
+export default {
+  errorNot3,
+  errorNot4,
+  errorNot5,
+  errorNoXRange,
+  errorNOutOfRange,
+  errorNoExtremum,
+  errorExtremumOutside,
+  errorZeroOutside,
+  errorNoConverge,
+  Len3,
+  len3ForInterpolateX,
+  iterate,
+  len4Half,
+  Len5,
+  lagrange,
+  lagrangePoly,
+  linear
 }

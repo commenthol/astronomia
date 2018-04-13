@@ -1,16 +1,15 @@
-/* eslint standard/array-bracket-even-spacing: 0, no-multi-spaces: 0, one-var: 0 */
-/* globals describe, it */
+/* eslint standard/array-bracket-even-spacing: 0, no-multi-spaces: 0 */
 
-'use strict'
-
-var assert = require('assert')
-var base = require('..').base
-var coord = require('..').coord
-var elementequinox = require('..').elementequinox
-var julian = require('..').julian
-var nutation = require('..').nutation
-var sexa = require('..').sexagesimal
-var precess = require('..').precess
+import assert from 'assert'
+import {
+  precess,
+  base,
+  coord,
+  elementequinox,
+  julian,
+  nutation,
+  sexagesimal as sexa
+} from '..'
 
 describe('#precess', function () {
   describe('mn', function () {
@@ -33,7 +32,9 @@ describe('#precess', function () {
         nd: test[3]
       }
       var a = precess.mn(epochFrom, e.epoch)
-      var m = a[0], na = a[1], nd = a[2]
+      var m = a[0]
+      var na = a[1]
+      var nd = a[2]
       it('' + e.epoch, function () {
         assert.ok(Math.abs(m - e.m) < 1e-3, 'm')
         assert.ok(Math.abs(na - e.na) < 1e-3, 'na')

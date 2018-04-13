@@ -1,11 +1,5 @@
-/* global describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var julian = require('..').julian
-var moonmaxdec = require('..').moonmaxdec
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {julian, moonmaxdec, sexagesimal as sexa} from '..'
 
 describe('moonmaxdec', function () {
   it('north', function () {

@@ -1,9 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var binary = require('..').binary
-var kepler = require('..').kepler
+import assert from 'assert'
+import {binary, kepler} from '..'
 
 describe('#binary', function () {
   it('position', function () {

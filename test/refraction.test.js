@@ -1,7 +1,7 @@
 /* global describe, it */
 
-var assert = require('assert')
-var refraction = require('..').refraction
+import assert from 'assert'
+import {refraction} from '..'
 
 describe('#refraction', function () {
   it('bennett', function () {

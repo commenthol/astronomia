@@ -1,10 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var julian = require('..').julian
-var jupitermoons = require('..').jupitermoons
-var planetposition = require('..').planetposition
+import assert from 'assert'
+import {julian, jupitermoons, data, planetposition} from '..'
 
 describe('#jupitermoons', function () {
   describe('positions', function () {
@@ -56,8 +51,8 @@ describe('#jupitermoons', function () {
 
   describe('e5 positions', function () {
     it('e5()', function () {
-      var e = new planetposition.Planet(planetposition.earth)
-      var j = new planetposition.Planet(planetposition.jupiter)
+      var e = new planetposition.Planet(data.earth)
+      var j = new planetposition.Planet(data.jupiter)
       var pos = jupitermoons.e5(2448972.50068, e, j)
 
       assert.equal(pos[0].x.toFixed(4), -3.4503)
@@ -82,8 +77,8 @@ describe('#jupitermoons', function () {
       // zero (indicating conjunction) and Y coordinates near the values given by
       // Meeus.
 
-      var e = new planetposition.Planet(planetposition.earth)
-      var j = new planetposition.Planet(planetposition.jupiter)
+      var e = new planetposition.Planet(data.earth)
+      var j = new planetposition.Planet(data.jupiter)
 
       var jde = new julian.Calendar().fromDate(new Date('1988-11-23T07:28:00Z')).toJDE()
       var pos3 = jupitermoons.e5(jde, e, j)

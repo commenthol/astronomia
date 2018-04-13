@@ -8,15 +8,14 @@
  * Julian: Chapter 7, Julian day.
  */
 
-const base = require('./base')
-const sexa = require('./sexagesimal')
-const deltat = require('./deltat')
+import base from './base'
+import sexa from './sexagesimal'
+import deltat from './deltat'
 
-const M = exports
 const int = Math.trunc
 
 /** 1582-10-05 Julian Date is 1st Gregorian Date (1582-10-15) */
-const GREGORIAN0JD = M.GREGORIAN0JD = 2299160.5
+export const GREGORIAN0JD = 2299160.5
 
 const DAYS_OF_YEAR = [0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
 const SECS_OF_DAY = 86400 // 24 * 60 * 60
@@ -25,7 +24,7 @@ const SECS_OF_DAY = 86400 // 24 * 60 * 60
  * Base class for CalendarJulian and CalendarGregorian
  * Respects the start of the Gregorian Calendar at `GREGORIAN0JD`
  */
-class Calendar {
+export class Calendar {
   /**
    * @param {number|Date} year - If `Date` is given then year, month, day is taken from that. Shortcut to `new Calendar().fromDate(date)`
    * @param {number} month
@@ -49,8 +48,8 @@ class Calendar {
   }
 
   getTime () {
-    let t = new sexa.Time(this.day * SECS_OF_DAY)
-    let [neg, h, m, _s] = t.toHMS() // eslint-disable-line no-unused-vars
+    const t = new sexa.Time(this.day * SECS_OF_DAY)
+    const [neg, h, m, _s] = t.toHMS() // eslint-disable-line no-unused-vars
     let [s, ms] = base.modf(_s)
     ms = Math.trunc(ms * 1000)
     return {
@@ -62,14 +61,14 @@ class Calendar {
   }
 
   toISOString () {
-    let {year, month, day} = this.getDate()
-    let {hour, minute, second, millisecond} = this.getTime()
+    const {year, month, day} = this.getDate()
+    const {hour, minute, second, millisecond} = this.getTime()
     return `${pad(year, 4)}-${pad(month)}-${pad(day)}T` +
       `${pad(hour)}:${pad(minute)}:${pad(second)}.${pad(millisecond, 3)}Z`
   }
 
   isGregorian () {
-    return M.isCalendarGregorian(this.year, this.month, this.day)
+    return isCalendarGregorian(this.year, this.month, this.day)
   }
 
   /**
@@ -80,11 +79,11 @@ class Calendar {
   fromDate (date) {
     this.year = date.getUTCFullYear()
     this.month = date.getUTCMonth() + 1
-    var day = date.getUTCDate()
-    var hour = date.getUTCHours()
-    var minute = date.getUTCMinutes()
-    var second = date.getUTCSeconds()
-    var ms = date.getMilliseconds()
+    const day = date.getUTCDate()
+    const hour = date.getUTCHours()
+    const minute = date.getUTCMinutes()
+    const second = date.getUTCSeconds()
+    const ms = date.getMilliseconds()
     this.day = day + (hour + ((minute + ((second + ms / 1000) / 60)) / 60)) / 24
     return this
   }
@@ -95,11 +94,11 @@ class Calendar {
    * @returns {Date} proleptic Gregorian date
    */
   toDate () {
-    let [day, fhour] = base.modf(this.day)
-    let [hour, fminute] = base.modf(fhour * 24)
-    let [minute, fsecond] = base.modf(fminute * 60)
-    let [second, fms] = base.modf(fsecond * 60)
-    let date = new Date(Date.UTC(
+    const [day, fhour] = base.modf(this.day)
+    const [hour, fminute] = base.modf(fhour * 24)
+    const [minute, fsecond] = base.modf(fminute * 60)
+    const [second, fms] = base.modf(fsecond * 60)
+    const date = new Date(Date.UTC(
       this.year, this.month - 1, day, hour, minute, second, Math.round(fms * 1000)
     ))
     date.setUTCFullYear(this.year)
@@ -111,10 +110,10 @@ class Calendar {
    * @returns {number} decimal year
    */
   toYear () {
-    let [d, f] = base.modf(this.day) // eslint-disable-line no-unused-vars
-    let n = this.dayOfYear() - 1 + f
-    let days = this.isLeapYear() ? 366 : 365
-    let decYear = this.year + (n / days)
+    const [d, f] = base.modf(this.day) // eslint-disable-line no-unused-vars
+    const n = this.dayOfYear() - 1 + f
+    const days = this.isLeapYear() ? 366 : 365
+    const decYear = this.year + (n / days)
     return decYear
   }
 
@@ -123,10 +122,10 @@ class Calendar {
    * @param {number} decimal year
    */
   fromYear (year) {
-    let [y, f] = base.modf(year)
+    const [y, f] = base.modf(year)
     this.year = y
-    let days = this.isLeapYear() ? 366 : 365
-    let dayOfYear = base.round(f * days, 5)
+    const days = this.isLeapYear() ? 366 : 365
+    const dayOfYear = base.round(f * days, 5)
     let m = 12
     while (m > 0 && DAYS_OF_YEAR[m] > dayOfYear) {
       m--
@@ -138,19 +137,19 @@ class Calendar {
 
   isLeapYear () {
     if (this.isGregorian()) {
-      return M.LeapYearGregorian(this.year)
+      return LeapYearGregorian(this.year)
     } else {
-      return M.LeapYearJulian(this.year)
+      return LeapYearJulian(this.year)
     }
   }
 
   toJD () {
-    return M.CalendarToJD(this.year, this.month, this.day, !this.isGregorian())
+    return CalendarToJD(this.year, this.month, this.day, !this.isGregorian())
   }
 
   fromJD (jd) {
-    let isJulian = !M.isJDCalendarGregorian(jd)
-    let {year, month, day} = M.JDToCalendar(jd, isJulian)
+    const isJulian = !isJDCalendarGregorian(jd)
+    const {year, month, day} = JDToCalendar(jd, isJulian)
     this.year = year
     this.month = month
     this.day = day
@@ -159,13 +158,13 @@ class Calendar {
 
   fromJDE (jde) {
     this.fromJD(jde)
-    let dT = deltat.deltaT(this.toYear()) // in seconds
+    const dT = deltat.deltaT(this.toYear()) // in seconds
     this.day -= dT / 86400
     return this
   }
 
   toJDE () {
-    let dT = deltat.deltaT(this.toYear()) // in seconds
+    const dT = deltat.deltaT(this.toYear()) // in seconds
     this.day += dT / 86400
     return this.toJD()
   }
@@ -192,7 +191,7 @@ class Calendar {
    *   false - `TD = UT + ΔT`
    */
   deltaT (td) {
-    let dT = deltat.deltaT(this.toYear()) // in seconds
+    const dT = deltat.deltaT(this.toYear()) // in seconds
     if (td) {
       this.day -= dT / 86400
     } else {
@@ -202,26 +201,25 @@ class Calendar {
   }
 
   dayOfWeek () {
-    return M.DayOfWeek(this.toJD())
+    return DayOfWeek(this.toJD())
   }
 
   dayOfYear () {
     if (this.isGregorian()) {
-      return M.DayOfYearGregorian(this.year, this.month, this.day)
+      return DayOfYearGregorian(this.year, this.month, this.day)
     } else {
-      return M.DayOfYearJulian(this.year, this.month, this.day)
+      return DayOfYearJulian(this.year, this.month, this.day)
     }
   }
 }
-M.Calendar = Calendar
 
-class CalendarJulian extends Calendar {
+export class CalendarJulian extends Calendar {
   toJD () {
-    return M.CalendarJulianToJD(this.year, this.month, this.day)
+    return CalendarJulianToJD(this.year, this.month, this.day)
   }
 
   fromJD (jd) {
-    let {year, month, day} = M.JDToCalendarJulian(jd)
+    const {year, month, day} = JDToCalendarJulian(jd)
     this.year = year
     this.month = month
     this.day = day
@@ -229,11 +227,11 @@ class CalendarJulian extends Calendar {
   }
 
   isLeapYear () {
-    return M.LeapYearJulian(this.year)
+    return LeapYearJulian(this.year)
   }
 
   dayOfYear () {
-    return M.DayOfYearJulian(this.year, this.month, this.day)
+    return DayOfYearJulian(this.year, this.month, this.day)
   }
 
   /**
@@ -242,19 +240,18 @@ class CalendarJulian extends Calendar {
    * @returns {CalendarGregorian}
    */
   toGregorian () {
-    let jd = this.toJD()
+    const jd = this.toJD()
     return new CalendarGregorian().fromJD(jd)
   }
 }
-M.CalendarJulian = CalendarJulian
 
-class CalendarGregorian extends Calendar {
+export class CalendarGregorian extends Calendar {
   toJD () {
-    return M.CalendarGregorianToJD(this.year, this.month, this.day)
+    return CalendarGregorianToJD(this.year, this.month, this.day)
   }
 
   fromJD (jd) {
-    let {year, month, day} = M.JDToCalendarGregorian(jd)
+    const {year, month, day} = JDToCalendarGregorian(jd)
     this.year = year
     this.month = month
     this.day = day
@@ -262,11 +259,11 @@ class CalendarGregorian extends Calendar {
   }
 
   isLeapYear () {
-    return M.LeapYearGregorian(this.year)
+    return LeapYearGregorian(this.year)
   }
 
   dayOfYear () {
-    return M.DayOfYearGregorian(this.year, this.month, this.day)
+    return DayOfYearGregorian(this.year, this.month, this.day)
   }
 
   /*
@@ -275,29 +272,28 @@ class CalendarGregorian extends Calendar {
   * @returns {CalendarJulian}
   */
   toJulian () {
-    let jd = this.toJD()
+    const jd = this.toJD()
     return new CalendarJulian().fromJD(jd)
   }
 }
-M.CalendarGregorian = CalendarGregorian
 
 // -----------------------------------------------------------------------------
 
 /**
  * base conversion from calendar date to julian day
  */
-M.CalendarToJD = function (y, m, d, isJulian) {
+export function CalendarToJD (y, m, d, isJulian) {
   let b = 0
   if (m < 3) {
     y--
     m += 12
   }
   if (!isJulian) {
-    let a = base.floorDiv(y, 100)
+    const a = base.floorDiv(y, 100)
     b = 2 - a + base.floorDiv(a, 4)
   }
   // (7.1) p. 61
-  let jd = (base.floorDiv(36525 * (int(y + 4716)), 100)) +
+  const jd = (base.floorDiv(36525 * (int(y + 4716)), 100)) +
     (base.floorDiv(306 * (m + 1), 10) + b) + d - 1524.5
   return jd
 }
@@ -313,8 +309,8 @@ M.CalendarToJD = function (y, m, d, isJulian) {
  * @param {number} d - day (float)
  * @returns {number} jd - Julian day (float)
  */
-M.CalendarGregorianToJD = function (y, m, d) {
-  return M.CalendarToJD(y, m, d, false)
+export function CalendarGregorianToJD (y, m, d) {
+  return CalendarToJD(y, m, d, false)
 }
 
 /**
@@ -327,8 +323,8 @@ M.CalendarGregorianToJD = function (y, m, d) {
  * @param {number} d - day (float)
  * @returns {number} jd - Julian day (float)
  */
-M.CalendarJulianToJD = function (y, m, d) {
-  return M.CalendarToJD(y, m, d, true)
+export function CalendarJulianToJD (y, m, d) {
+  return CalendarToJD(y, m, d, true)
 }
 
 /**
@@ -336,7 +332,7 @@ M.CalendarJulianToJD = function (y, m, d) {
  * @param {number} y - year (int)
  * @returns {boolean} true if leap year in Julian Calendar
  */
-M.LeapYearJulian = function (y) {
+export function LeapYearJulian (y) {
   return y % 4 === 0
 }
 
@@ -345,7 +341,7 @@ M.LeapYearJulian = function (y) {
  * @param {number} y - year (int)
  * @returns {boolean} true if leap year in Gregorian Calendar
  */
-M.LeapYearGregorian = function (y) {
+export function LeapYearGregorian (y) {
   return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0
 }
 
@@ -358,21 +354,21 @@ M.LeapYearGregorian = function (y) {
  * @param {boolean} isJulian - set true for Julian Calendar, otherwise Gregorian is used
  * @returns {object} `{ (int) year, (int) month, (float) day }`
  */
-M.JDToCalendar = function (jd, isJulian) {
-  var [z, f] = base.modf(jd + 0.5)
-  var a = z
+export function JDToCalendar (jd, isJulian) {
+  const [z, f] = base.modf(jd + 0.5)
+  let a = z
   if (!isJulian) {
-    var α = base.floorDiv(z * 100 - 186721625, 3652425)
+    const α = base.floorDiv(z * 100 - 186721625, 3652425)
     a = z + 1 + α - base.floorDiv(α, 4)
   }
-  var b = a + 1524
-  var c = base.floorDiv(b * 100 - 12210, 36525)
-  var d = base.floorDiv(36525 * c, 100)
-  var e = int(base.floorDiv((b - d) * 1e4, 306001))
+  const b = a + 1524
+  const c = base.floorDiv(b * 100 - 12210, 36525)
+  const d = base.floorDiv(36525 * c, 100)
+  const e = int(base.floorDiv((b - d) * 1e4, 306001))
   // compute return values
-  var year
-  var month
-  var day = (int(b - d) - base.floorDiv(306001 * e, 1e4)) + f
+  let year
+  let month
+  const day = (int(b - d) - base.floorDiv(306001 * e, 1e4)) + f
   if (e === 14 || e === 15) {
     month = e - 13
   } else {
@@ -392,8 +388,8 @@ M.JDToCalendar = function (jd, isJulian) {
  * @param {number} jd - Julian day (float)
  * @returns {object} `{ (int) year, (int) month, (float) day }`
  */
-M.JDToCalendarGregorian = function (jd) {
-  return M.JDToCalendar(jd, false)
+export function JDToCalendarGregorian (jd) {
+  return JDToCalendar(jd, false)
 }
 
 /**
@@ -402,8 +398,8 @@ M.JDToCalendarGregorian = function (jd) {
  * @param {number} jd - Julian day (float)
  * @returns {object} { (int) year, (int) month, (float) day }
  */
-M.JDToCalendarJulian = function (jd) {
-  return M.JDToCalendar(jd, true)
+export function JDToCalendarJulian (jd) {
+  return JDToCalendar(jd, true)
 }
 
 /**
@@ -411,7 +407,7 @@ M.JDToCalendarJulian = function (jd) {
  * @param {number} jd - Julian day (float)
  * @returns {boolean} true for Gregorian, false for Julian calendar
  */
-M.isJDCalendarGregorian = function (jd) {
+export function isJDCalendarGregorian (jd) {
   return (jd >= GREGORIAN0JD)
 }
 
@@ -422,7 +418,7 @@ M.isJDCalendarGregorian = function (jd) {
  * @param {number} [day] - day of julian/gregorian year
  * @returns {boolean} true for Gregorian, false for Julian calendar
  */
-M.isCalendarGregorian = function (year, month = 1, day = 1) {
+export function isCalendarGregorian (year, month = 1, day = 1) {
   return (year > 1582 ||
     (year === 1582 && month > 10) ||
     (year === 1582 && month === 10 && day >= 15)
@@ -440,7 +436,7 @@ M.isCalendarGregorian = function (year, month = 1, day = 1) {
  * @param {number} jd - Julian day (float)
  * @returns {Date}
  */
-M.JDToDate = function (jd) {
+export function JDToDate (jd) {
   return new CalendarGregorian().fromJD(jd).toDate()
 }
 
@@ -449,7 +445,7 @@ M.JDToDate = function (jd) {
  * @param {Date} date
  * @returns {number} jd - Julian day (float)
  */
-M.DateToJD = function (date) {
+export function DateToJD (date) {
   return new CalendarGregorian().fromDate(date).toJD()
 }
 
@@ -469,7 +465,7 @@ M.DateToJD = function (date) {
  * @param {number} jde - Julian ephemeris day
  * @returns {Date} Javascript Date Object
  */
-M.JDEToDate = function (jde) {
+export function JDEToDate (jde) {
   return new CalendarGregorian().fromJDE(jde).toDate()
 }
 
@@ -484,7 +480,7 @@ M.JDEToDate = function (jde) {
  * @param {Date} date - Javascript Date Object
  * @returns {number} jde - Julian ephemeris day (float)
  */
-M.DateToJDE = function (date) {
+export function DateToJDE (date) {
   return new CalendarGregorian().fromDate(date).toJDE()
 }
 
@@ -493,7 +489,7 @@ M.DateToJDE = function (date) {
  * @param {Number} mjd - Modified Julian Day
  * @returns {Number} jd - Julian Day
  */
-M.MJDToJD = function (mjd) {
+export function MJDToJD (mjd) {
   return mjd - base.JMod
 }
 
@@ -502,7 +498,7 @@ M.MJDToJD = function (mjd) {
  * @param {Number} jd - Julian Day
  * @returns {Number} mjd - Modified Julian Day
  */
-M.JDToMJD = function (jd) {
+export function JDToMJD (jd) {
   return jd + base.JMod
 }
 
@@ -515,7 +511,7 @@ M.JDToMJD = function (jd) {
  * @param {number} jd - Julian day (float)
  * @returns {number} (int) 0 == sunday; ...; 6 == saturday
  */
-M.DayOfWeek = function (jd) {
+export function DayOfWeek (jd) {
   return int(jd + 1.5) % 7
 }
 
@@ -527,8 +523,8 @@ M.DayOfWeek = function (jd) {
  * @param {number} d - day (float)
  * @returns {number} day of year
  */
-M.DayOfYearGregorian = function (y, m, d) {
-  return M.DayOfYear(y, m, int(d), M.LeapYearGregorian(y))
+export function DayOfYearGregorian (y, m, d) {
+  return DayOfYear(y, m, int(d), LeapYearGregorian(y))
 }
 
 /**
@@ -539,8 +535,8 @@ M.DayOfYearGregorian = function (y, m, d) {
  * @param {number} d - day (float)
  * @returns {number} day of year
  */
-M.DayOfYearJulian = function (y, m, d) {
-  return M.DayOfYear(y, m, int(d), M.LeapYearJulian(y))
+export function DayOfYearJulian (y, m, d) {
+  return DayOfYear(y, m, int(d), LeapYearJulian(y))
 }
 
 /**
@@ -554,8 +550,8 @@ M.DayOfYearJulian = function (y, m, d) {
  * @param {boolean} leap - set `true` if `y` is leap year
  * @returns {number} day of year
  */
-M.DayOfYear = function (y, m, d, leap) {
-  var k = 0
+export function DayOfYear (y, m, d, leap) {
+  let k = 0
   if (leap && m > 1) {
     k = 1
   }
@@ -569,9 +565,9 @@ M.DayOfYear = function (y, m, d, leap) {
  * @param {boolean} leap - set `true` if `y` is leap year
  * @returns {object} `{ (int) month, (float) day }`
  */
-M.DayOfYearToCalendar = function (n, leap) {
-  var month
-  var k = 0
+export function DayOfYearToCalendar (n, leap) {
+  let month
+  let k = 0
   if (leap) {
     k = 1
   }
@@ -581,7 +577,7 @@ M.DayOfYearToCalendar = function (n, leap) {
       break
     }
   }
-  var day = n - k - DAYS_OF_YEAR[month]
+  const day = n - k - DAYS_OF_YEAR[month]
   return {month, day}
 }
 
@@ -592,8 +588,8 @@ M.DayOfYearToCalendar = function (n, leap) {
  * @param {number} n - day of year (int)
  * @returns {CalendarGregorian} { (int) year, (int) month, (float) day }
  */
-M.DayOfYearToCalendarGregorian = function (year, n) {
-  var {month, day} = M.DayOfYearToCalendar(n, M.LeapYearGregorian(year))
+export function DayOfYearToCalendarGregorian (year, n) {
+  const {month, day} = DayOfYearToCalendar(n, LeapYearGregorian(year))
   return new CalendarGregorian(year, month, day)
 }
 
@@ -604,15 +600,45 @@ M.DayOfYearToCalendarGregorian = function (year, n) {
  * @param {number} n - day of year (int)
  * @returns {CalendarJulian} { (int) year, (int) month, (float) day }
  */
-M.DayOfYearToCalendarJulian = function (year, n) {
-  var {month, day} = M.DayOfYearToCalendar(n, M.LeapYearJulian(year))
+export function DayOfYearToCalendarJulian (year, n) {
+  const {month, day} = DayOfYearToCalendar(n, LeapYearJulian(year))
   return new CalendarJulian(year, month, day)
 }
 
 function pad (num, len) {
   len = len || 2
-  let neg = num < 0 ? '-' : ''
+  const neg = num < 0 ? '-' : ''
   num = Math.abs(num)
   const padded = ('0000' + num)
   return neg + padded.substr(padded.length - len, len)
+}
+
+export default {
+  GREGORIAN0JD,
+  Calendar,
+  CalendarJulian,
+  CalendarGregorian,
+  CalendarToJD,
+  CalendarGregorianToJD,
+  CalendarJulianToJD,
+  LeapYearJulian,
+  LeapYearGregorian,
+  JDToCalendar,
+  JDToCalendarGregorian,
+  JDToCalendarJulian,
+  isJDCalendarGregorian,
+  isCalendarGregorian,
+  JDToDate,
+  DateToJD,
+  JDEToDate,
+  DateToJDE,
+  MJDToJD,
+  JDToMJD,
+  DayOfWeek,
+  DayOfYearGregorian,
+  DayOfYearJulian,
+  DayOfYear,
+  DayOfYearToCalendar,
+  DayOfYearToCalendarGregorian,
+  DayOfYearToCalendarJulian
 }

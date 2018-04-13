@@ -1,15 +1,5 @@
-/* globals describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var sexa = require('..').sexagesimal
-var globe = require('..').globe
-var julian = require('..').julian
-var sidereal = require('..').sidereal
-var coord = require('..').coord
-
-// var oit = it.only
+import assert from 'assert'
+import {globe, sidereal, coord, julian, sexagesimal as sexa} from '..'
 
 describe('#coord', function () {
   it('Equatorial.toEcliptic', function () {

@@ -1,13 +1,5 @@
-/* global describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var base = require('..').base
-var julian = require('..').julian
-var moonillum = require('..').moonillum
-var moonposition = require('..').moonposition
-var solar = require('..').solar
+import assert from 'assert'
+import {base, julian, moonillum, moonposition, solar} from '..'
 
 var p = Math.PI / 180
 

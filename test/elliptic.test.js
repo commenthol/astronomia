@@ -1,19 +1,14 @@
-/* global describe, it */
 /* eslint key-spacing: 0 */
 
-var assert = require('assert')
-
-var elliptic = require('..').elliptic
-var julian = require('..').julian
-var planetposition = require('..').planetposition
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {elliptic, planetposition, data, julian, sexagesimal as sexa} from '..'
 
 describe('elliptic', function () {
-  var earth = new planetposition.Planet('earth')
+  var earth = new planetposition.Planet(data.vsop87Bearth)
 
   it('position()', function () {
     // Example 33.a, p. 225.0  VSOP87 result p. 227.0
-    var venus = new planetposition.Planet('venus')
+    var venus = new planetposition.Planet(data.vsop87Bvenus)
     var eq = elliptic.position(venus, earth, 2448976.5)
     assert.equal(new sexa.RA(eq.ra).toString(3), '21ʰ4ᵐ41.454ˢ')
     assert.equal(new sexa.Angle(eq.dec).toString(2), '-18°53′16.84″')

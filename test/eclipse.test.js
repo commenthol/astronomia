@@ -1,8 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var eclipse = require('..').eclipse
+import assert from 'assert'
+import {eclipse} from '..'
 
 describe('#eclipse', function () {
   it('Solar 1993', function () {

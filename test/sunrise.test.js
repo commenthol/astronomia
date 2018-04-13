@@ -1,9 +1,9 @@
 /* eslint key-spacing:0 */
-/* global describe, it */
 
-var assert = require('assert')
-var julian = require('..').julian
-var Sunrise = require('..').sunrise
+import assert from 'assert'
+import {sunrise, julian} from '..'
+
+const {Sunrise} = sunrise
 
 describe.disable = function () {}
 

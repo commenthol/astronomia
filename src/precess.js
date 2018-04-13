@@ -43,13 +43,11 @@
  * (The code, following Meeus's example, technically treats it as Julian years.)
  */
 
-const base = require('./base')
-const coord = require('./coord')
-const elementequinox = require('./elementequinox')
-const nutation = require('./nutation')
-const sexa = require('./sexagesimal')
-
-const M = exports
+import base from './base'
+import coord from './coord'
+import elementequinox from './elementequinox'
+import nutation from './nutation'
+import sexa from './sexagesimal'
 
 /**
  * approxAnnualPrecession returns approximate annual precision in right
@@ -65,14 +63,14 @@ const M = exports
  *  {sexa.HourAngle} seconds of right ascension
  *  {sexa.Angle} seconds of Declination
  */
-M.approxAnnualPrecession = function (eqFrom, epochFrom, epochTo) {
-  let [m, na, nd] = mn(epochFrom, epochTo)
-  let [sa, ca] = base.sincos(eqFrom.ra)
+export function approxAnnualPrecession (eqFrom, epochFrom, epochTo) {
+  const [m, na, nd] = mn(epochFrom, epochTo)
+  const [sa, ca] = base.sincos(eqFrom.ra)
   // (21.1) p. 132
-  let Δαs = m + na * sa * Math.tan(eqFrom.dec) // seconds of RA
-  let Δδs = nd * ca // seconds of Dec
-  let ra = new sexa.HourAngle(false, 0, 0, Δαs).rad()
-  let dec = new sexa.Angle(false, 0, 0, Δδs).rad()
+  const Δαs = m + na * sa * Math.tan(eqFrom.dec) // seconds of RA
+  const Δδs = nd * ca // seconds of Dec
+  const ra = new sexa.HourAngle(false, 0, 0, Δαs).rad()
+  const dec = new sexa.Angle(false, 0, 0, Δδs).rad()
   return {ra, dec}
 }
 
@@ -80,14 +78,13 @@ M.approxAnnualPrecession = function (eqFrom, epochFrom, epochTo) {
  * @param {Number} epochFrom - use `base.JDEToJulianYear(year)` to get epoch
  * @param {Number} epochTo - use `base.JDEToJulianYear(year)` to get epoch
  */
-function mn (epochFrom, epochTo) {
-  var T = (epochTo - epochFrom) * 0.01
-  var m = 3.07496 + 0.00186 * T
-  var na = 1.33621 - 0.00057 * T
-  var nd = 20.0431 - 0.0085 * T
+export function mn (epochFrom, epochTo) {
+  const T = (epochTo - epochFrom) * 0.01
+  const m = 3.07496 + 0.00186 * T
+  const na = 1.33621 - 0.00057 * T
+  const nd = 20.0431 - 0.0085 * T
   return [m, na, nd]
 }
-M.mn = mn
 
 /**
  * ApproxPosition uses ApproxAnnualPrecession to compute a simple and quick
@@ -100,10 +97,10 @@ M.mn = mn
  * @param {Number} mδ - in radians
  * @returns {coord.Equatorial} eqTo
  */
-M.approxPosition = function (eqFrom, epochFrom, epochTo, mα, mδ) {
-  let {ra, dec} = M.approxAnnualPrecession(eqFrom, epochFrom, epochTo)
-  let dy = epochTo - epochFrom
-  let eqTo = new coord.Equatorial()
+export function approxPosition (eqFrom, epochFrom, epochTo, mα, mδ) {
+  const {ra, dec} = approxAnnualPrecession(eqFrom, epochFrom, epochTo)
+  const dy = epochTo - epochFrom
+  const eqTo = new coord.Equatorial()
   eqTo.ra = eqFrom.ra + (ra + mα) * dy
   eqTo.dec = eqFrom.dec + (dec + mδ) * dy
   return eqTo
@@ -129,7 +126,7 @@ const θt = [2004.3109 * s, -0.42665 * s, -0.041833 * s]
  * After construction, Precess may be called multiple times to precess
  * different coordinates with the same initial and final epochs.
  */
-class Precessor {
+export class Precessor {
   /**
    * constructs a Precessor object and initializes it to precess
    * coordinates from epochFrom to epochTo.
@@ -142,7 +139,7 @@ class Precessor {
     let zCoeff = zt
     let θCoeff = θt
     if (epochFrom !== 2000) {
-      let T = (epochFrom - 2000) * 0.01
+      const T = (epochFrom - 2000) * 0.01
       ζCoeff = [
         base.horner(T, ζT),
         0.30188 * s - 0.000344 * s * T,
@@ -159,10 +156,10 @@ class Precessor {
         -0.041833 * s
       ]
     }
-    let t = (epochTo - epochFrom) * 0.01
+    const t = (epochTo - epochFrom) * 0.01
     this.ζ = base.horner(t, ζCoeff) * t
     this.z = base.horner(t, zCoeff) * t
-    let θ = base.horner(t, θCoeff) * t
+    const θ = base.horner(t, θCoeff) * t
     this.sθ = Math.sin(θ)
     this.cθ = Math.cos(θ)
   }
@@ -175,12 +172,12 @@ class Precessor {
    */
   precess (eqFrom) {
     // (21.4) p. 134
-    let [sδ, cδ] = base.sincos(eqFrom.dec)
-    let [sαζ, cαζ] = base.sincos(eqFrom.ra + this.ζ)
-    let A = cδ * sαζ
-    let B = this.cθ * cδ * cαζ - this.sθ * sδ
-    let C = this.sθ * cδ * cαζ + this.cθ * sδ
-    let eqTo = new coord.Equatorial()
+    const [sδ, cδ] = base.sincos(eqFrom.dec)
+    const [sαζ, cαζ] = base.sincos(eqFrom.ra + this.ζ)
+    const A = cδ * sαζ
+    const B = this.cθ * cδ * cαζ - this.sθ * sδ
+    const C = this.sθ * cδ * cαζ + this.cθ * sδ
+    const eqTo = new coord.Equatorial()
     eqTo.ra = Math.atan2(A, B) + this.z
     if (C < base.CosSmallAngle) {
       eqTo.dec = Math.asin(C)
@@ -190,7 +187,6 @@ class Precessor {
     return eqTo
   }
 }
-M.Precessor = Precessor
 
 /**
  * Position precesses equatorial coordinates from one epoch to another,
@@ -209,10 +205,10 @@ M.Precessor = Precessor
  * @param {Number} mδ - in radians
  * @returns {coord.Equatorial} [eqTo]
  */
-M.position = function (eqFrom, epochFrom, epochTo, mα, mδ) {
-  let p = new Precessor(epochFrom, epochTo)
-  let t = epochTo - epochFrom
-  let eqTo = new coord.Equatorial()
+export function position (eqFrom, epochFrom, epochTo, mα, mδ) {
+  const p = new Precessor(epochFrom, epochTo)
+  const t = epochTo - epochFrom
+  const eqTo = new coord.Equatorial()
   eqTo.ra = eqFrom.ra + mα * t
   eqTo.dec = eqFrom.dec + mδ * t
   return p.precess(eqTo)
@@ -233,7 +229,7 @@ const pt = [5029.0966 * s, 1.11113 * s, -0.000006 * s]
  * After construction, Precess may be called multiple times to precess
  * different coordinates with the same initial and final epochs.
  */
-class EclipticPrecessor {
+export class EclipticPrecessor {
   /**
    * constructs an EclipticPrecessor object and initializes
    * it to precess coordinates from epochFrom to epochTo.
@@ -246,7 +242,7 @@ class EclipticPrecessor {
     let πCoeff = πt
     let pCoeff = pt
     if (epochFrom !== 2000) {
-      let T = (epochFrom - 2000) * 0.01
+      const T = (epochFrom - 2000) * 0.01
       ηCoeff = [
         base.horner(T, ηT),
         -0.03302 * s + 0.000598 * s * T,
@@ -263,10 +259,10 @@ class EclipticPrecessor {
         -0.000006 * s
       ]
     }
-    let t = (epochTo - epochFrom) * 0.01
+    const t = (epochTo - epochFrom) * 0.01
     this.π = base.horner(t, πCoeff)
     this.p = base.horner(t, pCoeff) * t
-    let η = base.horner(t, ηCoeff) * t
+    const η = base.horner(t, ηCoeff) * t
     this.sη = Math.sin(η)
     this.cη = Math.cos(η)
   }
@@ -282,12 +278,12 @@ class EclipticPrecessor {
    */
   precess (eclFrom) {
     // (21.7) p. 137
-    let [sβ, cβ] = base.sincos(eclFrom.lat)
-    let [sd, cd] = base.sincos(this.π - eclFrom.lon)
-    let A = this.cη * cβ * sd - this.sη * sβ
-    let B = cβ * cd
-    let C = this.cη * sβ + this.sη * cβ * sd
-    let eclTo = new coord.Ecliptic()
+    const [sβ, cβ] = base.sincos(eclFrom.lat)
+    const [sd, cd] = base.sincos(this.π - eclFrom.lon)
+    const A = this.cη * cβ * sd - this.sη * sβ
+    const B = cβ * cd
+    const C = this.cη * sβ + this.sη * cβ * sd
+    const eclTo = new coord.Ecliptic()
     eclTo.lon = this.p + this.π - Math.atan2(A, B)
     if (C < base.CosSmallAngle) {
       eclTo.lat = Math.asin(C)
@@ -308,10 +304,10 @@ class EclipticPrecessor {
    * @returns {elementequinox.Elements} eTo
    */
   reduceElements (eFrom) {
-    let ψ = this.π + this.p
-    let [si, ci] = base.sincos(eFrom.inc)
-    let [snp, cnp] = base.sincos(eFrom.node - this.π)
-    let eTo = new elementequinox.Elements()
+    const ψ = this.π + this.p
+    const [si, ci] = base.sincos(eFrom.inc)
+    const [snp, cnp] = base.sincos(eFrom.node - this.π)
+    const eTo = new elementequinox.Elements()
     // (24.1) p. 159
     eTo.inc = Math.acos(ci * this.cη + si * this.sη * cnp)
     // (24.2) p. 159
@@ -321,7 +317,6 @@ class EclipticPrecessor {
     return eTo
   }
 }
-M.EclipticPrecessor = EclipticPrecessor
 
 /**
  * eclipticPosition precesses ecliptic coordinates from one epoch to another,
@@ -339,12 +334,12 @@ M.EclipticPrecessor = EclipticPrecessor
  * @param {sexa.Angle} mδ
  * @returns {coord.Ecliptic} eclTo
  */
-M.eclipticPosition = function (eclFrom, epochFrom, epochTo, mα, mδ) {
-  let p = new EclipticPrecessor(epochFrom, epochTo)
+export function eclipticPosition (eclFrom, epochFrom, epochTo, mα, mδ) {
+  const p = new EclipticPrecessor(epochFrom, epochTo)
 
   if (mα !== 0 || mδ !== 0) {
-    let {lon, lat} = M.properMotion(mα.rad(), mδ.rad(), epochFrom, eclFrom)
-    let t = epochTo - epochFrom
+    const {lon, lat} = properMotion(mα.rad(), mδ.rad(), epochFrom, eclFrom)
+    const t = epochTo - epochFrom
     eclFrom.lon += lon * t
     eclFrom.lat += lat * t
   }
@@ -358,15 +353,15 @@ M.eclipticPosition = function (eclFrom, epochFrom, epochTo, mα, mδ) {
  * @param {coord.Ecliptic} ecl
  * @returns {Number[]} [mλ, mβ]
  */
-M.properMotion = function (mα, mδ, epoch, ecl) {
-  let ε = nutation.meanObliquity(base.JulianYearToJDE(epoch))
-  let [εsin, εcos] = base.sincos(ε)
-  let {ra, dec} = ecl.toEquatorial(ε)
-  let [sα, cα] = base.sincos(ra)
-  let [sδ, cδ] = base.sincos(dec)
-  let cβ = Math.cos(ecl.lat)
-  let lon = (mδ * εsin * cα + mα * cδ * (εcos * cδ + εsin * sδ * sα)) / (cβ * cβ)
-  let lat = (mδ * (εcos * cδ + εsin * sδ * sα) - mα * εsin * cα * cδ) / cβ
+export function properMotion (mα, mδ, epoch, ecl) {
+  const ε = nutation.meanObliquity(base.JulianYearToJDE(epoch))
+  const [εsin, εcos] = base.sincos(ε)
+  const {ra, dec} = ecl.toEquatorial(ε)
+  const [sα, cα] = base.sincos(ra)
+  const [sδ, cδ] = base.sincos(dec)
+  const cβ = Math.cos(ecl.lat)
+  const lon = (mδ * εsin * cα + mα * cδ * (εcos * cδ + εsin * sδ * sα)) / (cβ * cβ)
+  const lat = (mδ * (εcos * cδ + εsin * sδ * sα) - mα * εsin * cα * cδ) / cβ
   return new coord.Ecliptic(lon, lat)
 }
 
@@ -389,23 +384,35 @@ M.properMotion = function (mα, mδ, epoch, ecl) {
  * @param {sexa.Angle} mδ
  * @returns {coord.Equatorial} eqTo
  */
-M.properMotion3D = function (eqFrom, epochFrom, epochTo, r, mr, mα, mδ) {
-  let [sα, cα] = base.sincos(eqFrom.ra)
-  let [sδ, cδ] = base.sincos(eqFrom.dec)
-  let x = r * cδ * cα
-  let y = r * cδ * sα
-  let z = r * sδ
-  let mrr = mr / r
-  let zmδ = z * mδ.rad()
-  let mx = x * mrr - zmδ * cα - y * mα.rad()
-  let my = y * mrr - zmδ * sα + x * mα.rad()
-  let mz = z * mrr + r * mδ.rad() * cδ
-  let t = epochTo - epochFrom
-  let xp = x + t * mx
-  let yp = y + t * my
-  let zp = z + t * mz
-  let eqTo = new coord.Equatorial()
+export function properMotion3D (eqFrom, epochFrom, epochTo, r, mr, mα, mδ) {
+  const [sα, cα] = base.sincos(eqFrom.ra)
+  const [sδ, cδ] = base.sincos(eqFrom.dec)
+  const x = r * cδ * cα
+  const y = r * cδ * sα
+  const z = r * sδ
+  const mrr = mr / r
+  const zmδ = z * mδ.rad()
+  const mx = x * mrr - zmδ * cα - y * mα.rad()
+  const my = y * mrr - zmδ * sα + x * mα.rad()
+  const mz = z * mrr + r * mδ.rad() * cδ
+  const t = epochTo - epochFrom
+  const xp = x + t * mx
+  const yp = y + t * my
+  const zp = z + t * mz
+  const eqTo = new coord.Equatorial()
   eqTo.ra = Math.atan2(yp, xp)
   eqTo.dec = Math.atan2(zp, Math.hypot(xp, yp))
   return eqTo
+}
+
+export default {
+  approxAnnualPrecession,
+  mn,
+  approxPosition,
+  Precessor,
+  position,
+  EclipticPrecessor,
+  eclipticPosition,
+  properMotion,
+  properMotion3D
 }

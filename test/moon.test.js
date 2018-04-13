@@ -1,24 +1,15 @@
-/* eslint one-var: 0 */
-/* global describe, it */
-
-'use strict'
-
-var assert = require('assert')
-
-var base = require('..').base
-var julian = require('..').julian
-var moon = require('..').moon
-var planetposition = require('..').planetposition
+import assert from 'assert'
+import {base, julian, moon, data, planetposition} from '..'
 
 var j = julian.CalendarGregorianToJD(1992, 4, 12)
-var earth = new planetposition.Planet('earth')
+var earth = new planetposition.Planet(data.earth)
 
 describe('#moon', function () {
   it('physical', function () {
     var a = moon.physical(j, earth)
-    var cMoon = a[0],
-      P = a[1],
-      cSun = a[2]
+    var cMoon = a[0]
+    var P = a[1]
+    var cSun = a[2]
     assert.equal((cMoon.lon * 180 / Math.PI).toFixed(2), -1.23)
     assert.equal((cMoon.lat * 180 / Math.PI).toFixed(2), 4.20)
     assert.equal((P * 180 / Math.PI).toFixed(2), 15.08)

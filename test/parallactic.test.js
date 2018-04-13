@@ -1,9 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var parallactic = require('..').parallactic
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {parallactic, sexagesimal as sexa} from '..'
 
 describe('#parallactic', function () {
   it('eclipticAtHorizon', function () {

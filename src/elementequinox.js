@@ -13,8 +13,7 @@
  * in package precess so that it can be a method of EclipticPrecessor.
  */
 
-const base = require('./base')
-const M = exports
+import base from './base'
 
 /**
  * Elements are the orbital elements of a solar system object which change
@@ -24,7 +23,7 @@ const M = exports
  * @param {Number} node - longitude of ascending node (Ω)
  * @param {Number} peri - argument of perihelion (ω)
  */
-class Elements {
+export class Elements {
   constructor (inc, node, peri) {
     if (typeof inc === 'object') {
       node = inc.pode
@@ -36,7 +35,6 @@ class Elements {
     this.peri = peri || 0
   }
 }
-M.Elements = Elements
 
 // (24.4) p. 161
 const S = 0.0001139788
@@ -48,13 +46,13 @@ const C = 0.9999999935
  * @param {Elements} eFrom
  * @returns {Elements} eTo
  */
-M.reduceB1950ToJ2000 = function (eFrom) {
-  let W = eFrom.node - 174.298782 * Math.PI / 180
-  let [si, ci] = base.sincos(eFrom.inc)
-  let [sW, cW] = base.sincos(W)
-  let A = si * sW
-  let B = C * si * cW - S * ci
-  let eTo = new Elements()
+export function reduceB1950ToJ2000 (eFrom) {
+  const W = eFrom.node - 174.298782 * Math.PI / 180
+  const [si, ci] = base.sincos(eFrom.inc)
+  const [sW, cW] = base.sincos(W)
+  const A = si * sW
+  const B = C * si * cW - S * ci
+  const eTo = new Elements()
   eTo.inc = Math.asin(Math.hypot(A, B))
   eTo.node = base.pmod(174.997194 * Math.PI / 180 + Math.atan2(A, B),
     2 * Math.PI)
@@ -74,16 +72,22 @@ const J = 0.00651966 * Math.PI / 180
  * @param {Elements} eFrom
  * @returns {Elements} eTo
  */
-M.reduceB1950FK4ToJ2000FK5 = function (eFrom) {
-  let W = L + eFrom.node
-  let [si, ci] = base.sincos(eFrom.inc)
-  let [sJ, cJ] = base.sincos(J)
-  let [sW, cW] = base.sincos(W)
-  let eTo = new Elements()
+export function reduceB1950FK4ToJ2000FK5 (eFrom) {
+  const W = L + eFrom.node
+  const [si, ci] = base.sincos(eFrom.inc)
+  const [sJ, cJ] = base.sincos(J)
+  const [sW, cW] = base.sincos(W)
+  const eTo = new Elements()
   eTo.inc = Math.acos(ci * cJ - si * sJ * cW)
   eTo.node = base.pmod(Math.atan2(si * sW, ci * sJ + si * cJ * cW) - Lp,
     2 * Math.PI)
   eTo.peri = base.pmod(eFrom.peri + Math.atan2(sJ * sW, si * cJ + ci * sJ * cW),
     2 * Math.PI)
   return eTo
+}
+
+export default {
+  Elements,
+  reduceB1950ToJ2000,
+  reduceB1950FK4ToJ2000FK5
 }

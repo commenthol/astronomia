@@ -1,8 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var stellar = require('..').stellar
+import assert from 'assert'
+import {stellar} from '..'
 
 describe('#stellar', function () {
   it('sum()', function () {

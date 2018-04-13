@@ -1,9 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var julian = require('..').julian
-var parabolic = require('..').parabolic
+import assert from 'assert'
+import {parabolic, julian} from '..'
 
 describe('#parabolic', function () {
   it('anomalyDistance', function () {

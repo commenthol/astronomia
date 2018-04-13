@@ -10,20 +10,18 @@
  * Incomplete.  Topocentric functions are commented out for lack of test data.
  */
 
-const base = require('./base')
-// const parallax = require('./parallax')
-const coord = require('./coord')
-const moonposition = require('./moonposition')
-const nutation = require('./nutation')
-// const planetposition = require('./planetposition')
-const solar = require('./solar')
-
-const M = exports
+import base from './base'
+// import parallax from './parallax'
+import coord from './coord'
+import moonposition from './moonposition'
+import nutation from './nutation'
+// import planetposition from './planetposition'
+import solar from './solar'
 
 const p = Math.PI / 180
 const _I = 1.54242 * p // IAU value of inclination of mean lunar equator
 
-let [sI, cI] = base.sincos(_I)
+const [sI, cI] = base.sincos(_I)
 
 /**
  * Physical returns quantities useful for physical observation of the Moon.
@@ -45,15 +43,15 @@ let [sI, cI] = base.sincos(_I)
  *    {number} P - position angle of the Moon's axis of rotation
  *    {base.Coord} cSun - selenographic longitude, latitude of the Sun.
  */
-M.physical = function (jde, earth) {
-  let {lon, lat, range} = moonposition.position(jde) // (λ without nutation)
+export function physical (jde, earth) {
+  const {lon, lat, range} = moonposition.position(jde) // (λ without nutation)
   // [λ, β, Δ]
-  let m = new Moon(jde)
-  let [l, b] = m.lib(lon, lat)
-  let P = m.pa(lon, lat, b)
-  let [l0, b0] = m.sun(lon, lat, range, earth)
-  let cMoon = new base.Coord(l, b)
-  let cSun = new base.Coord(l0, b0)
+  const m = new Moon(jde)
+  const [l, b] = m.lib(lon, lat)
+  const P = m.pa(lon, lat, b)
+  const [l0, b0] = m.sun(lon, lat, range, earth)
+  const cMoon = new base.Coord(l, b)
+  const cSun = new base.Coord(l0, b0)
   return [cMoon, P, cSun]
 }
 
@@ -62,14 +60,14 @@ M.physical = function (jde, earth) {
  * physical().  Computations are broken into several methods to organize
  * the code.
  */
-class Moon {
+export class Moon {
   constructor (jde) {
     this.jde = jde
     // Δψ, F, Ω, p. 372.0
-    let [Δψ, Δε] = nutation.nutation(jde)
+    const [Δψ, Δε] = nutation.nutation(jde)
     this.Δψ = Δψ
-    let T = base.J2000Century(jde)
-    let F = this.F = base.horner(T, 93.272095 * p, 483202.0175233 * p, -0.0036539 * p, -p / 3526000, p / 863310000)
+    const T = base.J2000Century(jde)
+    const F = this.F = base.horner(T, 93.272095 * p, 483202.0175233 * p, -0.0036539 * p, -p / 3526000, p / 863310000)
     this.Ω = base.horner(T, 125.0445479 * p, -1934.1362891 * p, 0.0020754 * p,
       p / 467441, -p / 60616000)
     // true ecliptic
@@ -77,13 +75,13 @@ class Moon {
     this.sε = Math.sin(this.ε)
     this.cε = Math.cos(this.ε)
     // ρ, σ, τ, p. 372,373
-    let D = base.horner(T, 297.8501921 * p, 445267.1114034 * p, -0.0018819 * p, p / 545868, -p / 113065000)
-    let M = base.horner(T, 357.5291092 * p, 35999.0502909 * p, -0.0001535 * p, p / 24490000)
-    let M_ = base.horner(T, 134.9633964 * p, 477198.8675055 * p,
+    const D = base.horner(T, 297.8501921 * p, 445267.1114034 * p, -0.0018819 * p, p / 545868, -p / 113065000)
+    const M = base.horner(T, 357.5291092 * p, 35999.0502909 * p, -0.0001535 * p, p / 24490000)
+    const M_ = base.horner(T, 134.9633964 * p, 477198.8675055 * p,
       0.0087414 * p, p / 69699, -p / 14712000)
-    let E = base.horner(T, 1, -0.002516, -0.0000074)
-    let K1 = 119.75 * p + 131.849 * p * T
-    let K2 = 72.56 * p + 20.186 * p * T
+    const E = base.horner(T, 1, -0.002516, -0.0000074)
+    const K1 = 119.75 * p + 131.849 * p * T
+    const K2 = 72.56 * p + 20.186 * p * T
     this.ρ = -0.02752 * p * Math.cos(M_) +
       -0.02245 * p * Math.sin(F) +
       0.00684 * p * Math.cos(M_ - 2 * F) +
@@ -136,43 +134,43 @@ class Moon {
    * and pass it along to physical.
    */
   lib (λ, β) {
-    let [l_, b_, A] = this.optical(λ, β)
-    let [l$, b$] = this.physical(A, b_)
+    const [l_, b_, A] = this.optical(λ, β)
+    const [l$, b$] = this.physical(A, b_)
     let l = l_ + l$
     if (l > Math.PI) {
       l -= 2 * Math.PI
     }
-    let b = b_ + b$
+    const b = b_ + b$
     return [l, b]
   }
 
   optical (λ, β) {
     // (53.1) p. 372
-    let W = λ - this.Ω // (λ without nutation)
-    let [sW, cW] = base.sincos(W)
-    let [sβ, cβ] = base.sincos(β)
-    let A = Math.atan2(sW * cβ * cI - sβ * sI, cW * cβ)
-    let l_ = base.pmod(A - this.F, 2 * Math.PI)
-    let b_ = Math.asin(-sW * cβ * sI - sβ * cI)
+    const W = λ - this.Ω // (λ without nutation)
+    const [sW, cW] = base.sincos(W)
+    const [sβ, cβ] = base.sincos(β)
+    const A = Math.atan2(sW * cβ * cI - sβ * sI, cW * cβ)
+    const l_ = base.pmod(A - this.F, 2 * Math.PI)
+    const b_ = Math.asin(-sW * cβ * sI - sβ * cI)
     return [l_, b_, A]
   }
 
   physical (A, b_) {
     // (53.2) p. 373
-    let [sA, cA] = base.sincos(A)
-    let l$ = -this.τ + (this.ρ * cA + this.σ * sA) * Math.tan(b_)
-    let b$ = this.σ * cA - this.ρ * sA
+    const [sA, cA] = base.sincos(A)
+    const l$ = -this.τ + (this.ρ * cA + this.σ * sA) * Math.tan(b_)
+    const b$ = this.σ * cA - this.ρ * sA
     return [l$, b$]
   }
 
   pa (λ, β, b) {
-    let V = this.Ω + this.Δψ + this.σ / sI
-    let [sV, cV] = base.sincos(V)
-    let [sIρ, cIρ] = base.sincos(_I + this.ρ)
-    let X = sIρ * sV
-    let Y = sIρ * cV * this.cε - cIρ * this.sε
-    let ω = Math.atan2(X, Y)
-    let ecl = new coord.Ecliptic(λ + this.Δψ, β).toEquatorial(this.ε) // eslint-disable-line no-unused-vars
+    const V = this.Ω + this.Δψ + this.σ / sI
+    const [sV, cV] = base.sincos(V)
+    const [sIρ, cIρ] = base.sincos(_I + this.ρ)
+    const X = sIρ * sV
+    const Y = sIρ * cV * this.cε - cIρ * this.sε
+    const ω = Math.atan2(X, Y)
+    const ecl = new coord.Ecliptic(λ + this.Δψ, β).toEquatorial(this.ε) // eslint-disable-line no-unused-vars
     let P = Math.asin(Math.hypot(X, Y) * Math.cos(ecl.ra - ω) / Math.cos(b))
     if (P < 0) {
       P += 2 * Math.PI
@@ -181,36 +179,35 @@ class Moon {
   }
 
   sun (λ, β, Δ, earth) {
-    let {lon, lat, range} = solar.apparentVSOP87(earth, this.jde) // eslint-disable-line no-unused-vars
-    let ΔR = Δ / (range * base.AU)
-    let λH = lon + Math.PI + ΔR * Math.cos(β) * Math.sin(lon - λ)
-    let βH = ΔR * β
+    const {lon, lat, range} = solar.apparentVSOP87(earth, this.jde) // eslint-disable-line no-unused-vars
+    const ΔR = Δ / (range * base.AU)
+    const λH = lon + Math.PI + ΔR * Math.cos(β) * Math.sin(lon - λ)
+    const βH = ΔR * β
     return this.lib(λH, βH)
   }
 }
-M.Moon = Moon
 
 /* commented out for lack of test data
-M.Topocentric = function (jde, ρsφ_, ρcφ_, L) { // (jde, ρsφ_, ρcφ_, L float64)  (l, b, P float64)
+export function Topocentric (jde, ρsφ_, ρcφ_, L) { // (jde, ρsφ_, ρcφ_, L float64)  (l, b, P float64)
   λ, β, Δ := moonposition.Position(jde) // (λ without nutation)
   Δψ, Δε := nutation.Nutation(jde)
   sε, cε := base.sincos(nutation.MeanObliquity(jde) + Δε)
   α, δ := coord.EclToEq(λ+Δψ, β, sε, cε)
   α, δ = parallax.Topocentric(α, δ, Δ/base.AU, ρsφ_, ρcφ_, L, jde)
   λ, β = coord.EqToEcl(α, δ, sε, cε)
-  let m = newMoon(jde)
+  const m = newMoon(jde)
   l, b = m.lib(λ, β)
   P = m.pa(λ, β, b)
   return
 }
 
-M.TopocentricCorrections = function (jde, b, P, φ, δ, H, π) { // (jde, b, P, φ, δ, H, π float64)  (Δl, Δb, ΔP float64)
+export function TopocentricCorrections (jde, b, P, φ, δ, H, π) { // (jde, b, P, φ, δ, H, π float64)  (Δl, Δb, ΔP float64)
   sφ, cφ := base.sincos(φ)
   sH, cH := base.sincos(H)
   sδ, cδ := base.sincos(δ)
-  let Q = Math.atan(cφ * sH / (cδ*sφ - sδ*cφ*cH))
-  let z = Math.acos(sδ*sφ + cδ*cφ*cH)
-  let π_ = π * (Math.sin(z) + 0.0084*Math.sin(2*z))
+  const Q = Math.atan(cφ * sH / (cδ*sφ - sδ*cφ*cH))
+  const z = Math.acos(sδ*sφ + cδ*cφ*cH)
+  const π_ = π * (Math.sin(z) + 0.0084*Math.sin(2*z))
   sQP, cQP := base.sincos(Q - P)
   Δl = -π_ * sQP / Math.cos(b)
   Δb = π_ * cQP
@@ -226,10 +223,10 @@ M.TopocentricCorrections = function (jde, b, P, φ, δ, H, π) { // (jde, b, P, 
  * @param {base.Coords} cSun - selenographic coordinates of the Sun (as returned by physical(), for example.)
  * @return altitude in radians.
  */
-M.sunAltitude = function (cOnMoon, cSun) { // (η, θ, l0, b0 float64)  float64
-  let c0 = Math.PI / 2 - cSun.lon
-  let [sb0, cb0] = base.sincos(cSun.lat)
-  let [sθ, cθ] = base.sincos(cOnMoon.lat)
+export function sunAltitude (cOnMoon, cSun) { // (η, θ, l0, b0 float64)  float64
+  const c0 = Math.PI / 2 - cSun.lon
+  const [sb0, cb0] = base.sincos(cSun.lat)
+  const [sθ, cθ] = base.sincos(cOnMoon.lat)
   return Math.asin(sb0 * sθ + cb0 * cθ * Math.sin(c0 + cOnMoon.lon))
 }
 
@@ -241,7 +238,7 @@ M.sunAltitude = function (cOnMoon, cSun) { // (η, θ, l0, b0 float64)  float64
  * @param {planetposition.Planet} earth - VSOP87 Planet Earth
  * @return time of sunrise as a jde nearest the given jde.
  */
-M.sunrise = function (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *pp.V87Planet)  float64
+export function sunrise (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *pp.V87Planet)  float64
   jde -= srCorr(cOnMoon, jde, earth)
   return jde - srCorr(cOnMoon, jde, earth)
 }
@@ -254,7 +251,7 @@ M.sunrise = function (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *pp.
  * @param {planetposition.Planet} earth - VSOP87 Planet Earth
  * @return time of sunset as a jde nearest the given jde.
  */
-M.sunset = function (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *pp.V87Planet)  float64
+export function sunset (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *pp.V87Planet)  float64
   jde += srCorr(cOnMoon, jde, earth)
   return jde + srCorr(cOnMoon, jde, earth)
 }
@@ -263,7 +260,17 @@ M.sunset = function (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *pp.V
  * @private
  */
 function srCorr (cOnMoon, jde, earth) {
-  let phy = M.physical(jde, earth)
-  let h = M.sunAltitude(cOnMoon, phy[2])
+  const phy = physical(jde, earth)
+  const h = sunAltitude(cOnMoon, phy[2])
   return h / (12.19075 * p * Math.cos(cOnMoon.lat))
+}
+
+export default {
+  physical,
+  Moon,
+  // Topocentric,
+  // TopocentricCorrections,
+  sunAltitude,
+  sunrise,
+  sunset
 }

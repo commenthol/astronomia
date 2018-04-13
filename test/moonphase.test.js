@@ -1,11 +1,7 @@
 /* eslint no-multi-spaces: 0 */
-/* globals describe, it */
 
-'use strict'
-
-var assert = require('assert')
-var julian = require('..').julian
-var moonphase = require('..').moonphase
+import assert from 'assert'
+import {julian, moonphase} from '..'
 
 describe('#moonphase', function () {
   describe('mean', function () {
@@ -28,7 +24,7 @@ describe('#moonphase', function () {
     it('new', function () {
       // Example 49.a, p. 353.
       var dyear = new julian.CalendarGregorian(1977, 2, 14).toYear()
-      var jde = moonphase.new(dyear)
+      var jde = moonphase.newMoon(dyear)
       assert.equal(jde.toFixed(5), 2443192.65118)
       assert.equal(julian.JDToDate(jde).toISOString(), '1977-02-18T03:37:42.183Z')
       // Example 10.a p.78

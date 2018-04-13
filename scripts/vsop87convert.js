@@ -7,7 +7,7 @@
 const fs = require('fs')
 const path = require('path')
 const serialize = require('serialize-to-js').serializeToModule
-const VSOP = require('../lib/vsop87')
+const {VSOP} = require('../lib/vsop87')
 
 const config = {
   attic: path.resolve(__dirname, '../attic'),

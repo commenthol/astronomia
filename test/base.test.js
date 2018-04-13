@@ -1,9 +1,5 @@
-/* globals describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var base = require('..').base
+import assert from 'assert'
+import {base} from '..'
 
 describe('#base', function () {
   describe('constants', function () {

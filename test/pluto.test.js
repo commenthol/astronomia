@@ -1,10 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var planetposition = require('..').planetposition
-var pluto = require('..').pluto
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {planetposition, data, pluto, sexagesimal as sexa} from '..'
 
 describe('#pluto', function () {
   it('heliocentric()', function () {
@@ -17,7 +12,7 @@ describe('#pluto', function () {
 
   it('astrometric()', function () {
     // Example 37.a, p. 266
-    var earth = new planetposition.Planet(planetposition.earth)
+    var earth = new planetposition.Planet(data.earth)
     var res = pluto.astrometric(2448908.5, earth)
     assert.equal(new sexa.RA(res.ra).toString(1), '15ʰ31ᵐ43.8ˢ')
     assert.equal(new sexa.Angle(res.dec).toString(0), '-4°27′29″')

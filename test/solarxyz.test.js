@@ -1,12 +1,8 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var planetposition = require('..').planetposition
-var solarxyz = require('..').solarxyz
+import assert from 'assert'
+import {planetposition, data, solarxyz} from '..'
 
 describe('#solarxyz', function () {
-  var earth = new planetposition.Planet('earth')
+  var earth = new planetposition.Planet(data.earth)
 
   it('position()', function () {
     // Example 26.a, p. 172.0

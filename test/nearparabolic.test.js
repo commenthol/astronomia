@@ -1,9 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var base = require('..').base
-var nearparabolic = require('..').nearparabolic
+import assert from 'assert'
+import {base, nearparabolic} from '..'
 
 describe('#nearparabolic', function () {
   describe('anomalyDistance', function () {

@@ -1,23 +1,18 @@
 /* eslint no-multi-spaces: 0 */
-/* global describe, it */
 
-'use strict'
+import 'babel-polyfill'
 
-require('babel-polyfill')
+import assert from 'assert'
+import {format} from 'util'
 
-var assert = require('assert')
-var format = require('util').format
-
-var base = require('..').base
-var sexa = require('..').sexagesimal
-var interp = require('..').interpolation
+import {base, interpolation, sexagesimal as sexa} from '..'
 
 describe('#interpolation', function () {
   describe('Len3', function () {
     it('interpolateN', function () {
       // Example 3.a, p. 25.0
       try {
-        var d3 = new interp.Len3(7, 9, [
+        var d3 = new interpolation.Len3(7, 9, [
           0.884226,
           0.877366,
           0.870531
@@ -33,7 +28,7 @@ describe('#interpolation', function () {
     it('interpolateX', function () {
       // Example 3.a, p. 25.0
       try {
-        var d3 = new interp.Len3(7, 9, [
+        var d3 = new interpolation.Len3(7, 9, [
           0.884226,
           0.877366,
           0.870531
@@ -49,7 +44,7 @@ describe('#interpolation', function () {
     it('extremum', function () {
       // Example 3.b, p. 26.0
       try {
-        var d3 = new interp.Len3(12, 20, [
+        var d3 = new interpolation.Len3(12, 20, [
           1.3814294,
           1.3812213,
           1.3812453
@@ -68,7 +63,7 @@ describe('#interpolation', function () {
       // Example 3.d, p. 26.0
       // y = 3 + 2x - 3x^2
       try {
-        var d3 = new interp.Len3(-1, 1, [ -2, 3, 2 ])
+        var d3 = new interpolation.Len3(-1, 1, [ -2, 3, 2 ])
       } catch (err) {
         assert.ok(!err, err)
       }
@@ -90,7 +85,7 @@ describe('#interpolation', function () {
         sexa.DMSToDeg(false, 0, 38, 23.2)
       ]
       try {
-        var d3 = new interp.Len3(x1, x3, yTable)
+        var d3 = new interpolation.Len3(x1, x3, yTable)
         var x = d3.zero(false)
       } catch (err) {
         assert.ok(!err, err)
@@ -110,7 +105,7 @@ describe('#interpolation', function () {
       var x3 = 1.0
       var yTable = [-2, 3, 2]
       try {
-        var d3 = new interp.Len3(x1, x3, yTable)
+        var d3 = new interpolation.Len3(x1, x3, yTable)
         var x = d3.zero(true)
       } catch (err) {
         assert.ok(!err, err)
@@ -134,7 +129,7 @@ describe('#interpolation', function () {
       ]
       var x = 28 + (3 + 20.0 / 60) / 24
       try {
-        var d5 = new interp.Len5(x1, x5, yTable)
+        var d5 = new interpolation.Len5(x1, x5, yTable)
         var y = d5.interpolateX(x)
       } catch (err) {
         assert.ok(!err, err)
@@ -146,7 +141,7 @@ describe('#interpolation', function () {
       // Example 3.d, p. 26.0
       // y = 3 + 2x - 3x^2
       try {
-        var d5 = new interp.Len5(-2, 2, [ -13, -2, 3, 2, -5 ])
+        var d5 = new interpolation.Len5(-2, 2, [ -13, -2, 3, 2, -5 ])
       } catch (err) {
         assert.ok(!err, err)
       }
@@ -169,7 +164,7 @@ describe('#interpolation', function () {
         sexa.DMSToDeg(false, 1, 45, 46.33)
       ]
       try {
-        var d5 = new interp.Len5(x1, x5, yTable)
+        var d5 = new interpolation.Len5(x1, x5, yTable)
         var z = d5.zero(false)
       } catch (err) {
         assert.ok(!err, err)
@@ -184,7 +179,7 @@ describe('#interpolation', function () {
 
       // compare result to that from just three central values
       try {
-        var d3 = new interp.Len3(26, 28, yTable.slice(1, 4))
+        var d3 = new interpolation.Len3(26, 28, yTable.slice(1, 4))
         var z3 = d3.zero(false)
       } catch (err) {
         assert.ok(!err, err)
@@ -200,7 +195,7 @@ describe('#interpolation', function () {
     var half
     // Example 3.f, p. 32.0
     try {
-      half = interp.len4Half([
+      half = interpolation.len4Half([
         new sexa.RA(10, 18, 48.732).rad(),
         new sexa.RA(10, 23, 22.835).rad(),
         new sexa.RA(10, 27, 57.247).rad(),
@@ -223,9 +218,9 @@ describe('#interpolation', function () {
       [33.05, 0.5453707057]
     ]
     // 10 significant digits in input, no more than 10 expected in output
-    assert.equal(interp.lagrange(30, table).toFixed(10), 0.5000000000)
-    assert.equal(interp.lagrange(0, table).toFixed(10),  0.0000512249)
-    assert.equal(interp.lagrange(90, table).toFixed(10), 0.9999648100)
+    assert.equal(interpolation.lagrange(30, table).toFixed(10), 0.5000000000)
+    assert.equal(interpolation.lagrange(0, table).toFixed(10),  0.0000512249)
+    assert.equal(interpolation.lagrange(90, table).toFixed(10), 0.9999648100)
   })
 
   it('lagrangePoly', function () {
@@ -236,7 +231,7 @@ describe('#interpolation', function () {
       [4,  9],
       [6, 15]
     ]
-    var p = interp.lagrangePoly(table)
+    var p = interpolation.lagrangePoly(table)
     var exp = [ -87 / 5, 69 / 5, -13 / 5, 1 / 5 ]
 
     p.forEach(function (c, i) {
@@ -249,14 +244,14 @@ describe('#interpolation', function () {
     var t = [0.2, 0.4, 0.7, -1.5, 15]
     t.forEach(function (x) {
       it('' + x, function () {
-        var y = interp.linear(x, 0, 1, [0, 1])
+        var y = interpolation.linear(x, 0, 1, [0, 1])
         assert.equal(y, x)
       })
     })
 
     t.forEach(function (x) {
       it(x + ' #2', function () {
-        var y = interp.linear(x, 0, 1, [1, 1.25, 1.5, 1.75, 2])
+        var y = interpolation.linear(x, 0, 1, [1, 1.25, 1.5, 1.75, 2])
         assert.equal(y, x + 1)
       })
     })

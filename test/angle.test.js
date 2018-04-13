@@ -1,11 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var base = require('..').base
-var angle = require('..').angle
-var julian = require('..').julian
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {base, angle, julian, sexagesimal as sexa} from '..'
 
 describe('#angle', function () {
   describe('single functions', function () {

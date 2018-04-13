@@ -1,9 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var mars = require('..').mars
-var planetposition = require('..').planetposition
+import assert from 'assert'
+import {mars, data, planetposition} from '..'
 
 function toFixed (num, pos) {
   return parseFloat(num.toFixed(pos), 10)
@@ -12,8 +8,8 @@ function toFixed (num, pos) {
 describe('#mars', function () {
   it('physical()', function () {
   // Example 42.a, p. 291
-    var e = new planetposition.Planet(planetposition.earth)
-    var m = new planetposition.Planet(planetposition.mars)
+    var e = new planetposition.Planet(data.earth)
+    var m = new planetposition.Planet(data.mars)
     var re = mars.physical(2448935.500683, e, m)
     var DE = re[0]
     var DS = re[1]

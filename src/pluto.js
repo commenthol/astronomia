@@ -8,10 +8,8 @@
  * Pluto: Chapter 37, Pluto.
  */
 
-const base = require('./base')
-const elliptic = require('./elliptic')
-
-const M = exports
+import base from './base'
+import elliptic from './elliptic'
 
 /**
  * Heliocentric returns J2000 heliocentric coordinates of Pluto.
@@ -19,17 +17,17 @@ const M = exports
  * Results l, b are solar longitude and latitude in radians.
  * Result r is distance in AU.
  */
-M.heliocentric = function (jde) {
-  var l = 0
-  var b = 0
-  var r = 0
-  let T = base.J2000Century(jde)
-  let J = 34.35 + 3034.9057 * T
-  let S = 50.08 + 1222.1138 * T
-  let P = 238.96 + 144.96 * T
-  for (var i in t37) {
-    let t = t37[i]
-    let [sα, cα] = base.sincos((t.i * J + t.j * S + t.k * P) * Math.PI / 180)
+export function heliocentric (jde) {
+  let l = 0
+  let b = 0
+  let r = 0
+  const T = base.J2000Century(jde)
+  const J = 34.35 + 3034.9057 * T
+  const S = 50.08 + 1222.1138 * T
+  const P = 238.96 + 144.96 * T
+  for (let i in t37) {
+    const t = t37[i]
+    const [sα, cα] = base.sincos((t.i * J + t.j * S + t.k * P) * Math.PI / 180)
     l += t.lA * sα + t.lB * cα
     b += t.bA * sα + t.bB * cα
     r += t.rA * sα + t.rB * cα
@@ -43,21 +41,21 @@ M.heliocentric = function (jde) {
 /**
  * Astrometric returns J2000 astrometric coordinates of Pluto.
  */
-M.astrometric = function (jde, earth) {
+export function astrometric (jde, earth) {
   const sε = base.SOblJ2000
   const cε = base.COblJ2000
-  let f = function (jde) {
-    var x, y, z
-    let {lon, lat, range} = M.heliocentric(jde)
-    let [sl, cl] = base.sincos(lon)
-    let [sb, cb] = base.sincos(lat)
+  const f = function (jde) {
+    let x, y, z
+    const {lon, lat, range} = heliocentric(jde)
+    const [sl, cl] = base.sincos(lon)
+    const [sb, cb] = base.sincos(lat)
     // (37.1) p. 264
     x = range * cl * cb
     y = range * (sl * cb * cε - sb * sε)
     z = range * (sl * cb * sε + sb * cε)
     return {x, y, z}
   }
-  let c = elliptic.astrometricJ2000(f, jde, earth) // eslint-disable-line no-unused-vars
+  const c = elliptic.astrometricJ2000(f, jde, earth) // eslint-disable-line no-unused-vars
   return new base.Coord(c.ra, c.dec)
 }
 
@@ -73,7 +71,7 @@ function Pt (i, j, k, lA, lB, bA, bB, rA, rB) {
   this.rB = rB
 }
 
-var t37 = [
+const t37 = [
   new Pt(0, 0, 1, -19.799805, 19.850055, -5.452852, -14.974862, 6.6865439, 6.8951812),
   new Pt(0, 0, 2, 0.897144, -4.954829, 3.527812, 1.67279, -1.1827535, -0.0332538),
   new Pt(0, 0, 3, 0.611149, 1.211027, -1.050748, 0.327647, 0.1593179, -0.143889),
@@ -118,3 +116,8 @@ var t37 = [
   new Pt(3, 0, -1, 0.000005, -0.000003, 0, 0, 0.0000019, 0.0000035),
   new Pt(3, 0, 0, 0, 0, 0.000001, 0, 0.000001, 0.0000003)
 ]
+
+export default {
+  heliocentric,
+  astrometric
+}

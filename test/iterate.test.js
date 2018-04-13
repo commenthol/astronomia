@@ -1,8 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var iterate = require('..').iterate
+import assert from 'assert'
+import {iterate} from '..'
 
 describe('#iterate', function () {
   it('decimalPlaces', function () {

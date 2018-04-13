@@ -1,11 +1,5 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var base = require('..').base
-var julian = require('..').julian
-var planetary = require('..').planetary
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import {planetary, base, julian, sexagesimal as sexa} from '..'
 
 describe('#planetary', function () {
   it('mercuryInfConj()', function () {

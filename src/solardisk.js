@@ -8,11 +8,9 @@
  * Solardisk: Chapter 29, Ephemeris for Physical Observations of the Sun.
  */
 
-const base = require('./base')
-const nutation = require('./nutation')
-const solar = require('./solar')
-
-const M = exports
+import base from './base'
+import nutation from './nutation'
+import solar from './solar'
 
 /**
  * Ephemeris returns the apparent orientation of the sun at the given jd.
@@ -24,30 +22,30 @@ const M = exports
  *
  * All results in radians.
  */
-M.ephemeris = function (jd, earth) { // (jd float64, e *pp.V87Planet)  (P, B0, L0 float64)
-  let θ = (jd - 2398220) * 2 * Math.PI / 25.38
-  let I = 7.25 * Math.PI / 180
-  let K = 73.6667 * Math.PI / 180 +
+export function ephemeris (jd, earth) { // (jd float64, e *pp.V87Planet)  (P, B0, L0 float64)
+  const θ = (jd - 2398220) * 2 * Math.PI / 25.38
+  const I = 7.25 * Math.PI / 180
+  const K = 73.6667 * Math.PI / 180 +
     1.3958333 * Math.PI / 180 * (jd - 2396758) / base.JulianCentury
 
-  let solarPos = solar.trueVSOP87(earth, jd)
-  let L = solarPos.lon
-  let R = solarPos.range
-  let [Δψ, Δε] = nutation.nutation(jd)
-  let ε0 = nutation.meanObliquity(jd)
-  let ε = ε0 + Δε
-  let λ = L - 20.4898 / 3600 * Math.PI / 180 / R
-  let λp = λ + Δψ
+  const solarPos = solar.trueVSOP87(earth, jd)
+  const L = solarPos.lon
+  const R = solarPos.range
+  const [Δψ, Δε] = nutation.nutation(jd)
+  const ε0 = nutation.meanObliquity(jd)
+  const ε = ε0 + Δε
+  const λ = L - 20.4898 / 3600 * Math.PI / 180 / R
+  const λp = λ + Δψ
 
-  let [sλK, cλK] = base.sincos(λ - K)
-  let [sI, cI] = base.sincos(I)
+  const [sλK, cλK] = base.sincos(λ - K)
+  const [sI, cI] = base.sincos(I)
 
-  let tx = -Math.cos(λp) * Math.tan(ε)
-  let ty = -cλK * Math.tan(I)
-  var P = Math.atan(tx) + Math.atan(ty)
-  var B0 = Math.asin(sλK * sI)
-  let η = Math.atan2(-sλK * cI, -cλK)
-  var L0 = base.pmod(η - θ, 2 * Math.PI)
+  const tx = -Math.cos(λp) * Math.tan(ε)
+  const ty = -cλK * Math.tan(I)
+  const P = Math.atan(tx) + Math.atan(ty)
+  const B0 = Math.asin(sλK * sI)
+  const η = Math.atan2(-sλK * cI, -cλK)
+  const L0 = base.pmod(η - θ, 2 * Math.PI)
   return [P, B0, L0]
 }
 
@@ -58,9 +56,14 @@ M.ephemeris = function (jd, earth) { // (jd float64, e *pp.V87Planet)  (P, B0, L
  *
  * Result is a dynamical time (not UT).
  */
-M.cycle = function (c) { // (c int)  (jde float64)
-  let jde = 2398140.227 + 27.2752316 * c
-  let m = 281.96 * Math.PI / 180 + 26.882476 * Math.PI / 180 * c
-  let [s2m, c2m] = base.sincos(2 * m)
+export function cycle (c) { // (c int)  (jde float64)
+  const jde = 2398140.227 + 27.2752316 * c
+  const m = 281.96 * Math.PI / 180 + 26.882476 * Math.PI / 180 * c
+  const [s2m, c2m] = base.sincos(2 * m)
   return jde + 0.1454 * Math.sin(m) - 0.0085 * s2m - 0.0141 * c2m
+}
+
+export default {
+  ephemeris,
+  cycle
 }
