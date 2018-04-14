@@ -19,7 +19,7 @@ export class Angle {
   * __One argument__
   * @param {Number} angle - (float) angle in radians
   * __Four arguments__
-  * @param {Boolean} neg - sign, true if negative
+  * @param {Boolean} neg - sign, true if negative (required to attribute -0°30')
   * @param {Number} d - (int) degree
   * @param {Number} m - (int) minute
   * @param {Number} s - (float) second
@@ -74,8 +74,8 @@ export class Angle {
   }
 
   /**
-  * toDMS converts to parsed sexagesimal angle component.
-  */
+   * toDMS converts to parsed sexagesimal angle component.
+   */
   toDMS () {
     return degToDMS(this.deg())
   }
@@ -235,7 +235,8 @@ export class RA extends HourAngle {
 }
 
 /**
- * TODO
+ * Time Angle
+ * Unit is time in seconds.
  */
 export class Time {
   /**
