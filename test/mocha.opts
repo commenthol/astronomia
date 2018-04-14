@@ -1,4 +1,3 @@
 --require babel-register
 --check-leaks
---colors
 --reporter dot

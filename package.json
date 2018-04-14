@@ -40,6 +40,12 @@
   },
   "babel": {
     "env": {
+      "development": {
+        "presets": [
+          "env",
+          "stage-2"
+        ]
+      },
       "es5": {
         "presets": [
           [
@@ -55,14 +61,11 @@
               "modules": false,
               "loose": true
             }
-          ]
+          ],
+          "stage-2"
         ]
       }
-    },
-    "presets": [
-      "env",
-      "stage-2"
-    ]
+    }
   },
   "eslintConfig": {
     "extends": "standard",
