@@ -119,9 +119,13 @@ To access dedicated VSOP87 data sets use e.g.
 
 ```js
 const {vsop87Bvenus} = require('astronomia').data
-// or 
+// or
 const vsop87Bvenus = require('astronomia/data/vsop87Bvenus')
 ```
+
+## Migration from v1
+
+Please take a look at [./docs/migrate_v1.md](./docs/migrate_v1.md)
 
 ## Running tests
 

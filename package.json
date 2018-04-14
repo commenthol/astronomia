@@ -1,6 +1,6 @@
 {
   "name": "astronomia",
-  "version": "1.4.1-0",
+  "version": "2.0.0-0",
   "description": "An astronomical library",
   "keywords": [
     "astronomy",
@@ -92,7 +92,7 @@
     "serialize-to-js": "^1.2.0"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=4.0.0"
   },
   "maintainers": [
     "commenthol <commenthol@gmail.com>"
