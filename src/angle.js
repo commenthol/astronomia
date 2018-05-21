@@ -215,7 +215,7 @@ export function minSepPauwels (jd1, jd3, cs1, cs2) {
  * @return {Number} position angle (p)
  */
 export function relativePosition (c1, c2) {
-  const [sinΔr, cosΔr] = base.sincos(c2.ra - c1.ra)
+  const [sinΔr, cosΔr] = base.sincos(c1.ra - c2.ra)
   const [sind2, cosd2] = base.sincos(c2.dec)
   const p = atan2(sinΔr, cosd2 * tan(c1.dec) - sind2 * cosΔr)
   return p
