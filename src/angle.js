@@ -38,8 +38,10 @@ export function sep (c1, c2) {
   const cd = sind1 * sind2 + cosd1 * cosd2 * cos(c1.ra - c2.ra) // (17.1) p. 109
   if (cd < base.CosSmallAngle) {
     return acos(cd)
+  } else {
+    const cosd = cos((c2.dec + c1.dec) / 2) // average dec of two bodies
+    return hypot((c2.ra - c1.ra) * cosd, c2.dec - c1.dec) // (17.2) p. 109
   }
-  return hypot((c2.ra - c1.ra) * cosd1, c2.dec - c1.dec) // (17.2) p. 109
 }
 
 /**
