@@ -14,7 +14,7 @@
 
 import base from './base'
 
-const p = Math.PI / 180
+const D2R = Math.PI / 180
 
 /**
  * phaseAngleEquatorial computes the phase angle of the Moon given equatorial coordinates.
@@ -115,19 +115,19 @@ export function phaseAngleEcliptic2 (cMoon, cSun) {
  */
 export function phaseAngle3 (jde) { // (jde float64)  float64
   const T = base.J2000Century(jde)
-  const D = base.horner(T, 297.8501921 * p, 445267.1114034 * p,
-    -0.0018819 * p, p / 545868, -p / 113065000)
-  const m = base.horner(T, 357.5291092 * p, 35999.0502909 * p,
-    -0.0001535 * p, p / 24490000)
-  const m_ = base.horner(T, 134.9633964 * p, 477198.8675055 * p,
-    0.0087414 * p, p / 69699, -p / 14712000)
+  const D = base.horner(T, 297.8501921 * D2R, 445267.1114034 * D2R,
+    -0.0018819 * D2R, D2R / 545868, -D2R / 113065000)
+  const m = base.horner(T, 357.5291092 * D2R, 35999.0502909 * D2R,
+    -0.0001536 * D2R, D2R / 24490000)
+  const m_ = base.horner(T, 134.9633964 * D2R, 477198.8675055 * D2R,
+    0.0087414 * D2R, D2R / 69699, -D2R / 14712000)
   return Math.PI - base.pmod(D, 2 * Math.PI) +
-    -6.289 * p * Math.sin(m_) +
-    2.1 * p * Math.sin(m) +
-    -1.274 * p * Math.sin(2 * D - m_) +
-    -0.658 * p * Math.sin(2 * D) +
-    -0.214 * p * Math.sin(2 * m_) +
-    -0.11 * p * Math.sin(D)
+    -6.289 * D2R * Math.sin(m_) +
+    2.1 * D2R * Math.sin(m) +
+    -1.274 * D2R * Math.sin(2 * D - m_) +
+    -0.658 * D2R * Math.sin(2 * D) +
+    -0.214 * D2R * Math.sin(2 * m_) +
+    -0.11 * D2R * Math.sin(D)
 }
 
 export default {
