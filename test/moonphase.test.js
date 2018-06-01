@@ -36,7 +36,7 @@ describe('#moonphase', function () {
       var dyear = new julian.CalendarGregorian(2044, 1, 16).toYear()
       var jde = moonphase.last(dyear)
       assert.equal(jde.toFixed(5), 2467636.49186)
-      assert.equal(julian.JDToDate(jde).toISOString(), '2044-01-21T23:48:16.987Z')
+      assert.equal(julian.JDToDate(jde).toISOString(), '2044-01-21T23:48:16.956Z')
     })
 
     // When is Chinese New Year? Helmer Aslaksen
