@@ -36,7 +36,7 @@ describe('#nutation', function () {
   it('NutationInRA', function () {
     var jd = julian.CalendarGregorianToJD(1987, 4, 10)
     var a = nutation.nutationInRA(jd)
-    assert.equal(a, -0.000016848469492013187)
+    assert.equal(a, -0.000016848469493116356)
   })
 
   it('IAUvsLaskar', function () {

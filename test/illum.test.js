@@ -45,4 +45,16 @@ describe('#illum', function () {
     var v = illum.saturn(9.867882, 10.464606, 16.442 * Math.PI / 180, 4.198 * Math.PI / 180)
     assert.equal(v.toFixed(1), 0.9)
   })
+
+  it('venus84()', function () {
+    // modified Example 41.c, p. 285
+    var v = illum.venus84(0.724604, 0.910947, 72.96 * Math.PI / 180)
+    assert.equal(v.toFixed(1), -4.2)
+  })
+
+  it('saturn84()', function () {
+    // modified Example 41.d, p. 285
+    var v = illum.saturn84(9.867882, 10.464606, 16.442 * Math.PI / 180, 4.198 * Math.PI / 180)
+    assert.equal(v.toFixed(1), 0.7)
+  })
 })

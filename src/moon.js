@@ -11,15 +11,14 @@
  */
 
 import base from './base'
-// import parallax from './parallax'
 import coord from './coord'
 import moonposition from './moonposition'
 import nutation from './nutation'
-// import planetposition from './planetposition'
 import solar from './solar'
 
-const p = Math.PI / 180
-const _I = 1.54242 * p // IAU value of inclination of mean lunar equator
+const {sin, cos, asin, atan2} = Math
+const D2R = Math.PI / 180
+const _I = 1.54242 * D2R // IAU value of inclination of mean lunar equator
 
 const [sI, cI] = base.sincos(_I)
 
@@ -67,63 +66,63 @@ export class Moon {
     const [Δψ, Δε] = nutation.nutation(jde)
     this.Δψ = Δψ
     const T = base.J2000Century(jde)
-    const F = this.F = base.horner(T, 93.272095 * p, 483202.0175233 * p, -0.0036539 * p, -p / 3526000, p / 863310000)
-    this.Ω = base.horner(T, 125.0445479 * p, -1934.1362891 * p, 0.0020754 * p,
-      p / 467441, -p / 60616000)
+    const F = this.F = base.horner(T, 93.272095 * D2R, 483202.0175233 * D2R, -0.0036539 * D2R, -D2R / 3526000, D2R / 863310000)
+    this.Ω = base.horner(T, 125.0445479 * D2R, -1934.1362891 * D2R, 0.0020754 * D2R,
+      D2R / 467441, -D2R / 60616000)
     // true ecliptic
     this.ε = nutation.meanObliquity(jde) + Δε
-    this.sε = Math.sin(this.ε)
-    this.cε = Math.cos(this.ε)
+    this.sε = sin(this.ε)
+    this.cε = cos(this.ε)
     // ρ, σ, τ, p. 372,373
-    const D = base.horner(T, 297.8501921 * p, 445267.1114034 * p, -0.0018819 * p, p / 545868, -p / 113065000)
-    const M = base.horner(T, 357.5291092 * p, 35999.0502909 * p, -0.0001535 * p, p / 24490000)
-    const M_ = base.horner(T, 134.9633964 * p, 477198.8675055 * p,
-      0.0087414 * p, p / 69699, -p / 14712000)
+    const D = base.horner(T, 297.8501921 * D2R, 445267.1114034 * D2R, -0.0018819 * D2R, D2R / 545868, -D2R / 113065000)
+    const M = base.horner(T, 357.5291092 * D2R, 35999.0502909 * D2R, -0.0001536 * D2R, D2R / 24490000)
+    const M_ = base.horner(T, 134.9633964 * D2R, 477198.8675055 * D2R,
+      0.0087414 * D2R, D2R / 69699, -D2R / 14712000)
     const E = base.horner(T, 1, -0.002516, -0.0000074)
-    const K1 = 119.75 * p + 131.849 * p * T
-    const K2 = 72.56 * p + 20.186 * p * T
-    this.ρ = -0.02752 * p * Math.cos(M_) +
-      -0.02245 * p * Math.sin(F) +
-      0.00684 * p * Math.cos(M_ - 2 * F) +
-      -0.00293 * p * Math.cos(2 * F) +
-      -0.00085 * p * Math.cos(2 * (F - D)) +
-      -0.00054 * p * Math.cos(M_ - 2 * D) +
-      -0.0002 * p * Math.sin(M_ + F) +
-      -0.0002 * p * Math.cos(M_ + 2 * F) +
-      -0.0002 * p * Math.cos(M_ - F) +
-      0.00014 * p * Math.cos(M_ + 2 * (F - D))
-    this.σ = -0.02816 * p * Math.sin(M_) +
-      0.02244 * p * Math.cos(F) +
-      -0.00682 * p * Math.sin(M_ - 2 * F) +
-      -0.00279 * p * Math.sin(2 * F) +
-      -0.00083 * p * Math.sin(2 * (F - D)) +
-      0.00069 * p * Math.sin(M_ - 2 * D) +
-      0.0004 * p * Math.cos(M_ + F) +
-      -0.00025 * p * Math.sin(2 * M_) +
-      -0.00023 * p * Math.sin(M_ + 2 * F) +
-      0.0002 * p * Math.cos(M_ - F) +
-      0.00019 * p * Math.sin(M_ - F) +
-      0.00013 * p * Math.sin(M_ + 2 * (F - D)) +
-      -0.0001 * p * Math.cos(M_ - 3 * F)
-    this.τ = 0.0252 * p * Math.sin(M) * E +
-      0.00473 * p * Math.sin(2 * (M_ - F)) +
-      -0.00467 * p * Math.sin(M_) +
-      0.00396 * p * Math.sin(K1) +
-      0.00276 * p * Math.sin(2 * (M_ - D)) +
-      0.00196 * p * Math.sin(this.Ω) +
-      -0.00183 * p * Math.cos(M_ - F) +
-      0.00115 * p * Math.sin(M_ - 2 * D) +
-      -0.00096 * p * Math.sin(M_ - D) +
-      0.00046 * p * Math.sin(2 * (F - D)) +
-      -0.00039 * p * Math.sin(M_ - F) +
-      -0.00032 * p * Math.sin(M_ - M - D) +
-      0.00027 * p * Math.sin(2 * (M_ - D) - M) +
-      0.00023 * p * Math.sin(K2) +
-      -0.00014 * p * Math.sin(2 * D) +
-      0.00014 * p * Math.cos(2 * (M_ - F)) +
-      -0.00012 * p * Math.sin(M_ - 2 * F) +
-      -0.00012 * p * Math.sin(2 * M_) +
-      0.00011 * p * Math.sin(2 * (M_ - M - D))
+    const K1 = 119.75 * D2R + 131.849 * D2R * T
+    const K2 = 72.56 * D2R + 20.186 * D2R * T
+    this.ρ = -0.02752 * D2R * cos(M_) +
+      -0.02245 * D2R * sin(F) +
+      0.00684 * D2R * cos(M_ - 2 * F) +
+      -0.00293 * D2R * cos(2 * F) +
+      -0.00085 * D2R * cos(2 * (F - D)) +
+      -0.00054 * D2R * cos(M_ - 2 * D) +
+      -0.0002 * D2R * sin(M_ + F) +
+      -0.0002 * D2R * cos(M_ + 2 * F) +
+      -0.0002 * D2R * cos(M_ - F) +
+      0.00014 * D2R * cos(M_ + 2 * (F - D))
+    this.σ = -0.02816 * D2R * sin(M_) +
+      0.02244 * D2R * cos(F) +
+      -0.00682 * D2R * sin(M_ - 2 * F) +
+      -0.00279 * D2R * sin(2 * F) +
+      -0.00083 * D2R * sin(2 * (F - D)) +
+      0.00069 * D2R * sin(M_ - 2 * D) +
+      0.0004 * D2R * cos(M_ + F) +
+      -0.00025 * D2R * sin(2 * M_) +
+      -0.00023 * D2R * sin(M_ + 2 * F) +
+      0.0002 * D2R * cos(M_ - F) +
+      0.00019 * D2R * sin(M_ - F) +
+      0.00013 * D2R * sin(M_ + 2 * (F - D)) +
+      -0.0001 * D2R * cos(M_ - 3 * F)
+    this.τ = 0.0252 * D2R * sin(M) * E +
+      0.00473 * D2R * sin(2 * (M_ - F)) +
+      -0.00467 * D2R * sin(M_) +
+      0.00396 * D2R * sin(K1) +
+      0.00276 * D2R * sin(2 * (M_ - D)) +
+      0.00196 * D2R * sin(this.Ω) +
+      -0.00183 * D2R * cos(M_ - F) +
+      0.00115 * D2R * sin(M_ - 2 * D) +
+      -0.00096 * D2R * sin(M_ - D) +
+      0.00046 * D2R * sin(2 * (F - D)) +
+      -0.00039 * D2R * sin(M_ - F) +
+      -0.00032 * D2R * sin(M_ - M - D) +
+      0.00027 * D2R * sin(2 * (M_ - D) - M) +
+      0.00023 * D2R * sin(K2) +
+      -0.00014 * D2R * sin(2 * D) +
+      0.00014 * D2R * cos(2 * (M_ - F)) +
+      -0.00012 * D2R * sin(M_ - 2 * F) +
+      -0.00012 * D2R * sin(2 * M_) +
+      0.00011 * D2R * sin(2 * (M_ - M - D))
   }
 
   /**
@@ -149,9 +148,9 @@ export class Moon {
     const W = λ - this.Ω // (λ without nutation)
     const [sW, cW] = base.sincos(W)
     const [sβ, cβ] = base.sincos(β)
-    const A = Math.atan2(sW * cβ * cI - sβ * sI, cW * cβ)
+    const A = atan2(sW * cβ * cI - sβ * sI, cW * cβ)
     const l_ = base.pmod(A - this.F, 2 * Math.PI)
-    const b_ = Math.asin(-sW * cβ * sI - sβ * cI)
+    const b_ = asin(-sW * cβ * sI - sβ * cI)
     return [l_, b_, A]
   }
 
@@ -171,7 +170,7 @@ export class Moon {
     const Y = sIρ * cV * this.cε - cIρ * this.sε
     const ω = Math.atan2(X, Y)
     const ecl = new coord.Ecliptic(λ + this.Δψ, β).toEquatorial(this.ε) // eslint-disable-line no-unused-vars
-    let P = Math.asin(Math.hypot(X, Y) * Math.cos(ecl.ra - ω) / Math.cos(b))
+    let P = asin(Math.hypot(X, Y) * cos(ecl.ra - ω) / cos(b))
     if (P < 0) {
       P += 2 * Math.PI
     }
@@ -181,7 +180,7 @@ export class Moon {
   sun (λ, β, Δ, earth) {
     const {lon, lat, range} = solar.apparentVSOP87(earth, this.jde) // eslint-disable-line no-unused-vars
     const ΔR = Δ / (range * base.AU)
-    const λH = lon + Math.PI + ΔR * Math.cos(β) * Math.sin(lon - λ)
+    const λH = lon + Math.PI + 57.296 * D2R * ΔR * cos(β) * sin(lon - λ)
     const βH = ΔR * β
     return this.lib(λH, βH)
   }
@@ -207,11 +206,11 @@ export function TopocentricCorrections (jde, b, P, φ, δ, H, π) { // (jde, b, 
   sδ, cδ := base.sincos(δ)
   const Q = Math.atan(cφ * sH / (cδ*sφ - sδ*cφ*cH))
   const z = Math.acos(sδ*sφ + cδ*cφ*cH)
-  const π_ = π * (Math.sin(z) + 0.0084*Math.sin(2*z))
+  const π_ = π * (sin(z) + 0.0084*sin(2*z))
   sQP, cQP := base.sincos(Q - P)
-  Δl = -π_ * sQP / Math.cos(b)
+  Δl = -π_ * sQP / cos(b)
   Δb = π_ * cQP
-  ΔP = Δl*Math.sin(b+Δb) - π_*Math.sin(Q)*Math.tan(δ)
+  ΔP = Δl*sin(b+Δb) - π_*sin(Q)*Math.tan(δ)
   return
 }
 */
@@ -227,7 +226,7 @@ export function sunAltitude (cOnMoon, cSun) { // (η, θ, l0, b0 float64)  float
   const c0 = Math.PI / 2 - cSun.lon
   const [sb0, cb0] = base.sincos(cSun.lat)
   const [sθ, cθ] = base.sincos(cOnMoon.lat)
-  return Math.asin(sb0 * sθ + cb0 * cθ * Math.sin(c0 + cOnMoon.lon))
+  return asin(sb0 * sθ + cb0 * cθ * sin(c0 + cOnMoon.lon))
 }
 
 /**
@@ -262,7 +261,67 @@ export function sunset (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *p
 function srCorr (cOnMoon, jde, earth) {
   const phy = physical(jde, earth)
   const h = sunAltitude(cOnMoon, phy[2])
-  return h / (12.19075 * p * Math.cos(cOnMoon.lat))
+  return h / (12.19075 * D2R * cos(cOnMoon.lat))
+}
+
+const lunarCoord = (η, θ) => new base.Coord(η * D2R, θ * D2R)
+/**
+ * selenographic coordinates of some lunar features
+ * Table 53.A
+ */
+export const selenographic = {
+  archimedes: lunarCoord(-3.9, 29.7),
+  aristarchus: lunarCoord(-47.5, 23.7),
+  aristillus: lunarCoord(1.2, 33.9),
+  aristoteles: lunarCoord(17.3, 50.1),
+  arzachel: lunarCoord(-1.9, -17.7),
+  autolycus: lunarCoord(1.5, 30.7),
+  billy: lunarCoord(-50, -13.8),
+  birt: lunarCoord(-8.5, -22.3),
+  campanus: lunarCoord(-27.7, -28),
+  censorinus: lunarCoord(32.7, -0.4),
+  clavius: lunarCoord(-14, -58),
+  copernicus: lunarCoord(-20, 9.7),
+  delambre: lunarCoord(17.5, -1.9),
+  dionysius: lunarCoord(17.3, 2.8),
+  endymion: lunarCoord(56.4, 53.6),
+  eratosthenes: lunarCoord(-11.3, 14.5),
+  eudoxus: lunarCoord(16.3, 44.3),
+  fracastorius: lunarCoord(33.2, -21),
+  fraMauro: lunarCoord(-17, -6),
+  gassendi: lunarCoord(-39.9, -17.5),
+  goclenius: lunarCoord(45, -10.1),
+  grimaldi: lunarCoord(-68.5, -5.8),
+  harpalus: lunarCoord(-43.4, 52.6),
+  horrocks: lunarCoord(5.9, -4),
+  kepler: lunarCoord(-38, 8.1),
+  langrenus: lunarCoord(60.9, -8.9),
+  lansberg: lunarCoord(-26.6, -0.3),
+  letronne: lunarCoord(-43, -10),
+  macrobius: lunarCoord(46, 21.2),
+  manilius: lunarCoord(9.1, 14.5),
+  menelaus: lunarCoord(16, 16.3),
+  messier: lunarCoord(47.6, -1.9),
+  petavius: lunarCoord(61, -25),
+  pico: lunarCoord(-8.8, 45.8),
+  pitatus: lunarCoord(-13.5, -29.8),
+  piton: lunarCoord(-0.8, 40.8),
+  plato: lunarCoord(-9.2, 51.4),
+  plinius: lunarCoord(23.6, 15.3),
+  posidonius: lunarCoord(30, 31.9),
+  proclus: lunarCoord(46.9, 16.1),
+  ptolemeusA: lunarCoord(-0.8, -8.5),
+  pytheas: lunarCoord(-20.6, 20.5),
+  reinhold: lunarCoord(-22.8, 3.2),
+  riccioli: lunarCoord(-74.3, -3.2),
+  schickard: lunarCoord(-54.5, -44),
+  schiller: lunarCoord(-39, -52),
+  tauruntius: lunarCoord(46.5, 5.6),
+  theophilus: lunarCoord(26.5, -11.4),
+  timocharis: lunarCoord(-13.1, 26.7),
+  tycho: lunarCoord(-11, -43.2),
+  vitruvius: lunarCoord(31.3, 17.6),
+  walter: lunarCoord(1, -33)
 }
 
 export default {
@@ -272,5 +331,6 @@ export default {
   // TopocentricCorrections,
   sunAltitude,
   sunrise,
-  sunset
+  sunset,
+  selenographic
 }

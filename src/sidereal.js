@@ -34,7 +34,7 @@ export function JDToCFrac (jd) {
  * Coefficients are those adopted in 1982 by the International Astronomical
  * Union and are given in (12.2) p. 87.
  */
-export const iau82 = [24110.54841, 8640184.812866, 0.093104, 0.0000062]
+export const iau82 = [24110.54841, 8640184.812866, 0.093104, -0.0000062]
 
 /**
  * Mean returns mean sidereal time at Greenwich for a given JD.

@@ -351,7 +351,7 @@ export class Len5 {
     const nCoeff = [
       6 * (this.b + this.c) - this.h - this.j,
       0,
-      3 * (this.h + this.k),
+      3 * (this.h + this.j),
       2 * this.k
     ]
     const den = this.k - 12 * this.f

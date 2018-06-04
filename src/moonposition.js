@@ -27,7 +27,7 @@ export function parallax (distance) {
 
 function dmf (T) {
   const d = base.horner(T, 297.8501921 * D2R, 445267.1114034 * D2R, -0.0018819 * D2R, D2R / 545868, -D2R / 113065000)
-  const m = base.horner(T, 357.5291092 * D2R, 35999.0502909 * D2R, -0.0001535 * D2R, D2R / 24490000)
+  const m = base.horner(T, 357.5291092 * D2R, 35999.0502909 * D2R, -0.0001536 * D2R, D2R / 24490000)
   const m_ = base.horner(T, 134.9633964 * D2R, 477198.8675055 * D2R,
     0.0087414 * D2R, D2R / 69699, -D2R / 14712000)
   const f = base.horner(T, 93.272095 * D2R, 483202.0175233 * D2R, -0.0036539 * D2R, -D2R / 3526000, D2R / 863310000)

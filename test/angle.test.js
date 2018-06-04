@@ -32,7 +32,7 @@ describe('#angle', function () {
 
     it('relativePosition', function () {
       var p = angle.relativePosition(c1, c2)
-      assert.equal(new sexa.Angle(p).toString(0), '-22°23′25″')
+      assert.equal(new sexa.Angle(p).toString(0), '22°23′25″')
     })
   })
 

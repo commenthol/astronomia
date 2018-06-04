@@ -28,14 +28,19 @@ import sexa from './sexagesimal'
  */
 export function nutation (jde) {
   const T = base.J2000Century(jde)
+  // Mean elongation of the Moon from the sun
   const D = base.horner(T,
     297.85036, 445267.11148, -0.0019142, 1.0 / 189474) * Math.PI / 180
+  // Mean anomaly of the Sun (Earth)
   const M = base.horner(T,
     357.52772, 35999.050340, -0.0001603, -1.0 / 300000) * Math.PI / 180
+  // Mean anomaly of the Moon
   const N = base.horner(T,
-    134.96298, 477198.867398, 0.0086972, 1.0 / 5620) * Math.PI / 180
+    134.96298, 477198.867398, 0.0086972, 1.0 / 56250) * Math.PI / 180
+  // Moon's argument of latitude
   const F = base.horner(T,
     93.27191, 483202.017538, -0.0036825, 1.0 / 327270) * Math.PI / 180
+  // Longitude of the ascending node of the Moon's mean orbit on the ecliptic, measured from mean equinox of date
   const Ω = base.horner(T,
     125.04452, -1934.136261, 0.0020708, 1.0 / 450000) * Math.PI / 180
   let Δψ = 0
