@@ -84,10 +84,8 @@ function _mean0UT (jd /* float */) {
  *
  * Apparent is mean plus the nutation in right ascension.
  *
- * The result is in seconds of time and is in the range [0,86400).
- *
  * @param {number} jd - Julian Days
- * @return {number}
+ * @return {number} seconds of time and is in the range [0,86400).
  */
 export function apparent (jd) {
   const s = _mean(jd) // seconds of time

@@ -23,6 +23,8 @@
 import base from './base'
 import coord from './coord'
 import nutation from './nutation'
+import globe from './globe'
+import parallax from './parallax'
 
 /**
  * True returns true geometric longitude and anomaly of the sun referenced to the mean equinox of date.
@@ -156,6 +158,20 @@ export function apparentEquatorial (jde) {
 }
 
 /**
+ * apparentTopocentric returns the apparent position of the Sun as topocentric coordinates.
+ *
+ * @param {Number} jde - Julian ephemeris day
+ * @param {globe.Coord} coord - geographic location of observer
+ * @return {base.Coord} apparent position of the Sun as topocentric coordinates in ra and dec.
+ */
+export function apparentTopocentric (jde, coord) {
+  const ae = apparentEquatorial(jde)
+  const [ρsφ, ρcφ] = globe.Earth76.parallaxConstants(coord.lat, coord.alt)
+  const corr = parallax.topocentric2(ae, ρsφ, ρcφ, coord.lon, jde)
+  return new base.Coord(ae.ra + corr.ra, ae.dec + corr.dec)
+}
+
+/**
  * trueVSOP87 returns the true geometric position of the sun as ecliptic coordinates.
  *
  * Result computed by full VSOP87 theory.  Result is at equator and equinox
@@ -252,6 +268,7 @@ export default {
   true2000,
   trueEquatorial,
   apparentEquatorial,
+  apparentTopocentric,
   trueVSOP87,
   apparentVSOP87,
   apparentEquatorialVSOP87,

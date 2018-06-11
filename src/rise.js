@@ -130,16 +130,6 @@ function _th0 (Th0, m) {
   return th0 // 0...86400 in seconds angle
 }
 
-// maintain backward compatibility - will be removed in v2
-// return value in future will be an object not an array
-function _compatibility (rs) {
-  const _rs = [rs.rise, rs.transit, rs.set]
-  _rs.rise = rs.rise
-  _rs.transit = rs.transit
-  _rs.set = rs.set
-  return _rs
-}
-
 /**
  * ApproxTimes computes approximate UT rise, transit and set times for
  * a celestial object on a day of interest.
@@ -164,11 +154,12 @@ export function approxTimes (p, h0, Th0, α, δ) {
   // approximate transit, rise, set times.
   // (15.2) p. 102.0
   const mt = _mt(p.lon, α, Th0)
-  const rs = {}
-  rs.transit = base.pmod(mt, SECS_PER_DAY)
-  rs.rise = base.pmod(mt - H0, SECS_PER_DAY)
-  rs.set = base.pmod(mt + H0, SECS_PER_DAY)
-  return _compatibility(rs)
+  const rs = {
+    transit: base.pmod(mt, SECS_PER_DAY),
+    rise: base.pmod(mt - H0, SECS_PER_DAY),
+    set: base.pmod(mt + H0, SECS_PER_DAY)
+  }
+  return rs
 }
 
 /**
@@ -221,8 +212,13 @@ export function times (p, ΔT, h0, Th0, α3, δ3) { // (p globe.Coord, ΔT, h0, 
 
   rs.rise = adjustRS(rs.rise)
   rs.set = adjustRS(rs.set)
+  // TODO REMOVE_V2
+  // v1 compatibility
+  rs[0] = rs.rise
+  rs[1] = rs.transit
+  rs[2] = rs.set
 
-  return _compatibility(rs)
+  return rs
 }
 
 /**

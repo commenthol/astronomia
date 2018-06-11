@@ -9,12 +9,13 @@
 
 /* eslint key-spacing: 0 */
 
-import base from './base'
-import eqtime from './eqtime'
 import sexa from './sexagesimal'
 import solar from './solar'
 import julian from './julian'
 import rise from './rise'
+import sidereal from './sidereal'
+import deltat from './deltat'
+import globe from './globe'
 
 const stdh0 = {
   sunrise:          new sexa.Angle(true, 0, 50, 0).rad(),
@@ -37,75 +38,55 @@ export class Sunrise {
    * Computes time of sunrise, sunset for a given day `date` of an observer on earth given by latitude and longitude.
    * Methods may return `undefined` instead of `julian.Calendar` for latitudes very near the poles.
    * @param {julian.Calendar} date - calendar date
-   * @param {number} lat - latitude of observer in the range of (-89.6, 89.6)
-   * @param {number} lon - longitude of observer (measured positively westwards, New York = 40.7° lat, 74° lon)
+   * @param {globe.Coord} coord - coordinates of observer
    * @param {number} [refraction] - optional refraction
    */
-  constructor (date, lat, lon, refraction) {
+  constructor (date, coord, refraction, _compat) {
+    if (typeof coord !== 'object') {
+      // TODO REMOVE_V2
+      // v1 maintain backwards compatibility with old API (date, lat, lon, refraction)
+      const lat = coord
+      const lon = refraction
+      refraction = _compat
+      coord = globe.Coord.fromWgs84(lat, -lon)
+    }
     this.date = date
-    this.jde = date.midnight().toJDE()
-    this.lat = sexa.angleFromDeg(lat)
-    this.lon = sexa.angleFromDeg(lon)
+    this.jd = date.midnight().toJD()
     this.refraction = refraction
+    this.coord = coord
+
+    this.jde = date.midnight().toJDE()
+    this.lat = coord.lat
+    this.lon = coord.lon
   }
 
-  _calcNoon (jde) {
-    const etime = sexa.secFromHourAngle(eqtime.eSmart(jde))
-    const delta = sexa.secFromHourAngle(this.lon)
-    const time = 43200 /* noon */ + delta - etime // in seconds
-    return base.pmod(time / 86400, 86400)
-  }
+  times (h0) {
+    const {jd, coord} = this
+    const ΔT = deltat.deltaT(new julian.Calendar().fromJD(jd).toYear())
+    const jde = jd + ΔT / 86400
 
-  _calcRiseOrSet (jde, h0, isSet) {
-    const etime = sexa.secFromHourAngle(eqtime.eSmart(jde))
-    const solarDec = solar.apparentEquatorial(jde).dec
-    let ha = rise.hourAngle(this.lat, h0, solarDec)
-    if (isSet) ha = -ha
-    const delta = sexa.secFromHourAngle(ha - this.lon)
-    const time = 43200 /* noon */ - delta - etime // in seconds
-    return time / 86400
-  }
+    const ae = [
+      solar.apparentTopocentric(jde - 1, coord),
+      solar.apparentTopocentric(jde, coord),
+      solar.apparentTopocentric(jde + 1, coord)
+    ]
+    const α3 = ae.map(i => i.ra)
+    const δ3 = ae.map(i => i.dec)
 
-  _calcPolarDayNight (h0, isSet, step) {
-    let jde = this.jde
-    let t
-    let failCnt = 0
-    while (failCnt < 190) { // a bit more than days of half a year
-      jde += step
-      try {
-        t = this._calcRiseOrSet(jde, h0, isSet)
-        t = this._calcRiseOrSet(jde + t, h0, isSet)
-        break
-      } catch (e) {
-        t = undefined
-        failCnt++
-      }
+    const Th0 = sidereal.apparent0UT(jd)
+    const o = rise.times(coord, ΔT, h0, Th0, α3, δ3)
+    const _toDate = (secs) => new julian.Calendar().fromJD(jd + secs / 86400)
+
+    return {
+      rise: _toDate(o.rise),
+      transit: _toDate(o.transit),
+      set: _toDate(o.set)
     }
-    if (t === undefined) {
-      return
-    }
-    return new julian.Calendar().fromJDE(jde + t)
   }
 
   _calc (h0, isSet) {
-    let t
-    const jde = this.jde
-    // calc 2times for higher accuracy
-    try {
-      t = this._calcRiseOrSet(jde, h0, isSet)
-      t = this._calcRiseOrSet(jde + t, h0, isSet)
-      return new julian.Calendar().fromJDE(jde + t)
-    } catch (e) {
-      let step = (isSet ? -1 : 1)
-      const doy = this.date.dayOfYear()
-      if ( // overlap with march, september equinoxes
-        (this.lat > 0 && (doy > 76 && doy < 267)) || // northern hemisphere
-        (this.lat < 0 && (doy < 83 || doy > 262)) // southern hemisphere
-      ) {
-        step = -step
-      }
-      return this._calcPolarDayNight(h0, isSet, step)
-    }
+    const r = this.times(h0)
+    return isSet ? r.set : r.rise
   }
 
   /**
@@ -113,11 +94,7 @@ export class Sunrise {
    * @return {julian.Calendar} time of noon
    */
   noon () {
-    const jde = this.jde
-    // calc 2times for higher accuracy
-    let t = this._calcNoon(jde + this.lon / (2 * Math.PI))
-    t = this._calcNoon(jde + t)
-    return new julian.Calendar().fromJDE(jde + t)
+    return this.times(stdh0Sunrise(this.refraction)).transit
   }
 
   /**

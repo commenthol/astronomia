@@ -11,6 +11,8 @@
  * an ellipsoid of revolution.
  */
 
+import {angleFromDeg} from './sexagesimal'
+
 /**
  * Ellipsoid represents an ellipsoid of revolution. */
 export class Ellipsoid {
@@ -151,7 +153,7 @@ export const RotationRate1996_5 = 7.292114992e-5 // eslint-disable-line camelcas
  * @return {number} distance in Km
  */
 export function oneDegreeOfLongitude (rp) {
-  return rp * Math.PI / 180
+  return angleFromDeg(rp)
 }
 
 /**
@@ -165,7 +167,7 @@ export function oneDegreeOfLongitude (rp) {
  * @return {number} distance in Km
  */
 export function oneDegreeOfLatitude (rm) {
-  return rm * Math.PI / 180
+  return angleFromDeg(rm)
 }
 
 /**
@@ -187,16 +189,30 @@ export function geocentricLatitudeDifference (φ) {
  * Coord represents geographic coordinates on the Earth.
  *
  * Longitude is measured positively westward from the Greenwich meridian.
+ * e.g. Washington D.C. +77°04; Vienna -16°23'
  */
 export class Coord {
   /**
    * @param {number} lat - latitude (φ) in radians
    * @param {number} lon - longitude (ψ, or L) in radians (measured positively westward)
+   * @param {number} alt - altitude in meter
    */
-  constructor (lat = 0, lon = 0) {
+  constructor (lat = 0, lon = 0, alt = 0) {
     this.lat = lat
     this.lon = lon
+    this.alt = alt
   }
+}
+
+/**
+ * Create a new Coord object from WGS84 coordinates
+ * @static
+ * @param {number} lat - latitude (φ) in degree
+ * @param {number} lon - longitude (ψ, or L) in degree (measured negatively westward)
+ * @param {number} alt - altitude in meter
+ */
+Coord.fromWgs84 = function (lat = 0, lon = 0, alt = 0) {
+  return new Coord(angleFromDeg(lat), angleFromDeg(-lon), alt)
 }
 
 /**

@@ -18,10 +18,10 @@ const horPar = (8.794 / 3600) * Math.PI / 180 // 8".794 arcseconds in radians
 /**
  * Horizontal returns equatorial horizontal parallax of a body.
  *
- * @param {number} Δ - distance in AU.
+ * @param {number} [Δ=1] - distance in AU - default is 1 equals distance earth-sun.
  * @return {number} parallax in radians.
  */
-export function horizontal (Δ) {
+export function horizontal (Δ = 1) {
   // (40.1) p. 279
   return Math.asin(Math.sin(horPar) / Δ)
   // return horPar / Δ // with sufficient accuracy
