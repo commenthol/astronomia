@@ -7,6 +7,7 @@
 
 const fs = require('fs')
 const path = require('path')
+const { datafile } = require('./src/datafile.js')
 const serialize = require('serialize-to-js').serializeToModule
 const julian = require('..').julian
 
@@ -113,26 +114,23 @@ function Finals2000A (taiMinusUTC) { /* extends DataSet */
 }
 Object.assign(Finals2000A.prototype, DataSet.prototype, {
   read: function (file) {
-    let dataSet = fs.readFileSync(file, 'utf8')
-    dataSet.split(/\n/).forEach((row) => {
-      if (/^ ?\d/.test(row)) {
-        let day = toFloat(row.substr(4, 2))
-        let year = toFloat(row.substr(0, 2))
-        let month = toFloat(row.substr(2, 2))
-        if (year > 90) {
-          year += 1900
-        } else {
-          year += 2000
-        }
-        // let type = row.substr(57, 1)
-        let ut1MinusUtc = toFloat(row.substr(58, 10))
-        if (day === 1 && !isNaN(ut1MinusUtc)) {
-          let tai = this.taiMinusUTC.get(year, month)
-          let deltaT = toPrecision(32.184 + tai - ut1MinusUtc, 7)
-          this._add(year, month, deltaT)
-          // console.log([year, month, deltaT, tai, ut1MinusUtc].join('\t'))
-        }
+    const rows = datafile(file, [[0, 2], [2, 4], [4, 6], [58, 68]])
+    rows.forEach(row => {
+      let [year, month, day, ut1MinusUtc] = row.map(toFloat)
+      if (year > 90) {
+        year += 1900
+      } else {
+        year += 2000
       }
+      // let type = row.substr(57, 1)
+      // let ut1MinusUtc = toFloat(row.substr(58, 10))
+      if (year && month && day === 1 && ut1MinusUtc) {
+        let tai = this.taiMinusUTC.get(year, month)
+        let deltaT = toPrecision(32.184 + tai - ut1MinusUtc, 7)
+        this._add(year, month, deltaT)
+        // console.log([year, month, deltaT, tai, ut1MinusUtc].join('\t'))
+      }
+      // }
     })
     return this
   }
@@ -145,17 +143,10 @@ function Data (finals2000A) { /* extends DataSet */
 }
 Object.assign(Data.prototype, DataSet.prototype, {
   read: function (file) {
-    let dataSet = fs.readFileSync(file, 'utf8')
-    this.process(dataSet)
-    return this
-  },
-  process: function (dataSet) {
-    this.data = { table: [] }
-    dataSet.split(/\n/).forEach((row) => {
-      if (/^ ?\d{4}/.test(row)) {
-        let year = toFloat(row.substr(0, 5))
-        let month = toFloat(row.substr(5, 3))
-        let deltaT = toFloat(row.substr(13, 7))
+    const rows = datafile(file, [[0, 5], [5, 8], [13, 20]])
+    rows.forEach(row => {
+      const [year, month, deltaT] = row.map(toFloat)
+      if (year && month && deltaT) {
         this._add(year, month, deltaT)
         // let fdt = this.finals2000A.get(year, month)
         // console.log([year, month, deltaT, fdt, fdt ? deltaT - fdt : ''].join('\t'))
@@ -239,11 +230,10 @@ function Historic () {
 }
 Object.assign(Historic.prototype, DataSetDec.prototype, {
   read: function (file) {
-    let dataSet = fs.readFileSync(file, 'utf8')
-    dataSet.split(/\n/).forEach((row) => {
-      if (/^ ?\d{4}/.test(row)) {
-        let year = toFloat(row.substr(0, 11))
-        let deltaT = toFloat(row.substr(11, 19))
+    const rows = datafile(file, [[0, 11], [11, 20]])
+    rows.forEach((row) => {
+      const [year, deltaT] = row.map(toFloat)
+      if (year && deltaT) {
         this._add(year, deltaT)
       }
     })
@@ -256,11 +246,11 @@ function Prediction () {
 }
 Object.assign(Prediction.prototype, DataSetDec.prototype, {
   read: function (file) {
-    let dataSet = fs.readFileSync(file, 'utf8')
-    dataSet.split(/\n/).forEach((row) => {
-      if (/^ ?\d{4}/.test(row)) {
-        let year = toFloat(row.substr(0, 11))
-        let deltaT = toFloat(row.substr(12, 24))
+    const rows = datafile(file, [[14, 22], [22, 34], [34, 48]])
+    rows.shift() // header row
+    rows.forEach((row) => {
+      const [year, deltaT] = row.map(toFloat)
+      if (year && deltaT) {
         this._add(year, deltaT)
       }
     })
@@ -273,7 +263,8 @@ function toPrecision (num, decimals) {
 }
 
 function toFloat (num) {
-  return parseFloat(num, 10)
+  const f = parseFloat(num, 10)
+  return !isNaN(f) && f
 }
 
 function toYear (year, month) {
