@@ -1,7 +1,8 @@
 /* global describe, it */
 
 import assert from 'assert'
-import {refraction} from '..'
+import float from './support/float.js'
+import { refraction } from '..'
 
 describe('#refraction', function () {
   it('bennett', function () {
@@ -9,13 +10,13 @@ describe('#refraction', function () {
     var h0 = 0.5 * Math.PI / 180
     var R = refraction.bennett(h0)
     var cMin = 60 * 180 / Math.PI
-    assert.equal((R * cMin).toFixed(3), 28.754) // R Lower: 28.754
+    assert.strictEqual(float(R * cMin).toFixed(3), 28.754) // R Lower: 28.754
     var hLower = h0 - R
-    assert.equal((hLower * cMin).toFixed(3), 1.246) // h Lower: 1.246
+    assert.strictEqual(float(hLower * cMin).toFixed(3), 1.246) // h Lower: 1.246
     var hUpper = hLower + 32 * Math.PI / (180 * 60)
-    assert.equal((hUpper * cMin).toFixed(3), 33.246) // h Upper: 33.246
+    assert.strictEqual(float(hUpper * cMin).toFixed(3), 33.246) // h Upper: 33.246
     var Rh = refraction.saemundsson(hUpper)
-    assert.equal((Rh * cMin).toFixed(3), 24.618) // R Upper: 24.618
+    assert.strictEqual(float(Rh * cMin).toFixed(3), 24.618) // R Upper: 24.618
   })
 
   /**

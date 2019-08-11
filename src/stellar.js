@@ -21,7 +21,7 @@ export function sum (m1, m2) { // (m1, m2 float64)  float64
  */
 export function sumN (m) { // (m ...float64)  float64
   let s = 0
-  for (let mi of m) {
+  for (const mi of m) {
     s += Math.pow(10, -0.4 * mi)
   }
   return -2.5 * Math.log10(s)

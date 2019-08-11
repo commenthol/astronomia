@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {base, angle, julian, sexagesimal as sexa} from '..'
+import { base, angle, julian, sexagesimal as sexa } from '..'
 
 describe('#angle', function () {
   describe('single functions', function () {
@@ -15,7 +15,7 @@ describe('#angle', function () {
     it('sep', function () {
       // Example 17.a, p. 110.0
       var d = angle.sep(c1, c2)
-      assert.equal(new sexa.Angle(d).toString(0), '32°47′35″')
+      assert.strictEqual(new sexa.Angle(d).toString(0), '32°47′35″')
     })
 
     it('sepHav', function () {
@@ -32,7 +32,7 @@ describe('#angle', function () {
 
     it('relativePosition', function () {
       var p = angle.relativePosition(c1, c2)
-      assert.equal(new sexa.Angle(p).toString(0), '22°23′25″')
+      assert.strictEqual(new sexa.Angle(p).toString(0), '22°23′25″')
     })
   })
 

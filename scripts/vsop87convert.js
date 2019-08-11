@@ -6,8 +6,8 @@
 
 const fs = require('fs')
 const path = require('path')
-const serialize = require('serialize-to-js').serializeToModule
-const {VSOP} = require('../lib/vsop87')
+const serialize = require('serialize-to-module')
+const { VSOP } = require('../lib/vsop87')
 
 const config = {
   attic: path.resolve(__dirname, '../attic'),
@@ -43,7 +43,7 @@ function filename (planet) {
 
 function convertPlanet (planet) {
   console.log('converting ' + planet)
-  var v = new VSOP(planet, config.attic, {type: type})
+  var v = new VSOP(planet, config.attic, { type: type })
   v.loadSync()
   var o = v.getData()
   o.name = planet

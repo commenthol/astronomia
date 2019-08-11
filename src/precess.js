@@ -71,7 +71,7 @@ export function approxAnnualPrecession (eqFrom, epochFrom, epochTo) {
   const Δδs = nd * ca // seconds of Dec
   const ra = new sexa.HourAngle(false, 0, 0, Δαs).rad()
   const dec = new sexa.Angle(false, 0, 0, Δδs).rad()
-  return {ra, dec}
+  return { ra, dec }
 }
 
 /**
@@ -98,7 +98,7 @@ export function mn (epochFrom, epochTo) {
  * @returns {coord.Equatorial} eqTo
  */
 export function approxPosition (eqFrom, epochFrom, epochTo, mα, mδ) {
-  const {ra, dec} = approxAnnualPrecession(eqFrom, epochFrom, epochTo)
+  const { ra, dec } = approxAnnualPrecession(eqFrom, epochFrom, epochTo)
   const dy = epochTo - epochFrom
   const eqTo = new coord.Equatorial()
   eqTo.ra = eqFrom.ra + (ra + mα) * dy
@@ -338,7 +338,7 @@ export function eclipticPosition (eclFrom, epochFrom, epochTo, mα, mδ) {
   const p = new EclipticPrecessor(epochFrom, epochTo)
 
   if (mα !== 0 || mδ !== 0) {
-    const {lon, lat} = properMotion(mα.rad(), mδ.rad(), epochFrom, eclFrom)
+    const { lon, lat } = properMotion(mα.rad(), mδ.rad(), epochFrom, eclFrom)
     const t = epochTo - epochFrom
     eclFrom.lon += lon * t
     eclFrom.lat += lat * t
@@ -356,7 +356,7 @@ export function eclipticPosition (eclFrom, epochFrom, epochTo, mα, mδ) {
 export function properMotion (mα, mδ, epoch, ecl) {
   const ε = nutation.meanObliquity(base.JulianYearToJDE(epoch))
   const [εsin, εcos] = base.sincos(ε)
-  const {ra, dec} = ecl.toEquatorial(ε)
+  const { ra, dec } = ecl.toEquatorial(ε)
   const [sα, cα] = base.sincos(ra)
   const [sδ, cδ] = base.sincos(dec)
   const cβ = Math.cos(ecl.lat)

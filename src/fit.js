@@ -19,7 +19,7 @@ export function linear (points) { // (p []struct{ X, Y float64 })  (a, b float64
   let sy = 0
   let sx2 = 0
   let sxy = 0
-  for (let p of points) {
+  for (const p of points) {
     const x = p.x
     const y = p.y
     sx += x
@@ -44,7 +44,7 @@ export function correlationCoefficient (points) { // (p []struct{ X, Y float64 }
   let sx2 = 0
   let sy2 = 0
   let sxy = 0
-  for (let p of points) {
+  for (const p of points) {
     const x = p.x
     const y = p.y
     sx += x
@@ -72,7 +72,7 @@ export function quadratic (points) {
   let T = 0
   let U = 0
   let V = 0
-  for (let p of points) {
+  for (const p of points) {
     const x = p.x
     const y = p.y
     const x2 = x * x
@@ -111,7 +111,7 @@ export function func3 (points, f0, f1, f2) {
   let U = 0
   let V = 0
   let W = 0
-  for (let p of points) {
+  for (const p of points) {
     const x = p.x
     const y = p.y
     const y0 = f0(x)
@@ -145,7 +145,7 @@ export function func1 (points, f) {
   let syf = 0
   let sf2 = 0
   // (4.8) p. 45
-  for (let p of points) {
+  for (const p of points) {
     const fx = f(p.x)
     const y = p.y
     syf += y * fx

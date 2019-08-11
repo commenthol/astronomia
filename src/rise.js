@@ -16,7 +16,7 @@ import interp from './interpolation'
 import julian from './julian'
 import sexa from './sexagesimal'
 import sidereal from './sidereal'
-const {acos, asin, cos, sin} = Math
+const { acos, asin, cos, sin } = Math
 
 const SECS_PER_DEGREE = 240 // = 86400 / 360
 const SECS_PER_DAY = 86400
@@ -259,7 +259,7 @@ export class PlanetRise {
     const body = elliptic.position(this.planet, this.earth, this.jde)
     const Th0 = sidereal.apparent0UT(this.jd)
     const rs = approxTimes(
-      {lat: this.lat, lon: this.lon}, this.refraction,
+      { lat: this.lat, lon: this.lon }, this.refraction,
       Th0, body.ra, body.dec
     )
     return this._rsToJD(rs)
@@ -273,17 +273,19 @@ export class PlanetRise {
     ]
     const Th0 = sidereal.apparent0UT(this.jd)
     const rs = times(
-      {lat: this.lat, lon: this.lon}, this.ΔT, this.refraction,
+      { lat: this.lat, lon: this.lon }, this.ΔT, this.refraction,
       Th0, this._toArr(body, 'ra'), this._toArr(body, 'dec')
     )
     return this._rsToJD(rs)
   }
+
   /** @private */
   _toArr (body, p) {
     return body.map((item) => {
       return item[p]
     })
   }
+
   /** @private */
   _rsToJD (rs) {
     return {
@@ -292,6 +294,7 @@ export class PlanetRise {
       set: this._toJD(rs.set)
     }
   }
+
   /** @private */
   _toJD (secs) {
     const jd = this.jd + secs / 86400

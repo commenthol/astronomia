@@ -1,9 +1,9 @@
 /* eslint key-spacing:0 */
 
 import assert from 'assert'
-import {sunrise, julian} from '..'
+import { sunrise, julian } from '..'
 
-const {Sunrise} = sunrise
+const { Sunrise } = sunrise
 
 describe.disable = function () {}
 
@@ -32,7 +32,7 @@ describe('#Sunrise', function () {
 
     Object.keys(tests).forEach(function (fnName) {
       it(fnName, function () {
-        assert.equal(sr[fnName]().toDate().toISOString(), tests[fnName])
+        assert.strictEqual(sr[fnName]().toDate().toISOString(), tests[fnName])
       })
     })
   })
@@ -60,7 +60,7 @@ describe('#Sunrise', function () {
     }
     Object.keys(tests).forEach(function (fnName) {
       it(fnName, function () {
-        assert.equal(sr[fnName]().toDate().toISOString(), tests[fnName])
+        assert.strictEqual(sr[fnName]().toDate().toISOString(), tests[fnName])
       })
     })
   })
@@ -88,7 +88,7 @@ describe('#Sunrise', function () {
     }
     Object.keys(tests).forEach(function (fnName) {
       it(fnName, function () {
-        assert.equal(sr[fnName]().toDate().toISOString(), tests[fnName])
+        assert.strictEqual(sr[fnName]().toDate().toISOString(), tests[fnName])
       })
     })
   })
@@ -116,7 +116,7 @@ describe('#Sunrise', function () {
     }
     Object.keys(tests).forEach(function (fnName) {
       it(fnName, function () {
-        assert.equal(sr[fnName]().toDate().toISOString(), tests[fnName])
+        assert.strictEqual(sr[fnName]().toDate().toISOString(), tests[fnName])
       })
     })
   })
@@ -144,7 +144,7 @@ describe('#Sunrise', function () {
     }
     Object.keys(tests).forEach(function (fnName) {
       it(fnName, function () {
-        assert.equal(sr[fnName]().toDate().toISOString(), tests[fnName])
+        assert.strictEqual(sr[fnName]().toDate().toISOString(), tests[fnName])
       })
     })
   })
@@ -172,7 +172,7 @@ describe('#Sunrise', function () {
     }
     Object.keys(tests).forEach(function (fnName) {
       it(fnName, function () {
-        assert.equal(sr[fnName]().toDate().toISOString(), tests[fnName])
+        assert.strictEqual(sr[fnName]().toDate().toISOString(), tests[fnName])
       })
     })
   })

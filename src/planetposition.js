@@ -94,7 +94,7 @@ export class Planet {
    *  {Number} range - heliocentric range in AU.
    */
   position (jde) {
-    const {lat, lon, range} = this.position2000(jde)
+    const { lat, lon, range } = this.position2000(jde)
     const eclFrom = new coord.Ecliptic(lon, lat)
     const epochFrom = 2000.0
     const epochTo = base.JDEToJulianYear(jde)

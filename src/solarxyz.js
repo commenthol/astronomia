@@ -22,14 +22,14 @@ import solar from './solar'
  */
 export function position (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z float64)
   // (26.1) p. 171
-  const {lon, lat, range} = solar.trueVSOP87(earth, jde)
+  const { lon, lat, range } = solar.trueVSOP87(earth, jde)
   const [sε, cε] = base.sincos(nutation.meanObliquity(jde))
   const [ss, cs] = base.sincos(lon)
   const sβ = Math.sin(lat)
   const x = range * cs
   const y = range * (ss * cε - sβ * sε)
   const z = range * (ss * sε + sβ * cε)
-  return {x, y, z}
+  return { x, y, z }
 }
 
 /**
@@ -53,7 +53,7 @@ export function longitudeJ2000 (earth, jde) {
  *   {Number} z
  */
 export function positionJ2000 (earth, jde) {
-  const {x, y, z} = xyz(earth, jde)
+  const { x, y, z } = xyz(earth, jde)
   // (26.3) p. 174
   return {
     x: x + 0.00000044036 * y - 0.000000190919 * z,
@@ -63,7 +63,7 @@ export function positionJ2000 (earth, jde) {
 }
 
 export function xyz (earth, jde) {
-  const {lon, lat, range} = earth.position2000(jde)
+  const { lon, lat, range } = earth.position2000(jde)
   const s = lon + Math.PI
   const β = -lat
   const [ss, cs] = base.sincos(s)
@@ -72,7 +72,7 @@ export function xyz (earth, jde) {
   const x = range * cβ * cs
   const y = range * cβ * ss
   const z = range * sβ
-  return {x, y, z}
+  return { x, y, z }
 }
 
 /**
@@ -89,7 +89,7 @@ export function xyz (earth, jde) {
  *   {Number} z
  */
 export function positionB1950 (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z float64)
-  const {x, y, z} = xyz(earth, jde)
+  const { x, y, z } = xyz(earth, jde)
   return {
     x: 0.999925702634 * x + 0.012189716217 * y + 0.000011134016 * z,
     y: -0.011179418036 * x + 0.917413998946 * y - 0.397777041885 * z,

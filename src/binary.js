@@ -8,7 +8,7 @@
  * Binary: Chapter 57, Binary Stars
  */
 import base from './base'
-const {atan, atan2, cos, sqrt, tan} = Math
+const { atan, atan2, cos, sqrt, tan } = Math
 
 /**
  * computes mean anomaly for the given date.

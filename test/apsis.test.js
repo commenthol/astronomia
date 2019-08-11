@@ -1,26 +1,27 @@
 import assert from 'assert'
-import {apsis, moonposition, julian, sexagesimal as sexa} from '..'
+import float from './support/float.js'
+import { apsis, moonposition, julian, sexagesimal as sexa } from '..'
 
 describe('#apsis', function () {
   it('meanApogee', function () {
     // Example 50.a, p. 357.0
     var res = apsis.meanApogee(1988.75)
-    assert.equal(res.toFixed(4), 2447442.8191)
+    assert.strictEqual(float(res).toFixed(4), 2447442.8191)
   })
 
   it('apogee', function () {
     // Example 50.a, p. 357.0
     var j = apsis.apogee(1988.75)
-    assert.equal(j.toFixed(4), 2447442.3543) // JDE
+    assert.strictEqual(float(j).toFixed(4), 2447442.3543) // JDE
     var date = julian.JDEToDate(j)
-    assert.equal(date.toISOString(), '1988-10-07T20:29:15.380Z')
+    assert.strictEqual(date.toISOString(), '1988-10-07T20:29:15.380Z')
   })
 
   it('apogeeParallax', function () {
     // Example 50.a, p. 357.0
     var p = apsis.apogeeParallax(1988.75)
-    assert.equal((p * 180 / Math.PI * 3600).toFixed(3), 3240.679)
-    assert.equal(new sexa.Angle(p).toString(3), '0°54′.679″')
+    assert.strictEqual(float(p * 180 / Math.PI * 3600).toFixed(3), 3240.679)
+    assert.strictEqual(new sexa.Angle(p).toString(3), '0°54′.679″')
   })
 
   /**
@@ -46,18 +47,18 @@ describe('#apsis', function () {
 
   it('perigeeParallax', function () {
     var p = apsis.perigeeParallax(1997.93)
-    assert.equal((p * 180 / Math.PI * 3600).toFixed(3), 3566.637)
-    assert.equal(new sexa.Angle(p).toString(3), '0°59′26.637″')
+    assert.strictEqual(float(p * 180 / Math.PI * 3600).toFixed(3), 3566.637)
+    assert.strictEqual(new sexa.Angle(p).toString(3), '0°59′26.637″')
   })
 
   it('perigeeDistance', function () {
     var y = 1997.93
     var p = apsis.perigeeParallax(y)
     var d = apsis.distance(p)
-    assert.equal(d.toFixed(0), 368877)
+    assert.strictEqual(float(d).toFixed(0), 368877)
     var per = apsis.perigee(y)
     var dist = moonposition.position(per).range
-    assert.equal(dist.toFixed(0), 368881)
+    assert.strictEqual(float(dist).toFixed(0), 368881)
   })
 
   it('comparing perigeeParallax with parallax from position', function () {
@@ -74,10 +75,10 @@ describe('#apsis', function () {
     var y = 1997.90
     var p = apsis.apogeeParallax(y)
     var d = apsis.distance(p)
-    assert.equal(d.toFixed(0), 404695)
+    assert.strictEqual(float(d).toFixed(0), 404695)
     var apo = apsis.apogee(y)
     var dist = moonposition.position(apo).range
-    assert.equal(dist.toFixed(0), 404697)
+    assert.strictEqual(float(dist).toFixed(0), 404697)
   })
 
   it('comparing apogeeParallax with parallax from position', function () {

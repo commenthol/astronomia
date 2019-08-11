@@ -1,9 +1,6 @@
 import assert from 'assert'
-import {mars, data, planetposition} from '..'
-
-function toFixed (num, pos) {
-  return parseFloat(num.toFixed(pos), 10)
-}
+import float from './support/float.js'
+import { mars, data, planetposition } from '..'
 
 describe('#mars', function () {
   it('physical()', function () {
@@ -20,14 +17,14 @@ describe('#mars', function () {
     var k = re[6]
     var q = re[7]
     var res = [
-      toFixed(DE * 180 / Math.PI, 2),
-      toFixed(DS * 180 / Math.PI, 2),
-      toFixed(ω * 180 / Math.PI, 2),
-      toFixed(P * 180 / Math.PI, 2),
-      toFixed(Q * 180 / Math.PI, 2),
-      toFixed(d * 180 / Math.PI * 60 * 60, 2), // display as arc sec
-      toFixed(k, 4),
-      toFixed(q * 180 / Math.PI * 60 * 60, 2) // display as arc sec
+      float(DE * 180 / Math.PI).toFixed(2),
+      float(DS * 180 / Math.PI).toFixed(2),
+      float(ω * 180 / Math.PI).toFixed(2),
+      float(P * 180 / Math.PI).toFixed(2),
+      float(Q * 180 / Math.PI).toFixed(2),
+      float(d * 180 / Math.PI * 60 * 60).toFixed(2), // display as arc sec
+      float(k).toFixed(4),
+      float(q * 180 / Math.PI * 60 * 60).toFixed(2) // display as arc sec
     ]
     var exp = [
       +12.44, // DE
@@ -39,6 +36,6 @@ describe('#mars', function () {
       0.9012, // k
       1.06 // q
     ]
-    assert.deepEqual(res, exp)
+    assert.deepStrictEqual(res, exp)
   })
 })

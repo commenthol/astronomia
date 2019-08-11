@@ -8,7 +8,7 @@
 const fs = require('fs')
 const path = require('path')
 const { datafile } = require('./src/datafile.js')
-const serialize = require('serialize-to-js').serializeToModule
+const serialize = require('serialize-to-module')
 const julian = require('..').julian
 
 const attic = path.resolve(__dirname, '../attic')
@@ -48,12 +48,12 @@ DataSet.prototype = {
     if (!this.first.year || this.first.year > year ||
       (this.first.year === year && this.first.month > month)
     ) {
-      this.first = {year: year, month: month}
+      this.first = { year: year, month: month }
     }
     if (!this.last.year || this.last.year < year ||
       (this.last.year === year && this.last.month < month)
     ) {
-      this.last = {year: year, month: month}
+      this.last = { year: year, month: month }
     }
   }
 }
@@ -70,15 +70,15 @@ TaiMinusUTC.prototype = {
    * @return {this}
    */
   read: function (file) {
-    let months = [ '', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC' ]
-    let dataSet = fs.readFileSync(file, 'utf8')
+    const months = ['', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    const dataSet = fs.readFileSync(file, 'utf8')
     this.data = []
     dataSet.split(/\n/).forEach((row) => {
       if (/^ \d{4}/.test(row)) {
-        let year = toFloat(row.substr(1, 4))
-        let _month = row.substr(6, 3)
-        let month = months.indexOf(_month)
-        let taiMinusUtc = toFloat(row.substr(37, 12))
+        const year = toFloat(row.substr(1, 4))
+        const _month = row.substr(6, 3)
+        const month = months.indexOf(_month)
+        const taiMinusUtc = toFloat(row.substr(37, 12))
         this.data.push({
           year: year,
           month: month,
@@ -91,7 +91,7 @@ TaiMinusUTC.prototype = {
   },
   get: function (year, month) {
     let i
-    let decYear = toYear(year, month)
+    const decYear = toYear(year, month)
     for (i in this.data) {
       // console.log(this.data[i].decYear, decYear)
       if (this.data[i].decYear > decYear) {
@@ -125,8 +125,8 @@ Object.assign(Finals2000A.prototype, DataSet.prototype, {
       // let type = row.substr(57, 1)
       // let ut1MinusUtc = toFloat(row.substr(58, 10))
       if (year && month && day === 1 && ut1MinusUtc) {
-        let tai = this.taiMinusUTC.get(year, month)
-        let deltaT = toPrecision(32.184 + tai - ut1MinusUtc, 7)
+        const tai = this.taiMinusUTC.get(year, month)
+        const deltaT = toPrecision(32.184 + tai - ut1MinusUtc, 7)
         this._add(year, month, deltaT)
         // console.log([year, month, deltaT, tai, ut1MinusUtc].join('\t'))
       }
@@ -177,7 +177,7 @@ Object.assign(Data.prototype, DataSet.prototype, {
   },
   toData: function () {
     var _this = this
-    var data = {table: []}
+    var data = { table: [] }
     var year
     var month
 
@@ -210,7 +210,7 @@ Object.assign(Data.prototype, DataSet.prototype, {
 })
 
 function DataSetDec () {
-  this.data = {table: []}
+  this.data = { table: [] }
 }
 DataSetDec.prototype = {
   read: function () {
@@ -288,7 +288,7 @@ function main (config) {
     data: new Data(finals2000A).read(config.fileData).mergeFinals().toData(),
     prediction: new Prediction().read(config.filePreds).data
   }
-  let out = config.comment + serialize(dataSet)
+  const out = config.comment + serialize(dataSet)
   fs.writeFileSync(config.fileOut, out, 'utf8')
 }
 

@@ -212,7 +212,7 @@ export function JulianToMoslem (y, m, d) { // (y, m, d int)  (my, mm, md int)
     mm = 1 + S
     md = base.floorDiv(10 * JJ - 295 * S, 10)
   }
-  return {year: my, month: mm, day: md}
+  return { year: my, month: mm, day: md }
 }
 
 /**

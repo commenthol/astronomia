@@ -1,5 +1,6 @@
 import assert from 'assert'
-import {binary, kepler} from '..'
+import float from './support/float.js'
+import { binary, kepler } from '..'
 
 describe('#binary', function () {
   it('position', function () {
@@ -10,9 +11,9 @@ describe('#binary', function () {
       23.717 * Math.PI / 180, 219.907 * Math.PI / 180, E)
     var θ = a[0]
     var ρ = a[1]
-    assert.equal((M * 180 / Math.PI).toFixed(3), 37.788)
-    assert.equal((θ * 180 / Math.PI).toFixed(1), 318.4)
-    assert.equal(ρ.toFixed(3), 0.411)
+    assert.strictEqual(float(M * 180 / Math.PI).toFixed(3), 37.788)
+    assert.strictEqual(float(θ * 180 / Math.PI).toFixed(1), 318.4)
+    assert.strictEqual(float(ρ).toFixed(3), 0.411)
   })
 
   it('apparentEccentricity', function () {
@@ -21,6 +22,6 @@ describe('#binary', function () {
       59.025 * Math.PI / 180,
       219.907 * Math.PI / 180
     )
-    assert.equal(res.toFixed(3), 0.860)
+    assert.strictEqual(float(res).toFixed(3), 0.860)
   })
 })

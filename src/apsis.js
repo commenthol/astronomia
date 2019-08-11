@@ -9,7 +9,7 @@
  */
 
 import base from './base'
-const {sin, cos} = Math
+const { sin, cos } = Math
 
 /**
  * conversion factor from k to T, given in (50.3) p. 356

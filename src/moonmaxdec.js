@@ -132,7 +132,7 @@ function max (y, c) { // (y float64, c *mc)  (jde, δ float64)
     c.dc[34] * Math.cos(m_) +
     c.dc[35] * Math.sin(2 * f) +
     c.dc[36] * Math.sin(m_ + f)
-  return {jde: jde, dec: c.s * δ}
+  return { jde: jde, dec: c.s * δ }
 }
 
 /**

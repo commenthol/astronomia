@@ -1,5 +1,6 @@
 import assert from 'assert'
-import {julian, node, perihelion, planetelements} from '..'
+import float from './support/float.js'
+import { julian, node, perihelion, planetelements } from '..'
 
 describe('#node', function () {
   it('EllipticAscending()', function () {
@@ -10,10 +11,10 @@ describe('#node', function () {
     var t = res[0]
     var r = res[1]
     var d = julian.JDToCalendar(t)
-    assert.equal(d.year, 1985)
-    assert.equal(d.month, 11)
-    assert.equal(d.day.toFixed(2), 9.16)
-    assert.equal(r.toFixed(4), 1.8045) // AU
+    assert.strictEqual(d.year, 1985)
+    assert.strictEqual(d.month, 11)
+    assert.strictEqual(float(d.day).toFixed(2), 9.16)
+    assert.strictEqual(float(r).toFixed(4), 1.8045) // AU
   })
 
   it('EllipticDescending()', function () {
@@ -25,10 +26,10 @@ describe('#node', function () {
     var t = res[0]
     var r = res[1]
     var d = julian.JDToCalendar(t)
-    assert.equal(d.year, 1986)
-    assert.equal(d.month, 3)
-    assert.equal(d.day.toFixed(2), 10.37)
-    assert.equal(r.toFixed(4), 0.8493) // AU
+    assert.strictEqual(d.year, 1986)
+    assert.strictEqual(d.month, 3)
+    assert.strictEqual(float(d.day).toFixed(2), 10.37)
+    assert.strictEqual(float(r).toFixed(4), 0.8493) // AU
   })
 
   it('parabolicAscending()', function () {
@@ -40,10 +41,10 @@ describe('#node', function () {
     var t = res[0]
     var r = res[1]
     var d = julian.JDToCalendar(t)
-    assert.equal(d.year, 1977)
-    assert.equal(d.month, 9)
-    assert.equal(d.day.toFixed(1), 17.6)
-    assert.equal(r.toFixed(2), 28.07) // AU
+    assert.strictEqual(d.year, 1977)
+    assert.strictEqual(d.month, 9)
+    assert.strictEqual(float(d.day).toFixed(1), 17.6)
+    assert.strictEqual(float(r).toFixed(2), 28.07) // AU
   })
 
   it('parabolicDescending()', function () {
@@ -55,10 +56,10 @@ describe('#node', function () {
     var t = res[0]
     var r = res[1]
     var d = julian.JDToCalendar(t)
-    assert.equal(d.year, 1989)
-    assert.equal(d.month, 9)
-    assert.equal(d.day.toFixed(3), 17.636)
-    assert.equal(r.toFixed(4), 1.3901) // AU
+    assert.strictEqual(d.year, 1989)
+    assert.strictEqual(d.month, 9)
+    assert.strictEqual(float(d.day).toFixed(3), 17.636)
+    assert.strictEqual(float(r).toFixed(4), 1.3901) // AU
   })
 
   it('ellipticAscending_venus()', function () {
@@ -74,8 +75,8 @@ describe('#node', function () {
     )
     var t = res[0]
     var d = julian.JDToCalendar(t)
-    assert.equal(d.year, 1978)
-    assert.equal(d.month, 11)
-    assert.equal(d.day.toFixed(3), 27.409)
+    assert.strictEqual(d.year, 1978)
+    assert.strictEqual(d.month, 11)
+    assert.strictEqual(float(d.day).toFixed(3), 27.409)
   })
 })

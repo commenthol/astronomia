@@ -16,7 +16,7 @@ import moonposition from './moonposition'
 import nutation from './nutation'
 import solar from './solar'
 
-const {sin, cos, asin, atan2} = Math
+const { sin, cos, asin, atan2 } = Math
 const D2R = Math.PI / 180
 const _I = 1.54242 * D2R // IAU value of inclination of mean lunar equator
 
@@ -43,7 +43,7 @@ const [sI, cI] = base.sincos(_I)
  *    {base.Coord} cSun - selenographic longitude, latitude of the Sun.
  */
 export function physical (jde, earth) {
-  const {lon, lat, range} = moonposition.position(jde) // (λ without nutation)
+  const { lon, lat, range } = moonposition.position(jde) // (λ without nutation)
   // [λ, β, Δ]
   const m = new Moon(jde)
   const [l, b] = m.lib(lon, lat)
@@ -178,7 +178,7 @@ export class Moon {
   }
 
   sun (λ, β, Δ, earth) {
-    const {lon, lat, range} = solar.apparentVSOP87(earth, this.jde) // eslint-disable-line no-unused-vars
+    const { lon, lat, range } = solar.apparentVSOP87(earth, this.jde) // eslint-disable-line no-unused-vars
     const ΔR = Δ / (range * base.AU)
     const λH = lon + Math.PI + 57.296 * D2R * ΔR * cos(β) * sin(lon - λ)
     const βH = ΔR * β

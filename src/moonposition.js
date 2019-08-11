@@ -9,7 +9,7 @@
  */
 
 import base from './base'
-const {asin, sin} = Math
+const { asin, sin } = Math
 const D2R = Math.PI / 180
 
 const EARTH_RADIUS = 6378.137 // km

@@ -61,8 +61,8 @@ export class Calendar {
   }
 
   toISOString () {
-    const {year, month, day} = this.getDate()
-    const {hour, minute, second, millisecond} = this.getTime()
+    const { year, month, day } = this.getDate()
+    const { hour, minute, second, millisecond } = this.getTime()
     return `${pad(year, 4)}-${pad(month)}-${pad(day)}T` +
       `${pad(hour)}:${pad(minute)}:${pad(second)}.${pad(millisecond, 3)}Z`
   }
@@ -149,7 +149,7 @@ export class Calendar {
 
   fromJD (jd) {
     const isJulian = !isJDCalendarGregorian(jd)
-    const {year, month, day} = JDToCalendar(jd, isJulian)
+    const { year, month, day } = JDToCalendar(jd, isJulian)
     this.year = year
     this.month = month
     this.day = day
@@ -219,7 +219,7 @@ export class CalendarJulian extends Calendar {
   }
 
   fromJD (jd) {
-    const {year, month, day} = JDToCalendarJulian(jd)
+    const { year, month, day } = JDToCalendarJulian(jd)
     this.year = year
     this.month = month
     this.day = day
@@ -251,7 +251,7 @@ export class CalendarGregorian extends Calendar {
   }
 
   fromJD (jd) {
-    const {year, month, day} = JDToCalendarGregorian(jd)
+    const { year, month, day } = JDToCalendarGregorian(jd)
     this.year = year
     this.month = month
     this.day = day
@@ -578,7 +578,7 @@ export function DayOfYearToCalendar (n, leap) {
     }
   }
   const day = n - k - DAYS_OF_YEAR[month]
-  return {month, day}
+  return { month, day }
 }
 
 /**
@@ -589,7 +589,7 @@ export function DayOfYearToCalendar (n, leap) {
  * @returns {CalendarGregorian} { (int) year, (int) month, (float) day }
  */
 export function DayOfYearToCalendarGregorian (year, n) {
-  const {month, day} = DayOfYearToCalendar(n, LeapYearGregorian(year))
+  const { month, day } = DayOfYearToCalendar(n, LeapYearGregorian(year))
   return new CalendarGregorian(year, month, day)
 }
 
@@ -601,7 +601,7 @@ export function DayOfYearToCalendarGregorian (year, n) {
  * @returns {CalendarJulian} { (int) year, (int) month, (float) day }
  */
 export function DayOfYearToCalendarJulian (year, n) {
-  const {month, day} = DayOfYearToCalendar(n, LeapYearJulian(year))
+  const { month, day } = DayOfYearToCalendar(n, LeapYearJulian(year))
   return new CalendarJulian(year, month, day)
 }
 

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {base, circle, sexagesimal as sexa} from '..'
+import { base, circle, sexagesimal as sexa } from '..'
 
 describe('#circle', function () {
   it('Smallest typeI', function () {
@@ -19,8 +19,8 @@ describe('#circle', function () {
     var a = circle.smallest(c1, c2, c3)
     var d = a[0]
     var t = a[1]
-    assert.equal(new sexa.Angle(d).toString(0), '2°18′38″') // Δ = 2°.31054 = 2°19′
-    assert.equal(t, true) // type I
+    assert.strictEqual(new sexa.Angle(d).toString(0), '2°18′38″') // Δ = 2°.31054 = 2°19′
+    assert.strictEqual(t, true) // type I
   })
 
   it('Smallest typeII', function () {
@@ -40,7 +40,7 @@ describe('#circle', function () {
     var a = circle.smallest(c1, c2, c3)
     var d = a[0]
     var t = a[1]
-    assert.equal(new sexa.Angle(d).toString(0), '4°15′49″') // Δ = 4°.26363 = 4°16′
-    assert.equal(t, false) // type II
+    assert.strictEqual(new sexa.Angle(d).toString(0), '4°15′49″') // Δ = 4°.26363 = 4°16′
+    assert.strictEqual(t, false) // type II
   })
 })

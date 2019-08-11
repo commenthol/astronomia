@@ -1,12 +1,13 @@
 /* eslint key-spacing: 0 */
 
 import assert from 'assert'
-import {saturnmoons, planetposition, data} from '..'
+import float from './support/float.js'
+import { saturnmoons, planetposition, data } from '..'
 
 describe('#saturnmoons', function () {
   function comp (res, exp) {
-    assert.equal(res.x.toFixed(3), exp.x)
-    assert.equal(res.y.toFixed(3), exp.y)
+    assert.strictEqual(float(res.x).toFixed(3), exp.x)
+    assert.strictEqual(float(res.y).toFixed(3), exp.y)
   }
 
   describe('positions()', function () {

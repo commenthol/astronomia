@@ -110,14 +110,14 @@ export function e5 (jde, earth, jupiter, pos) {
   let Δ = 5.0
 
   ;(function () {
-    const {lon, lat, range} = solar.trueVSOP87(earth, jde)
+    const { lon, lat, range } = solar.trueVSOP87(earth, jde)
     const [s, β, R] = [lon, lat, range]
     const [ss, cs] = base.sincos(s)
     const sβ = Math.sin(β)
     let τ = base.lightTime(Δ)
     let x, y, z
     function f () {
-      const {lon, lat, range} = jupiter.position(jde - τ)
+      const { lon, lat, range } = jupiter.position(jde - τ)
       const [sl, cl] = base.sincos(lon)
       const [sb, cb] = base.sincos(lat)
       x = range * cb * cl + R * cs
@@ -411,13 +411,13 @@ export function e5 (jde, earth, jupiter, pos) {
     // p. 311
     const T0 = (jde - 2433282.423) / base.JulianCentury
     const P = (1.3966626 * p + 0.0003088 * p * T0) * T0
-    for (let i in L) {
+    for (const i in L) {
       L[i] += P
     }
     ψ += P
     const T = (jde - base.J1900) / base.JulianCentury
     I = 3.120262 * p + 0.0006 * p * T
-    for (let i in L) {
+    for (const i in L) {
       const [sLψ, cLψ] = base.sincos(L[i] - ψ)
       const [sB, cB] = base.sincos(B[i])
       X[i] = R[i] * cLψ * cB
@@ -439,8 +439,8 @@ export function e5 (jde, earth, jupiter, pos) {
   const [sλ0, cλ0] = base.sincos(λ0)
   const [sβ0, cβ0] = base.sincos(β0)
 
-  for (let i in A) {
-    let a0, b0
+  for (const i in A) {
+    let a0
     // step 1
     let a = X[i]
     let b = Y[i] * cI - Z[i] * sI
@@ -450,7 +450,7 @@ export function e5 (jde, earth, jupiter, pos) {
     b = a * sΦ + b * cΦ
     a = a0
     // step 3
-    b0 = b * ci - c * si
+    const b0 = b * ci - c * si
     c = b * si + c * ci
     b = b0
     // step 4

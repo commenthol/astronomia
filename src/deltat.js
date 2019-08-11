@@ -34,7 +34,7 @@
 import base from './base'
 import interp from './interpolation'
 import deltat from '../data/deltat'
-import {Calendar, LeapYearGregorian} from './julian'
+import { Calendar, LeapYearGregorian } from './julian'
 
 /**
  * deltaT returns the difference ΔT = TD - UT between Dynamical Time TD and
@@ -102,7 +102,7 @@ function interpolate (dyear, data) {
  */
 function interpolateData (dyear, data) {
   const [fyear, fmonth] = data.firstYM
-  const {year, month, first, last} = monthOfYear(dyear)
+  const { year, month, first, last } = monthOfYear(dyear)
   const pos = 12 * (year - fyear) + (month - fmonth)
   const table = data.table.slice(pos, pos + 3)
   const d3 = new interp.Len3(first, last, table)
@@ -117,7 +117,7 @@ function interpolateData (dyear, data) {
 */
 function monthOfYear (dyear) {
   if (!monthOfYear.data) { // memoize yearly fractions per month
-    monthOfYear.data = {0: [], 1: []}
+    monthOfYear.data = { 0: [], 1: [] }
     for (let m = 0; m <= 12; m++) {
       monthOfYear.data[0][m] = new Calendar(1999, m, 1).toYear() - 1999 // non leap year
       monthOfYear.data[1][m] = new Calendar(2000, m, 1).toYear() - 2000 // leap year
@@ -134,7 +134,7 @@ function monthOfYear (dyear) {
   }
   const first = year + data[month]
   const last = month < 11 ? year + data[month + 2] : year + 1 + data[(month + 2) % 12]
-  return {year, month, first, last}
+  return { year, month, first, last }
 }
 
 export default {

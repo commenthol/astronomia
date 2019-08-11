@@ -1,5 +1,6 @@
 import assert from 'assert'
-import {base, conjunction, julian, sexagesimal as sexa} from '..'
+import float from './support/float.js'
+import { base, conjunction, julian, sexagesimal as sexa } from '..'
 
 describe('#conjunction', function () {
   it('planetary', function () {
@@ -72,11 +73,11 @@ describe('#conjunction', function () {
     // time of conjunction
     var cal = new julian.CalendarGregorian(1991, 8, day)
     // date in TD
-    assert.equal(cal.toDate().toISOString(), '1991-08-07T05:42:40.908Z')
+    assert.strictEqual(cal.toDate().toISOString(), '1991-08-07T05:42:40.908Z')
     // compute UT = TD - ΔT
-    assert.equal(cal.deltaT(true).toDate().toISOString(), '1991-08-07T05:41:42.903Z')
+    assert.strictEqual(cal.deltaT(true).toDate().toISOString(), '1991-08-07T05:41:42.903Z')
 
-    assert.equal(new sexa.Angle(Δδ).toString(0), '2°8′22″')
+    assert.strictEqual(new sexa.Angle(Δδ).toString(0), '2°8′22″')
   })
 
   it('stellar', function () {
@@ -112,8 +113,8 @@ describe('#conjunction', function () {
     var dy = dt / base.JulianYear
     var dc = dy / 100
 
-    assert.equal(dy.toFixed(2), -3.87) // -3.87 years
-    assert.equal(dc.toFixed(4), -0.0387) // -0.0387 century
+    assert.strictEqual(float(dy).toFixed(2), -3.87) // -3.87 years
+    assert.strictEqual(float(dc).toFixed(4), -0.0387) // -0.0387 century
 
     var pmr = -0.649 // sec/cen
     var pmd = -1.91 // sec/cen
@@ -126,8 +127,8 @@ describe('#conjunction', function () {
       new sexa.Angle(true, 9, 22, 58.54 - pmd * dc).rad()
     )
 
-    assert.equal(new sexa.RA(c1.ra).toString(3), '15ʰ17ᵐ.446ˢ') // α′ = 15ʰ17ᵐ0ˢ.446
-    assert.equal(new sexa.Angle(c1.dec).toString(2), '-9°22′58.47″') // δ′ = -9°22′58″.47
+    assert.strictEqual(new sexa.RA(c1.ra).toString(3), '15ʰ17ᵐ.446ˢ') // α′ = 15ʰ17ᵐ0ˢ.446
+    assert.strictEqual(new sexa.Angle(c1.dec).toString(2), '-9°22′58.47″') // δ′ = -9°22′58″.47
 
     var err
     try {
@@ -142,10 +143,10 @@ describe('#conjunction', function () {
     // time of conjunction
     var cal = new julian.CalendarGregorian(1996, 2, day)
     // date in TD
-    assert.equal(cal.toDate().toISOString(), '1996-02-18T06:36:55.352Z')
+    assert.strictEqual(cal.toDate().toISOString(), '1996-02-18T06:36:55.352Z')
     // compute UT = TD - ΔT
-    assert.equal(cal.deltaT(true).toDate().toISOString(), '1996-02-18T06:35:53.634Z')
+    assert.strictEqual(cal.deltaT(true).toDate().toISOString(), '1996-02-18T06:35:53.634Z')
 
-    assert.equal(new sexa.Angle(dd).toString(0), '0°3′38″')
+    assert.strictEqual(new sexa.Angle(dd).toString(0), '0°3′38″')
   })
 })

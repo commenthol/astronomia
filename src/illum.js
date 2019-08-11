@@ -15,7 +15,7 @@
 
 import base from './base'
 
-const {toDeg} = base
+const { toDeg } = base
 const D2R = Math.PI / 180
 
 /**

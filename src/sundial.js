@@ -56,7 +56,7 @@ export function general (φ, D, a, z) { // (φ, D, a, z float64)  (lines []Line,
     const H = (i - 12) * 15 * Math.PI / 180
     const aH = Math.abs(H)
     const [sH, cH] = base.sincos(H)
-    for (let d of m) {
+    for (const d of m) {
       const tδ = Math.tan(d * Math.PI / 180)
       const H0 = Math.acos(-tφ * tδ)
       if (aH > H0) {
@@ -109,7 +109,7 @@ export function equatorial (φ, a) { // (φ, a float64)  (n, s []Line)
     const H = (i - 12) * 15 * Math.PI / 180
     const aH = Math.abs(H)
     const [sH, cH] = base.sincos(H)
-    for (let d of m) {
+    for (const d of m) {
       const tδ = Math.tan(d * Math.PI / 180)
       const H0 = Math.acos(-tφ * tδ)
       if (aH > H0) {
@@ -155,7 +155,7 @@ export function horizontal (φ, a) { // (φ, a float64)  (lines []Line, center P
     const H = (i - 12) * 15 * Math.PI / 180
     const aH = Math.abs(H)
     const [sH, cH] = base.sincos(H)
-    for (let d of m) {
+    for (const d of m) {
       const tδ = Math.tan(d * Math.PI / 180)
       const H0 = Math.acos(-tφ * tδ)
       if (aH > H0) {
@@ -201,7 +201,7 @@ export function vertical (φ, D, a) { // (φ, D, a float64)  (lines []Line, cent
     const H = (i - 12) * 15 * Math.PI / 180
     const aH = Math.abs(H)
     const [sH, cH] = base.sincos(H)
-    for (let d of m) {
+    for (const d of m) {
       const tδ = Math.tan(d * Math.PI / 180)
       const H0 = Math.acos(-tφ * tδ)
       if (aH > H0) {

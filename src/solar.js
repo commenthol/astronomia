@@ -43,7 +43,7 @@ export function trueLongitude (T) {
     0.000289 * Math.sin(3 * m)) * Math.PI / 180
   const lon = base.pmod(L0 + C, 2 * Math.PI)
   const ano = base.pmod(m + C, 2 * Math.PI)
-  return {lon, ano}
+  return { lon, ano }
 }
 
 /**
@@ -111,9 +111,9 @@ function node (T) {
  *   {Number} ano - true anomaly in radians
  */
 export function true2000 (T) {
-  let {lon, ano} = trueLongitude(T)
+  let { lon, ano } = trueLongitude(T)
   lon -= 0.01397 * Math.PI / 180 * T * 100
-  return {lon, ano}
+  return { lon, ano }
 }
 
 /**
@@ -169,7 +169,7 @@ export function apparentEquatorial (jde) {
  *   {Number} range - range in AU
  */
 export function trueVSOP87 (planet, jde) {
-  let {lon, lat, range} = planet.position(jde)
+  let { lon, lat, range } = planet.position(jde)
   const s = lon + Math.PI
   // FK5 correction.
   const λp = base.horner(base.J2000Century(jde),
@@ -197,7 +197,7 @@ export function trueVSOP87 (planet, jde) {
  */
 export function apparentVSOP87 (planet, jde) {
   // note: see duplicated code in ApparentEquatorialVSOP87.
-  let {lon, lat, range} = trueVSOP87(planet, jde)
+  let { lon, lat, range } = trueVSOP87(planet, jde)
   const Δψ = nutation.nutation(jde)[0]
   const a = aberration(range)
   lon = lon + Δψ + a
@@ -220,12 +220,12 @@ export function apparentVSOP87 (planet, jde) {
 export function apparentEquatorialVSOP87 (planet, jde) {
   // note: duplicate code from ApparentVSOP87 so we can keep Δε.
   // see also duplicate code in time.E().
-  const {lon, lat, range} = trueVSOP87(planet, jde)
+  const { lon, lat, range } = trueVSOP87(planet, jde)
   const [Δψ, Δε] = nutation.nutation(jde)
   const a = aberration(range)
   const λ = lon + Δψ + a
   const ε = nutation.meanObliquity(jde) + Δε
-  const {ra, dec} = new coord.Ecliptic(λ, lat).toEquatorial(ε)
+  const { ra, dec } = new coord.Ecliptic(λ, lat).toEquatorial(ε)
   return new base.Coord(ra, dec, range)
 }
 

@@ -13,7 +13,7 @@ import coord from './coord'
 import _nutation from './nutation'
 import precess from './precess'
 import solar from './solar'
-const {cos, tan} = Math
+const { cos, tan } = Math
 
 /**
  * Nutation returns corrections due to nutation for equatorial coordinates
@@ -55,7 +55,7 @@ export function perihelion (T) { // (T float64)  float64
  */
 export function eclipticAberration (λ, β, jd) { // (λ, β, jd float64)  (Δλ, Δβ float64)
   const T = base.J2000Century(jd)
-  const {lon, ano} = solar.trueLongitude(T) // eslint-disable-line no-unused-vars
+  const { lon, ano } = solar.trueLongitude(T) // eslint-disable-line no-unused-vars
   const e = solar.eccentricity(T)
   const π = perihelion(T)
   const [sβ, cβ] = base.sincos(β)
@@ -74,7 +74,7 @@ export function eclipticAberration (λ, β, jd) { // (λ, β, jd float64)  (Δλ
 export function aberration (α, δ, jd) { // (α, δ, jd float64)  (Δα2, Δδ2 float64)
   const ε = _nutation.meanObliquity(jd)
   const T = base.J2000Century(jd)
-  const {lon, ano} = solar.trueLongitude(T) // eslint-disable-line no-unused-vars
+  const { lon, ano } = solar.trueLongitude(T) // eslint-disable-line no-unused-vars
   const e = solar.eccentricity(T)
   const π = perihelion(T)
   const [sinα, cosα] = base.sincos(α)

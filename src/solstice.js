@@ -10,7 +10,7 @@
 
 import base from './base'
 import solar from './solar'
-const {abs, cos, sin} = Math
+const { abs, cos, sin } = Math
 const D2R = Math.PI / 180
 
 // table 27.a - for years from -1000 to +1000

@@ -20,7 +20,7 @@
 
 import base from './base'
 import interp from './interpolation'
-const {abs, acos, asin, atan2, cos, hypot, sin, sqrt, tan} = Math
+const { abs, acos, asin, atan2, cos, hypot, sin, sqrt, tan } = Math
 
 /**
  * `sep` returns the angular separation between two celestial bodies.

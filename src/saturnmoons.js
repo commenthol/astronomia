@@ -57,7 +57,7 @@ export function positions (jde, earth, saturn) {
   const f = function () {
     const τ = base.lightTime(Δ)
     _jde = jde - τ
-    const {lon, lat, range} = saturn.position(_jde)
+    const { lon, lat, range } = saturn.position(_jde)
     const fk5 = planetposition.toFK5(lon, lat, _jde)
     const [l, b] = [fk5.lon, fk5.lat]
     const [sl, cl] = base.sincos(l)
@@ -111,12 +111,11 @@ export function positions (jde, earth, saturn) {
   const A = new Array(9).fill(0)
   const B = new Array(9).fill(0)
   const C = new Array(9).fill(0)
-  for (let j in X) {
-    let a0
+  for (const j in X) {
     let a = X[j]
     let b = q.c1 * Y[j] - q.s1 * Z[j]
-    let c = q.s1 * Y[j] + q.c1 * Z[j]
-    a0 = q.c2 * a - q.s2 * b
+    const c = q.s1 * Y[j] + q.c1 * Z[j]
+    const a0 = q.c2 * a - q.s2 * b
     b = q.s2 * a + q.c2 * b
     a = a0
 

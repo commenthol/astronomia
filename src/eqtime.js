@@ -12,7 +12,7 @@ import base from './base'
 import coord from './coord'
 import nutation from './nutation'
 import solar from './solar'
-const {cos, sin, tan} = Math
+const { cos, sin, tan } = Math
 
 /**
  * e computes the "equation of time" for the given JDE.
@@ -29,7 +29,7 @@ export function e (jde, earth) {
   const L0 = l0(τ)
   // code duplicated from solar.ApparentEquatorialVSOP87 so that
   // we can keep Δψ and cε
-  const {lon, lat, range} = solar.trueVSOP87(earth, jde)
+  const { lon, lat, range } = solar.trueVSOP87(earth, jde)
   const [Δψ, Δε] = nutation.nutation(jde)
   const a = -20.4898 / 3600 * Math.PI / 180 / range
   const λ = lon + Δψ + a

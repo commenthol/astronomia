@@ -10,7 +10,7 @@
 
 import base from './base'
 
-const {sin, cos} = Math
+const { sin, cos } = Math
 const ck = 1 / 1236.85
 const D2R = Math.PI / 180
 
@@ -151,7 +151,7 @@ class Mp {
 
   // new or full corrections
   nfc (c) {
-    const {M, M_, E, F, Ω} = this
+    const { M, M_, E, F, Ω } = this
     return c[0] * sin(M_) +
       c[1] * sin(M) * E +
       c[2] * sin(2 * M_) +
@@ -181,7 +181,7 @@ class Mp {
 
   // first or last corrections
   flc () {
-    const {M, M_, E, F, Ω} = this
+    const { M, M_, E, F, Ω } = this
     return -0.62801 * sin(M_) +
       0.17172 * sin(M) * E +
       -0.01183 * sin(M_ + M) * E +
@@ -210,7 +210,7 @@ class Mp {
   }
 
   w () {
-    const {M, M_, E, F} = this
+    const { M, M_, E, F } = this
     return 0.00306 -
       0.00038 * E * cos(M) +
       0.00026 * cos(M_) -

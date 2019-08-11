@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {globe, sidereal, coord, julian, sexagesimal as sexa} from '..'
+import { globe, sidereal, coord, julian, sexagesimal as sexa } from '..'
 
 describe('#coord', function () {
   it('Equatorial.toEcliptic', function () {
@@ -12,8 +12,8 @@ describe('#coord', function () {
     var ecl = eq.toEcliptic(obl)
     var λ = new sexa.Angle(ecl.lon).toDegString(5)
     var β = new sexa.Angle(ecl.lat).toDegString(5)
-    assert.equal(λ, '113°.21563')
-    assert.equal(β, '6°.68417')
+    assert.strictEqual(λ, '113°.21563')
+    assert.strictEqual(β, '6°.68417')
   })
 
   it('Equatorial.toEcliptic.toEquatorial', function () {
@@ -25,8 +25,8 @@ describe('#coord', function () {
     var obl = 23.4392911 * Math.PI / 180
     var eq = eq0.toEcliptic(obl).toEquatorial(obl) // apply reverse transform
 
-    assert.deepEqual(new sexa.RA(eq.ra).toDMS(), [false, 7, 45, 18.946])
-    assert.deepEqual(new sexa.Angle(eq.dec).toDMS(), [false, 28, 1, 34.26])
+    assert.deepStrictEqual(new sexa.RA(eq.ra).toDMS(), [false, 7, 45, 18.946])
+    assert.deepStrictEqual(new sexa.Angle(eq.dec).toDMS(), [false, 28, 1, 34.26])
   })
 
   it('Equatorial.toHorizontal', function () {
@@ -44,8 +44,8 @@ describe('#coord', function () {
     var jd = julian.DateToJD(new Date(Date.UTC(1987, 3, 10, 19, 21, 0, 0)))
     var st = sidereal.apparent(jd)
     var hz = eq.toHorizontal(g, st)
-    assert.deepEqual(new sexa.Angle(hz.az).toDegString(3), '68°.034')
-    assert.deepEqual(new sexa.Angle(hz.alt).toDegString(3), '15°.125')
+    assert.deepStrictEqual(new sexa.Angle(hz.az).toDegString(3), '68°.034')
+    assert.deepStrictEqual(new sexa.Angle(hz.alt).toDegString(3), '15°.125')
   })
 
   it('Equatorial.toHorizontal.toEquatorial', function () {
@@ -63,8 +63,8 @@ describe('#coord', function () {
     var jd = julian.DateToJD(new Date(Date.UTC(1987, 3, 10, 19, 21, 0, 0)))
     var st = sidereal.apparent(jd)
     var eq = eq0.toHorizontal(g, st).toEquatorial(g, st)
-    assert.deepEqual(new sexa.RA(eq.ra).toDMS(), [false, 23, 9, 16.641])
-    assert.deepEqual(new sexa.Angle(eq.dec).toString(4), '-6°43′11.61″')
+    assert.deepStrictEqual(new sexa.RA(eq.ra).toDMS(), [false, 23, 9, 16.641])
+    assert.deepStrictEqual(new sexa.Angle(eq.dec).toString(4), '-6°43′11.61″')
   })
 
   it('Equatorial.toGalactic', function () {
@@ -74,8 +74,8 @@ describe('#coord', function () {
       new sexa.Angle('-', 14, 43, 8.2).rad()
     )
     var g = eq.toGalactic()
-    assert.equal(new sexa.Angle(g.lon).toDegString(4), '12°.9593') // 12.9593
-    assert.equal(new sexa.Angle(g.lat).toDegString(4), '6°.0463') // 6.0463
+    assert.strictEqual(new sexa.Angle(g.lon).toDegString(4), '12°.9593') // 12.9593
+    assert.strictEqual(new sexa.Angle(g.lat).toDegString(4), '6°.0463') // 6.0463
   })
 
   it('Equatorial.toGalactic.toEquatorial', function () {
@@ -84,7 +84,7 @@ describe('#coord', function () {
       new sexa.Angle('-', 14, 43, 8.2).rad()
     )
     var eq = eq0.toGalactic().toEquatorial()
-    assert.deepEqual(new sexa.RA(eq.ra).toDMS(), [false, 17, 48, 59.74])
-    assert.deepEqual(new sexa.Angle(eq.dec).toString(4), '-14°43′8.2″')
+    assert.deepStrictEqual(new sexa.RA(eq.ra).toDMS(), [false, 17, 48, 59.74])
+    assert.deepStrictEqual(new sexa.Angle(eq.dec).toString(4), '-14°43′8.2″')
   })
 })

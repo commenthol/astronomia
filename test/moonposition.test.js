@@ -1,5 +1,6 @@
 import assert from 'assert'
-import {base, julian, moonposition} from '..'
+import float from './support/float.js'
+import { base, julian, moonposition } from '..'
 
 var R2D = 180 / Math.PI
 
@@ -8,9 +9,9 @@ describe('#moonposition', function () {
     // Example 47.a, p. 342.
     var jde = julian.CalendarGregorianToJD(1992, 4, 12)
     var res = moonposition.position(jde)
-    assert.equal((res.lon * R2D).toFixed(6), 133.162655)
-    assert.equal((res.lat * R2D).toFixed(6), -3.229126)
-    assert.equal((res.range).toFixed(1), 368409.7)
+    assert.strictEqual(float(res.lon * R2D).toFixed(6), 133.162655)
+    assert.strictEqual(float(res.lat * R2D).toFixed(6), -3.229126)
+    assert.strictEqual(float(res.range).toFixed(1), 368409.7)
   })
 
   it('parallax', function () {
@@ -18,7 +19,7 @@ describe('#moonposition', function () {
     var jde = julian.CalendarGregorianToJD(1992, 4, 12)
     var res = moonposition.position(jde)
     var π = moonposition.parallax(res.range)
-    assert.equal((π * R2D).toFixed(6), 0.991990)
+    assert.strictEqual(float(π * R2D).toFixed(6), 0.991990)
   })
 
   it('parallax 2', function () {

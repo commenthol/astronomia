@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {parallactic, sexagesimal as sexa} from '..'
+import { parallactic, sexagesimal as sexa } from '..'
 
 describe('#parallactic', function () {
   it('eclipticAtHorizon', function () {
@@ -9,9 +9,9 @@ describe('#parallactic', function () {
     var res = parallactic.eclipticAtHorizon(ε, φ, θ)
     var λ1 = res[0], λ2 = res[1], I = res[2] // eslint-disable-line one-var
 
-    assert.equal(new sexa.Angle(λ1).toString(0), '169°21′30″')
-    assert.equal(new sexa.Angle(λ2).toString(0), '349°21′30″')
-    assert.equal(new sexa.Angle(I).toString(0), '61°53′14″')
+    assert.strictEqual(new sexa.Angle(λ1).toString(0), '169°21′30″')
+    assert.strictEqual(new sexa.Angle(λ2).toString(0), '349°21′30″')
+    assert.strictEqual(new sexa.Angle(I).toString(0), '61°53′14″')
   })
 
   it('diurnalPathAtHorizon', function () {

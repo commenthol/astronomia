@@ -1,11 +1,12 @@
 /* eslint no-multi-spaces: 0 */
 
-import 'babel-polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 import assert from 'assert'
-import {format} from 'util'
-
-import {base, interpolation, sexagesimal as sexa} from '..'
+import float from './support/float.js'
+import { format } from 'util'
+import { base, interpolation, sexagesimal as sexa } from '..'
 
 describe('#interpolation', function () {
   describe('Len3', function () {
@@ -22,7 +23,7 @@ describe('#interpolation', function () {
       }
       var n = 4.35 / 24
       var y = d3.interpolateN(n)
-      assert.equal(y.toFixed(6), 0.876125)
+      assert.strictEqual(float(y).toFixed(6), 0.876125)
     })
 
     it('interpolateX', function () {
@@ -38,7 +39,7 @@ describe('#interpolation', function () {
       }
       var x = 8 + new sexa.Time(false, 4, 21, 0).day() // 8th day at 4:21
       var y = d3.interpolateX(x)
-      assert.equal(y.toFixed(6), 0.876125)
+      assert.strictEqual(float(y).toFixed(6), 0.876125)
     })
 
     it('extremum', function () {
@@ -55,23 +56,23 @@ describe('#interpolation', function () {
       var res = d3.extremum()
       var x = res[0]
       var y = res[1]
-      assert.equal(y.toFixed(7), 1.3812030) // distance: 1.3812030 AU
-      assert.equal(x.toFixed(4), 17.5864)   // date:     17.5864 TD
+      assert.strictEqual(float(y).toFixed(7), 1.3812030) // distance: 1.3812030 AU
+      assert.strictEqual(float(x).toFixed(4), 17.5864)   // date:     17.5864 TD
     })
 
     it('extremum #2', function () {
       // Example 3.d, p. 26.0
       // y = 3 + 2x - 3x^2
       try {
-        var d3 = new interpolation.Len3(-1, 1, [ -2, 3, 2 ])
+        var d3 = new interpolation.Len3(-1, 1, [-2, 3, 2])
       } catch (err) {
         assert.ok(!err, err)
       }
       var res = d3.extremum()
       var x = res[0]
       var y = res[1]
-      assert.equal(x.toFixed(4), 0.3333)
-      assert.equal(y.toFixed(4), 3.3333)
+      assert.strictEqual(float(x).toFixed(4), 0.3333)
+      assert.strictEqual(float(y).toFixed(4), 3.3333)
     })
 
     it('zero', function () {
@@ -94,9 +95,9 @@ describe('#interpolation', function () {
       var res = base.modf(x)
       var i = res[0]
       var frac = res[1]
-      assert.equal(x.toFixed(5), 26.79873) // February 26.79873
+      assert.strictEqual(float(x).toFixed(5), 26.79873) // February 26.79873
       var s = format('February %s, at %s', i, new sexa.Time(frac * 24 * 3600).toString(0))
-      assert.equal(s, 'February 26, at 19ʰ10ᵐ11ˢ')
+      assert.strictEqual(s, 'February 26, at 19ʰ10ᵐ11ˢ')
     })
 
     it('zero strong', function () {
@@ -110,7 +111,7 @@ describe('#interpolation', function () {
       } catch (err) {
         assert.ok(!err, err)
       }
-      assert.equal(x.toFixed(12), -0.720759220056)
+      assert.strictEqual(float(x).toFixed(12), -0.720759220056)
     })
   })
 
@@ -134,22 +135,22 @@ describe('#interpolation', function () {
       } catch (err) {
         assert.ok(!err, err)
       }
-      assert.equal(new sexa.Angle(y).toString(3), '0°54′13.369″')
+      assert.strictEqual(new sexa.Angle(y).toString(3), '0°54′13.369″')
     })
 
     it('extremum', function () {
       // Example 3.d, p. 26.0
       // y = 3 + 2x - 3x^2
       try {
-        var d5 = new interpolation.Len5(-2, 2, [ -13, -2, 3, 2, -5 ])
+        var d5 = new interpolation.Len5(-2, 2, [-13, -2, 3, 2, -5])
       } catch (err) {
         assert.ok(!err, err)
       }
       var res = d5.extremum()
       var x = res[0]
       var y = res[1]
-      assert.equal(x.toFixed(4), 0.3333)
-      assert.equal(y.toFixed(4), 3.3333)
+      assert.strictEqual(float(x).toFixed(4), 0.3333)
+      assert.strictEqual(float(y).toFixed(4), 3.3333)
     })
 
     it('zero', function () {
@@ -170,12 +171,12 @@ describe('#interpolation', function () {
         assert.ok(!err, err)
       }
       // 1988 January 26.638587
-      assert.equal(z.toFixed(6), 26.638587)
+      assert.strictEqual(float(z).toFixed(6), 26.638587)
       var a = base.modf(z)
       var zInt = a[0]
       var zFrac = a[1]
       var s = format('1988 January %s at %s TD', zInt, new sexa.Time(zFrac * 24 * 3600).toString(0))
-      assert.equal(s, '1988 January 26 at 15ʰ19ᵐ34ˢ TD')
+      assert.strictEqual(s, '1988 January 26 at 15ʰ19ᵐ34ˢ TD')
 
       // compare result to that from just three central values
       try {
@@ -186,8 +187,8 @@ describe('#interpolation', function () {
       }
       var dz = z - z3
 
-      assert.equal(dz.toFixed(6), 0.000753) // day
-      assert.equal((dz * 24 * 60).toFixed(1), 1.1) // minute
+      assert.strictEqual(float(dz).toFixed(6), 0.000753) // day
+      assert.strictEqual(float(dz * 24 * 60).toFixed(1), 1.1) // minute
     })
   })
 
@@ -204,7 +205,7 @@ describe('#interpolation', function () {
     } catch (err) {
       assert.ok(!err, err)
     }
-    assert.equal(new sexa.RA(half).toString(3), '10ʰ25ᵐ40.001ˢ')
+    assert.strictEqual(new sexa.RA(half).toString(3), '10ʰ25ᵐ40.001ˢ')
   })
 
   it('lagrange', function () {
@@ -218,9 +219,9 @@ describe('#interpolation', function () {
       [33.05, 0.5453707057]
     ]
     // 10 significant digits in input, no more than 10 expected in output
-    assert.equal(interpolation.lagrange(30, table).toFixed(10), 0.5000000000)
-    assert.equal(interpolation.lagrange(0, table).toFixed(10),  0.0000512249)
-    assert.equal(interpolation.lagrange(90, table).toFixed(10), 0.9999648100)
+    assert.strictEqual(float(interpolation.lagrange(30, table)).toFixed(10), 0.5000000000)
+    assert.strictEqual(float(interpolation.lagrange(0, table)).toFixed(10),  0.0000512249)
+    assert.strictEqual(float(interpolation.lagrange(90, table)).toFixed(10), 0.9999648100)
   })
 
   it('lagrangePoly', function () {
@@ -232,12 +233,12 @@ describe('#interpolation', function () {
       [6, 15]
     ]
     var p = interpolation.lagrangePoly(table)
-    var exp = [ -87 / 5, 69 / 5, -13 / 5, 1 / 5 ]
+    var exp = [-87 / 5, 69 / 5, -13 / 5, 1 / 5]
 
     p.forEach(function (c, i) {
-      assert.equal((c).toFixed(2), exp[i])
+      assert.strictEqual(float(c).toFixed(2), exp[i])
     })
-    assert.equal(base.horner(1, p), -6) // result at x=1
+    assert.strictEqual(base.horner(1, p), -6) // result at x=1
   })
 
   it('linear', function () {
@@ -245,14 +246,14 @@ describe('#interpolation', function () {
     t.forEach(function (x) {
       it('' + x, function () {
         var y = interpolation.linear(x, 0, 1, [0, 1])
-        assert.equal(y, x)
+        assert.strictEqual(y, x)
       })
     })
 
     t.forEach(function (x) {
       it(x + ' #2', function () {
         var y = interpolation.linear(x, 0, 1, [1, 1.25, 1.5, 1.75, 2])
-        assert.equal(y, x + 1)
+        assert.strictEqual(y, x + 1)
       })
     })
   })

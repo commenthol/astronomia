@@ -25,7 +25,7 @@ const planets = [
 ]
 
 // VSOP planet extension names
-const exts = [ 'mer', 'ven', 'ear', 'mar', 'jup', 'sat', 'ura', 'nep' ]
+const exts = ['mer', 'ven', 'ear', 'mar', 'jup', 'sat', 'ura', 'nep']
 
 const toFloat = function (f) {
   return parseFloat(f, 10)

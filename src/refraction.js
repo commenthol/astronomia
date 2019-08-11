@@ -11,7 +11,7 @@
  * 10°C, and yellow light.
  */
 import sexa from './sexagesimal'
-const {sin, tan} = Math
+const { sin, tan } = Math
 const D2R = Math.PI / 180
 
 const gt15true1 = new sexa.Angle(false, 0, 0, 58.294).rad()

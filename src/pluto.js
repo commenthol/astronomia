@@ -25,7 +25,7 @@ export function heliocentric (jde) {
   const J = 34.35 + 3034.9057 * T
   const S = 50.08 + 1222.1138 * T
   const P = 238.96 + 144.96 * T
-  for (let i in t37) {
+  for (const i in t37) {
     const t = t37[i]
     const [sα, cα] = base.sincos((t.i * J + t.j * S + t.k * P) * Math.PI / 180)
     l += t.lA * sα + t.lB * cα
@@ -35,7 +35,7 @@ export function heliocentric (jde) {
   l = (l + 238.958116 + 144.96 * T) * Math.PI / 180
   b = (b - 3.908239) * Math.PI / 180
   r += 40.7241346
-  return {lon: l, lat: b, range: r}
+  return { lon: l, lat: b, range: r }
 }
 
 /**
@@ -45,15 +45,14 @@ export function astrometric (jde, earth) {
   const sε = base.SOblJ2000
   const cε = base.COblJ2000
   const f = function (jde) {
-    let x, y, z
-    const {lon, lat, range} = heliocentric(jde)
+    const { lon, lat, range } = heliocentric(jde)
     const [sl, cl] = base.sincos(lon)
     const [sb, cb] = base.sincos(lat)
     // (37.1) p. 264
-    x = range * cl * cb
-    y = range * (sl * cb * cε - sb * sε)
-    z = range * (sl * cb * sε + sb * cε)
-    return {x, y, z}
+    const x = range * cl * cb
+    const y = range * (sl * cb * cε - sb * sε)
+    const z = range * (sl * cb * sε + sb * cε)
+    return { x, y, z }
   }
   const c = elliptic.astrometricJ2000(f, jde, earth) // eslint-disable-line no-unused-vars
   return new base.Coord(c.ra, c.dec)

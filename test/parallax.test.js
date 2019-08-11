@@ -1,5 +1,6 @@
 import assert from 'assert'
-import {parallax, base, julian, moonposition, sidereal, globe, sexagesimal as sexa} from '..'
+import float from './support/float.js'
+import { parallax, base, julian, moonposition, sidereal, globe, sexagesimal as sexa } from '..'
 
 var D2R = Math.PI / 180
 var R2D = 180 / Math.PI
@@ -10,7 +11,7 @@ describe('#parallax', function () {
   it('horizontal', function () {
     // Example 40.a, p. 280
     var π = parallax.horizontal(0.37276) // in radians
-    assert.equal((π * RAD2SEC).toFixed(3), 23.592)
+    assert.strictEqual(float(π * RAD2SEC).toFixed(3), 23.592)
   })
 
   it('horizontal from moonposition', function () {
@@ -46,8 +47,8 @@ describe('#parallax', function () {
       var a = parallax.topocentric(marsCoord, ρsφʹ, ρcφʹ, lon, jd)
       var α = a.ra
       var δ = a.dec
-      assert.equal(new sexa.RA(α).toString(2), '22ʰ38ᵐ8.54ˢ')
-      assert.equal(new sexa.Angle(δ).toString(1), '-15°46′30″')
+      assert.strictEqual(new sexa.RA(α).toString(2), '22ʰ38ᵐ8.54ˢ')
+      assert.strictEqual(new sexa.Angle(δ).toString(1), '-15°46′30″')
     })
 
     it('topocentric2', function () {
@@ -55,8 +56,8 @@ describe('#parallax', function () {
       var a = parallax.topocentric2(marsCoord, ρsφʹ, ρcφʹ, lon, jd)
       var Δα = a.ra
       var Δδ = a.dec
-      assert.equal((Δα * RAD2SEC / 15).toFixed(2), 1.29) // 1.29 sec of RA
-      assert.equal((Δδ * RAD2SEC).toFixed(1), -14.1) // -14.1 sec
+      assert.strictEqual(float(Δα * RAD2SEC / 15).toFixed(2), 1.29) // 1.29 sec of RA
+      assert.strictEqual(float(Δδ * RAD2SEC).toFixed(1), -14.1) // -14.1 sec
     })
 
     it('topocentric3', function () {

@@ -134,7 +134,7 @@ export class Elements {
       const x = r * a * Math.sin(A + this.argP + ν)
       const y = r * b * Math.sin(B + this.argP + ν)
       const z = r * c * Math.sin(C + this.argP + ν)
-      return {x, y, z}
+      return { x, y, z }
     }
     return astrometricJ2000(f, jde, earth)
   }
@@ -161,7 +161,7 @@ export function astrometricJ2000 (f, jde, earth) { // (f func(float64)  (x, y, z
 
   function fn (τ = 0) {
     // (33.10) p. 229
-    const {x, y, z} = f(jde - τ)
+    const { x, y, z } = f(jde - τ)
     ξ = X + x
     η = Y + y
     ζ = Z + z
