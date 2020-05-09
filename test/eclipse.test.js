@@ -154,4 +154,26 @@ describe('#eclipse', function () {
     // Partial phase semiduration:     98 min
     // Penumbral semiduration:        153 min
   })
+
+  describe('issue14', function () {
+    it('eclipse.solar shall not return undefined', function () {
+      const decimalYear = 2019.0900790352
+      const solar = eclipse.solar(decimalYear)
+      assert.strictEqual(typeof solar, 'object')
+      assert.strictEqual(solar.type, eclipse.TYPE.None)
+    })
+
+    it('eclipse.lunar shall not throw', function () {
+      const decimalYear = 2019.0900790352
+      const lunar = eclipse.lunar(decimalYear)
+      assert.ok(lunar)
+    })
+
+    it('eclipse.lunar shall not return undefined', function () {
+      const decimalYear = 2019.9
+      const lunar = eclipse.lunar(decimalYear)
+      assert.strictEqual(typeof lunar, 'object')
+      assert.strictEqual(lunar.type, eclipse.TYPE.None)
+    })
+  })
 })
