@@ -1,6 +1,6 @@
 all: build
 
-test: v4. v6. v8. v9.
+test: v12. v14.
 
 v%:
 	n $@ \
@@ -18,7 +18,7 @@ build: clean lib/
 
 lib/: src/*.js
 	npm run lint \
-	&& npm run transpile \
+	&& npm run build \
 	&& npm run test
 
 clean:

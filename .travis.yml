@@ -2,9 +2,8 @@ sudo: false
 language: node_js
 
 node_js:
-  - 6
-  - 8
-  - 10
+  - 12
+  - 14
   - node
 
 install:
@@ -14,4 +13,4 @@ before_script:
   - npm run build
 
 script:
-  - npm test
+  - SLOWTESTS=1 npm test

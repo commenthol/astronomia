@@ -20,7 +20,7 @@ const g = function (k, jm, c1, c2) { // (k, jm, c1, c2 float64)  (eclipse bool, 
   const F = base.horner(T, 160.7108 * p, 390.67050284 * p / ck,
     -0.0016118 * p, -0.00000227 * p, 0.000000011 * p)
   if (Math.abs(Math.sin(F)) > 0.36) {
-    return // no eclipse
+    return [false] // no eclipse
   }
   const eclipse = true
   const E = base.horner(T, 1, -0.002516, -0.0000074)
@@ -209,7 +209,7 @@ export function lunar (year) { // (year float64)  (eclipseType int, jdeMax, γ, 
   const [e, jdeMax, γ, u, Mʹ] = g(snap(year, 0.5),
     moonphase.meanFull(year), -0.4065, 0.1727)
   if (!e) {
-    return { type: eclipseType }// no eclipse
+    return { type: eclipseType } // no eclipse
   }
   const ρ = 1.2848 + u
   const σ = 0.7403 - u
@@ -223,7 +223,7 @@ export function lunar (year) { // (year float64)  (eclipseType int, jdeMax, γ, 
   } else {
     mag = (1.5573 + u - aγ) / 0.545 // (54.4) p. 382
     if (mag < 0) {
-      return // no eclipse
+      return { type: eclipseType } // no eclipse
     }
     eclipseType = TYPE.Penumbral
   }
