@@ -6,6 +6,8 @@ curl=curl
 cwd=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 target=$cwd/../attic
 
+# set -x
+
 test ! -d $target && mkdir -p $target
 
 ## get filename
@@ -30,20 +32,25 @@ function vsop_conv () {
 }
 
 ## DeltaT data
-# primary: ftp://maia.usno.navy.mil
+# primary:   ftp://maia.usno.navy.mil
 # secondary: ftp://toshi.nofs.navy.mil
+# iers:      ftp://ftp.iers.org/products/eop/rapid/standard
+# As of https://www.usno.navy.mil/USNO server maia.usno.navy.mil is being modernized till summer 2020
 function deltat () {
   local server="http://maia.usno.navy.mil/ser7"
-  local urls=$(cat << EOS
-    $server/deltat.preds
-    $server/deltat.data
-    $server/historic_deltat.data
-    $server/finals2000A.data
-    $server/tai-utc.dat
-EOS
-)
+  local server2="ftp://ftp.iers.org/products/eop/rapid/standard"
+  local urls=(
+    $server2/finals2000A.data
+    # $server/deltat.preds
+    # $server/deltat.data
+    # $server/historic_deltat.data
+    # $server/finals2000A.data
+    # $server/tai-utc.dat
+  )
+
   for url in $urls; do
     f=$(file $url)
+    echo downloading $url
     $curl $url > $target/$f
   done
 }
