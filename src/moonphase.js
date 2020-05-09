@@ -92,7 +92,7 @@ export function newMoon (year) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-export function first (year, month, day) {
+export function first (year) {
   const m = new Mp(year, 0.25)
   return mean(m.T) + m.flc() + m.w() + m.a()
 }
@@ -103,7 +103,7 @@ export function first (year, month, day) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-export function full (year, month, day) {
+export function full (year) {
   const m = new Mp(year, 0.5)
   return mean(m.T) + m.nfc(fc) + m.a()
 }
@@ -114,7 +114,7 @@ export function full (year, month, day) {
  * @param {Number} year - decimal year
  * @returns {Number} jde
  */
-export function last (year, month, day) {
+export function last (year) {
   const m = new Mp(year, 0.75)
   return mean(m.T) + m.flc() - m.w() + m.a()
 }
