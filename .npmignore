@@ -9,3 +9,5 @@ tmp/
 *.tgz
 .*
 Makefile
+package-lock.json
+yarn.lock

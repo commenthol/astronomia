@@ -1,15 +1,6 @@
-/* eslint one-var: 0 */
-/* global describe, it */
-
-var assert = require('assert')
-
-var base = require('..').base
-var julian = require('..').julian
-var moonposition = require('..').moonposition
-var parallax = require('..').parallax
-var sidereal = require('..').sidereal
-var sexa = require('..').sexagesimal
-var globe = require('..').globe
+import assert from 'assert'
+import float from './support/float.js'
+import { parallax, base, julian, moonposition, sidereal, globe, sexagesimal as sexa } from '..'
 
 var D2R = Math.PI / 180
 var R2D = 180 / Math.PI
@@ -20,7 +11,7 @@ describe('#parallax', function () {
   it('horizontal', function () {
     // Example 40.a, p. 280
     var π = parallax.horizontal(0.37276) // in radians
-    assert.equal((π * RAD2SEC).toFixed(3), 23.592)
+    assert.strictEqual(float(π * RAD2SEC).toFixed(3), 23.592)
   })
 
   it('horizontal from moonposition', function () {
@@ -56,8 +47,8 @@ describe('#parallax', function () {
       var a = parallax.topocentric(marsCoord, ρsφʹ, ρcφʹ, lon, jd)
       var α = a.ra
       var δ = a.dec
-      assert.equal(new sexa.RA(α).toString(2), '22ʰ38ᵐ8.54ˢ')
-      assert.equal(new sexa.Angle(δ).toString(1), '-15°46′30″')
+      assert.strictEqual(new sexa.RA(α).toString(2), '22ʰ38ᵐ8.54ˢ')
+      assert.strictEqual(new sexa.Angle(δ).toString(1), '-15°46′30″')
     })
 
     it('topocentric2', function () {
@@ -65,18 +56,20 @@ describe('#parallax', function () {
       var a = parallax.topocentric2(marsCoord, ρsφʹ, ρcφʹ, lon, jd)
       var Δα = a.ra
       var Δδ = a.dec
-      assert.equal((Δα * RAD2SEC / 15).toFixed(2), 1.29) // 1.29 sec of RA
-      assert.equal((Δδ * RAD2SEC).toFixed(1), -14.1) // -14.1 sec
+      assert.strictEqual(float(Δα * RAD2SEC / 15).toFixed(2), 1.29) // 1.29 sec of RA
+      assert.strictEqual(float(Δδ * RAD2SEC).toFixed(1), -14.1) // -14.1 sec
     })
 
     it('topocentric3', function () {
       // same test case as example 40.a, p. 280
       // reference result
       var a = parallax.topocentric(marsCoord, ρsφʹ, ρcφʹ, lon, jd)
-      var αʹ = a.ra, δʹ1 = a.dec
+      var αʹ = a.ra
+      var δʹ1 = a.dec
       // result to test
       a = parallax.topocentric3(marsCoord, ρsφʹ, ρcφʹ, lon, jd)
-      var Hʹ = a[0], δʹ3 = a[1]
+      var Hʹ = a[0]
+      var δʹ3 = a[1]
       // test
       var θ0 = new sexa.Time(sidereal.apparent(jd)).rad()
       var err = Math.abs(base.pmod(Hʹ - (θ0 - lon - αʹ) + 1, 2 * Math.PI) - 1)
@@ -98,7 +91,9 @@ describe('#parallax', function () {
       new sexa.Angle(false, 209, 46, 7.9).rad(),
       new sexa.Angle(false, 0, 59, 27.7).rad()
     )
-    var λʹ = a[0], βʹ = a[1], sʹ = a[2]
+    var λʹ = a[0]
+    var βʹ = a[1]
+    var sʹ = a[2]
     var λʹa = new sexa.Angle(false, 181, 48, 5).rad()
     var βʹa = new sexa.Angle(false, 1, 29, 7.1).rad()
     var sʹa = new sexa.Angle(false, 0, 16, 25.5).rad()

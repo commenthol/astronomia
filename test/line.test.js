@@ -1,10 +1,6 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var julian = require('..').julian
-var line = require('..').line
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import float from './support/float.js'
+import { julian, line, sexagesimal as sexa } from '..'
 
 describe('#line', function () {
   it('time', function () {
@@ -32,7 +28,7 @@ describe('#line', function () {
     )
 
     var date = new julian.CalendarGregorian().fromJD(jd)
-    assert.equal(date.toISOString(), '1994-10-01T05:21:33.530Z')
+    assert.strictEqual(date.toISOString(), '1994-10-01T05:21:33.530Z')
   })
 
   it('angle', function () {
@@ -45,8 +41,8 @@ describe('#line', function () {
     var dζ = new sexa.Angle(true, 1, 56, 33.3).rad()
 
     var n = line.angle(rδ, dδ, rε, dε, rζ, dζ)
-    assert.equal((n * 180 / Math.PI).toFixed(4), 172.4830) // degrees
-    assert.equal(new sexa.Angle(n).toString(0), '172°28′59″')
+    assert.strictEqual(float(n * 180 / Math.PI).toFixed(4), 172.4830) // degrees
+    assert.strictEqual(new sexa.Angle(n).toString(0), '172°28′59″')
   })
 
   it('error', function () {
@@ -60,8 +56,8 @@ describe('#line', function () {
 
     var ω = line.error(rζ, dζ, rδ, dδ, rε, dε)
     var e = new sexa.Angle(ω)
-    assert.equal(e.toDegString(6), '0°.089876')
-    assert.equal((ω * 180 / Math.PI * 3600).toFixed(0), 324)
+    assert.strictEqual(e.toDegString(6), '0°.089876')
+    assert.strictEqual(float(ω * 180 / Math.PI * 3600).toFixed(0), 324)
   })
 
   it('angleError()', function () {
@@ -76,7 +72,7 @@ describe('#line', function () {
     var res = line.angleError(rδ, dδ, rε, dε, rζ, dζ)
     var n = res[0]
     var ω = res[1]
-    assert.equal(new sexa.Angle(n).toString(0), '7°31′1″')
-    assert.equal(new sexa.Angle(ω).toString(0), '-0°5′24″')
+    assert.strictEqual(new sexa.Angle(n).toString(0), '7°31′1″')
+    assert.strictEqual(new sexa.Angle(ω).toString(0), '-0°5′24″')
   })
 })

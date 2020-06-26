@@ -1,58 +1,57 @@
-module.exports = {
-  angle: require('./angle'),
-  apparent: require('./apparent'),
-  apsis: require('./apsis'),
-  base: require('./base'),
-  binary: require('./binary'),
-  coord: require('./coord'),
-  conjunction: require('./conjunction'),
-  circle: require('./circle'),
-  deltat: require('./deltat'),
-  elementequinox: require('./elementequinox'),
-  elliptic: require('./elliptic'),
-  eclipse: require('./eclipse'),
-  eqtime: require('./eqtime'),
-  fit: require('./fit'),
-  globe: require('./globe'),
-  illum: require('./illum'),
-  interpolation: require('./interpolation'),
-  iterate: require('./iterate'),
-  jm: require('./jm'),
-  julian: require('./julian'),
-  jupiter: require('./jupiter'),
-  jupitermoons: require('./jupitermoons'),
-  kepler: require('./kepler'),
-  line: require('./line'),
-  nearparabolic: require('./nearparabolic'),
-  node: require('./node'),
-  nutation: require('./nutation'),
-  mars: require('./mars'),
-  moon: require('./moon'),
-  moonillum: require('./moonillum'),
-  moonmaxdec: require('./moonmaxdec'),
-  moonnode: require('./moonnode'),
-  moonphase: require('./moonphase'),
-  moonposition: require('./moonposition'),
-  parabolic: require('./parabolic'),
-  parallax: require('./parallax'),
-  parallactic: require('./parallactic'),
-  perihelion: require('./perihelion'),
-  planetary: require('./planetary'),
-  planetposition: require('./planetposition'),
-  planetelements: require('./planetelements'),
-  pluto: require('./pluto'),
-  precess: require('./precess'),
-  refraction: require('./refraction'),
-  rise: require('./rise'),
-  saturnmoons: require('./saturnmoons'),
-  saturnring: require('./saturnring'),
-  sexagesimal: require('./sexagesimal'),
-  sidereal: require('./sidereal'),
-  solar: require('./solar'),
-  solardisk: require('./solardisk'),
-  solarxyz: require('./solarxyz'),
-  solstice: require('./solstice'),
-  stellar: require('./stellar'),
-  sundial: require('./sundial'),
-  sunrise: require('./sunrise')
-}
+export { default as angle } from './angle'
+export { default as apparent } from './apparent'
+export { default as apsis } from './apsis'
+export { default as base } from './base'
+export { default as binary } from './binary'
+export { default as coord } from './coord'
+export { default as conjunction } from './conjunction'
+export { default as circle } from './circle'
+export { default as data } from '../data'
+export { default as deltat } from './deltat'
+export { default as elementequinox } from './elementequinox'
+export { default as elliptic } from './elliptic'
+export { default as eclipse } from './eclipse'
+export { default as eqtime } from './eqtime'
+export { default as fit } from './fit'
+export { default as globe } from './globe'
+export { default as illum } from './illum'
+export { default as interpolation } from './interpolation'
+export { default as iterate } from './iterate'
+export { default as jm } from './jm'
+export { default as julian } from './julian'
+export { default as jupiter } from './jupiter'
+export { default as jupitermoons } from './jupitermoons'
+export { default as kepler } from './kepler'
+export { default as line } from './line'
+export { default as nearparabolic } from './nearparabolic'
+export { default as node } from './node'
+export { default as nutation } from './nutation'
+export { default as mars } from './mars'
+export { default as moon } from './moon'
+export { default as moonillum } from './moonillum'
+export { default as moonmaxdec } from './moonmaxdec'
+export { default as moonnode } from './moonnode'
+export { default as moonphase } from './moonphase'
+export { default as moonposition } from './moonposition'
+export { default as parabolic } from './parabolic'
+export { default as parallax } from './parallax'
+export { default as parallactic } from './parallactic'
+export { default as perihelion } from './perihelion'
+export { default as planetary } from './planetary'
+export { default as planetposition } from './planetposition'
+export { default as planetelements } from './planetelements'
+export { default as pluto } from './pluto'
+export { default as precess } from './precess'
+export { default as refraction } from './refraction'
+export { default as rise } from './rise'
+export { default as saturnmoons } from './saturnmoons'
+export { default as saturnring } from './saturnring'
+export { default as sexagesimal } from './sexagesimal'
+export { default as sidereal } from './sidereal'
+export { default as solar } from './solar'
+export { default as solardisk } from './solardisk'
+export { default as solarxyz } from './solarxyz'
+export { default as solstice } from './solstice'
+export { default as stellar } from './stellar'
+export { default as sundial } from './sundial'
+export { default as sunrise } from './sunrise'

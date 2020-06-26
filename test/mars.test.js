@@ -1,19 +1,12 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var mars = require('..').mars
-var planetposition = require('..').planetposition
-
-function toFixed (num, pos) {
-  return parseFloat(num.toFixed(pos), 10)
-}
+import assert from 'assert'
+import float from './support/float.js'
+import { mars, data, planetposition } from '..'
 
 describe('#mars', function () {
   it('physical()', function () {
   // Example 42.a, p. 291
-    var e = new planetposition.Planet(planetposition.earth)
-    var m = new planetposition.Planet(planetposition.mars)
+    var e = new planetposition.Planet(data.earth)
+    var m = new planetposition.Planet(data.mars)
     var re = mars.physical(2448935.500683, e, m)
     var DE = re[0]
     var DS = re[1]
@@ -24,25 +17,25 @@ describe('#mars', function () {
     var k = re[6]
     var q = re[7]
     var res = [
-      toFixed(DE * 180 / Math.PI, 2),
-      toFixed(DS * 180 / Math.PI, 2),
-      toFixed(ω * 180 / Math.PI, 2),
-      toFixed(P * 180 / Math.PI, 2),
-      toFixed(Q * 180 / Math.PI, 2),
-      toFixed(d * 180 / Math.PI * 60 * 60, 2), // display as arc sec
-      toFixed(k, 4),
-      toFixed(q * 180 / Math.PI * 60 * 60, 2) // display as arc sec
+      float(DE * 180 / Math.PI).toFixed(2),
+      float(DS * 180 / Math.PI).toFixed(2),
+      float(ω * 180 / Math.PI).toFixed(2),
+      float(P * 180 / Math.PI).toFixed(2),
+      float(Q * 180 / Math.PI).toFixed(2),
+      float(d * 180 / Math.PI * 60 * 60).toFixed(2), // display as arc sec
+      float(k).toFixed(4),
+      float(q * 180 / Math.PI * 60 * 60).toFixed(2) // display as arc sec
     ]
     var exp = [
       +12.44, // DE
-      -2.76,  // DS
+      -2.76, // DS
       111.55, // ω
       347.64, // P
       279.91, // Q
-      10.75,  // d
+      10.75, // d
       0.9012, // k
-      1.06    // q
+      1.06 // q
     ]
-    assert.deepEqual(res, exp)
+    assert.deepStrictEqual(res, exp)
   })
 })

@@ -13,8 +13,6 @@
  * and divergence.
  */
 
-const M = exports
-
 /**
  * decimalPlaces iterates to a fixed number of decimal places.
  *
@@ -28,10 +26,10 @@ const M = exports
  * @param {Number} maxIterations - (int)
  * @returns {Number}
  */
-M.decimalPlaces = function (better, start, places, maxIterations) {
-  let d = Math.pow(10, -places)
-  for (var i = 0; i < maxIterations; i++) {
-    let n = better(start)
+export function decimalPlaces (better, start, places, maxIterations) {
+  const d = Math.pow(10, -places)
+  for (let i = 0; i < maxIterations; i++) {
+    const n = better(start)
     if (Math.abs(n - start) < d) {
       return n
     }
@@ -54,9 +52,9 @@ M.decimalPlaces = function (better, start, places, maxIterations) {
  * @param {Number} maxIterations - (int)
  * @returns {Number}
  */
-M.fullPrecision = function (better, start, maxIterations) {
-  for (var i = 0; i < maxIterations; i++) {
-    let n = better(start)
+export function fullPrecision (better, start, maxIterations) {
+  for (let i = 0; i < maxIterations; i++) {
+    const n = better(start)
     if (Math.abs((n - start) / n) < 1e-15) {
       return n
     }
@@ -76,12 +74,12 @@ M.fullPrecision = function (better, start, maxIterations) {
  * @param {Number} upper - (float)
  * @returns {Number}
  */
-M.binaryRoot = function (f, lower, upper) {
+export function binaryRoot (f, lower, upper) {
   let yLower = f(lower)
-  var mid = 0
-  for (var j = 0; j < 52; j++) {
+  let mid = 0
+  for (let j = 0; j < 52; j++) {
     mid = (lower + upper) / 2
-    let yMid = f(mid)
+    const yMid = f(mid)
     if (yMid === 0) {
       break
     }
@@ -97,4 +95,10 @@ M.binaryRoot = function (f, lower, upper) {
 
 function signbit (v) {
   return (v < 0)
+}
+
+export default {
+  decimalPlaces,
+  fullPrecision,
+  binaryRoot
 }

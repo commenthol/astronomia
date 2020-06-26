@@ -1,11 +1,6 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var base = require('..').base
-var julian = require('..').julian
-var planetary = require('..').planetary
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import float from './support/float.js'
+import { planetary, base, julian, sexagesimal as sexa } from '..'
 
 describe('#planetary', function () {
   it('mercuryInfConj()', function () {
@@ -13,16 +8,16 @@ describe('#planetary', function () {
     var j = planetary.mercuryInfConj(1993.75)
     // console.log("0.000\n", j)
     var d = new julian.Calendar().fromJD(j).toDate().toISOString()
-    assert.equal(j.toFixed(3), 2449297.645)
-    assert.equal(d, '1993-11-06T03:28:41.609Z')
+    assert.strictEqual(float(j).toFixed(3), 2449297.645)
+    assert.strictEqual(d, '1993-11-06T03:28:41.609Z')
   })
 
   it('saturnConj()', function () {
     // Example 36.b, p. 252
     var j = planetary.saturnConj(2125.5)
     var d = new julian.Calendar().fromJD(j).toDate().toISOString()
-    assert.equal(j.toFixed(3), 2497437.904)
-    assert.equal(d, '2125-08-26T09:41:05.648Z')
+    assert.strictEqual(float(j).toFixed(3), 2497437.904)
+    assert.strictEqual(d, '2125-08-26T09:41:05.648Z')
   })
 
   it('mercuryWestElongation()', function () {
@@ -31,18 +26,18 @@ describe('#planetary', function () {
     var j = res[0]
     var e = res[1]
     var d = new julian.Calendar().fromJDE(j).toDate().toISOString()
-    assert.equal(j.toFixed(2), 2449314.14)
-    assert.equal(d, '1993-11-22T15:18:35.044Z')
-    assert.equal((e * 180 / Math.PI).toFixed(4), 19.7506 /* deg */)
-    assert.equal(new sexa.Angle(e).toString(0), '19°45′2″')
+    assert.strictEqual(float(j).toFixed(2), 2449314.14)
+    assert.strictEqual(d, '1993-11-22T15:18:35.044Z')
+    assert.strictEqual(float(e * 180 / Math.PI).toFixed(4), 19.7506 /* deg */)
+    assert.strictEqual(new sexa.Angle(e).toString(0), '19°45′2″')
   })
 
   it('marsStation2()', function () {
     // Example 36.d, p. 254
     var j = planetary.marsStation2(1997.3)
     var d = new julian.Calendar().fromJDE(j).toDate().toISOString()
-    assert.equal(j.toFixed(3), 2450566.255)
-    assert.equal(d, '1997-04-27T18:06:34.275Z')
+    assert.strictEqual(float(j).toFixed(3), 2450566.255)
+    assert.strictEqual(d, '1997-04-27T18:06:34.275Z')
   })
 
   function Tc (f, jNom, hour) {
@@ -65,7 +60,7 @@ describe('#planetary', function () {
     td.forEach(function (d, i) {
       it('' + i, function () {
         var f = base.modf(0.5 + d.f(base.JDEToJulianYear(d.jNom)))[1]
-        assert.equal(Math.floor(f * 24 + 0.5), d.hour)
+        assert.strictEqual(Math.floor(f * 24 + 0.5), d.hour)
       })
     })
   })

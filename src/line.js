@@ -8,10 +8,8 @@
  * Line: Chapter 19, Bodies in Straight Line
  */
 
-const base = require('./base')
-const interp = require('./interpolation')
-
-const M = exports
+import base from './base'
+import interp from './interpolation'
 
 /**
  * Time computes the time at which a moving body is on a straight line (great
@@ -34,18 +32,18 @@ const M = exports
  * @param {Array} t5 - time in Julian Days
  * @returns {Number} time of alignment in Julian Days
  */
-M.time = function (r1, d1, r2, d2, r3, d3, t1, t5) { // (r1, d1, r2, d2 float64, r3, d3 []float64, t1, t5 float64)  (float64, error)
+export function time (r1, d1, r2, d2, r3, d3, t1, t5) { // (r1, d1, r2, d2 float64, r3, d3 []float64, t1, t5 float64)  (float64, error)
   if (r3.length !== 5 || d3.length !== 5) {
     throw new Error('r3, d3 must be length 5')
   }
-  let gc = new Array(5)
+  const gc = new Array(5)
   r3.forEach((r3i, i) => {
     // (19.1) p. 121
     gc[i] = Math.tan(d1) * Math.sin(r2 - r3i) +
       Math.tan(d2) * Math.sin(r3i - r1) +
       Math.tan(d3[i]) * Math.sin(r1 - r2)
   })
-  let l5 = new interp.Len5(t1, t5, gc)
+  const l5 = new interp.Len5(t1, t5, gc)
   return l5.zero(false)
 }
 
@@ -58,12 +56,12 @@ M.time = function (r1, d1, r2, d2, r3, d3, t1, t5) { // (r1, d1, r2, d2 float64,
  *
  * Algorithm by Meeus.
  */
-M.angle = function (r1, d1, r2, d2, r3, d3) { // (r1, d1, r2, d2, r3, d3 float64)  float64
-  let [sd2, cd2] = base.sincos(d2)
-  let [sr21, cr21] = base.sincos(r2 - r1)
-  let [sr32, cr32] = base.sincos(r3 - r2)
-  let C1 = Math.atan2(sr21, cd2 * Math.tan(d1) - sd2 * cr21)
-  let C2 = Math.atan2(sr32, cd2 * Math.tan(d3) - sd2 * cr32)
+export function angle (r1, d1, r2, d2, r3, d3) { // (r1, d1, r2, d2, r3, d3 float64)  float64
+  const [sd2, cd2] = base.sincos(d2)
+  const [sr21, cr21] = base.sincos(r2 - r1)
+  const [sr32, cr32] = base.sincos(r3 - r2)
+  const C1 = Math.atan2(sr21, cd2 * Math.tan(d1) - sd2 * cr21)
+  const C2 = Math.atan2(sr32, cd2 * Math.tan(d3) - sd2 * cr32)
   return C1 + C2
 }
 
@@ -75,22 +73,22 @@ M.angle = function (r1, d1, r2, d2, r3, d3) { // (r1, d1, r2, d2, r3, d3 float64
  *
  * Algorithm by Meeus.
  */
-M.error = function (r1, d1, r2, d2, r0, d0) { // (r1, d1, r2, d2, r0, d0 float64)  float64
-  let [sr1, cr1] = base.sincos(r1)
-  let [sd1, cd1] = base.sincos(d1)
-  let [sr2, cr2] = base.sincos(r2)
-  let [sd2, cd2] = base.sincos(d2)
-  let X1 = cd1 * cr1
-  let X2 = cd2 * cr2
-  let Y1 = cd1 * sr1
-  let Y2 = cd2 * sr2
-  let Z1 = sd1
-  let Z2 = sd2
-  let A = Y1 * Z2 - Z1 * Y2
-  let B = Z1 * X2 - X1 * Z2
-  let C = X1 * Y2 - Y1 * X2
-  let m = Math.tan(r0)
-  let n = Math.tan(d0) / Math.cos(r0)
+export function error (r1, d1, r2, d2, r0, d0) { // (r1, d1, r2, d2, r0, d0 float64)  float64
+  const [sr1, cr1] = base.sincos(r1)
+  const [sd1, cd1] = base.sincos(d1)
+  const [sr2, cr2] = base.sincos(r2)
+  const [sd2, cd2] = base.sincos(d2)
+  const X1 = cd1 * cr1
+  const X2 = cd2 * cr2
+  const Y1 = cd1 * sr1
+  const Y2 = cd2 * sr2
+  const Z1 = sd1
+  const Z2 = sd2
+  const A = Y1 * Z2 - Z1 * Y2
+  const B = Z1 * X2 - X1 * Z2
+  const C = X1 * Y2 - Y1 * X2
+  const m = Math.tan(r0)
+  const n = Math.tan(d0) / Math.cos(r0)
   return Math.asin((A + B * m + C * n) /
     (Math.sqrt(A * A + B * B + C * C) * Math.sqrt(1 + m * m + n * n)))
 }
@@ -105,31 +103,38 @@ M.error = function (r1, d1, r2, d2, r0, d0) { // (r1, d1, r2, d2, r0, d0 float64
  *  {Number} ψ - angle between great circles defined by three points.
  *  {Number} ω - error angle of three nearly co-linear points
  */
-M.angleError = function (r1, d1, r2, d2, r3, d3) {
-  let [sr1, cr1] = base.sincos(r1)
-  let [c1, cd1] = base.sincos(d1)
-  let [sr2, cr2] = base.sincos(r2)
-  let [c2, cd2] = base.sincos(d2)
-  let [sr3, cr3] = base.sincos(r3)
-  let [c3, cd3] = base.sincos(d3)
-  let a1 = cd1 * cr1
-  let a2 = cd2 * cr2
-  let a3 = cd3 * cr3
-  let b1 = cd1 * sr1
-  let b2 = cd2 * sr2
-  let b3 = cd3 * sr3
-  let l1 = b1 * c2 - b2 * c1
-  let l2 = b2 * c3 - b3 * c2
-  let l3 = b1 * c3 - b3 * c1
-  let m1 = c1 * a2 - c2 * a1
-  let m2 = c2 * a3 - c3 * a2
-  let m3 = c1 * a3 - c3 * a1
-  let n1 = a1 * b2 - a2 * b1
-  let n2 = a2 * b3 - a3 * b2
-  let n3 = a1 * b3 - a3 * b1
-  let ψ = Math.acos((l1 * l2 + m1 * m2 + n1 * n2) /
+export function angleError (r1, d1, r2, d2, r3, d3) {
+  const [sr1, cr1] = base.sincos(r1)
+  const [c1, cd1] = base.sincos(d1)
+  const [sr2, cr2] = base.sincos(r2)
+  const [c2, cd2] = base.sincos(d2)
+  const [sr3, cr3] = base.sincos(r3)
+  const [c3, cd3] = base.sincos(d3)
+  const a1 = cd1 * cr1
+  const a2 = cd2 * cr2
+  const a3 = cd3 * cr3
+  const b1 = cd1 * sr1
+  const b2 = cd2 * sr2
+  const b3 = cd3 * sr3
+  const l1 = b1 * c2 - b2 * c1
+  const l2 = b2 * c3 - b3 * c2
+  const l3 = b1 * c3 - b3 * c1
+  const m1 = c1 * a2 - c2 * a1
+  const m2 = c2 * a3 - c3 * a2
+  const m3 = c1 * a3 - c3 * a1
+  const n1 = a1 * b2 - a2 * b1
+  const n2 = a2 * b3 - a3 * b2
+  const n3 = a1 * b3 - a3 * b1
+  const ψ = Math.acos((l1 * l2 + m1 * m2 + n1 * n2) /
     (Math.sqrt(l1 * l1 + m1 * m1 + n1 * n1) * Math.sqrt(l2 * l2 + m2 * m2 + n2 * n2)))
-  let ω = Math.asin((a2 * l3 + b2 * m3 + c2 * n3) /
+  const ω = Math.asin((a2 * l3 + b2 * m3 + c2 * n3) /
     (Math.sqrt(a2 * a2 + b2 * b2 + c2 * c2) * Math.sqrt(l3 * l3 + m3 * m3 + n3 * n3)))
   return [ψ, ω]
+}
+
+export default {
+  time,
+  angle,
+  error,
+  angleError
 }

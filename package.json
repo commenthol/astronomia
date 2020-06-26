@@ -1,6 +1,6 @@
 {
   "name": "astronomia",
-  "version": "1.3.5",
+  "version": "2.1.3",
   "description": "An astronomical library",
   "keywords": [
     "astronomy",
@@ -10,32 +10,62 @@
   ],
   "homepage": "https://github.com/commenthol/astronomia",
   "bugs": {
-    "url": "https://github.com/commenthol/astronomia"
+    "url": "https://github.com/commenthol/astronomia/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commenthol/astronomia.git"
   },
   "license": "MIT",
   "author": "commenthol <commenthol@gmail.com>",
+  "contributors": [],
   "main": "lib",
-  "jsnext:main": "src",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/commenthol/astronomia.git"
+  "module": "es",
+  "jsnext:main": "es",
+  "directories": {
+    "lib": "lib",
+    "doc": "docs",
+    "test": "test"
   },
   "scripts": {
-    "clean": "rimraf lib doc coverage .nyc_output",
-    "cover": "nyc npm test && nyc report --reporter=html",
-    "dist": "npm run clean && npm run lint && npm run transpile && npm run test",
+    "all": "npm run clean && npm run lint && npm run build && npm test",
+    "build": "npm run build:cjs && npm run build:es5",
+    "build:cjs": "babel -d lib src",
+    "build:es5": "BABEL_ENV=es5 babel -d es src",
+    "clean": "rimraf lib es coverage .nyc_output",
+    "clean:all": "rimraf node_modules && npm run clean",
+    "coverage": "nyc -r text -r html npm test",
     "lint": "eslint '**/*.js'",
-    "test": "mocha -R dot",
-    "transpile": "babel -d lib src",
+    "prepublishOnly": "npm run all",
+    "test": "mocha",
     "zuul": "zuul test/*.js"
   },
   "babel": {
-    "presets": [
-      "es2015",
-      "stage-0",
-      "stage-1",
-      "stage-2"
-    ]
+    "env": {
+      "development": {
+        "presets": [
+          "@babel/preset-env"
+        ]
+      },
+      "es5": {
+        "presets": [
+          [
+            "@babel/preset-env",
+            {
+              "targets": {
+                "node": "current",
+                "browsers": [
+                  "last 2 versions",
+                  "ie >= 11"
+                ]
+              },
+              "modules": false,
+              "loose": true
+            }
+          ]
+        ]
+      }
+    }
   },
   "eslintConfig": {
     "extends": "standard",
@@ -43,33 +73,32 @@
       "standard"
     ]
   },
-  "dependencies": {
-    "lodash.padstart": "^4.6.1"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "babel-core": "^6.25.0",
-    "babel-polyfill": "^6",
-    "babel-preset-es2015": "^6",
-    "babel-preset-stage-0": "^6",
-    "babel-preset-stage-1": "^6",
-    "babel-preset-stage-2": "^6",
-    "babelify": "^7.3.0",
-    "core-js": "^2.5.0",
-    "mocha": "^3.4.2"
-  },
-  "optionalDependencies": {
-    "eslint": "^3",
-    "eslint-config-standard": "^10",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-node": "^5.0.0",
-    "eslint-plugin-promise": "^3",
-    "eslint-plugin-standard": "^3",
-    "nyc": "^11.0.2",
-    "rimraf": "^2.6.1",
-    "serialize-to-js": "^1.1.1"
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/register": "^7.9.0",
+    "babelify": "^10.0.0",
+    "core-js": "^3.6.5",
+    "eslint": "^7.0.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "mocha": "^7.1.2",
+    "nyc": "^15.0.1",
+    "regenerator-runtime": "^0.13.5",
+    "rimraf": "^3.0.2",
+    "serialize-to-js": "^3.1.1",
+    "serialize-to-module": "^1.0.1",
+    "zuul": "^3.12.0"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=6.0.0"
   },
-  "maintainers": "commenthol <commenthol@gmail.com>"
+  "maintainers": [
+    "commenthol <commenthol@gmail.com>"
+  ]
 }

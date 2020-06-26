@@ -1,13 +1,6 @@
-/* global describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var base = require('..').base
-var julian = require('..').julian
-var moonillum = require('..').moonillum
-var moonposition = require('..').moonposition
-var solar = require('..').solar
+import assert from 'assert'
+import float from './support/float.js'
+import { base, julian, moonillum, moonposition, solar } from '..'
 
 var p = Math.PI / 180
 
@@ -19,7 +12,7 @@ describe('#moonillum', function () {
       new base.Coord(134.6885 * p, 13.7684 * p, 368410),
       new base.Coord(20.6579 * p, 8.6964 * p, 149971520)
     )
-    assert.equal((i / p).toFixed(4), 69.0756)
+    assert.strictEqual(float(i / p).toFixed(4), 69.0756)
   })
 
   it('phaseAngleEquatorial2', function () {
@@ -28,7 +21,7 @@ describe('#moonillum', function () {
       new base.Coord(20.6579 * p, 8.6964 * p)
     )
     var k = base.illuminated(i)
-    assert.equal(k.toFixed(4), 0.6775)
+    assert.strictEqual(float(k).toFixed(4), 0.6775)
   })
 
   it('phaseAngleEcliptic', function () {
@@ -55,7 +48,7 @@ describe('#moonillum', function () {
   it('phaseAngle3', function () {
     var i = moonillum.phaseAngle3(j)
     var k = base.illuminated(i)
-    assert.equal((i * 180 / Math.PI).toFixed(2), 68.88)
-    assert.equal(k.toFixed(4), 0.6801)
+    assert.strictEqual(float(i * 180 / Math.PI).toFixed(2), 68.88)
+    assert.strictEqual(float(k).toFixed(4), 0.6801)
   })
 })

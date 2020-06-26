@@ -10,18 +10,17 @@
  * Partial:  Only implemented for mean equinox of date.
  */
 
-const base = require('./base')
-const M = exports
+import base from './base'
 
 // planet names used in cMean
-M.mercury = 'mercury'
-M.venus = 'venus'
-M.earth = 'earth'
-M.mars = 'mars'
-M.jupiter = 'jupiter'
-M.saturn = 'saturn'
-M.uranus = 'uranus'
-M.neptune = 'neptune'
+export const mercury = 'mercury'
+export const venus = 'venus'
+export const earth = 'earth'
+export const mars = 'mars'
+export const jupiter = 'jupiter'
+export const saturn = 'saturn'
+export const uranus = 'uranus'
+export const neptune = 'neptune'
 
 /**
  * Elements contains orbital elements as returned by functions in this package.
@@ -38,11 +37,8 @@ M.neptune = 'neptune'
  * @param {Number} node - longitude of ascending node, Ω
  * @param {Number} peri - longitude of perihelion, ϖ (Meeus likes π better)
  */
-function Elements (lon, axis, ecc, inc, node, peri) {
-  let o = {}
-  if (typeof lon === 'object') {
-    o = lon
-  }
+export function Elements (lon, axis, ecc, inc, node, peri) {
+  const o = (typeof lon === 'object' ? lon : {})
   this.lon = o.lon || lon
   this.axis = o.axis || axis
   this.ecc = o.ecc || ecc
@@ -50,12 +46,11 @@ function Elements (lon, axis, ecc, inc, node, peri) {
   this.node = o.node || node
   this.peri = o.peri || peri
 }
-M.Elements = Elements
 
 /**
  * Table 31.A, p. 212
  */
-var cMean = {
+const cMean = {
   mercury: { // Mercury
     L: [252.250906, 149474.0722491, 0.0003035, 0.000000018],
     a: [0.38709831],
@@ -133,9 +128,9 @@ var cMean = {
  *
  * Semimajor axis is in AU, angular elements are in radians.
  */
-M.mean = function (p, jde, e) {
-  let T = base.J2000Century(jde)
-  let c = cMean[p]
+export function mean (p, jde, e) {
+  const T = base.J2000Century(jde)
+  const c = cMean[p]
   e = e || new Elements()
   e.lon = base.pmod(base.horner(T, c.L) * Math.PI / 180, 2 * Math.PI)
   e.axis = base.horner(T, c.a)
@@ -152,7 +147,7 @@ M.mean = function (p, jde, e) {
  * Result is the same as the Inc field returned by function Mean.  That is,
  * radians, referenced to mean dynamical ecliptic and equinox of date.
  */
-M.inc = function (p, jde) { // (p int, jde float64)  float64
+export function inc (p, jde) { // (p int, jde float64)  float64
   return base.horner(base.J2000Century(jde), cMean[p].i) * Math.PI / 180
 }
 
@@ -162,6 +157,21 @@ M.inc = function (p, jde) { // (p int, jde float64)  float64
  * Result is the same as the Node field returned by function Mean.  That is,
  * radians, referenced to mean dynamical ecliptic and equinox of date.
  */
-M.node = function (p, jde) { // (p int, jde float64)  float64
+export function node (p, jde) { // (p int, jde float64)  float64
   return base.horner(base.J2000Century(jde), cMean[p].Ω) * Math.PI / 180
+}
+
+export default {
+  mercury,
+  venus,
+  earth,
+  mars,
+  jupiter,
+  saturn,
+  uranus,
+  neptune,
+  Elements,
+  mean,
+  inc,
+  node
 }

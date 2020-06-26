@@ -1,21 +1,19 @@
-/* global describe, it */
 /* eslint key-spacing: 0 */
 
-var assert = require('assert')
-
-var planetposition = require('..').planetposition
-var saturnmoons = require('..').saturnmoons
+import assert from 'assert'
+import float from './support/float.js'
+import { saturnmoons, planetposition, data } from '..'
 
 describe('#saturnmoons', function () {
   function comp (res, exp) {
-    assert.equal(res.x.toFixed(3), exp.x)
-    assert.equal(res.y.toFixed(3), exp.y)
+    assert.strictEqual(float(res.x).toFixed(3), exp.x)
+    assert.strictEqual(float(res.y).toFixed(3), exp.y)
   }
 
   describe('positions()', function () {
     // Example 46.a, p. 334.0
-    var earth = new planetposition.Planet(planetposition.earth)
-    var saturn = new planetposition.Planet(planetposition.saturn)
+    var earth = new planetposition.Planet(data.vsop87Bearth)
+    var saturn = new planetposition.Planet(data.vsop87Bsaturn)
     var pos = saturnmoons.positions(2451439.50074, earth, saturn)
     var exp = [
       { x:  +3.102, y: -0.204 },

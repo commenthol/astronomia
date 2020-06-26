@@ -1,8 +1,6 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var iterate = require('..').iterate
+import assert from 'assert'
+import float from './support/float.js'
+import { iterate } from '..'
 
 describe('#iterate', function () {
   it('decimalPlaces', function () {
@@ -16,7 +14,7 @@ describe('#iterate', function () {
     var places = 8
     var maxIter = 20
     var n = iterate.decimalPlaces(betterSqrt(159), start, places, maxIter)
-    assert.equal(n.toFixed(8), 12.60952021)
+    assert.strictEqual(float(n).toFixed(8), 12.60952021)
   })
 
   it('fullPrecision', function () {
@@ -25,7 +23,7 @@ describe('#iterate', function () {
       return (8 - Math.pow(x, 5)) / 17
     }
     var x = iterate.fullPrecision(betterRoot, 0, 20)
-    assert.equal(x, 0.4692498784547387)
+    assert.strictEqual(x, 0.4692498784547387)
   })
 
   it('fullPrecision diverging', function () {
@@ -39,7 +37,7 @@ describe('#iterate', function () {
     } catch (e) {
       err = e
     }
-    assert.equal(err.message, 'Maximum iterations reached')
+    assert.strictEqual(err.message, 'Maximum iterations reached')
   })
 
   it('fullPrecision converging', function () {
@@ -48,7 +46,7 @@ describe('#iterate', function () {
       return Math.pow(8 - 3 * x, 0.2)
     }
     var x = iterate.fullPrecision(betterRoot, 0, 30)
-    assert.equal(x, 1.321785627117658)
+    assert.strictEqual(x, 1.321785627117658)
   })
 
   it('binaryRoot', function () {
@@ -57,6 +55,6 @@ describe('#iterate', function () {
       return Math.pow(x, 5) + 17 * x - 8
     }
     var x = iterate.binaryRoot(f, 0, 1)
-    assert.equal(x, 0.46924987845473876)
+    assert.strictEqual(x, 0.46924987845473876)
   })
 })

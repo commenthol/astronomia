@@ -9,30 +9,26 @@
  * Rise: Chapter 15, Rising, Transit, and Setting.
  */
 
-const base = require('./base')
-const deltat = require('./deltat')
-const elliptic = require('./elliptic')
-const interp = require('./interpolation')
-const julian = require('./julian')
-const sexa = require('./sexagesimal')
-const sidereal = require('./sidereal')
-const {acos, asin, cos, sin} = Math
+import base from './base'
+import deltat from './deltat'
+import elliptic from './elliptic'
+import interp from './interpolation'
+import julian from './julian'
+import sexa from './sexagesimal'
+import sidereal from './sidereal'
+const { acos, asin, cos, sin } = Math
 
 const SECS_PER_DEGREE = 240 // = 86400 / 360
 const SECS_PER_DAY = 86400
 const D2R = Math.PI / 180
 
-const M = exports
-
-const errorAboveHorizon = base.errorCode('always above horizon', -1)
-const errorBelowHorizon = base.errorCode('always below horizon', 1)
-M.errorAboveHorizon = errorAboveHorizon
-M.errorBelowHorizon = errorBelowHorizon
+export const errorAboveHorizon = base.errorCode('always above horizon', -1)
+export const errorBelowHorizon = base.errorCode('always below horizon', 1)
 
 /**
  * mean refraction of the atmosphere
  */
-M.meanRefraction = new sexa.Angle(false, 0, 34, 0).rad()
+export const meanRefraction = new sexa.Angle(false, 0, 34, 0).rad()
 
 /**
  * "Standard altitudes" for various bodies already including `meanRefraction` of 0°34'
@@ -40,8 +36,8 @@ M.meanRefraction = new sexa.Angle(false, 0, 34, 0).rad()
  * The standard altitude is the geometric altitude of the center of body
  * at the time of apparent rising or seting.
  */
-M.stdh0 = {
-  stellar: -M.meanRefraction,
+export const stdh0 = {
+  stellar: -meanRefraction,
   solar: new sexa.Angle(true, 0, 50, 0).rad(),
   // not containing meanRefraction
   lunar: new sexa.Angle(false, 0, 0, 0.7275).rad(),
@@ -54,32 +50,32 @@ M.stdh0 = {
  * @param {number} corr - the calcluated refraction e.g. from package `refraction` in radians
  * @return {number} refraction value in radians
  */
-M.refraction = function (h0, corr) {
+export function refraction (h0, corr) {
   if (!corr) {
     return h0
   } else {
-    return h0 - M.meanRefraction - corr
+    return h0 - meanRefraction - corr
   }
 }
 
 /**
  * standard altitude for stars, planets at apparent rising, seting
  */
-M.stdh0Stellar = (refraction) => M.refraction(M.stdh0.stellar, refraction)
-M.Stdh0Stellar = M.stdh0Stellar() // for backward-compatibility
+export const stdh0Stellar = (_refraction) => refraction(stdh0.stellar, _refraction)
+export const Stdh0Stellar = stdh0Stellar() // for backward-compatibility
 /**
  * standard altitude for sun for upper limb of the disk
  */
-M.stdh0Solar = (refraction) => M.refraction(M.stdh0.solar, refraction)
-M.Stdh0Solar = M.stdh0Solar() // for backward-compatibility
+export const stdh0Solar = (_refraction) => refraction(stdh0.solar, _refraction)
+export const Stdh0Solar = stdh0Solar() // for backward-compatibility
 
 /**
  * standard altitude for moon (low accuracy)
  */
-M.stdh0LunarMean = (refraction) => {
-  return M.stdh0.lunarMean - M.refraction(refraction)
+export const stdh0LunarMean = (_refraction) => {
+  return stdh0.lunarMean - refraction(_refraction)
 }
-M.Stdh0LunarMean = M.stdh0LunarMean() // for backward-compatibility
+export const Stdh0LunarMean = stdh0LunarMean() // for backward-compatibility
 /**
  * Stdh0Lunar is the standard altitude of the Moon considering π, the
  * Moon's horizontal parallax.
@@ -88,24 +84,24 @@ M.Stdh0LunarMean = M.stdh0LunarMean() // for backward-compatibility
  *        omitted than meanRefraction is used
  * @return {number} altitude of Moon in radians
  */
-M.stdh0Lunar = (π, refraction) => {
-  refraction = refraction || M.meanRefraction
-  return M.stdh0.lunar * π - refraction
+export const stdh0Lunar = (π, refraction) => {
+  refraction = refraction || meanRefraction
+  return stdh0.lunar * π - refraction
 }
-M.Stdh0Lunar = M.stdh0Lunar // for backward-compatibility
+export const Stdh0Lunar = stdh0Lunar // for backward-compatibility
 
 /**
  * @return {number} local angle in radians
  */
-M.hourAngle = function (lat, h0, δ) {
+export function hourAngle (lat, h0, δ) {
   // approximate local hour angle
-  let cosH = (sin(h0) - sin(lat) * sin(δ)) / (cos(lat) * cos(δ)) // (15.1) p. 102
+  const cosH = (sin(h0) - sin(lat) * sin(δ)) / (cos(lat) * cos(δ)) // (15.1) p. 102
   if (cosH < -1) {
     throw errorAboveHorizon
   } else if (cosH > 1) {
     throw errorBelowHorizon
   }
-  let H = acos(cosH)
+  const H = acos(cosH)
   return H
 }
 
@@ -116,8 +112,8 @@ M.hourAngle = function (lat, h0, δ) {
  * @return {number} time of transit in seconds of day `[0, 86400[`
  */
 function _mt (lon, α, th0) {
-  // let mt = (((lon + α) * 180 / Math.PI - (th0 * 360 / 86400)) * 86400 / 360)
-  let mt = (lon + α) * SECS_PER_DEGREE * 180 / Math.PI - th0
+  // const mt = (((lon + α) * 180 / Math.PI - (th0 * 360 / 86400)) * 86400 / 360)
+  const mt = (lon + α) * SECS_PER_DEGREE * 180 / Math.PI - th0
   return mt
 }
 
@@ -130,14 +126,14 @@ function _th0 (Th0, m) {
   // in original formula Th0 = 0...360 and m = 0...1 -> return value would be in 0...360 degrees
   // Th0 /= 240
   // m /= 86400
-  let th0 = base.pmod(Th0 + m * 360.985647 / 360, SECS_PER_DAY) // p103
+  const th0 = base.pmod(Th0 + m * 360.985647 / 360, SECS_PER_DAY) // p103
   return th0 // 0...86400 in seconds angle
 }
 
 // maintain backward compatibility - will be removed in v2
 // return value in future will be an object not an array
 function _compatibility (rs) {
-  let _rs = [rs.rise, rs.transit, rs.set]
+  const _rs = [rs.rise, rs.transit, rs.set]
   _rs.rise = rs.rise
   _rs.transit = rs.transit
   _rs.set = rs.set
@@ -163,12 +159,12 @@ function _compatibility (rs) {
  * @return Result units are seconds and are in the range [0,86400)
  * @throws Error
  */
-M.approxTimes = function (p, h0, Th0, α, δ) {
-  let H0 = M.hourAngle(p.lat, h0, δ) * SECS_PER_DEGREE * 180 / Math.PI // in degrees per day === seconds
+export function approxTimes (p, h0, Th0, α, δ) {
+  const H0 = hourAngle(p.lat, h0, δ) * SECS_PER_DEGREE * 180 / Math.PI // in degrees per day === seconds
   // approximate transit, rise, set times.
   // (15.2) p. 102.0
-  let mt = _mt(p.lon, α, Th0)
-  let rs = {}
+  const mt = _mt(p.lon, α, Th0)
+  const rs = {}
   rs.transit = base.pmod(mt, SECS_PER_DAY)
   rs.rise = base.pmod(mt - H0, SECS_PER_DAY)
   rs.set = base.pmod(mt + H0, SECS_PER_DAY)
@@ -196,30 +192,30 @@ M.approxTimes = function (p, h0, Th0, α, δ) {
  * @return Result units are seconds and are in the range [0,86400)
  * @throws Error
  */
-M.times = function (p, ΔT, h0, Th0, α3, δ3) { // (p globe.Coord, ΔT, h0, Th0 float64, α3, δ3 []float64)  (mRise, mTransit, mSet float64, err error)
-  let rs = M.approxTimes(p, h0, Th0, α3[1], δ3[1])
-  let d3α = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, α3)
-  let d3δ = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, δ3)
+export function times (p, ΔT, h0, Th0, α3, δ3) { // (p globe.Coord, ΔT, h0, Th0 float64, α3, δ3 []float64)  (mRise, mTransit, mSet float64, err error)
+  const rs = approxTimes(p, h0, Th0, α3[1], δ3[1])
+  const d3α = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, α3)
+  const d3δ = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, δ3)
 
   // adjust mTransit
-  let ut = rs.transit + ΔT
-  let α = d3α.interpolateX(ut)
-  let th0 = _th0(Th0, rs.transit)
-  let H = -1 * _mt(p.lon, α, th0) // in secs // Hmeus = 0...360
+  const ut = rs.transit + ΔT
+  const α = d3α.interpolateX(ut)
+  const th0 = _th0(Th0, rs.transit)
+  const H = -1 * _mt(p.lon, α, th0) // in secs // Hmeus = 0...360
   rs.transit -= H
 
   // adjust mRise, mSet
-  let [sLat, cLat] = base.sincos(p.lat)
+  const [sLat, cLat] = base.sincos(p.lat)
 
-  let adjustRS = function (m) {
-    let ut = m + ΔT
-    let α = d3α.interpolateX(ut)
-    let δ = d3δ.interpolateX(ut)
-    let th0 = _th0(Th0, m)
-    let H = -1 * _mt(p.lon, α, th0)
-    let Hrad = (H / SECS_PER_DEGREE) * D2R
-    let h = asin(((sLat * sin(δ)) + (cLat * cos(δ) * cos(Hrad)))) // formula 13.6
-    let Δm = (SECS_PER_DAY * (h - h0) / (cos(δ) * cLat * sin(Hrad) * 2 * Math.PI)) // formula p103 3
+  const adjustRS = function (m) {
+    const ut = m + ΔT
+    const α = d3α.interpolateX(ut)
+    const δ = d3δ.interpolateX(ut)
+    const th0 = _th0(Th0, m)
+    const H = -1 * _mt(p.lon, α, th0)
+    const Hrad = (H / SECS_PER_DEGREE) * D2R
+    const h = asin(((sLat * sin(δ)) + (cLat * cos(δ) * cos(Hrad)))) // formula 13.6
+    const Δm = (SECS_PER_DAY * (h - h0) / (cos(δ) * cLat * sin(Hrad) * 2 * Math.PI)) // formula p103 3
     return m + Δm
   }
 
@@ -232,7 +228,7 @@ M.times = function (p, ΔT, h0, Th0, α3, δ3) { // (p globe.Coord, ΔT, h0, Th0
 /**
  * RisePlanet computes rise, transit and set times for a planet on a day of interest.
  */
-class PlanetRise {
+export class PlanetRise {
   /**
    * @param {number|Date} jd - Julian Day starting at midnight or Date object
    * @param {number} lat - geographic latitude of the observerin degrees
@@ -245,14 +241,14 @@ class PlanetRise {
    */
   constructor (jd, lat, lon, earth, planet, opts) {
     this.opts = opts || {}
-    this.refraction = this.opts.refraction || M.stdh0Stellar()
+    this.refraction = this.opts.refraction || stdh0Stellar()
     if (jd instanceof Date) {
       jd = new julian.Calendar().fromDate(jd).toJD()
     }
     this.jd = Math.floor(jd - 0.5) + 0.5 // start at midnight
     this.lat = lat * D2R // convert to radians
     this.lon = lon * D2R
-    let cal = new julian.Calendar().fromJD(this.jd)
+    const cal = new julian.Calendar().fromJD(this.jd)
     this.jde = cal.toJDE()
     this.ΔT = deltat.deltaT(cal.toYear())
     this.earth = earth
@@ -260,34 +256,36 @@ class PlanetRise {
   }
 
   approxTimes () {
-    let body = elliptic.position(this.planet, this.earth, this.jde)
-    let Th0 = sidereal.apparent0UT(this.jd)
-    let rs = M.approxTimes(
-      {lat: this.lat, lon: this.lon}, this.refraction,
+    const body = elliptic.position(this.planet, this.earth, this.jde)
+    const Th0 = sidereal.apparent0UT(this.jd)
+    const rs = approxTimes(
+      { lat: this.lat, lon: this.lon }, this.refraction,
       Th0, body.ra, body.dec
     )
     return this._rsToJD(rs)
   }
 
   times () {
-    let body = [
+    const body = [
       elliptic.position(this.planet, this.earth, this.jde - 1),
       elliptic.position(this.planet, this.earth, this.jde),
       elliptic.position(this.planet, this.earth, this.jde + 1)
     ]
-    let Th0 = sidereal.apparent0UT(this.jd)
-    let rs = M.times(
-      {lat: this.lat, lon: this.lon}, this.ΔT, this.refraction,
+    const Th0 = sidereal.apparent0UT(this.jd)
+    const rs = times(
+      { lat: this.lat, lon: this.lon }, this.ΔT, this.refraction,
       Th0, this._toArr(body, 'ra'), this._toArr(body, 'dec')
     )
     return this._rsToJD(rs)
   }
+
   /** @private */
   _toArr (body, p) {
     return body.map((item) => {
       return item[p]
     })
   }
+
   /** @private */
   _rsToJD (rs) {
     return {
@@ -296,9 +294,10 @@ class PlanetRise {
       set: this._toJD(rs.set)
     }
   }
+
   /** @private */
   _toJD (secs) {
-    let jd = this.jd + secs / 86400
+    const jd = this.jd + secs / 86400
     if (this.opts.date) {
       return new julian.Calendar().fromJD(jd).toDate()
     } else {
@@ -306,4 +305,23 @@ class PlanetRise {
     }
   }
 }
-M.PlanetRise = PlanetRise
+
+export default {
+  errorAboveHorizon,
+  errorBelowHorizon,
+  meanRefraction,
+  stdh0,
+  refraction,
+  stdh0Stellar,
+  Stdh0Stellar,
+  stdh0Solar,
+  Stdh0Solar,
+  stdh0LunarMean,
+  Stdh0LunarMean,
+  stdh0Lunar,
+  Stdh0Lunar,
+  hourAngle,
+  approxTimes,
+  times,
+  PlanetRise
+}

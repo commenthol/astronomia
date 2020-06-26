@@ -1,8 +1,6 @@
-/* global describe, it */
-
-var assert = require('assert')
-
-var eclipse = require('..').eclipse
+import assert from 'assert'
+import float from './support/float.js'
+import { eclipse } from '..'
 
 describe('#eclipse', function () {
   it('Solar 1993', function () {
@@ -18,15 +16,15 @@ describe('#eclipse', function () {
       penumbral: 0.5558
     }
 
-    assert.equal(res.type, exp.type)
-    assert.equal(res.central, exp.central)
+    assert.strictEqual(res.type, exp.type)
+    assert.strictEqual(res.central, exp.central)
     if (res.type === eclipse.TYPE.Partial) {
-      assert.equal(res.magnitude.toFixed(2), exp.magnitude)
+      assert.strictEqual(float(res.magnitude).toFixed(2), exp.magnitude)
     }
-    assert.equal(res.jdeMax.toFixed(4), exp.jdeMax)
-    assert.equal(res.distance.toFixed(4), exp.distance)
-    assert.equal(res.umbral.toFixed(4), exp.umbral)
-    assert.equal(res.penumbral.toFixed(4), exp.penumbral)
+    assert.strictEqual(float(res.jdeMax).toFixed(4), exp.jdeMax)
+    assert.strictEqual(float(res.distance).toFixed(4), exp.distance)
+    assert.strictEqual(float(res.umbral).toFixed(4), exp.umbral)
+    assert.strictEqual(float(res.penumbral).toFixed(4), exp.penumbral)
 
     // Partial eclipse
     // Partial eclipse magnitude:       0.740
@@ -50,15 +48,15 @@ describe('#eclipse', function () {
       penumbral: 0.5304
     }
 
-    assert.equal(res.type, exp.type)
-    assert.equal(res.central, exp.central)
+    assert.strictEqual(res.type, exp.type)
+    assert.strictEqual(res.central, exp.central)
     if (res.type === eclipse.TYPE.Partial) {
-      assert.equal(res.magnitude.toFixed(2), exp.magnitude)
+      assert.strictEqual(float(res.magnitude).toFixed(2), exp.magnitude)
     }
-    assert.equal(res.jdeMax.toFixed(4), exp.jdeMax)
-    assert.equal(res.distance.toFixed(4), exp.distance)
-    assert.equal(res.umbral.toFixed(4), exp.umbral)
-    assert.equal(res.penumbral.toFixed(4), exp.penumbral)
+    assert.strictEqual(float(res.jdeMax).toFixed(4), exp.jdeMax)
+    assert.strictEqual(float(res.distance).toFixed(4), exp.distance)
+    assert.strictEqual(float(res.umbral).toFixed(4), exp.umbral)
+    assert.strictEqual(float(res.penumbral).toFixed(4), exp.penumbral)
 
     // Total eclipse
     // Central
@@ -80,26 +78,26 @@ describe('#eclipse', function () {
       penumbral: 1.3045,
       sdTotal: undefined,
       sdPartial: undefined,
-      sdPenumbral: (101.5 / 24 / 60).toFixed(4) // 101.5 min
+      sdPenumbral: float(101.5 / 24 / 60).toFixed(4) // 101.5 min
     }
 
-    assert.equal(res.type, exp.type)
-    assert.equal(res.magnitude.toFixed(4), exp.magnitude) // Partial eclipse magnitude
-    assert.equal(res.jdeMax.toFixed(4), exp.jdeMax)   // Time of maximum eclipse
-    assert.equal(res.distance.toFixed(4), exp.distance)    // Minimum distance
+    assert.strictEqual(res.type, exp.type)
+    assert.strictEqual(float(res.magnitude).toFixed(4), exp.magnitude) // Partial eclipse magnitude
+    assert.strictEqual(float(res.jdeMax).toFixed(4), exp.jdeMax) // Time of maximum eclipse
+    assert.strictEqual(float(res.distance).toFixed(4), exp.distance) // Minimum distance
     if (res.type >= eclipse.TYPE.Umbral) {
-      assert.equal(res.umbral.toFixed(4), exp.umbral)    // Umbral radius
+      assert.strictEqual(float(res.umbral).toFixed(4), exp.umbral) // Umbral radius
     }
-    assert.equal(res.penumbral.toFixed(4), exp.penumbral)   // Penumbral radius
+    assert.strictEqual(float(res.penumbral).toFixed(4), exp.penumbral) // Penumbral radius
 
     /* eslint-disable no-fallthrough */
     switch (res.type) {
       case eclipse.TYPE.Total:
-        assert.equal(res.sdTotal.toFixed(4), exp.sdTotal) // semiduration in min
+        assert.strictEqual(float(res.sdTotal).toFixed(4), exp.sdTotal) // semiduration in min
       case eclipse.TYPE.Umbral:
-        assert.equal(res.sdPartial.toFixed(4), exp.sdPartial)
+        assert.strictEqual(float(res.sdPartial).toFixed(4), exp.sdPartial)
       default:
-        assert.equal(res.sdPenumbral.toFixed(4), exp.sdPenumbral)
+        assert.strictEqual(float(res.sdPenumbral).toFixed(4), exp.sdPenumbral)
     }
     /* eslint-enable */
 
@@ -121,28 +119,28 @@ describe('#eclipse', function () {
       distance: -0.3791,
       umbral: +0.7534,
       penumbral: +1.2717,
-      sdTotal: (30.384 / 24 / 60).toFixed(4), // in min
-      sdPartial: (97.632 / 24 / 60).toFixed(4), // in min
-      sdPenumbral: (153.36 / 24 / 60).toFixed(4) // in min
+      sdTotal: float(30.384 / 24 / 60).toFixed(4), // in min
+      sdPartial: float(97.632 / 24 / 60).toFixed(4), // in min
+      sdPenumbral: float(153.36 / 24 / 60).toFixed(4) // in min
     }
 
-    assert.equal(res.type, exp.type)
-    assert.equal(res.magnitude.toFixed(4), exp.magnitude) // Partial eclipse magnitude
-    assert.equal(res.jdeMax.toFixed(4), exp.jdeMax)   // Time of maximum eclipse
-    assert.equal(res.distance.toFixed(4), exp.distance)    // Minimum distance
+    assert.strictEqual(res.type, exp.type)
+    assert.strictEqual(float(res.magnitude).toFixed(4), exp.magnitude) // Partial eclipse magnitude
+    assert.strictEqual(float(res.jdeMax).toFixed(4), exp.jdeMax) // Time of maximum eclipse
+    assert.strictEqual(float(res.distance).toFixed(4), exp.distance) // Minimum distance
     if (res.type >= eclipse.TYPE.Umbral) {
-      assert.equal(res.umbral.toFixed(4), exp.umbral)    // Umbral radius
+      assert.strictEqual(float(res.umbral).toFixed(4), exp.umbral) // Umbral radius
     }
-    assert.equal(res.penumbral.toFixed(4), exp.penumbral)   // Penumbral radius
+    assert.strictEqual(float(res.penumbral).toFixed(4), exp.penumbral) // Penumbral radius
 
     /* eslint-disable no-fallthrough */
     switch (res.type) {
       case eclipse.TYPE.Total:
-        assert.equal(res.sdTotal.toFixed(4), exp.sdTotal) // semiduration in min
+        assert.strictEqual(float(res.sdTotal).toFixed(4), exp.sdTotal) // semiduration in min
       case eclipse.TYPE.Umbral:
-        assert.equal(res.sdPartial.toFixed(4), exp.sdPartial)
+        assert.strictEqual(float(res.sdPartial).toFixed(4), exp.sdPartial)
       default:
-        assert.equal(res.sdPenumbral.toFixed(4), exp.sdPenumbral)
+        assert.strictEqual(float(res.sdPenumbral).toFixed(4), exp.sdPenumbral)
     }
     /* eslint-enable */
 
@@ -155,5 +153,27 @@ describe('#eclipse', function () {
     // Totality semiduration:          30 min
     // Partial phase semiduration:     98 min
     // Penumbral semiduration:        153 min
+  })
+
+  describe('issue14', function () {
+    it('eclipse.solar shall not return undefined', function () {
+      const decimalYear = 2019.0900790352
+      const solar = eclipse.solar(decimalYear)
+      assert.strictEqual(typeof solar, 'object')
+      assert.strictEqual(solar.type, eclipse.TYPE.None)
+    })
+
+    it('eclipse.lunar shall not throw', function () {
+      const decimalYear = 2019.0900790352
+      const lunar = eclipse.lunar(decimalYear)
+      assert.ok(lunar)
+    })
+
+    it('eclipse.lunar shall not return undefined', function () {
+      const decimalYear = 2019.9
+      const lunar = eclipse.lunar(decimalYear)
+      assert.strictEqual(typeof lunar, 'object')
+      assert.strictEqual(lunar.type, eclipse.TYPE.None)
+    })
   })
 })

@@ -1,30 +1,23 @@
-/* eslint one-var: 0 */
-/* global describe, it */
-
-'use strict'
-
-var assert = require('assert')
-var format = require('util').format
-
-var julian = require('..').julian
-var jm = require('..').jm
+import assert from 'assert'
+import { format } from 'util'
+import { julian, jm } from '..'
 
 describe('#jm', function () {
   it('JewishCalendar', function () {
     // Example 9.a, p. 73.0
     var a = jm.JewishCalendar(1990)
-    var A = a[0],
-      mP = a[1],
-      dP = a[2],
-      mNY = a[3],
-      dNY = a[4],
-      months = a[5],
-      days = a[6]
-    assert.equal(format('Jewish Year: %s', A), 'Jewish Year: 5750')
-    assert.equal(format('Pesach: %s %s', mP, dP), 'Pesach: 4 10')
-    assert.equal(format('New Year: %s %s', mNY, dNY), 'New Year: 9 20')
-    assert.equal(format('Months: %s', months), 'Months: 12')
-    assert.equal(format('Days: %s', days), 'Days: 354')
+    var A = a[0]
+    var mP = a[1]
+    var dP = a[2]
+    var mNY = a[3]
+    var dNY = a[4]
+    var months = a[5]
+    var days = a[6]
+    assert.strictEqual(format('Jewish Year: %s', A), 'Jewish Year: 5750')
+    assert.strictEqual(format('Pesach: %s %s', mP, dP), 'Pesach: 4 10')
+    assert.strictEqual(format('New Year: %s %s', mNY, dNY), 'New Year: 9 20')
+    assert.strictEqual(format('Months: %s', months), 'Months: 12')
+    assert.strictEqual(format('Days: %s', days), 'Days: 354')
   })
 
   it('MoslemToJD', function () {
@@ -32,7 +25,7 @@ describe('#jm', function () {
     var jd = jm.MoslemToJD(1421, 1, 1)
     var g = julian.isJDCalendarGregorian(jd) // check type of Calendar Julian/ Gregorian
     var d = julian.JDToCalendar(jd, !g)
-    assert.deepEqual(d, { year: 2000, month: 4, day: 6.5 })
+    assert.deepStrictEqual(d, { year: 2000, month: 4, day: 6.5 })
   })
 
   it('MoslemLeapYear', function () {
@@ -47,10 +40,10 @@ describe('#jm', function () {
     // Example 9.c, p. 76, final output.
     var j = new julian.CalendarGregorian(1991, 8, 13).toJulian()
     var o = jm.JulianToMoslem(j.year, j.month, Math.floor(j.day))
-    var year = o.year,
-      month = o.month,
-      day = o.day
+    var year = o.year
+    var month = o.month
+    var day = o.day
     var res = format('%s %s of A.H. %s', day, jm.moslemMonth(month), year)
-    assert.equal(res, '2 Ṣafar of A.H. 1412')
+    assert.strictEqual(res, '2 Ṣafar of A.H. 1412')
   })
 })

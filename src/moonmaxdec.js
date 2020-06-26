@@ -8,8 +8,7 @@
  * Moonmaxdec: Chapter 52, Maximum Declinations of the Moon
  */
 
-const base = require('./base')
-const m = exports
+import base from './base'
 
 /**
  * North computes the maximum northern declination of the Moon near a given date.
@@ -19,7 +18,7 @@ const m = exports
  * Returned is the jde of the event nearest the given date and the declination
  * of the Moon at that time.
  */
-m.north = function (y) { // (y float64)  (jde, δ float64)
+export function north (y) { // (y float64)  (jde, δ float64)
   return max(y, nc)
 }
 
@@ -31,7 +30,7 @@ m.north = function (y) { // (y float64)  (jde, δ float64)
  * Returned is the jde of the event nearest the given date and the declination
  * of the Moon at that time.
  */
-m.south = function (y) { // (y float64)  (jde, δ float64)
+export function south (y) { // (y float64)  (jde, δ float64)
   return max(y, sc)
 }
 
@@ -44,13 +43,13 @@ const ck = 1 / 1336.86
 function max (y, c) { // (y float64, c *mc)  (jde, δ float64)
   let k = (y - 2000.03) * 13.3686 // (52.1) p. 367
   k = Math.floor(k + 0.5)
-  let T = k * ck
-  let D = base.horner(T, c.D, 333.0705546 * p / ck, -0.0004214 * p, 0.00000011 * p)
-  let m = base.horner(T, c.m, 26.9281592 * p / ck, -0.0000355 * p, -0.0000001 * p)
-  let m_ = base.horner(T, c.m_, 356.9562794 * p / ck, 0.0103066 * p, 0.00001251 * p)
-  let f = base.horner(T, c.f, 1.4467807 * p / ck, -0.002069 * p, -0.00000215 * p)
-  let E = base.horner(T, 1, -0.002516, -0.0000074)
-  let jde = base.horner(T, c.JDE, 27.321582247 / ck, 0.000119804, -0.000000141) +
+  const T = k * ck
+  const D = base.horner(T, c.D, 333.0705546 * p / ck, -0.0004214 * p, 0.00000011 * p)
+  const m = base.horner(T, c.m, 26.9281592 * p / ck, -0.0000355 * p, -0.0000001 * p)
+  const m_ = base.horner(T, c.m_, 356.9562794 * p / ck, 0.0103066 * p, 0.00001251 * p)
+  const f = base.horner(T, c.f, 1.4467807 * p / ck, -0.002069 * p, -0.00000215 * p)
+  const E = base.horner(T, 1, -0.002516, -0.0000074)
+  const jde = base.horner(T, c.JDE, 27.321582247 / ck, 0.000119804, -0.000000141) +
     c.tc[0] * Math.cos(f) +
     c.tc[1] * Math.sin(m_) +
     c.tc[2] * Math.sin(2 * f) +
@@ -95,7 +94,7 @@ function max (y, c) { // (y float64, c *mc)  (jde, δ float64)
     c.tc[41] * Math.sin(2 * (D - f)) +
     c.tc[42] * Math.cos(2 * m_ + f) +
     c.tc[43] * Math.cos(3 * m_ + f)
-  let δ = 23.6961 * p - 0.013004 * p * T +
+  const δ = 23.6961 * p - 0.013004 * p * T +
     c.dc[0] * Math.sin(f) +
     c.dc[1] * Math.cos(2 * f) +
     c.dc[2] * Math.sin(2 * D - f) +
@@ -133,13 +132,13 @@ function max (y, c) { // (y float64, c *mc)  (jde, δ float64)
     c.dc[34] * Math.cos(m_) +
     c.dc[35] * Math.sin(2 * f) +
     c.dc[36] * Math.sin(m_ + f)
-  return {jde: jde, dec: c.s * δ}
+  return { jde: jde, dec: c.s * δ }
 }
 
 /**
  * north coefficients
  */
-var nc = {
+const nc = {
   D: 152.2029 * p,
   m: 14.8591 * p,
   m_: 4.6881 * p,
@@ -236,7 +235,7 @@ var nc = {
 /**
  * south coefficients
  */
-var sc = {
+const sc = {
   D: 345.6676 * p,
   m: 1.3951 * p,
   m_: 186.21 * p,
@@ -328,4 +327,9 @@ var sc = {
     -0.001 * p,
     0.0037 * p
   ]
+}
+
+export default {
+  north,
+  south
 }

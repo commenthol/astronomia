@@ -1,46 +1,37 @@
-/* eslint one-var: 0 */
-/* global describe, it */
-
-'use strict'
-
-var assert = require('assert')
-
-var base = require('..').base
-var julian = require('..').julian
-var moon = require('..').moon
-var planetposition = require('..').planetposition
+import assert from 'assert'
+import float from './support/float.js'
+import { julian, moon, data, planetposition } from '..'
 
 var j = julian.CalendarGregorianToJD(1992, 4, 12)
-var earth = new planetposition.Planet('earth')
+var earth = new planetposition.Planet(data.earth)
+var R2D = 180 / Math.PI
 
 describe('#moon', function () {
   it('physical', function () {
+    // Example 53.a p374
     var a = moon.physical(j, earth)
-    var cMoon = a[0],
-      P = a[1],
-      cSun = a[2]
-    assert.equal((cMoon.lon * 180 / Math.PI).toFixed(2), -1.23)
-    assert.equal((cMoon.lat * 180 / Math.PI).toFixed(2), 4.20)
-    assert.equal((P * 180 / Math.PI).toFixed(2), 15.08)
-    assert.equal((cSun.lon * 180 / Math.PI).toFixed(2), 67.90)
-    assert.equal((cSun.lat * 180 / Math.PI).toFixed(2), 1.46)
+    var cMoon = a[0]
+    var P = a[1]
+    var cSun = a[2]
+    assert.strictEqual(float(cMoon.lon * R2D).toFixed(2), -1.23) // l langitude
+    assert.strictEqual(float(cMoon.lat * R2D).toFixed(2), 4.20) // b latitude
+    assert.strictEqual(float(P * R2D).toFixed(2), 15.08) // P position angle
+    assert.strictEqual(float(cSun.lon * R2D).toFixed(2), 67.90)
+    assert.strictEqual(float(cSun.lat * R2D).toFixed(2), 1.46)
   })
 
   it('sunAltitude', function () {
     var phy = moon.physical(j, earth)
     var cSun = phy[2]
-    var h = moon.sunAltitude(new base.Coord(-20 * Math.PI / 180, 9.7 * Math.PI / 180), cSun)
-    assert.equal((h * 180 / Math.PI).toFixed(3), 2.318)
+    var h = moon.sunAltitude(moon.selenographic.copernicus, cSun)
+    assert.strictEqual(float(h * R2D).toFixed(3), 2.318)
   })
 
   it('sunrise', function () {
-    var j0 = julian.CalendarGregorianToJD(1992, 4, 15)
-    var j = moon.sunrise(new base.Coord(-20 * Math.PI / 180, 9.7 * Math.PI / 180), j0, earth)
+    // Example 53.c p377 - sunrise for the crater Copernicus in April 1992
+    var j0 = julian.CalendarGregorianToJD(1992, 4, 12)
+    var j = moon.sunrise(moon.selenographic.copernicus, j0, earth)
     var date = new julian.CalendarGregorian().fromJD(j)
-    assert.deepEqual(date, {
-      year: 1992,
-      month: 4,
-      day: 11.806928920093924
-    })
+    assert.deepStrictEqual(date, new julian.CalendarGregorian(1992, 4, 11.806921077892184))
   })
 })

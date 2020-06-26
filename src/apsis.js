@@ -8,10 +8,8 @@
  * Apsis: Chapter 50, Perigee and apogee of the Moon
  */
 
-const base = require('./base')
-const {sin, cos} = Math
-
-const M = exports
+import base from './base'
+const { sin, cos } = Math
 
 /**
  * conversion factor from k to T, given in (50.3) p. 356
@@ -20,9 +18,9 @@ const ck = 1 / 1325.55
 const D2R = Math.PI / 180
 
 // from http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
-M.EARTH_RADIUS = 6378.137 // km
+export const EARTH_RADIUS = 6378.137 // km
 // from http://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
-M.MOON_RADIUS = 1738.1 // km
+export const MOON_RADIUS = 1738.1 // km
 
 /**
  * mean time of perigee or apogee
@@ -37,7 +35,7 @@ const mean = function (T) {
  * snap returns k at half h nearest year y.
  */
 const snap = function (y, h) {
-  let k = (y - 1999.97) * 13.2555 // (50.2) p. 355
+  const k = (y - 1999.97) * 13.2555 // (50.2) p. 355
   return Math.floor(k - h + 0.5) + h
 }
 
@@ -47,7 +45,7 @@ const snap = function (y, h) {
  * @param {Number} year - is a decimal year specifying a date.
  * @return {Number} jde - Julian ephemeris day
  */
-M.meanPerigee = function (year) {
+export function meanPerigee (year) {
   return mean(snap(year, 0) * ck)
 }
 
@@ -57,8 +55,8 @@ M.meanPerigee = function (year) {
  * @param {Number} year - is a decimal year specifying a date.
  * @return {Number} jde - Julian ephemeris day
  */
-M.perigee = function (year) {
-  let l = new La(year, 0)
+export function perigee (year) {
+  const l = new La(year, 0)
   return mean(l.T) + l.perigeeCorr()
 }
 
@@ -68,7 +66,7 @@ M.perigee = function (year) {
  * @param {Number} year - is a decimal year specifying a date.
  * @return {Number} jde - Julian ephemeris day
  */
-M.meanApogee = function (year) { // (year float64)  float64
+export function meanApogee (year) { // (year float64)  float64
   return mean(snap(year, 0.5) * ck)
 }
 
@@ -78,8 +76,8 @@ M.meanApogee = function (year) { // (year float64)  float64
  * @param {Number} year - is a decimal year specifying a date.
  * @return {Number} jde - Julian ephemeris day
  */
-M.apogee = function (year) {
-  let l = new La(year, 0.5)
+export function apogee (year) {
+  const l = new La(year, 0.5)
   return mean(l.T) + l.apogeeCorr()
 }
 
@@ -89,7 +87,7 @@ M.apogee = function (year) {
  * @param {Number} year - is a decimal year specifying a date.
  * @return {Number} equatorial horizontal parallax in radians
  */
-M.apogeeParallax = function (year) {
+export function apogeeParallax (year) {
   return new La(year, 0.5).apogeeParallax()
 }
 
@@ -99,7 +97,7 @@ M.apogeeParallax = function (year) {
  * @param {Number} year - is a decimal year specifying a date.
  * @return {Number} equatorial horizontal parallax in radians
  */
-M.perigeeParallax = function (year) {
+export function perigeeParallax (year) {
   return new La(year, 0).perigeeParallax()
 }
 
@@ -109,8 +107,8 @@ M.perigeeParallax = function (year) {
  * @param {Number} parallax - parallax angle in radians
  * @return {Number} distance in `km`
  */
-M.distance = function (parallax) {
-  return M.EARTH_RADIUS / sin(parallax)
+export function distance (parallax) {
+  return EARTH_RADIUS / sin(parallax)
 }
 
 class La {
@@ -118,11 +116,11 @@ class La {
     this.k = snap(y, h)
     this.T = this.k * ck // (50.3) p. 350
     this.D = base.horner(this.T, 171.9179 * D2R, 335.9106046 * D2R / ck,
-    -0.0100383 * D2R, -0.00001156 * D2R, 0.000000055 * D2R)
+      -0.0100383 * D2R, -0.00001156 * D2R, 0.000000055 * D2R)
     this.M = base.horner(this.T, 347.3477 * D2R, 27.1577721 * D2R / ck,
-    -0.000813 * D2R, -0.000001 * D2R)
+      -0.000813 * D2R, -0.000001 * D2R)
     this.F = base.horner(this.T, 316.6109 * D2R, 364.5287911 * D2R / ck,
-    -0.0125053 * D2R, -0.0000148 * D2R)
+      -0.0125053 * D2R, -0.0000148 * D2R)
     return this
   }
 
@@ -130,7 +128,7 @@ class La {
    * perigee correction
    */
   perigeeCorr () {
-    let l = this
+    const l = this
     return -1.6769 * sin(2 * l.D) +
     0.4589 * sin(4 * l.D) +
     -0.1856 * sin(6 * l.D) +
@@ -197,7 +195,7 @@ class La {
    * apogee correction
    */
   apogeeCorr () {
-    let l = this
+    const l = this
     return 0.4392 * sin(2 * l.D) +
     0.0684 * sin(4 * l.D) +
     (0.0456 - 0.00011 * l.T) * sin(l.M) +
@@ -237,7 +235,7 @@ class La {
    */
   apogeeParallax () {
     const s = Math.PI / 180 / 3600
-    let l = this
+    const l = this
     return 3245.251 * s +
     -9.147 * s * cos(2 * l.D) +
     -0.841 * s * cos(l.D) +
@@ -263,7 +261,7 @@ class La {
    */
   perigeeParallax () {
     const s = Math.PI / 180 / 3600
-    let l = this
+    const l = this
     return 3629.215 * s +
       63.224 * s * cos(2 * l.D) +
       -6.990 * s * cos(4 * l.D) +
@@ -312,4 +310,16 @@ class La {
       0.010 * s * cos(5 * l.D + l.M) +
       -0.010 * s * cos(20 * l.D)
   }
+}
+
+export default {
+  EARTH_RADIUS,
+  MOON_RADIUS,
+  meanPerigee,
+  perigee,
+  meanApogee,
+  apogee,
+  apogeeParallax,
+  perigeeParallax,
+  distance
 }

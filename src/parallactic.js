@@ -8,9 +8,7 @@
  * Parallactic: Chapter 14, The Parallactic Angle, and three other Topics.
  */
 
-const base = require('./base')
-
-const M = exports
+import base from './base'
 
 /**
  * ParallacticAngle returns parallactic angle of a celestial object.
@@ -21,9 +19,9 @@ const M = exports
  *
  * All angles including result are in radians.
  */
-M.parallacticAngle = function (φ, δ, H) { // (φ, δ, H float64)  float64
-  let [sδ, cδ] = base.sincos(δ)
-  let [sH, cH] = base.sincos(H)
+export function parallacticAngle (φ, δ, H) { // (φ, δ, H float64)  float64
+  const [sδ, cδ] = base.sincos(δ)
+  const [sH, cH] = base.sincos(H)
   return Math.atan2(sH, Math.tan(φ) * cδ - sδ * cH) // (14.1) p. 98
 }
 
@@ -32,7 +30,7 @@ M.parallacticAngle = function (φ, δ, H) { // (φ, δ, H float64)  float64
  *
  * The hour angle is not needed as an input and the math inside simplifies.
  */
-M.parallacticAngleOnHorizon = function (φ, δ) { // (φ, δ float64)  float64
+export function parallacticAngleOnHorizon (φ, δ) { // (φ, δ float64)  float64
   return Math.acos(Math.sin(φ) / Math.cos(δ))
 }
 
@@ -50,10 +48,10 @@ M.parallacticAngleOnHorizon = function (φ, δ) { // (φ, δ float64)  float64
  *
  * All angles, arguments and results, are in radians.
  */
-M.eclipticAtHorizon = function (ε, φ, θ) { // (ε, φ, θ float64)  (λ1, λ2, I float64)
-  let [sε, cε] = base.sincos(ε)
-  let [sφ, cφ] = base.sincos(φ)
-  let [sθ, cθ] = base.sincos(θ)
+export function eclipticAtHorizon (ε, φ, θ) { // (ε, φ, θ float64)  (λ1, λ2, I float64)
+  const [sε, cε] = base.sincos(ε)
+  const [sφ, cφ] = base.sincos(φ)
+  const [sθ, cθ] = base.sincos(θ)
   let λ = Math.atan2(-cθ, sε * (sφ / cφ) + cε * sθ) // (14.2) p. 99
   if (λ < 0) {
     λ += Math.PI
@@ -73,7 +71,7 @@ M.eclipticAtHorizon = function (ε, φ, θ) { // (ε, φ, θ float64)  (λ1, λ2
  *
  * All angles in radians.
  */
-M.eclipticAtEquator = function (λ, ε) { // (λ, ε float64)  float64
+export function eclipticAtEquator (λ, ε) { // (λ, ε float64)  float64
   return Math.atan(-Math.cos(λ) * Math.tan(ε))
 }
 
@@ -86,9 +84,17 @@ M.eclipticAtEquator = function (λ, ε) { // (λ, ε float64)  float64
  *
  * All angles in radians.
  */
-M.diurnalPathAtHorizon = function (δ, φ) { // (δ, φ float64)  (J float64)
-  let tφ = Math.tan(φ)
-  let b = Math.tan(δ) * tφ
-  let c = Math.sqrt(1 - b * b)
+export function diurnalPathAtHorizon (δ, φ) { // (δ, φ float64)  (J float64)
+  const tφ = Math.tan(φ)
+  const b = Math.tan(δ) * tφ
+  const c = Math.sqrt(1 - b * b)
   return Math.atan(c * Math.cos(δ) / tφ)
+}
+
+export default {
+  parallacticAngle,
+  parallacticAngleOnHorizon,
+  eclipticAtHorizon,
+  eclipticAtEquator,
+  diurnalPathAtHorizon
 }

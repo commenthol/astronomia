@@ -31,11 +31,10 @@
  * 2000 January 1, 11:59:27.816 TAI or 2000 January 1, 11:58:55.816 UTC.
  */
 
-const base = require('./base')
-const interp = require('./interpolation')
-const deltat = require('../data/deltat')
-
-const M = exports
+import base from './base'
+import interp from './interpolation'
+import deltat from '../data/deltat'
+import { Calendar, LeapYearGregorian } from './julian'
 
 /**
  * deltaT returns the difference ΔT = TD - UT between Dynamical Time TD and
@@ -47,7 +46,7 @@ const M = exports
  * @param {Number} dyear - decimal year
  * @returns {Number} ΔT in seconds.
  */
-M.deltaT = function (dyear) {
+export function deltaT (dyear) {
   let ΔT
   if (dyear < -500) {
     ΔT = base.horner((dyear - 1820) * 0.01, -20, 0, 32)
@@ -72,7 +71,7 @@ M.deltaT = function (dyear) {
   } else if (dyear < 2150) {
     ΔT = base.horner((dyear - 1820) / 100, -205.72, 56.28, 32)
   } else {
-    let u = (dyear - 1820) / 100
+    const u = (dyear - 1820) / 100
     ΔT = -20 + 32 * u * u
   }
   return ΔT
@@ -85,7 +84,7 @@ M.deltaT = function (dyear) {
  * @returns {Number} ΔT in seconds.
  */
 function interpolate (dyear, data) {
-  let d3 = interp.len3ForInterpolateX(dyear,
+  const d3 = interp.len3ForInterpolateX(dyear,
     data.first, data.last, data.table
   )
   return d3.interpolateX(dyear)
@@ -102,11 +101,11 @@ function interpolate (dyear, data) {
  * @returns {Number} ΔT in seconds.
  */
 function interpolateData (dyear, data) {
-  let [fyear, fmonth] = data.firstYM
-  let {year, month, first, last} = monthOfYear(dyear)
-  let pos = 12 * (year - fyear) + (month - fmonth)
-  let table = data.table.slice(pos, pos + 3)
-  let d3 = new interp.Len3(first, last, table)
+  const [fyear, fmonth] = data.firstYM
+  const { year, month, first, last } = monthOfYear(dyear)
+  const pos = 12 * (year - fyear) + (month - fmonth)
+  const table = data.table.slice(pos, pos + 3)
+  const d3 = new interp.Len3(first, last, table)
   return d3.interpolateX(dyear)
 }
 
@@ -117,24 +116,27 @@ function interpolateData (dyear, data) {
 * @return {Object} `{year: Number, month: Number, first: Number, last}`
 */
 function monthOfYear (dyear) {
-  const {Calendar, LeapYearGregorian} = require('./julian') // need to include this here due to cyclic require
   if (!monthOfYear.data) { // memoize yearly fractions per month
-    monthOfYear.data = {0: [], 1: []}
+    monthOfYear.data = { 0: [], 1: [] }
     for (let m = 0; m <= 12; m++) {
       monthOfYear.data[0][m] = new Calendar(1999, m, 1).toYear() - 1999 // non leap year
       monthOfYear.data[1][m] = new Calendar(2000, m, 1).toYear() - 2000 // leap year
     }
   }
-  let year = dyear | 0
-  let f = dyear - year
-  let d = LeapYearGregorian(year) ? 1 : 0
-  let data = monthOfYear.data[d]
+  const year = dyear | 0
+  const f = dyear - year
+  const d = LeapYearGregorian(year) ? 1 : 0
+  const data = monthOfYear.data[d]
 
   let month = 12 // TODO loop could be improved
   while (month > 0 && data[month] > f) {
     month--
   }
-  let first = year + data[month]
-  let last = month < 11 ? year + data[month + 2] : year + 1 + data[(month + 2) % 12]
-  return {year, month, first, last}
+  const first = year + data[month]
+  const last = month < 11 ? year + data[month + 2] : year + 1 + data[(month + 2) % 12]
+  return { year, month, first, last }
+}
+
+export default {
+  deltaT
 }

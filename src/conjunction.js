@@ -8,9 +8,7 @@
  * Conjunction: Chapter 18: Planetary Conjunctions.
  */
 
-const interp = require('./interpolation')
-
-const M = exports
+import interp from './interpolation'
 
 /**
  * Planetary computes a conjunction between two moving objects, such as planets.
@@ -36,12 +34,12 @@ const M = exports
  *    {Number} t - time of conjunction in JDE
  *    {Number} Δd - is the amount that object 2 was "above" object 1 at the time of conjunction.
  */
-M.planetary = function (t1, t5, cs1, cs2) {
+export function planetary (t1, t5, cs1, cs2) {
   if (cs1.length !== 5 || cs2.length !== 5) {
     throw new Error('Five rows required in ephemerides')
   }
-  let dr = new Array(5)
-  let dd = new Array(5)
+  const dr = new Array(5)
+  const dd = new Array(5)
   cs1.forEach((r, i) => {
     dr[i] = cs2[i].ra - cs1[i].ra
     dd[i] = cs2[i].dec - cs1[i].dec
@@ -63,12 +61,12 @@ M.planetary = function (t1, t5, cs1, cs2) {
  *    {Number} t - time of conjunction in JDE
  *    {Number} Δd - is the amount that object 2 was "above" object 1 at the time of conjunction.
  */
-M.stellar = function (t1, t5, c1, cs2) {
+export function stellar (t1, t5, c1, cs2) {
   if (cs2.length !== 5) {
     throw new Error('Five rows required in ephemerides')
   }
-  let dr = new Array(5)
-  let dd = new Array(5)
+  const dr = new Array(5)
+  const dd = new Array(5)
   cs2.forEach((r, i) => {
     dr[i] = cs2[i].ra - c1.ra
     dd[i] = cs2[i].dec - c1.dec
@@ -78,8 +76,13 @@ M.stellar = function (t1, t5, c1, cs2) {
 
 const conj = function (t1, t5, dr, dd) { // (t1, t5 float64, dr, dd []float64)  (t, Δd float64, err error)
   let l5 = new interp.Len5(t1, t5, dr)
-  let t = l5.zero(true)
+  const t = l5.zero(true)
   l5 = new interp.Len5(t1, t5, dd)
-  let Δd = l5.interpolateXStrict(t)
+  const Δd = l5.interpolateXStrict(t)
   return [t, Δd]
+}
+
+export default {
+  planetary,
+  stellar
 }

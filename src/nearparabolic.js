@@ -7,14 +7,12 @@
 /**
  * Nearparabolic: Chapter 35, Near-parabolic Motion.
  */
-const base = require('./base')
-
-const M = exports
+import base from './base'
 
 /**
  * Elements holds orbital elements for near-parabolic orbits.
  */
-class Elements {
+export class Elements {
   /**
    * @param {Number} timeP - time of Perihelion, T
    * @param {Number} pDis - Perihelion distance, q
@@ -34,16 +32,16 @@ class Elements {
    */
   anomalyDistance (jde) {
     // fairly literal translation of code on p. 246
-    let q1 = base.K * Math.sqrt((1 + this.ecc) / this.pDis) / (2 * this.pDis) // line 20
-    let g = (1 - this.ecc) / (1 + this.ecc) // line 20
+    const q1 = base.K * Math.sqrt((1 + this.ecc) / this.pDis) / (2 * this.pDis) // line 20
+    const g = (1 - this.ecc) / (1 + this.ecc) // line 20
 
-    let t = jde - this.timeP // line 22
+    const t = jde - this.timeP // line 22
     if (t === 0) { // line 24
       return { ano: 0, dist: this.pDis, err: null }
     }
-    let d1 = 1e4
-    let d = 1e-9 // line 14
-    let q2 = q1 * t // line 28
+    const d1 = 1e4
+    const d = 1e-9 // line 14
+    const q2 = q1 * t // line 28
     let s = 2.0 / (3 * Math.abs(q2)) // line 30
     s = 2 / Math.tan(2 * Math.atan(Math.cbrt(Math.tan(Math.atan(s) / 2))))
     if (t < 0) { // line 34
@@ -52,16 +50,16 @@ class Elements {
     if (this.ecc !== 1) { // line 36
       let l = 0 // line 38
       for (;;) {
-        let s0 = s // line 40
+        const s0 = s // line 40
         let z = 1.0
-        let y = s * s
+        const y = s * s
         let g1 = -y * s
         let q3 = q2 + 2 * g * s * y / 3 // line 42
         for (;;) {
           z += 1 // line 44
           g1 = -g1 * g * y // line 46
-          let z1 = (z - (z + 1) * g) / (2 * z + 1) // line 48
-          let f = z1 * g1 // line 50
+          const z1 = (z - (z + 1) * g) / (2 * z + 1) // line 48
+          const f = z1 * g1 // line 50
           q3 += f // line 52
           if (z > 50 || Math.abs(f) > d1) { // line 54
             return {
@@ -79,7 +77,7 @@ class Elements {
           }
         }
         for (;;) {
-          let s1 = s // line 60
+          const s1 = s // line 60
           s = (2 * s * s * s / 3 + q3) / (s * s + 1)
           if (Math.abs(s - s1) <= d) { // line 62
             break
@@ -91,7 +89,7 @@ class Elements {
       }
     }
     let ν = 2 * Math.atan(s) // line 66
-    let r = this.pDis * (1 + this.ecc) / (1 + this.ecc * Math.cos(ν)) // line 68
+    const r = this.pDis * (1 + this.ecc) / (1 + this.ecc * Math.cos(ν)) // line 68
     if (ν < 0) { // line 70
       ν += 2 * Math.PI
     }
@@ -102,4 +100,7 @@ class Elements {
     }
   }
 }
-M.Elements = Elements
+
+export default {
+  Elements
+}

@@ -8,16 +8,14 @@
  * Solstice: Chapter 27: Equinoxes and Solstices.
  */
 
-const base = require('./base')
-const solar = require('./solar')
-const {abs, cos, sin} = Math
+import base from './base'
+import solar from './solar'
+const { abs, cos, sin } = Math
 const D2R = Math.PI / 180
-
-const M = exports
 
 // table 27.a - for years from -1000 to +1000
 const mc0 = [1721139.29189, 365242.13740, 0.06134, 0.00111, -0.00071]
-const jc0 = [1721233.25401, 365241.72562, -0.05232, 0.00907, 0.00025]
+const jc0 = [1721233.25401, 365241.72562, -0.05323, 0.00907, 0.00025]
 const sc0 = [1721325.70455, 365242.49558, -0.11677, -0.00297, 0.00074]
 const dc0 = [1721414.39987, 365242.88257, -0.00769, -0.00933, -0.00006]
 
@@ -73,7 +71,7 @@ const terms = (function () {
  * @param {Number} y - (int) year
  * @returns {Number} JDE
  */
-M.march = function (y) {
+export function march (y) {
   if (y < 1000) {
     return eq(y, mc0)
   }
@@ -89,7 +87,7 @@ M.march = function (y) {
  * @param {Number} y - (int) year
  * @returns {Number} JDE
  */
-M.june = function (y) {
+export function june (y) {
   if (y < 1000) {
     return eq(y, jc0)
   }
@@ -105,7 +103,7 @@ M.june = function (y) {
  * @param {Number} y - (int) year
  * @returns {Number} JDE
  */
-M.september = function (y) {
+export function september (y) {
   if (y < 1000) {
     return eq(y, sc0)
   }
@@ -121,7 +119,7 @@ M.september = function (y) {
  * @param {Number} y - (int) year
  * @returns {Number} JDE
  */
-M.december = function (y) {
+export function december (y) {
   if (y < 1000) {
     return eq(y, dc0)
   }
@@ -137,14 +135,13 @@ M.december = function (y) {
  * @returns {Number} JDE
  */
 function eq (y, c) {
-  let J0 = base.horner(y * 0.001, c)
-  let T = base.J2000Century(J0)
-  let W = 35999.373 * D2R * T - 2.47 * D2R
-  let Δλ = 1 + 0.0334 * cos(W) + 0.0007 * cos(2 * W)
+  const J0 = base.horner(y * 0.001, c)
+  const T = base.J2000Century(J0)
+  const W = 35999.373 * D2R * T - 2.47 * D2R
+  const Δλ = 1 + 0.0334 * cos(W) + 0.0007 * cos(2 * W)
   let S = 0
-  let i
-  for (i = terms.length - 1; i >= 0; i--) {
-    let t = terms[i]
+  for (let i = terms.length - 1; i >= 0; i--) {
+    const t = terms[i]
     S += t.a * cos((t.b + t.c * T) * D2R)
   }
   return J0 + 0.00001 * S / Δλ
@@ -160,8 +157,8 @@ function eq (y, c) {
  * the package planetposition
  * @returns {Number} JDE
  */
-M.march2 = function (year, planet) {
-  return M.longitude(year, planet, 0)
+export function march2 (year, planet) {
+  return longitude(year, planet, 0)
 }
 
 /**
@@ -174,8 +171,8 @@ M.march2 = function (year, planet) {
  * the package planetposition
  * @returns {Number} JDE
  */
-M.june2 = function (year, planet) {
-  return M.longitude(year, planet, Math.PI / 2)
+export function june2 (year, planet) {
+  return longitude(year, planet, Math.PI / 2)
 }
 
 /**
@@ -188,8 +185,8 @@ M.june2 = function (year, planet) {
  * the package planetposition
  * @returns {Number} JDE
  */
-M.september2 = function (year, planet) {
-  return M.longitude(year, planet, Math.PI)
+export function september2 (year, planet) {
+  return longitude(year, planet, Math.PI)
 }
 
 /**
@@ -202,8 +199,8 @@ M.september2 = function (year, planet) {
  * the package planetposition
  * @returns {Number} JDE
  */
-M.december2 = function (year, planet) {
-  return M.longitude(year, planet, Math.PI * 3 / 2)
+export function december2 (year, planet) {
+  return longitude(year, planet, Math.PI * 3 / 2)
 }
 
 /**
@@ -214,7 +211,7 @@ M.december2 = function (year, planet) {
  * @param {Number} lon - geocentric solar longitude in radians
  * @returns {Number} JDE
  */
-M.longitude = function (year, planet, lon) {
+export function longitude (year, planet, lon) {
   let c
   let ct
 
@@ -240,7 +237,7 @@ M.longitude = function (year, planet, lon) {
   return eq2(year, planet, lon, c)
 }
 
- /**
+/**
   * Accurate calculation of solstices/ equinoxes
   * Result is accurate to one second of time.
   *
@@ -254,8 +251,8 @@ function eq2 (year, planet, lon, c) {
   let J0 = base.horner(year * 0.001, c)
 
   for (;;) {
-    let a = solar.apparentVSOP87(planet, J0)
-    let c = 58 * sin(lon - a.lon) // (27.1) p. 180
+    const a = solar.apparentVSOP87(planet, J0)
+    const c = 58 * sin(lon - a.lon) // (27.1) p. 180
     J0 += c
     if (abs(c) < 0.000005) {
       break
@@ -263,4 +260,16 @@ function eq2 (year, planet, lon, c) {
   }
 
   return J0
+}
+
+export default {
+  march,
+  june,
+  september,
+  december,
+  march2,
+  june2,
+  september2,
+  december2,
+  longitude
 }

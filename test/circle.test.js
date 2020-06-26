@@ -1,11 +1,5 @@
-/* eslint one-var: 0 */
-/* global describe, it */
-
-var assert = require('assert')
-
-var base = require('..').base
-var circle = require('..').circle
-var sexa = require('..').sexagesimal
+import assert from 'assert'
+import { base, circle, sexagesimal as sexa } from '..'
 
 describe('#circle', function () {
   it('Smallest typeI', function () {
@@ -23,9 +17,10 @@ describe('#circle', function () {
       new sexa.Angle(false, 17, 49, 36.8).rad()
     )
     var a = circle.smallest(c1, c2, c3)
-    var d = a[0], t = a[1]
-    assert.equal(new sexa.Angle(d).toString(0), '2°18′38″') // Δ = 2°.31054 = 2°19′
-    assert.equal(t, true) // type I
+    var d = a[0]
+    var t = a[1]
+    assert.strictEqual(new sexa.Angle(d).toString(0), '2°18′38″') // Δ = 2°.31054 = 2°19′
+    assert.strictEqual(t, true) // type I
   })
 
   it('Smallest typeII', function () {
@@ -43,8 +38,9 @@ describe('#circle', function () {
       new sexa.Angle(true, 1, 50, 3.7).rad()
     )
     var a = circle.smallest(c1, c2, c3)
-    var d = a[0], t = a[1]
-    assert.equal(new sexa.Angle(d).toString(0), '4°15′49″') // Δ = 4°.26363 = 4°16′
-    assert.equal(t, false) // type II
+    var d = a[0]
+    var t = a[1]
+    assert.strictEqual(new sexa.Angle(d).toString(0), '4°15′49″') // Δ = 4°.26363 = 4°16′
+    assert.strictEqual(t, false) // type II
   })
 })

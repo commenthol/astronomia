@@ -10,32 +10,30 @@
  * Incomplete: Some functions unimplemented for lack of test data.
  */
 
-const base = require('./base')
-
-const M = exports
+import base from './base'
 
 /**
  * Mean computes some intermediate values for a mean planetary configuration
  * given a year and a row of coefficients from Table 36.A, p. 250.0
  */
-const mean = M.mean = function (y, a) { // (y float64, a *ca)  (J, M, T float64)
+export function mean (y, a) { // (y float64, a *ca)  (J, M, T float64)
   // (36.1) p. 250
-  let k = Math.floor((365.2425 * y + 1721060 - a.A) / a.B + 0.5)
-  let J = a.A + k * a.B
-  let M = base.pmod(a.M0 + k * a.M1, 360) * Math.PI / 180
-  let T = base.J2000Century(J)
+  const k = Math.floor((365.2425 * y + 1721060 - a.A) / a.B + 0.5)
+  const J = a.A + k * a.B
+  const M = base.pmod(a.M0 + k * a.M1, 360) * Math.PI / 180
+  const T = base.J2000Century(J)
   return [J, M, T]
 }
 
 /**
  * Sum computes a sum of periodic terms.
  */
-const sum = M.sum = function (T, M, c) { // (T, M float64, c [][]float64)  float64
+export function sum (T, M, c) { // (T, M float64, c [][]float64)  float64
   let j = base.horner(T, c[0])
   let mm = 0.0
-  for (var i = 1; i < c.length; i++) {
+  for (let i = 1; i < c.length; i++) {
     mm += M
-    let [smm, cmm] = base.sincos(mm)
+    const [smm, cmm] = base.sincos(mm)
     j += smm * base.horner(T, c[i])
     i++
     j += cmm * base.horner(T, c[i])
@@ -46,8 +44,8 @@ const sum = M.sum = function (T, M, c) { // (T, M float64, c [][]float64)  float
 /**
  * ms returns a mean time corrected by a sum.
  */
-const ms = M.ms = function (y, a, c) { // (y float64, a *ca, c [][]float64)  float64
-  let [J, M, T] = mean(y, a)
+export function ms (y, a, c) { // (y float64, a *ca, c [][]float64)  float64
+  const [J, M, T] = mean(y, a)
   return J + sum(T, M, c)
 }
 
@@ -57,7 +55,7 @@ const ms = M.ms = function (y, a, c) { // (y float64, a *ca, c [][]float64)  flo
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.mercuryInfConj = function (y) { // (y float64)  (jde float64)
+export function mercuryInfConj (y) { // (y float64)  (jde float64)
   return ms(y, micA, micB)
 }
 
@@ -67,7 +65,7 @@ M.mercuryInfConj = function (y) { // (y float64)  (jde float64)
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.mercurySupConj = function (y) { // (y float64)  (jde float64)
+export function mercurySupConj (y) { // (y float64)  (jde float64)
   return ms(y, mscA, mscB)
 }
 
@@ -77,7 +75,7 @@ M.mercurySupConj = function (y) { // (y float64)  (jde float64)
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.venusInfConj = function (y) { // (y float64)  (jde float64)
+export function venusInfConj (y) { // (y float64)  (jde float64)
   return ms(y, vicA, vicB)
 }
 
@@ -87,18 +85,18 @@ M.venusInfConj = function (y) { // (y float64)  (jde float64)
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.marsOpp = function (y) { // (y float64)  (jde float64)
+export function marsOpp (y) { // (y float64)  (jde float64)
   return ms(y, moA, moB)
 }
 
 /**
  * SumA computes the sum of periodic terms with "additional angles"
  */
-const sumA = M.sumA = function (T, M, c, aa) { // (T, M float64, c [][]float64, aa []caa)  float64
+export function sumA (T, M, c, aa) { // (T, M float64, c [][]float64, aa []caa)  float64
   let i = c.length - 2 * aa.length
   let j = sum(T, M, c.slice(0, i))
-  for (var k = 0; k < aa.length; k++) {
-    let [saa, caa] = base.sincos((aa[k].c + aa[k].f * T) * Math.PI / 180)
+  for (let k = 0; k < aa.length; k++) {
+    const [saa, caa] = base.sincos((aa[k].c + aa[k].f * T) * Math.PI / 180)
     j += saa * base.horner(T, c[i])
     i++
     j += caa * base.horner(T, c[i])
@@ -110,8 +108,8 @@ const sumA = M.sumA = function (T, M, c, aa) { // (T, M float64, c [][]float64, 
 /**
  * Msa returns a mean time corrected by a sum.
  */
-const msa = M.msa = function (y, a, c, aa) { // (y float64, a *ca, c [][]float64, aa []caa)  float64
-  let [J, M, T] = mean(y, a)
+export function msa (y, a, c, aa) { // (y float64, a *ca, c [][]float64, aa []caa)  float64
+  const [J, M, T] = mean(y, a)
   return J + sumA(T, M, c, aa)
 }
 
@@ -121,7 +119,7 @@ const msa = M.msa = function (y, a, c, aa) { // (y float64, a *ca, c [][]float64
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.jupiterOpp = function (y) { // (y float64)  (jde float64)
+export function jupiterOpp (y) { // (y float64)  (jde float64)
   return msa(y, joA, joB, jaa)
 }
 
@@ -131,7 +129,7 @@ M.jupiterOpp = function (y) { // (y float64)  (jde float64)
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.saturnOpp = function (y) { // (y float64)  (jde float64)
+export function saturnOpp (y) { // (y float64)  (jde float64)
   return msa(y, soA, soB, saa)
 }
 
@@ -141,7 +139,7 @@ M.saturnOpp = function (y) { // (y float64)  (jde float64)
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.saturnConj = function (y) { // (y float64)  (jde float64)
+export function saturnConj (y) { // (y float64)  (jde float64)
   return msa(y, scA, scB, saa)
 }
 
@@ -151,7 +149,7 @@ M.saturnConj = function (y) { // (y float64)  (jde float64)
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.uranusOpp = function (y) { // (y float64)  (jde float64)
+export function uranusOpp (y) { // (y float64)  (jde float64)
   return msa(y, uoA, uoB, uaa)
 }
 
@@ -161,15 +159,15 @@ M.uranusOpp = function (y) { // (y float64)  (jde float64)
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.neptuneOpp = function (y) { // (y float64)  (jde float64)
+export function neptuneOpp (y) { // (y float64)  (jde float64)
   return msa(y, noA, noB, naa)
 }
 
 /**
  * El computes time and elongation of a greatest elongation event.
  */
-const el = M.el = function (y, a, t, e) { // (y float64, a *ca, t, e [][]float64)  (jde, elongation float64)
-  let [J, M, T] = mean(y, micA)
+export function el (y, a, t, e) { // (y float64, a *ca, t, e [][]float64)  (jde, elongation float64)
+  const [J, M, T] = mean(y, micA)
   return [J + sum(T, M, t), sum(T, M, e) * Math.PI / 180]
 }
 
@@ -179,7 +177,7 @@ const el = M.el = function (y, a, t, e) { // (y float64, a *ca, t, e [][]float64
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.mercuryEastElongation = function (y) { // (y float64)  (jde, elongation float64)
+export function mercuryEastElongation (y) { // (y float64)  (jde, elongation float64)
   return el(y, micA, met, mee)
 }
 
@@ -189,12 +187,12 @@ M.mercuryEastElongation = function (y) { // (y float64)  (jde, elongation float6
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
  */
-M.mercuryWestElongation = function (y) { // (y float64)  (jde, elongation float64)
+export function mercuryWestElongation (y) { // (y float64)  (jde, elongation float64)
   return el(y, micA, mwt, mwe)
 }
 
-M.marsStation2 = function (y) { // (y float64)  (jde float64)
-  let [J, M, T] = mean(y, moA)
+export function marsStation2 (y) { // (y float64)  (jde float64)
+  const [J, M, T] = mean(y, moA)
   return J + sum(T, M, ms2)
 }
 
@@ -211,15 +209,15 @@ function Ca (A, B, M0, M1) {
 /**
  * Table 36.A, p. 250
  */
-var micA = new Ca(2451612.023, 115.8774771, 63.5867, 114.2088742)
-var mscA = new Ca(2451554.084, 115.8774771, 6.4822, 114.2088742)
-var vicA = new Ca(2451996.706, 583.921361, 82.7311, 215.513058)
-var moA = new Ca(2452097.382, 779.936104, 181.9573, 48.705244)
-var joA = new Ca(2451870.628, 398.884046, 318.4681, 33.140229)
-var soA = new Ca(2451870.17, 378.091904, 318.0172, 12.647487)
-var scA = new Ca(2451681.124, 378.091904, 131.6934, 12.647487)
-var uoA = new Ca(2451764.317, 369.656035, 213.6884, 4.333093)
-var noA = new Ca(2451753.122, 367.486703, 202.6544, 2.194998)
+const micA = new Ca(2451612.023, 115.8774771, 63.5867, 114.2088742)
+const mscA = new Ca(2451554.084, 115.8774771, 6.4822, 114.2088742)
+const vicA = new Ca(2451996.706, 583.921361, 82.7311, 215.513058)
+const moA = new Ca(2452097.382, 779.936104, 181.9573, 48.705244)
+const joA = new Ca(2451870.628, 398.884046, 318.4681, 33.140229)
+const soA = new Ca(2451870.17, 378.091904, 318.0172, 12.647487)
+const scA = new Ca(2451681.124, 378.091904, 131.6934, 12.647487)
+const uoA = new Ca(2451764.317, 369.656035, 213.6884, 4.333093)
+const noA = new Ca(2451753.122, 367.486703, 202.6544, 2.194998)
 
 /**
  * caa holds coefficients for "additional angles" for outer planets
@@ -230,23 +228,23 @@ function Caa (c, f) {
   this.f = f
 }
 
-var jaa = [
+const jaa = [
   new Caa(82.74, 40.76)
 ]
 
-var saa = [
+const saa = [
   new Caa(82.74, 40.76),
   new Caa(29.86, 1181.36),
   new Caa(14.13, 590.68),
   new Caa(220.02, 1262.87)
 ]
 
-var uaa = [
+const uaa = [
   new Caa(207.83, 8.51),
   new Caa(108.84, 419.96)
 ]
 
-var naa = [
+const naa = [
   new Caa(207.83, 8.51),
   new Caa(276.74, 209.98)
 ]
@@ -258,7 +256,7 @@ var naa = [
 /**
  * Mercury inferior conjunction
  */
-var micB = [
+const micB = [
   [0.0545, 0.0002],
   [-6.2008, 0.0074, 0.00003],
   [-3.275, -0.0197, 0.00001],
@@ -275,7 +273,7 @@ var micB = [
 /**
  * Mercury superior conjunction
  */
-var mscB = [
+const mscB = [
   [-0.0548, -0.0002],
   [7.3894, -0.01, -0.00003],
   [3.22, 0.0197, -0.00001],
@@ -292,7 +290,7 @@ var mscB = [
 /**
  * Venus inferior conjunction
  */
-var vicB = [
+const vicB = [
   [-0.0096, 0.0002, -0.00001],
   [2.0009, -0.0033, -0.00001],
   [0.598, -0.0104, 0.00001],
@@ -305,7 +303,7 @@ var vicB = [
 /**
  * Mars opposition
  */
-var moB = [
+const moB = [
   [-0.3088, 0, 0.00002],
   [-17.6965, 0.0363, 0.00005],
   [18.3131, 0.0467, -0.00006],
@@ -322,7 +320,7 @@ var moB = [
 /**
  * Jupiter opposition
  */
-var joB = [
+const joB = [
   [-0.1029, 0, -0.00009],
   [-1.9658, -0.0056, 0.00007],
   [6.1537, 0.021, -0.00006],
@@ -337,7 +335,7 @@ var joB = [
 /**
  * Saturn opposition
  */
-var soB = [
+const soB = [
   [-0.0209, 0.0006, 0.00023],
   [4.5795, -0.0312, -0.00017],
   [1.1462, -0.0351, 0.00011],
@@ -358,7 +356,7 @@ var soB = [
 /**
  * Saturn conjunction
  */
-var scB = [
+const scB = [
   [0.0172, -0.0006, 0.00023],
   [-8.5885, 0.0411, 0.00020],
   [-1.147, 0.0352, -0.00011],
@@ -379,7 +377,7 @@ var scB = [
 /**
  * Uranus opposition
  */
-var uoB = [
+const uoB = [
   [0.0844, -0.0006],
   [-0.1048, 0.0246],
   [-5.1221, 0.0104, 0.00003],
@@ -396,7 +394,7 @@ var uoB = [
 /**
  * Neptune opposition [
  */
-var noB = [
+const noB = [
   [-0.014, 0, 0.00001],
   [-1.3486, 0.001, 0.00001],
   [0.8597, 0.0037],
@@ -415,7 +413,7 @@ var noB = [
 /**
  * Mercury east time correction
  */
-var met = [
+const met = [
   [-21.6106, 0.0002],
   [-1.9803, -0.006, 0.00001],
   [1.4151, -0.0072, -0.00001],
@@ -432,7 +430,7 @@ var met = [
 /**
  * Mercury east elongation
  */
-var mee = [
+const mee = [
   [22.4697],
   [-4.2666, 0.0054, 0.00002],
   [-1.8537, -0.0137],
@@ -449,7 +447,7 @@ var mee = [
 /**
  * Mercury west time correction
  */
-var mwt = [
+const mwt = [
   [21.6249, -0.0002],
   [0.1306, 0.0065],
   [-2.7661, -0.0011, 0.00001],
@@ -466,7 +464,7 @@ var mwt = [
 /**
  * Mercury west elongation
  */
-var mwe = [
+const mwe = [
   [22.4143, -0.0001],
   [4.3651, -0.0048, -0.00002],
   [2.3787, 0.0121, -0.00001],
@@ -487,7 +485,7 @@ var mwe = [
 /**
  * Mars Station 2
  */
-var ms2 = [
+const ms2 = [
   [36.7191, 0.0016, 0.00003],
   [-12.6163, 0.0417, -0.00001],
   [20.1218, 0.0379, -0.00006],
@@ -500,3 +498,24 @@ var ms2 = [
   [-0.0021, -0.0016],
   [-0.1497, -0.0006]
 ]
+
+export default {
+  mean,
+  sum,
+  ms,
+  mercuryInfConj,
+  mercurySupConj,
+  venusInfConj,
+  marsOpp,
+  sumA,
+  msa,
+  jupiterOpp,
+  saturnOpp,
+  saturnConj,
+  uranusOpp,
+  neptuneOpp,
+  el,
+  mercuryEastElongation,
+  mercuryWestElongation,
+  marsStation2
+}
