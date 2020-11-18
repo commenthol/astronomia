@@ -31,14 +31,13 @@ function vsop_conv () {
   node $cwd/vsop87convert.js
 }
 
-## VSOP87 data
+## ELP MPP data
 function elp () {
   local url=ftp://cyrano-se.obspm.fr/pub/2_lunar_solutions/2_elpmpp02
   local files="ELP_MAIN.S1 ELP_MAIN.S2 ELP_MAIN.S3 ELP_PERT.S1 ELP_PERT.S2 ELP_PERT.S3"
 
   for file in $files; do
-    # $curl $url/$file > $target/$file
-    echo "download"
+    $curl $url/$file > $target/$file
   done
 }
 
@@ -109,6 +108,8 @@ case $1 in
     deltat_conv
     vsop
     vsop_conv
+    elp
+    elp_conv
     ;;
   -h|--help)
     help
