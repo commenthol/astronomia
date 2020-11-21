@@ -66,7 +66,7 @@ export function precess(T, x, y, z) {
   return result
 }
 
-class Moon {
+export class Moon {
   /**
    * ELP representation of a Moon
    * @constructs Moon
