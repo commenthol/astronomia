@@ -7,8 +7,8 @@ var neptune = require('./vsop87Bneptune.js')
 var saturn = require('./vsop87Bsaturn.js')
 var uranus = require('./vsop87Buranus.js')
 var venus = require('./vsop87Bvenus.js')
-var elpMpp02Data = require('./elpMpp02Data.js')
-var elpMpp02DataFull = require('./elpMpp02DataFull.js')
+var elpMppDe = require('./elpMppDe.js')
+var elpMppDeFull = require('./elpMppDeFull.js')
 
 module.exports = {
   deltat: deltat,
@@ -28,6 +28,6 @@ module.exports = {
   vsop87Bsaturn: saturn,
   vsop87Buranus: uranus,
   vsop87Bvenus: venus,
-  elpMpp02Data: elpMpp02Data,
-  elpMpp02DataFull: elpMpp02DataFull,
+  elpMppDe: elpMppDe,
+  elpMppDeFull: elpMppDeFull,
 }

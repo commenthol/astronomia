@@ -31,21 +31,6 @@ function vsop_conv () {
   node $cwd/vsop87convert.js
 }
 
-## ELP MPP data
-function elp () {
-  local url=ftp://cyrano-se.obspm.fr/pub/2_lunar_solutions/2_elpmpp02
-  local files="ELP_MAIN.S1 ELP_MAIN.S2 ELP_MAIN.S3 ELP_PERT.S1 ELP_PERT.S2 ELP_PERT.S3"
-
-  for file in $files; do
-    $curl $url/$file > $target/$file
-  done
-}
-
-## convert ELPMPP data
-function elp_conv () {
-  node $cwd/elpmpp02convert.js
-}
-
 ## DeltaT data
 # primary:   ftp://maia.usno.navy.mil
 # secondary: ftp://toshi.nofs.navy.mil
@@ -84,7 +69,6 @@ function help () {
 
     -t, --deltat    download delta T data
     -v, --vsop      download VSOP87 data
-    -e, --elp       download ELPMPP02 data
     -h, --help      this help
 
 EOS
@@ -99,17 +83,11 @@ case $1 in
     vsop
     vsop_conv
     ;;
-  -e|--elp)
-    elp
-    elp_conv
-    ;;
   -a|--all)
     deltat
     deltat_conv
     vsop
     vsop_conv
-    elp
-    elp_conv
     ;;
   -h|--help)
     help
