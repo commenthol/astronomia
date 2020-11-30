@@ -5,6 +5,24 @@ import { elp, data, nutation, base } from '..'
 const R2D = 180 / Math.PI
 
 describe('#elp', function () {
+  it('position XYZ', function () {
+    // data test from ftp://cyrano-se.obspm.fr/pub/2_lunar_solutions/2_elpmpp02/elpmpp02.pdf
+    const dataTest = [
+      { JD: 2500000.5, X: 274034.5910319, Y: 252067.5368900, Z: -18998.7551906 },
+      { JD: 2300000.5, X: 353104.3135900, Y: -195254.1180825, Z: 34943.5459198 },
+      { JD: 2100000.5, X: -19851.2767407, Y: -385646.1771713, Z: -27597.6613380 },
+      { JD: 1900000.5, X: -370342.7925431, Y: -37574.2553207, Z: -4527.9184052 },
+      { JD: 1700000.5, X: -164673.0471978, Y: 367791.7132932, Z: 31603.9802706 }
+    ]
+    var moon = new elp.Moon(data.elpMppDeFull)
+    dataTest.forEach(function (row) {
+      const { x, y, z } = moon.positionXYZ(row.JD)
+      assert.strictEqual(float(x).toFixed(4), float(row.X).toFixed(4))
+      assert.strictEqual(float(y).toFixed(4), float(row.Y).toFixed(4))
+      assert.strictEqual(float(z).toFixed(4), float(row.Z).toFixed(4))
+    })
+  })
+  
   it('position horizon', function () {
     var JplHorizonData = [
       //       date                JD                range         deltaT        lon         lat
@@ -23,7 +41,8 @@ describe('#elp', function () {
       ['2800-Jan-01 00:00', 2743738.500000000, 4.0343739337E+05, 69.183555, 74.2741320, -4.3494133],
       ['2950-Jan-01 00:00', 2798525.500000000, 3.7651911566E+05, 69.183485, 166.3008243, 4.3577757]
     ]
-    var moon = new elp.Moon(data.elpMppDeFull)
+    // truncate version
+    var moon = new elp.Moon(data.elpMppDe)
     JplHorizonData.forEach(function (row) {
       const [, jd, R, deltaT, L, B] = row
       const jde = jd + deltaT / (24 * 3600)
@@ -35,24 +54,6 @@ describe('#elp', function () {
       assert.ok(Math.abs(lat * R2D - B) * 3600 < 0.5) // less than 0.5"
       // unsure about range
       assert.ok(Math.abs(range - R) < 41)
-    })
-  })
-
-  it('position XYZ', function () {
-    // data test from ftp://cyrano-se.obspm.fr/pub/2_lunar_solutions/2_elpmpp02/elpmpp02.pdf
-    const dataTest = [
-      { JD: 2500000.5, X: 274034.5910319, Y: 252067.5368900, Z: -18998.7551906 },
-      { JD: 2300000.5, X: 353104.3135900, Y: -195254.1180825, Z: 34943.5459198 },
-      { JD: 2100000.5, X: -19851.2767407, Y: -385646.1771713, Z: -27597.6613380 },
-      { JD: 1900000.5, X: -370342.7925431, Y: -37574.2553207, Z: -4527.9184052 },
-      { JD: 1700000.5, X: -164673.0471978, Y: 367791.7132932, Z: 31603.9802706 }
-    ]
-    var moon = new elp.Moon(data.elpMppDeFull)
-    dataTest.forEach(function (row) {
-      const { x, y, z } = moon.positionXYZ(row.JD)
-      assert.strictEqual(float(x).toFixed(4), float(row.X).toFixed(4))
-      assert.strictEqual(float(y).toFixed(4), float(row.Y).toFixed(4))
-      assert.strictEqual(float(z).toFixed(4), float(row.Z).toFixed(4))
     })
   })
 })

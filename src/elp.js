@@ -19,14 +19,14 @@ const SEC2RAD = 1 / 3600 * Math.PI / 180
 
 function sum(T, series) {
   const coeffs = []
-  series.forEach((rows, index) => {
-    coeffs[index] = 0.0
-    let y = rows.length - 1
+  Object.keys(series).forEach((x) => {
+    coeffs[x] = 0.0
+    let y = series[x].length - 1
     for (y; y >= 0; y--) {
       // A, t0, t1, t2, t3, t4
-      const row = rows[y]
+      const row = series[x][y]
       let φ = base.horner(T, row.slice(1))
-      coeffs[index] += row[0] * Math.sin(φ)
+      coeffs[x] += row[0] * Math.sin(φ)
     }
   })
   return base.horner(T, coeffs)
@@ -94,7 +94,7 @@ export class Moon {
   positionXYZ(jde) {
     const T = base.J2000Century(jde)
 
-    let lon = base.horner(T, this.series.W) + sum(T, this.series.L) * SEC2RAD
+    let lon = base.horner(T, this.series.W1) + sum(T, this.series.L) * SEC2RAD
     let lat = sum(T, this.series.B) * SEC2RAD
     let R = sum(T, this.series.R)
 
