@@ -104,10 +104,7 @@ export class ELPMPP02 {
    * @param {String} data - content of ELP file
    */
   parse(data) {
-    this.data = {
-      name: this.name,
-      W1: [...this.W1]
-    }
+    this.data = {}
     const lines = data.split(/\n/)
     let varName
     let ref
@@ -203,7 +200,11 @@ export class ELPMPP02 {
    * ```
    */
   getData() {
-    return this.data
+    return {
+      name: this.name,
+      W1: [...this.W1],
+      ...this.data
+    }
   }
 
   getTruncateData(treshold) {
@@ -214,14 +215,11 @@ export class ELPMPP02 {
       B: {},
       R: {}
     }
-    const thisData = this.data
-    const LBR = ['L', 'B', 'R']
-    LBR.forEach(function (type) {
-      Object.keys(thisData[type]).forEach(function (pos) {
+
+    Object.keys(this.data).forEach((type) => {
+      Object.keys(this.data[type]).forEach((pos) => {
         const limit = (treshold[type] || 0) / Math.pow(treshold.T || 1, parseInt(pos))
-        result[type][pos] = thisData[type][pos].filter(function (row) {
-          return Math.abs(row[0]) >= limit
-        })
+        result[type][pos] = this.data[type][pos].filter((row) => Math.abs(row[0]) >= limit)
       })
     })
     return result
