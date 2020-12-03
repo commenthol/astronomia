@@ -8,11 +8,11 @@ describe('#elp', function () {
   it('position XYZ', function () {
     // data test from ftp://cyrano-se.obspm.fr/pub/2_lunar_solutions/2_elpmpp02/elpmpp02.pdf
     const dataTest = [
-      { JD: 2500000.5, X: 274034.5910319, Y: 252067.5368900, Z: -18998.7551906 },
-      { JD: 2300000.5, X: 353104.3135900, Y: -195254.1180825, Z: 34943.5459198 },
-      { JD: 2100000.5, X: -19851.2767407, Y: -385646.1771713, Z: -27597.6613380 },
-      { JD: 1900000.5, X: -370342.7925431, Y: -37574.2553207, Z: -4527.9184052 },
-      { JD: 1700000.5, X: -164673.0471978, Y: 367791.7132932, Z: 31603.9802706 }
+      { JD: 2500000.5, X: 274034.59103, Y: 252067.53689, Z: -18998.75519 },
+      { JD: 2300000.5, X: 353104.31359, Y: -195254.11808, Z: 34943.54592 },
+      { JD: 2100000.5, X: -19851.27674, Y: -385646.17717, Z: -27597.66134 },
+      { JD: 1900000.5, X: -370342.79254, Y: -37574.25533, Z: -4527.91840 },
+      { JD: 1700000.5, X: -164673.04720, Y: 367791.71329, Z: 31603.98027 }
     ]
     var moon = new elp.Moon(data.elpMppDeFull)
     dataTest.forEach(function (row) {
@@ -50,10 +50,10 @@ describe('#elp', function () {
       let { lon, lat, range } = moon.position(jde)
       lon = base.pmod(lon + Δψ, 2 * Math.PI)
 
-      assert.ok(Math.abs(lon * R2D - L) * 3600 < 1.0) // less than 1"
-      assert.ok(Math.abs(lat * R2D - B) * 3600 < 0.5) // less than 0.5"
+      assert.ok(Math.abs(lon * R2D - L) * 3600 < 1.0, `L got ${lon*R2D} expected ${L}`) // less than 1"
+      assert.ok(Math.abs(lat * R2D - B) * 3600 < 0.5, `B got ${lat*R2D} expected ${B}`) // less than 0.5"
       // unsure about range
-      assert.ok(Math.abs(range - R) < 41)
+      assert.ok(Math.abs(range - R) < 41, `R got ${range} expected ${R}`)
     })
   })
 })

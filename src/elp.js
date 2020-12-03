@@ -12,8 +12,6 @@
  */
 
 import base from './base'
-import coord from './coord'
-import { eclipticPosition } from './precess'
 
 const SEC2RAD = 1 / 3600 * Math.PI / 180
 
@@ -35,37 +33,7 @@ function sum(T, series) {
 
 /**
  * 
- * @param {Number} T 
- * @param {Number} x 
- * @param {Number} y 
- * @param {Number} z 
- * @return {object} rectangular coordinates
- *   {Number} x
- *   {Number} y
- *   {Number} z 
  */
-export function precess(T, x, y, z) {
-  let P = base.horner(T, 0, 0.10180391e-4, 0.47020439e-6, -0.5417367e-9, -0.2507948e-11, 0.463486e-14)
-  let Q = base.horner(T, 0, -0.113469002e-3, 0.12372674e-6, 0.12654170e-8, -0.1371808e-11, -0.320334e-14)
-  var sq = Math.sqrt(1 - P * P - Q * Q)
-  let p11 = 1 - 2 * P * P,
-    p12 = 2 * P * Q,
-    p13 = 2 * P * sq
-  let p21 = 2 * P * Q,
-    p22 = 1 - 2 * Q * Q,
-    p23 = -2 * Q * sq
-  let p31 = -2 * P * sq,
-    p32 = 2 * Q * sq,
-    p33 = 1 - 2 * P * P - 2 * Q * Q
-
-  const result = {
-    x: p11 * x + p12 * y + p13 * z,
-    y: p21 * x + p22 * y + p23 * z,
-    z: p31 * x + p32 * y + p33 * z,
-  }
-  return result
-}
-
 export class Moon {
   /**
    * ELP representation of a Moon
@@ -83,8 +51,15 @@ export class Moon {
     this.series = data
   }
 
+  _calcLBR(T) {
+    const L = base.horner(T, this.series.W1) + sum(T, this.series.L) * SEC2RAD
+    const B = sum(T, this.series.B) * SEC2RAD
+    const R = sum(T, this.series.R)
+    return { L: base.pmod(L, 2 * Math.PI), B, R }
+  }
+
   /**
-   * Position returns rectangular coordinates referenced to the mean equinox of date.
+   * Position returns rectangular coordinates referred to the inertial mean ecliptic and equinox of J2000.
    * @param {Number} jde - Julian ephemeris day
    * @return {object} rectangular coordinates
    *   {Number} x
@@ -93,34 +68,31 @@ export class Moon {
    */
   positionXYZ(jde) {
     const T = base.J2000Century(jde)
+    const { L, B, R } = this._calcLBR(T)
 
-    let lon = base.horner(T, this.series.W1) + sum(T, this.series.L) * SEC2RAD
-    let lat = sum(T, this.series.B) * SEC2RAD
-    let R = sum(T, this.series.R)
+    let x = R * Math.cos(L) * Math.cos(B)
+    let y = R * Math.sin(L) * Math.cos(B)
+    let z = R * Math.sin(B)
 
-    let x = R * Math.cos(lon) * Math.cos(lat)
-    let y = R * Math.sin(lon) * Math.cos(lat)
-    let z = R * Math.sin(lat)
+    let P = base.horner(T, 0, 0.10180391e-4, 0.47020439e-6, -0.5417367e-9, -0.2507948e-11, 0.463486e-14)
+    let Q = base.horner(T, 0, -0.113469002e-3, 0.12372674e-6, 0.12654170e-8, -0.1371808e-11, -0.320334e-14)
+    var sq = Math.sqrt(1 - P * P - Q * Q)
+    let p11 = 1 - 2 * P * P,
+      p12 = 2 * P * Q,
+      p13 = 2 * P * sq
+    let p21 = 2 * P * Q,
+      p22 = 1 - 2 * Q * Q,
+      p23 = -2 * Q * sq
+    let p31 = -2 * P * sq,
+      p32 = 2 * Q * sq,
+      p33 = 1 - 2 * P * P - 2 * Q * Q
 
-    return precess(T, x, y, z)
-  }
-
-  /**
-   * Position2000 returns ecliptic position of moon by Elp Mpp theory.
-   *
-   * @param {Number} jde - the date for which positions are desired.
-   * @returns {base.Coord} Results are for the dynamical equinox and ecliptic J2000.
-   *  {Number} lon - geocentric longitude in radians.
-   *  {Number} lat - geocentric latitude in radians.
-   *  {Number} range - geocentric range in KM.
-   */
-  position2000(jde) {
-    let { x, y, z } = this.positionXYZ(jde)
-    let range = Math.hypot(x, y, z)
-    let lat = Math.asin(z / range)
-    let lon = Math.atan2(y, x)
-
-    return new base.Coord(lon, lat, range)
+    const result = {
+      x: p11 * x + p12 * y + p13 * z,
+      y: p21 * x + p22 * y + p23 * z,
+      z: p31 * x + p32 * y + p33 * z,
+    }
+    return result
   }
 
   /**
@@ -134,19 +106,17 @@ export class Moon {
    *  {Number} range - geocentric range in KM.
    */
   position(jde) {
-    const { lat, lon, range } = this.position2000(jde)
-    const eclFrom = new coord.Ecliptic(lon, lat)
-    const epochFrom = 2000.0
-    const epochTo = base.JDEToJulianYear(jde)
-    const eclTo = eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
+    const T = base.J2000Century(jde)
+    const { L, B, R } = this._calcLBR(T)
+
+    // precession
+    const pA = base.horner(T, 0, 5029.0966, 1.1120, 0.000077, -0.00002353) * SEC2RAD
     return new base.Coord(
-      eclTo.lon,
-      eclTo.lat,
-      range
-    )
+      base.pmod(L + pA, 2 * Math.PI),
+      B,
+      R)
   }
 }
-
 
 /**
  * Position returns the true geometric position of the moon as ecliptic coordinates.
@@ -168,6 +138,5 @@ export function position(elpData, jde) {
 
 export default {
   Moon,
-  position,
-  precess
+  position
 }

@@ -77,6 +77,7 @@ export class ELPMPP02 {
    * @throws {Error}
    * @param {String} dirname - folder containing ELP_MPP files
    * @param {Object} [constant]
+   * @param {String} name
    */
   constructor(dirname, constant, name) {
     this.dirname = dirname
