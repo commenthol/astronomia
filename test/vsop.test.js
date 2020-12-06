@@ -23,9 +23,8 @@ describe('#VSOP87', function () {
   })
 
   it('throws on unknown planet', function (done) {
-    var p // eslint-disable-line
     assert.throws(function () {
-      p = new VSOP('vogsphere')
+      new VSOP('vogsphere') // eslint-disable-line no-new
     }, /Invalid planet vogsphere/)
     done()
   })

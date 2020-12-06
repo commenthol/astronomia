@@ -22,7 +22,7 @@ describe('#elp', function () {
       assert.strictEqual(float(z).toFixed(4), float(row.Z).toFixed(4))
     })
   })
-  
+
   it('position horizon', function () {
     var JplHorizonData = [
       //       date                JD                range         deltaT        lon         lat
@@ -46,12 +46,12 @@ describe('#elp', function () {
     JplHorizonData.forEach(function (row) {
       const [, jd, R, deltaT, L, B] = row
       const jde = jd + deltaT / (24 * 3600)
-      const [Δψ,] = nutation.nutation(jde)
+      const [Δψ] = nutation.nutation(jde)
       let { lon, lat, range } = moon.position(jde)
       lon = base.pmod(lon + Δψ, 2 * Math.PI)
 
-      assert.ok(Math.abs(lon * R2D - L) * 3600 < 1.0, `L got ${lon*R2D} expected ${L}`) // less than 1"
-      assert.ok(Math.abs(lat * R2D - B) * 3600 < 0.5, `B got ${lat*R2D} expected ${B}`) // less than 0.5"
+      assert.ok(Math.abs(lon * R2D - L) * 3600 < 1.0, `L got ${lon * R2D} expected ${L}`) // less than 1"
+      assert.ok(Math.abs(lat * R2D - B) * 3600 < 0.5, `B got ${lat * R2D} expected ${B}`) // less than 0.5"
       // unsure about range
       assert.ok(Math.abs(range - R) < 41, `R got ${range} expected ${R}`)
     })
