@@ -1,3 +1,0 @@
---require @babel/register
---check-leaks
---reporter dot

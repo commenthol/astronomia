@@ -155,9 +155,9 @@ Object.assign(Data.prototype, DataSet.prototype, {
     return this
   },
   mergeFinals: function () {
-    var finals = this.finals2000A
-    var year
-    var month
+    const finals = this.finals2000A
+    let year
+    let month
 
     year = finals.first.year
     for (month = finals.first.month; month <= 12; month++) {
@@ -176,10 +176,10 @@ Object.assign(Data.prototype, DataSet.prototype, {
     return this
   },
   toData: function () {
-    var _this = this
-    var data = { table: [] }
-    var year
-    var month
+    const _this = this
+    const data = { table: [] }
+    let year
+    let month
 
     data.first = toYear(this.first.year, this.first.month)
     data.firstYM = [this.first.year, this.first.month]
@@ -187,7 +187,7 @@ Object.assign(Data.prototype, DataSet.prototype, {
     data.lastYM = [this.last.year, this.last.month]
 
     function push (year, month) {
-      var dt = _this.get(year, month)
+      const dt = _this.get(year, month)
       data.table.push(dt)
       console.log([year, month, dt].join('\t'))
     }
@@ -280,10 +280,10 @@ module.exports = {
 }
 
 function main (config) {
-  var taiMinusUTC = new TaiMinusUTC().read(config.fileLeapSecs)
-  var finals2000A = new Finals2000A(taiMinusUTC).read(config.fileFinals2000A)
+  const taiMinusUTC = new TaiMinusUTC().read(config.fileLeapSecs)
+  const finals2000A = new Finals2000A(taiMinusUTC).read(config.fileFinals2000A)
 
-  var dataSet = {
+  const dataSet = {
     historic: new Historic().read(config.fileHist).data,
     data: new Data(finals2000A).read(config.fileData).mergeFinals().toData(),
     prediction: new Prediction().read(config.filePreds).data

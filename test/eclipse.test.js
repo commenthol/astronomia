@@ -5,8 +5,8 @@ import { eclipse } from '..'
 describe('#eclipse', function () {
   it('Solar 1993', function () {
     // Example 54.a, p. 384.0
-    var res = eclipse.solar(1993.38)
-    var exp = {
+    const res = eclipse.solar(1993.38)
+    const exp = {
       type: eclipse.TYPE.Partial,
       central: false,
       jdeMax: 2449129.0978,
@@ -37,8 +37,8 @@ describe('#eclipse', function () {
 
   it('Solar 2009', function () {
     // Example 54.b, p. 385.0
-    var res = eclipse.solar(2009.56)
-    var exp = {
+    const res = eclipse.solar(2009.56)
+    const exp = {
       type: eclipse.TYPE.Total,
       central: true,
       jdeMax: 2455034.6088,
@@ -68,8 +68,8 @@ describe('#eclipse', function () {
 
   it('Lunar 1973', function () {
     // Example 54.c, p. 385.0
-    var res = eclipse.lunar(1973.46)
-    var exp = {
+    const res = eclipse.lunar(1973.46)
+    const exp = {
       type: eclipse.TYPE.Penumbral,
       magnitude: 0.4625,
       jdeMax: 2441849.3687,
@@ -111,8 +111,8 @@ describe('#eclipse', function () {
 
   it('Lunar 1997', function () {
     // Example 54.d, p. 386.0
-    var res = eclipse.lunar(1997.7)
-    var exp = {
+    const res = eclipse.lunar(1997.7)
+    const exp = {
       type: eclipse.TYPE.Total,
       magnitude: 1.1868,
       jdeMax: 2450708.2835,

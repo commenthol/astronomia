@@ -4,10 +4,10 @@ import { julian, planetelements } from '..'
 
 describe('#planetelements', function () {
   it('mean()', function () {
-    var pl = planetelements.mercury
+    const pl = planetelements.mercury
     // Example 31.a, p. 211
-    var j = julian.CalendarGregorianToJD(2065, 6, 24)
-    var e = new planetelements.Elements()
+    const j = julian.CalendarGregorianToJD(2065, 6, 24)
+    const e = new planetelements.Elements()
     planetelements.mean(pl, j, e)
     assert.strictEqual(float(e.lon * 180 / Math.PI).toFixed(6), 203.494701)
     assert.strictEqual(float(e.axis).toFixed(9), 0.387098310)
@@ -18,16 +18,16 @@ describe('#planetelements', function () {
   })
 
   it('inc(t', function () {
-    var pl = planetelements.mercury
-    var j = julian.CalendarGregorianToJD(2065, 6, 24)
-    var e = planetelements.mean(pl, j)
+    const pl = planetelements.mercury
+    const j = julian.CalendarGregorianToJD(2065, 6, 24)
+    const e = planetelements.mean(pl, j)
     assert.strictEqual(planetelements.inc(pl, j), e.inc)
   })
 
   it('node(t', function () {
-    var pl = planetelements.mercury
-    var j = julian.CalendarGregorianToJD(2065, 6, 24)
-    var e = planetelements.mean(pl, j)
+    const pl = planetelements.mercury
+    const j = julian.CalendarGregorianToJD(2065, 6, 24)
+    const e = planetelements.mean(pl, j)
     assert.strictEqual(planetelements.node(pl, j), e.node)
   })
 })

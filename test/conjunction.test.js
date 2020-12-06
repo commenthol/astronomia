@@ -7,14 +7,14 @@ describe('#conjunction', function () {
     // Example 18.a, p. 117.0
 
     // Day of month is sufficient for a time scale.
-    var day1 = 5.0
-    var day5 = 9.0
+    const day1 = 5.0
+    const day5 = 9.0
 
     // Text asks for Mercury-Venus conjunction, so r1, d1 is Venus ephemeris,
     // r2, d2 is Mercury ephemeris.
 
     // Venus
-    var cs1 = [
+    const cs1 = [
       new base.Coord(
         new sexa.RA(10, 27, 27.175).rad(),
         new sexa.Angle(false, 4, 4, 41.83).rad()
@@ -37,7 +37,7 @@ describe('#conjunction', function () {
       )
     ]
     // Mercury
-    var cs2 = [
+    const cs2 = [
       new base.Coord(
         new sexa.RA(10, 24, 30.125).rad(),
         new sexa.Angle(false, 6, 26, 32.05).rad()
@@ -60,18 +60,12 @@ describe('#conjunction', function () {
       )
     ]
     // compute conjunction
-    var err
-    try {
-      var a = conjunction.planetary(day1, day5, cs1, cs2)
-      var day = a[0]
-      var Δδ = a[1]
-    } catch (e) {
-      err = e
-    }
-    assert.ok(!err, '' + err)
+    const a = conjunction.planetary(day1, day5, cs1, cs2)
+    const day = a[0]
+    const Δδ = a[1]
 
     // time of conjunction
-    var cal = new julian.CalendarGregorian(1991, 8, day)
+    const cal = new julian.CalendarGregorian(1991, 8, day)
     // date in TD
     assert.strictEqual(cal.toDate().toISOString(), '1991-08-07T05:42:40.908Z')
     // compute UT = TD - ΔT
@@ -82,10 +76,10 @@ describe('#conjunction', function () {
 
   it('stellar', function () {
     // Exercise, p. 119.0
-    var day1 = 7.0
-    var day5 = 27.0
+    const day1 = 7.0
+    const day5 = 27.0
 
-    var cs2 = [
+    const cs2 = [
       new base.Coord(
         new sexa.RA(15, 3, 51.937).rad(), // 1996-02-07
         new sexa.Angle(true, 8, 57, 34.51).rad()
@@ -108,21 +102,21 @@ describe('#conjunction', function () {
       )
     ]
 
-    var jd = julian.CalendarGregorianToJD(1996, 2, 17)
-    var dt = jd - base.J2000
-    var dy = dt / base.JulianYear
-    var dc = dy / 100
+    const jd = julian.CalendarGregorianToJD(1996, 2, 17)
+    const dt = jd - base.J2000
+    const dy = dt / base.JulianYear
+    const dc = dy / 100
 
     assert.strictEqual(float(dy).toFixed(2), -3.87) // -3.87 years
     assert.strictEqual(float(dc).toFixed(4), -0.0387) // -0.0387 century
 
-    var pmr = -0.649 // sec/cen
-    var pmd = -1.91 // sec/cen
+    const pmr = -0.649 // sec/cen
+    const pmd = -1.91 // sec/cen
     // Careful with quick and dirty way of applying correction to seconds
     // component before converting to radians.  The dec here is negative
     // so correction must be subtracted.  Alternative, less error-prone,
     // way would be to convert both to radians, then add.
-    var c1 = new base.Coord(
+    const c1 = new base.Coord(
       new sexa.RA(15, 17, 0.421 + pmr * dc).rad(),
       new sexa.Angle(true, 9, 22, 58.54 - pmd * dc).rad()
     )
@@ -130,18 +124,12 @@ describe('#conjunction', function () {
     assert.strictEqual(new sexa.RA(c1.ra).toString(3), '15ʰ17ᵐ.446ˢ') // α′ = 15ʰ17ᵐ0ˢ.446
     assert.strictEqual(new sexa.Angle(c1.dec).toString(2), '-9°22′58.47″') // δ′ = -9°22′58″.47
 
-    var err
-    try {
-      var a = conjunction.stellar(day1, day5, c1, cs2)
-    } catch (e) {
-      err = e
-    }
-    assert.ok(!err, '' + err)
-    var day = a[0]
-    var dd = a[1]
+    const a = conjunction.stellar(day1, day5, c1, cs2)
+    const day = a[0]
+    const dd = a[1]
 
     // time of conjunction
-    var cal = new julian.CalendarGregorian(1996, 2, day)
+    const cal = new julian.CalendarGregorian(1996, 2, day)
     // date in TD
     assert.strictEqual(cal.toDate().toISOString(), '1996-02-18T06:36:55.352Z')
     // compute UT = TD - ΔT

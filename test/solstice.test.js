@@ -11,13 +11,13 @@ import { julian, planetposition, data, solstice, sexagesimal as sexa } from '..'
 describe('#solstice', function () {
   it('Example June', function () {
     // Example 27.a, p. 180
-    var res = solstice.june(1962)
+    const res = solstice.june(1962)
     assert.strictEqual(float(res).toFixed(5), 2437837.39245)
   })
 
   describe('Approx', function () {
-    var tests = (function () {
-      var data = {
+    const tests = (function () {
+      const data = {
         mar: [
           [1996, 20,  8,  4,  7],
           [1997, 20, 13, 55, 42],
@@ -67,10 +67,10 @@ describe('#solstice', function () {
           [2005, 21, 18, 36,  1]
         ]
       }
-      var ret = {}
+      const ret = {}
       Object.keys(data).forEach(function (key) {
         ret[key] = data[key].map(function (test) {
-          var o = {}
+          const o = {}
           ;['y', 'd', 'h', 'm', 's'].forEach(function (p, i) {
             o[p] = test[i]
           })
@@ -81,10 +81,10 @@ describe('#solstice', function () {
     })()
 
     function t2000 (e, month, fn) {
-      var approx = solstice[fn](e.y)
-      var vsop87 = julian.CalendarGregorianToJD(e.y, month, e.d) +
+      const approx = solstice[fn](e.y)
+      const vsop87 = julian.CalendarGregorianToJD(e.y, month, e.d) +
         new sexa.Time(false, e.h, e.m, e.s).day()
-      var res = Math.abs(vsop87 - approx) < 1.0 / 24 / 60
+      const res = Math.abs(vsop87 - approx) < 1.0 / 24 / 60
       // console.log(e.y, res, vsop87, approx)
       assert.ok(res)
     }
@@ -130,10 +130,10 @@ describe('#solstice', function () {
    * to construct the table but I have no way of knowing.
    */
   describe('Accurate', function () {
-    var planet = new planetposition.Planet(data.earth)
-    var tests = (function () {
+    const planet = new planetposition.Planet(data.earth)
+    const tests = (function () {
       // from table 27.F p.182 - meanError < 0.02
-      /* var years = [
+      /* let years = [
         [ -4000, 93.55, 89.18, 89.07, 93.44 ],
         [ -3500, 93.83, 89.53, 88.82, 93.07 ],
         [ -3000, 94.04, 89.92, 88.61, 92.67 ],
@@ -158,7 +158,7 @@ describe('#solstice', function () {
         [ 6500, 89.58, 92.96, 93.04, 89.66 ]
       ] */
       // computed table to match meanError < 0.01
-      var years = [
+      const years = [
         [-4000, 93.543, 89.189, 89.077, 93.433],
         [-3500, 93.813, 89.534, 88.827, 93.066],
         [-3000, 94.041, 89.917, 88.616, 92.670],
@@ -183,8 +183,8 @@ describe('#solstice', function () {
         [6500, 89.579, 92.968, 93.043, 89.652]
       ]
 
-      var ret = years.map(function (t) {
-        var o = {}
+      const ret = years.map(function (t) {
+        const o = {}
         ;['y', 'sp', 'su', 'au', 'wi'].forEach(function (p, i) {
           o[p] = t[i]
         })
@@ -194,33 +194,33 @@ describe('#solstice', function () {
     })()
 
     function t10000 (t) {
-      var meanError = 0.01
-      var s1
-      var s2
-      var s3
+      const meanError = 0.01
+      let s1
+      let s2
+      let s3
       it('spring', function () {
-        var s0 = solstice.march2(t.y, planet)
+        const s0 = solstice.march2(t.y, planet)
         s1 = solstice.june2(t.y, planet)
-        var sp = s1 - s0
-        var err = Math.abs(t.sp - sp)
+        const sp = s1 - s0
+        const err = Math.abs(t.sp - sp)
         assert.ok(err < meanError, 'sp ' + err)
       })
       it('summer', function () {
         s2 = solstice.september2(t.y, planet)
-        var su = s2 - s1
-        var err = Math.abs(t.su - su)
+        const su = s2 - s1
+        const err = Math.abs(t.su - su)
         assert.ok(err < meanError, 'su ' + err)
       })
       it('autumn', function () {
         s3 = solstice.december2(t.y, planet)
-        var au = s3 - s2
-        var err = Math.abs(t.au - au)
+        const au = s3 - s2
+        const err = Math.abs(t.au - au)
         assert.ok(err < meanError, 'au ' + err)
       })
       it('winter', function () {
-        var s4 = solstice.march2(t.y + 1, planet)
-        var wi = s4 - s3
-        var err = Math.abs(t.wi - wi)
+        const s4 = solstice.march2(t.y + 1, planet)
+        const wi = s4 - s3
+        const err = Math.abs(t.wi - wi)
         assert.ok(err < meanError, 'wi ' + err)
       })
     }
@@ -233,7 +233,7 @@ describe('#solstice', function () {
   })
 
   describe('Solar terms', function () {
-    var planet = new planetposition.Planet(data.vsop87Bearth)
+    const planet = new planetposition.Planet(data.vsop87Bearth)
 
     // Solarterms table for years 2014 - 2017
     // http://www.hko.gov.hk/gts/astron2015/Solar_Term_2014_e.htm
@@ -244,7 +244,7 @@ describe('#solstice', function () {
     // Maxmum calculated deviation from compared data set is 31 seconds.
     // On rounding to minutes, tests fail only for Solar term 2016 75°.
 
-    var tests = [
+    const tests = [
       // ['Solarterm', 'Longitude', 'Name', 2014, 2015, 2016, 2017],
       [23, 285, 'Moderate Cold',    '2014-01-05T18:24+0800', '2015-01-06T00:21+0800', '2016-01-06T06:08+0800', '2017-01-05T11:56+0800'],
       [24, 300, 'Great Cold',       '2014-01-20T11:51+0800', '2015-01-20T17:43+0800', '2016-01-20T23:27+0800', '2017-01-20T05:24+0800'],
@@ -271,7 +271,7 @@ describe('#solstice', function () {
       [21, 255, 'Heavy Snow',       '2014-12-07T13:04+0800', '2015-12-07T18:53+0800', '2016-12-07T00:41+0800', '2017-12-07T06:33+0800'],
       [22, 270, 'Winter Solstice',  '2014-12-22T07:03+0800', '2015-12-22T12:48+0800', '2016-12-21T18:44+0800', '2017-12-22T00:28+0800']
     ]
-    var map = {
+    const map = {
       2014: 3,
       2015: 4,
       2016: 5,
@@ -279,18 +279,18 @@ describe('#solstice', function () {
     }
 
     ;[2014, 2015, 2016, 2017].forEach(function (year) {
-      var i = map[year]
+      const i = map[year]
       describe('' + year, function () {
         tests.forEach(function (test) {
-          var deg = test[1]
+          const deg = test[1]
           it(deg + '° ' + test[2], function () {
-            var dateOfTest = new Date(test[i])
-            var y = dateOfTest.getFullYear()
-            var lon = deg * Math.PI / 180
+            const dateOfTest = new Date(test[i])
+            let y = dateOfTest.getFullYear()
+            const lon = deg * Math.PI / 180
             if (deg >= 285) --y
-            var jde = solstice.longitude(y, planet, lon)
-            var date = julian.JDEToDate(jde)
-            var err = Math.abs(date.getTime() - dateOfTest.getTime())
+            const jde = solstice.longitude(y, planet, lon)
+            const date = julian.JDEToDate(jde)
+            const err = Math.abs(date.getTime() - dateOfTest.getTime())
             // console.log(dateOfTest.toISOString(), date.toISOString(), Math.trunc(err / 1000))
             assert.ok(err < 31000, err + ' ' + date) // check if difftime is greater 31 seconds
             // let date1 = new Date(Math.round(+date / 60000) * 60000)

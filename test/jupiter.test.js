@@ -4,10 +4,10 @@ import { jupiter, data, planetposition } from '..'
 
 describe('#jupiter', function () {
   it('physical()', function () {
-    var earth = new planetposition.Planet(data.earth)
-    var jupiterP = new planetposition.Planet(data.jupiter)
+    const earth = new planetposition.Planet(data.earth)
+    const jupiterP = new planetposition.Planet(data.jupiter)
     // Example 43.a, p. 295
-    var res = jupiter.physical(2448972.50068, earth, jupiterP)
+    const res = jupiter.physical(2448972.50068, earth, jupiterP)
     // [DS, DE, ω1, ω2, P]
     assert.strictEqual(float(res[0] * 180 / Math.PI).toFixed(2), -2.20)
     assert.strictEqual(float(res[1] * 180 / Math.PI).toFixed(2), -2.48)
@@ -18,7 +18,7 @@ describe('#jupiter', function () {
 
   it('physical2()', function () {
     // Example 43.b, p. 299
-    var res = jupiter.physical2(2448972.50068)
+    const res = jupiter.physical2(2448972.50068)
     // [DS, DE, ω1, ω2]
     assert.strictEqual(float(res[0] * 180 / Math.PI).toFixed(3), -2.194)
     assert.strictEqual(float(res[1] * 180 / Math.PI).toFixed(2), -2.50)

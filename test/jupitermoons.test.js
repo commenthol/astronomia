@@ -5,7 +5,7 @@ import { julian, jupitermoons, data, planetposition } from '..'
 describe('#jupitermoons', function () {
   describe('positions', function () {
     it('positions()', function () {
-      var pos = jupitermoons.positions(2448972.50068)
+      const pos = jupitermoons.positions(2448972.50068)
 
       assert.strictEqual(float(pos[0].x).toFixed(2), -3.44)
       assert.strictEqual(float(pos[1].x).toFixed(2), +7.44)
@@ -29,11 +29,11 @@ describe('#jupitermoons', function () {
       // zero (indicating conjunction) and Y coordinates near the values given by
       // Meeus.
 
-      var jde = new julian.Calendar().fromDate(new Date('1988-11-23T07:28:00Z')).toJDE()
-      var pos3 = jupitermoons.positions(jde)
+      let jde = new julian.Calendar().fromDate(new Date('1988-11-23T07:28:00Z')).toJDE()
+      const pos3 = jupitermoons.positions(jde)
 
       jde = new julian.Calendar().fromDate(new Date('1988-11-23T05:15:00Z')).toJDE()
-      var pos4 = jupitermoons.positions(jde)
+      const pos4 = jupitermoons.positions(jde)
 
       assert.deepStrictEqual(xyToFixed(pos3[2]), {
         x: -0.0016,
@@ -52,9 +52,9 @@ describe('#jupitermoons', function () {
 
   describe('e5 positions', function () {
     it('e5()', function () {
-      var e = new planetposition.Planet(data.earth)
-      var j = new planetposition.Planet(data.jupiter)
-      var pos = jupitermoons.e5(2448972.50068, e, j)
+      const e = new planetposition.Planet(data.earth)
+      const j = new planetposition.Planet(data.jupiter)
+      const pos = jupitermoons.e5(2448972.50068, e, j)
 
       assert.strictEqual(float(pos[0].x).toFixed(4), -3.4503)
       assert.strictEqual(float(pos[1].x).toFixed(4), +7.4418)
@@ -78,14 +78,14 @@ describe('#jupitermoons', function () {
       // zero (indicating conjunction) and Y coordinates near the values given by
       // Meeus.
 
-      var e = new planetposition.Planet(data.earth)
-      var j = new planetposition.Planet(data.jupiter)
+      const e = new planetposition.Planet(data.earth)
+      const j = new planetposition.Planet(data.jupiter)
 
-      var jde = new julian.Calendar().fromDate(new Date('1988-11-23T07:28:00Z')).toJDE()
-      var pos3 = jupitermoons.e5(jde, e, j)
+      let jde = new julian.Calendar().fromDate(new Date('1988-11-23T07:28:00Z')).toJDE()
+      const pos3 = jupitermoons.e5(jde, e, j)
 
       jde = new julian.Calendar().fromDate(new Date('1988-11-23T05:15:00Z')).toJDE()
-      var pos4 = jupitermoons.e5(jde, e, j)
+      const pos4 = jupitermoons.e5(jde, e, j)
 
       assert.deepStrictEqual(xyToFixed(pos3[2]), {
         x: +0.0032,

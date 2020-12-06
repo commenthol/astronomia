@@ -11,8 +11,8 @@ function toFixed (num, acc) {
 }
 
 function mapPoints (hour, lines) {
-  for (var i in lines) {
-    var line = lines[i]
+  for (const i in lines) {
+    const line = lines[i]
     if (line.hour === hour) {
       return line.points.map(function (point) {
         return [toFixed(point.x, 4), toFixed(point.y, 4)]
@@ -24,12 +24,12 @@ function mapPoints (hour, lines) {
 describe('#sundial', function () {
   it('general a', function () {
     // Example 58.a, p. 404.0
-    var res = sundial.general(40 * p, 70 * p, 1, 50 * p)
+    const res = sundial.general(40 * p, 70 * p, 1, 50 * p)
 
-    var hours = res.lines.map(function (l) { return l.hour })
+    const hours = res.lines.map(function (l) { return l.hour })
     assert.deepStrictEqual(hours, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
-    for (var i in res.lines) {
-      var l = res.lines[i]
+    for (const i in res.lines) {
+      const l = res.lines[i]
       if (l.hour === 11) {
         assert.strictEqual(float(l.points[2].x).toFixed(4), -2.0007)
         assert.strictEqual(float(l.points[2].y).toFixed(4), -1.1069)
@@ -45,12 +45,12 @@ describe('#sundial', function () {
 
   it('general b', function () {
     // Example 58.b, p. 404.0
-    var res = sundial.general(-35 * p, 160 * p, 1, 90 * p)
+    const res = sundial.general(-35 * p, 160 * p, 1, 90 * p)
 
-    var hours = res.lines.map(function (l) { return l.hour })
+    const hours = res.lines.map(function (l) { return l.hour })
     assert.deepStrictEqual(hours, [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
-    for (var i in res.lines) {
-      var l = res.lines[i]
+    for (const i in res.lines) {
+      const l = res.lines[i]
       if (l.hour === 12) {
         assert.strictEqual(float(l.points[5].x).toFixed(4), +0.3640)
         assert.strictEqual(float(l.points[5].y).toFixed(4), -0.7410)
@@ -67,8 +67,8 @@ describe('#sundial', function () {
 
   it('general c', function () {
     // Example 58.c, p. 405.0
-    var res = sundial.general(40 * p, 160 * p, 1, 75 * p)
-    var hours = res.lines.map(function (l) { return l.hour })
+    const res = sundial.general(40 * p, 160 * p, 1, 75 * p)
+    const hours = res.lines.map(function (l) { return l.hour })
     assert.deepStrictEqual(hours, [5, 6, 13, 14, 15, 16, 17, 18, 19])
     assert.strictEqual(float(res.center.x).toFixed(4), +0.3041)
     assert.strictEqual(float(res.center.y).toFixed(4), -0.5043)
@@ -76,9 +76,9 @@ describe('#sundial', function () {
   })
 
   it('equatorial', function () {
-    var res = sundial.equatorial(40 * p, 1)
+    const res = sundial.equatorial(40 * p, 1)
 
-    var hours = res.north.map(function (l) { return l.hour })
+    let hours = res.north.map(function (l) { return l.hour })
     assert.deepStrictEqual(hours, [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
     assert.deepStrictEqual(mapPoints(5, res.north), [
       [2.6324, 0.7053], [2.2279, 0.597]
@@ -104,9 +104,9 @@ describe('#sundial', function () {
   })
 
   it('horizontal', function () {
-    var res = sundial.horizontal(40 * p, 1)
+    const res = sundial.horizontal(40 * p, 1)
 
-    var hours = res.lines.map(function (l) { return l.hour })
+    const hours = res.lines.map(function (l) { return l.hour })
     assert.deepStrictEqual(hours, [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
     assert.deepStrictEqual(mapPoints(5, res.lines), [
       [-25.6921, -11.9016], [-12.0103, -6.1983]
@@ -129,9 +129,9 @@ describe('#sundial', function () {
   })
 
   it('vertical', function () {
-    var res = sundial.vertical(40 * p, 70 * p, 1)
+    const res = sundial.vertical(40 * p, 70 * p, 1)
 
-    var hours = res.lines.map(function (l) { return l.hour })
+    const hours = res.lines.map(function (l) { return l.hour })
     assert.deepStrictEqual(hours, [11, 12, 13, 14, 15, 16, 17, 18, 19])
     assert.deepStrictEqual(mapPoints(11, res.lines), [
       [-11.8933, -5.5746],

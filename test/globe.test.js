@@ -5,8 +5,8 @@ describe('#globe', function () {
   it('parallaxConstants', function () {
     // Example 11.a, p 82.
     // phi = geographic latitude of Palomar
-    var φ = new sexa.Angle(false, 33, 21, 22).rad()
-    var res = globe.Earth76.parallaxConstants(φ, 1706)
+    const φ = new sexa.Angle(false, 33, 21, 22).rad()
+    const res = globe.Earth76.parallaxConstants(φ, 1706)
     // ρ sin φ′ = +0.546861
     // ρ cos φ′ = +0.836339
     assert.deepStrictEqual(res, [0.5468608240604509, 0.8363392323525684])
@@ -14,16 +14,16 @@ describe('#globe', function () {
 
   it('geocentricLatitudeDifference', function () {
     // p. 83
-    var φ0 = new sexa.Angle(false, 45, 5, 46.36).rad()
-    var diff = globe.geocentricLatitudeDifference(φ0)
-    var res = new sexa.Angle(diff).toString(2)
+    const φ0 = new sexa.Angle(false, 45, 5, 46.36).rad()
+    const diff = globe.geocentricLatitudeDifference(φ0)
+    const res = new sexa.Angle(diff).toString(2)
     assert.strictEqual(res, '0°11′32.73″')
   })
 
   describe('Radius functions', function () {
-    var rp
-    var rm
-    var φ
+    let rp
+    let rm
+    let φ
 
     it('radiusAtLatitude', function () {
       // Example 11.b p 84.
@@ -34,7 +34,7 @@ describe('#globe', function () {
     })
 
     it('RotationRate1996_5', function () {
-      var ωRp = rp * globe.RotationRate1996_5
+      const ωRp = rp * globe.RotationRate1996_5
       // linear velocity = ωRp = 0.34616 km/second
       assert.strictEqual(base.round(ωRp, 5), 0.34616)
     })
@@ -58,24 +58,24 @@ describe('#globe', function () {
 
   describe('distance functions', function () {
     // Example 11.c p 85.
-    var c1 = new globe.Coord(
+    const c1 = new globe.Coord(
       new sexa.Angle(false, 48, 50, 11).rad(), // geographic latitude
       new sexa.Angle(true, 2, 20, 14).rad() // geographic longitude
     )
-    var c2 = new globe.Coord(
+    const c2 = new globe.Coord(
       new sexa.Angle(false, 38, 55, 17).rad(), // lat
       new sexa.Angle(false, 77, 3, 56).rad() // lon
     )
-    var d
+    let d
 
     it('distance', function () {
       // 6181.63 km
-      var distance = globe.Earth76.distance(c1, c2)
+      const distance = globe.Earth76.distance(c1, c2)
       assert.strictEqual(base.round(distance, 2), 6181.63)
     })
 
     it('approxAngularDistance', function () {
-      var cos = globe.approxAngularDistance(c1, c2)
+      const cos = globe.approxAngularDistance(c1, c2)
       d = Math.acos(cos)
       // cos d = 0.567146
       assert.strictEqual(base.round(cos, 6), 0.567146)
@@ -84,7 +84,7 @@ describe('#globe', function () {
     })
 
     it('approxLinearDistance', function () {
-      var lindist = globe.approxLinearDistance(d)
+      const lindist = globe.approxLinearDistance(d)
       //     s = 6166 km
       assert.strictEqual(base.round(lindist, 0), 6166)
     })

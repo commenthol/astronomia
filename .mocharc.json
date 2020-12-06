@@ -1,0 +1,5 @@
+{
+  "require": "@babel/register",
+  "checkLeaks": true,
+  "reporter": "dot"
+}

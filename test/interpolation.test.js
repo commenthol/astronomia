@@ -12,50 +12,38 @@ describe('#interpolation', function () {
   describe('Len3', function () {
     it('interpolateN', function () {
       // Example 3.a, p. 25.0
-      try {
-        var d3 = new interpolation.Len3(7, 9, [
-          0.884226,
-          0.877366,
-          0.870531
-        ])
-      } catch (err) {
-        assert.ok(!err, err)
-      }
-      var n = 4.35 / 24
-      var y = d3.interpolateN(n)
+      const d3 = new interpolation.Len3(7, 9, [
+        0.884226,
+        0.877366,
+        0.870531
+      ])
+      const n = 4.35 / 24
+      const y = d3.interpolateN(n)
       assert.strictEqual(float(y).toFixed(6), 0.876125)
     })
 
     it('interpolateX', function () {
       // Example 3.a, p. 25.0
-      try {
-        var d3 = new interpolation.Len3(7, 9, [
-          0.884226,
-          0.877366,
-          0.870531
-        ])
-      } catch (err) {
-        assert.ok(!err, err)
-      }
-      var x = 8 + new sexa.Time(false, 4, 21, 0).day() // 8th day at 4:21
-      var y = d3.interpolateX(x)
+      const d3 = new interpolation.Len3(7, 9, [
+        0.884226,
+        0.877366,
+        0.870531
+      ])
+      const x = 8 + new sexa.Time(false, 4, 21, 0).day() // 8th day at 4:21
+      const y = d3.interpolateX(x)
       assert.strictEqual(float(y).toFixed(6), 0.876125)
     })
 
     it('extremum', function () {
       // Example 3.b, p. 26.0
-      try {
-        var d3 = new interpolation.Len3(12, 20, [
-          1.3814294,
-          1.3812213,
-          1.3812453
-        ])
-      } catch (err) {
-        assert.ok(!err, err)
-      }
-      var res = d3.extremum()
-      var x = res[0]
-      var y = res[1]
+      const d3 = new interpolation.Len3(12, 20, [
+        1.3814294,
+        1.3812213,
+        1.3812453
+      ])
+      const res = d3.extremum()
+      const x = res[0]
+      const y = res[1]
       assert.strictEqual(float(y).toFixed(7), 1.3812030) // distance: 1.3812030 AU
       assert.strictEqual(float(x).toFixed(4), 17.5864)   // date:     17.5864 TD
     })
@@ -63,54 +51,42 @@ describe('#interpolation', function () {
     it('extremum #2', function () {
       // Example 3.d, p. 26.0
       // y = 3 + 2x - 3x^2
-      try {
-        var d3 = new interpolation.Len3(-1, 1, [-2, 3, 2])
-      } catch (err) {
-        assert.ok(!err, err)
-      }
-      var res = d3.extremum()
-      var x = res[0]
-      var y = res[1]
+      const d3 = new interpolation.Len3(-1, 1, [-2, 3, 2])
+      const res = d3.extremum()
+      const x = res[0]
+      const y = res[1]
       assert.strictEqual(float(x).toFixed(4), 0.3333)
       assert.strictEqual(float(y).toFixed(4), 3.3333)
     })
 
     it('zero', function () {
       // Example 3.c, p. 26.0
-      var x1 = 26.0
-      var x3 = 28.0
+      const x1 = 26.0
+      const x3 = 28.0
       // the y unit doesn't matter.  working in degrees is fine
-      var yTable = [
+      const yTable = [
         sexa.DMSToDeg(true, 0, 28, 13.4),
         sexa.DMSToDeg(false, 0, 6, 46.3),
         sexa.DMSToDeg(false, 0, 38, 23.2)
       ]
-      try {
-        var d3 = new interpolation.Len3(x1, x3, yTable)
-        var x = d3.zero(false)
-      } catch (err) {
-        assert.ok(!err, err)
-      }
+      const d3 = new interpolation.Len3(x1, x3, yTable)
+      const x = d3.zero(false)
 
-      var res = base.modf(x)
-      var i = res[0]
-      var frac = res[1]
+      const res = base.modf(x)
+      const i = res[0]
+      const frac = res[1]
       assert.strictEqual(float(x).toFixed(5), 26.79873) // February 26.79873
-      var s = format('February %s, at %s', i, new sexa.Time(frac * 24 * 3600).toString(0))
+      const s = format('February %s, at %s', i, new sexa.Time(frac * 24 * 3600).toString(0))
       assert.strictEqual(s, 'February 26, at 19ʰ10ᵐ11ˢ')
     })
 
     it('zero strong', function () {
       // Example 3.d, p. 27.0
-      var x1 = -1.0
-      var x3 = 1.0
-      var yTable = [-2, 3, 2]
-      try {
-        var d3 = new interpolation.Len3(x1, x3, yTable)
-        var x = d3.zero(true)
-      } catch (err) {
-        assert.ok(!err, err)
-      }
+      const x1 = -1.0
+      const x3 = 1.0
+      const yTable = [-2, 3, 2]
+      const d3 = new interpolation.Len3(x1, x3, yTable)
+      const x = d3.zero(true)
       assert.strictEqual(float(x).toFixed(12), -0.720759220056)
     })
   })
@@ -118,74 +94,58 @@ describe('#interpolation', function () {
   describe('Len5', function () {
     it('interpolateX', function () {
       // Example 3.e, p. 28.0
-      var x1 = 27.0
-      var x5 = 29.0
+      const x1 = 27.0
+      const x5 = 29.0
       // work in radians to get answer in radians
-      var yTable = [
+      const yTable = [
         new sexa.Angle(false, 0, 54, 36.125).rad(),
         new sexa.Angle(false, 0, 54, 24.606).rad(),
         new sexa.Angle(false, 0, 54, 15.486).rad(),
         new sexa.Angle(false, 0, 54,  8.694).rad(),
         new sexa.Angle(false, 0, 54,  4.133).rad()
       ]
-      var x = 28 + (3 + 20.0 / 60) / 24
-      try {
-        var d5 = new interpolation.Len5(x1, x5, yTable)
-        var y = d5.interpolateX(x)
-      } catch (err) {
-        assert.ok(!err, err)
-      }
+      const x = 28 + (3 + 20.0 / 60) / 24
+      const d5 = new interpolation.Len5(x1, x5, yTable)
+      const y = d5.interpolateX(x)
       assert.strictEqual(new sexa.Angle(y).toString(3), '0°54′13.369″')
     })
 
     it('extremum', function () {
       // Example 3.d, p. 26.0
       // y = 3 + 2x - 3x^2
-      try {
-        var d5 = new interpolation.Len5(-2, 2, [-13, -2, 3, 2, -5])
-      } catch (err) {
-        assert.ok(!err, err)
-      }
-      var res = d5.extremum()
-      var x = res[0]
-      var y = res[1]
+      const d5 = new interpolation.Len5(-2, 2, [-13, -2, 3, 2, -5])
+      const res = d5.extremum()
+      const x = res[0]
+      const y = res[1]
       assert.strictEqual(float(x).toFixed(4), 0.3333)
       assert.strictEqual(float(y).toFixed(4), 3.3333)
     })
 
     it('zero', function () {
       // Exercise, p. 30.0
-      var x1 = 25.0
-      var x5 = 29.0
-      var yTable = [
+      const x1 = 25.0
+      const x5 = 29.0
+      const yTable = [
         sexa.DMSToDeg(true,  1, 11, 21.23),
         sexa.DMSToDeg(true,  0, 28, 12.31),
         sexa.DMSToDeg(false, 0, 16,  7.02),
         sexa.DMSToDeg(false, 1,  1,  0.13),
         sexa.DMSToDeg(false, 1, 45, 46.33)
       ]
-      try {
-        var d5 = new interpolation.Len5(x1, x5, yTable)
-        var z = d5.zero(false)
-      } catch (err) {
-        assert.ok(!err, err)
-      }
+      const d5 = new interpolation.Len5(x1, x5, yTable)
+      const z = d5.zero(false)
       // 1988 January 26.638587
       assert.strictEqual(float(z).toFixed(6), 26.638587)
-      var a = base.modf(z)
-      var zInt = a[0]
-      var zFrac = a[1]
-      var s = format('1988 January %s at %s TD', zInt, new sexa.Time(zFrac * 24 * 3600).toString(0))
+      const a = base.modf(z)
+      const zInt = a[0]
+      const zFrac = a[1]
+      const s = format('1988 January %s at %s TD', zInt, new sexa.Time(zFrac * 24 * 3600).toString(0))
       assert.strictEqual(s, '1988 January 26 at 15ʰ19ᵐ34ˢ TD')
 
       // compare result to that from just three central values
-      try {
-        var d3 = new interpolation.Len3(26, 28, yTable.slice(1, 4))
-        var z3 = d3.zero(false)
-      } catch (err) {
-        assert.ok(!err, err)
-      }
-      var dz = z - z3
+      const d3 = new interpolation.Len3(26, 28, yTable.slice(1, 4))
+      const z3 = d3.zero(false)
+      const dz = z - z3
 
       assert.strictEqual(float(dz).toFixed(6), 0.000753) // day
       assert.strictEqual(float(dz * 24 * 60).toFixed(1), 1.1) // minute
@@ -193,7 +153,7 @@ describe('#interpolation', function () {
   })
 
   it('len4Half', function () {
-    var half
+    let half
     // Example 3.f, p. 32.0
     try {
       half = interpolation.len4Half([
@@ -210,7 +170,7 @@ describe('#interpolation', function () {
 
   it('lagrange', function () {
     // exercise, p. 34.0
-    var table = [
+    const table = [
       [29.43, 0.4913598528],
       [30.97, 0.5145891926],
       [27.69, 0.4646875083],
@@ -226,14 +186,14 @@ describe('#interpolation', function () {
 
   it('lagrangePoly', function () {
     // Example 3.g, p, 34.0
-    var table = [
+    const table = [
       [1, -6],
       [3,  6],
       [4,  9],
       [6, 15]
     ]
-    var p = interpolation.lagrangePoly(table)
-    var exp = [-87 / 5, 69 / 5, -13 / 5, 1 / 5]
+    const p = interpolation.lagrangePoly(table)
+    const exp = [-87 / 5, 69 / 5, -13 / 5, 1 / 5]
 
     p.forEach(function (c, i) {
       assert.strictEqual(float(c).toFixed(2), exp[i])
@@ -242,17 +202,17 @@ describe('#interpolation', function () {
   })
 
   it('linear', function () {
-    var t = [0.2, 0.4, 0.7, -1.5, 15]
+    const t = [0.2, 0.4, 0.7, -1.5, 15]
     t.forEach(function (x) {
       it('' + x, function () {
-        var y = interpolation.linear(x, 0, 1, [0, 1])
+        const y = interpolation.linear(x, 0, 1, [0, 1])
         assert.strictEqual(y, x)
       })
     })
 
     t.forEach(function (x) {
       it(x + ' #2', function () {
-        var y = interpolation.linear(x, 0, 1, [1, 1.25, 1.5, 1.75, 2])
+        const y = interpolation.linear(x, 0, 1, [1, 1.25, 1.5, 1.75, 2])
         assert.strictEqual(y, x + 1)
       })
     })

@@ -3,7 +3,7 @@ import { base, nearparabolic } from '..'
 
 describe('#nearparabolic', function () {
   describe('anomalyDistance', function () {
-    var tdat = [
+    const tdat = [
       // test data p. 247
       { q: 0.921326, e: 1, t: 138.4783, ν: 102.74426, r: 2.364192 },
       { q: 0.1, e: 0.987, t: 254.9, ν: 164.50029, r: 4.063777 },
@@ -12,7 +12,7 @@ describe('#nearparabolic', function () {
       { q: 0.5871018, e: 0.9672746, t: 20, ν: 52.85331, r: 0.729116 },
       { q: 0.5871018, e: 0.9672746, t: 0, ν: 0, r: 0.5871018 }
     ]
-    var e = new nearparabolic.Elements()
+    const e = new nearparabolic.Elements()
 
     tdat.forEach(function (d, i) {
       it('' + i, function () {
@@ -20,7 +20,7 @@ describe('#nearparabolic', function () {
         e.pDis = d.q
         e.ecc = d.e
 
-        var res = e.anomalyDistance(e.timeP + d.t)
+        const res = e.anomalyDistance(e.timeP + d.t)
         // console.log(res)
         if (!res.err) {
           assert.ok(Math.abs(res.ano * 180 / Math.PI - d.ν) < 1e-5, d.ν)
@@ -31,7 +31,7 @@ describe('#nearparabolic', function () {
   })
 
   describe('anomalyDistance2', function () {
-    var tdat = [
+    const tdat = [
       // test data p. 248
       { q: 0.1, e: 0.9, t: 10, ν: 126, p: 0, c: true },
       { q: 0.1, e: 0.9, t: 20, ν: 142, p: 0, c: true },
@@ -56,13 +56,13 @@ describe('#nearparabolic', function () {
       { q: 1, e: 0.99999, t: 18000000, ν: 0, p: 2, c: false }
     ]
 
-    var e = new nearparabolic.Elements()
+    const e = new nearparabolic.Elements()
     tdat.forEach(function (d, i) {
       it('' + i, function () {
         e.timeP = base.J2000 + Math.random() * base.JulianCentury
         e.pDis = d.q
         e.ecc = d.e
-        var res = e.anomalyDistance(e.timeP + d.t)
+        const res = e.anomalyDistance(e.timeP + d.t)
         assert.ok(!res.err === d.c)
         if (!res.err) {
           assert.ok(Math.abs(res.ano * 180 / Math.PI - d.ν) < Math.pow(10, -d.p), JSON.stringify(res))

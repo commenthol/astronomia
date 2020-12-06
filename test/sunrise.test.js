@@ -9,12 +9,12 @@ describe.disable = function () {}
 
 describe('#Sunrise', function () {
   describe('northern hemisphere', function () {
-    var date = new Date('1935-09-24T00:00:00Z')
-    var lat = 50.79770
-    var lon = 4.35916
-    var sr = new Sunrise(new julian.Calendar(date), lat, -lon)
+    const date = new Date('1935-09-24T00:00:00Z')
+    const lat = 50.79770
+    const lon = 4.35916
+    const sr = new Sunrise(new julian.Calendar(date), lat, -lon)
 
-    var tests = {
+    const tests = {
       nightEnd       : '1935-09-24T03:38:18.262Z',
       nauticalDawn   : '1935-09-24T04:18:34.713Z',
       dawn           : '1935-09-24T04:57:20.768Z',
@@ -38,12 +38,12 @@ describe('#Sunrise', function () {
   })
 
   describe('in northern polar night', function () {
-    var date = new Date('2015-01-01T00:00:00Z')
-    var lat = 78.22236
-    var lon = 15.65257
-    var sr = new Sunrise(new julian.Calendar(date), lat, -lon)
+    const date = new Date('2015-01-01T00:00:00Z')
+    const lat = 78.22236
+    const lon = 15.65257
+    const sr = new Sunrise(new julian.Calendar(date), lat, -lon)
 
-    var tests = {
+    const tests = {
       nightEnd       : '2015-01-01T06:33:13.220Z',
       nauticalDawn   : '2015-01-01T09:34:31.168Z',
       dawn           : '2015-01-31T10:11:44.907Z',
@@ -66,12 +66,12 @@ describe('#Sunrise', function () {
   })
 
   describe('in northern polar day', function () {
-    var date = new Date('2015-06-01T00:00:00Z')
-    var lat = 78.22236
-    var lon = 15.65257
-    var sr = new Sunrise(new julian.Calendar(date), lat, -lon)
+    const date = new Date('2015-06-01T00:00:00Z')
+    const lat = 78.22236
+    const lon = 15.65257
+    const sr = new Sunrise(new julian.Calendar(date), lat, -lon)
 
-    var tests = {
+    const tests = {
       nightEnd       : '2015-03-04T23:28:52.385Z',
       nauticalDawn   : '2015-03-19T23:42:05.887Z',
       dawn           : '2015-04-03T23:51:59.979Z',
@@ -94,12 +94,12 @@ describe('#Sunrise', function () {
   })
 
   describe('southern hemisphere', function () {
-    var date = new Date('2015-02-21T00:00:00Z')
-    var lat = -44.7787668
-    var lon = -65.7178918
-    var sr = new Sunrise(new julian.Calendar(date), lat, -lon)
+    const date = new Date('2015-02-21T00:00:00Z')
+    const lat = -44.7787668
+    const lon = -65.7178918
+    const sr = new Sunrise(new julian.Calendar(date), lat, -lon)
 
-    var tests = {
+    const tests = {
       nightEnd       : '2015-02-21T08:00:34.926Z',
       nauticalDawn   : '2015-02-21T08:40:43.950Z',
       dawn           : '2015-02-21T09:18:04.318Z',
@@ -122,12 +122,12 @@ describe('#Sunrise', function () {
   })
 
   describe('in southern polar day', function () {
-    var date = new Date('2015-12-21T00:00:00Z')
-    var lat = -77.8460468
-    var lon = 166.6753
-    var sr = new Sunrise(new julian.Calendar(date), lat, -lon)
+    const date = new Date('2015-12-21T00:00:00Z')
+    const lat = -77.8460468
+    const lon = 166.6753
+    const sr = new Sunrise(new julian.Calendar(date), lat, -lon)
 
-    var tests = {
+    const tests = {
       nightEnd       : '2015-09-07T13:33:38.473Z',
       nauticalDawn   : '2015-09-22T13:48:42.893Z',
       dawn           : '2015-10-08T13:29:23.426Z',
@@ -150,12 +150,12 @@ describe('#Sunrise', function () {
   })
 
   describe('in southern polar night', function () {
-    var date = new Date('2015-06-21T00:00:00Z')
-    var lat = -77.8460468
-    var lon = 166.6753
-    var sr = new Sunrise(new julian.Calendar(date), lat, -lon)
+    const date = new Date('2015-06-21T00:00:00Z')
+    const lat = -77.8460468
+    const lon = 166.6753
+    const sr = new Sunrise(new julian.Calendar(date), lat, -lon)
 
-    var tests = {
+    const tests = {
       nightEnd       : '2015-06-20T20:32:23.851Z',
       nauticalDawn   : '2015-06-20T23:32:36.264Z',
       dawn           : '2015-08-01T00:46:43.715Z',
@@ -183,14 +183,14 @@ describe('#Sunrise', function () {
         str += Array(len).fill(' ').join('')
         return str.substr(0, len)
       }
-      var j = new julian.Calendar(2015, 1, 1).toJD()
-      var last = ''
-      for (var i = 0; i < 366; i++) {
-        var date = new julian.Calendar().fromJD(j + i)
-        var lat = 89.9
-        var lon = 0
-        var sr = new Sunrise(date, lat, -lon)
-        var res
+      const j = new julian.Calendar(2015, 1, 1).toJD()
+      let last = ''
+      for (let i = 0; i < 366; i++) {
+        const date = new julian.Calendar().fromJD(j + i)
+        const lat = 89.9
+        const lon = 0
+        const sr = new Sunrise(date, lat, -lon)
+        let res
         try {
           res = sr.rise().toDate().toISOString()
         } catch (e) {

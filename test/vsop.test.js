@@ -6,7 +6,7 @@ it.disable = function () {}
 describe('#VSOP87', function () {
   it.disable('can load EARTH data', function (done) {
     // disables as requires VSOP87B.ear in package
-    var earth = new VSOP('EARTH', [__dirname, '..', 'attic'].join('/'))
+    const earth = new VSOP('EARTH', [__dirname, '..', 'attic'].join('/'))
     earth.load(function () {
       assert.strictEqual(typeof earth.data.L, 'object')
       assert.strictEqual(typeof earth.data.B, 'object')

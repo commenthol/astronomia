@@ -12,10 +12,10 @@ describe('#saturnmoons', function () {
 
   describe('positions()', function () {
     // Example 46.a, p. 334.0
-    var earth = new planetposition.Planet(data.vsop87Bearth)
-    var saturn = new planetposition.Planet(data.vsop87Bsaturn)
-    var pos = saturnmoons.positions(2451439.50074, earth, saturn)
-    var exp = [
+    const earth = new planetposition.Planet(data.vsop87Bearth)
+    const saturn = new planetposition.Planet(data.vsop87Bsaturn)
+    const pos = saturnmoons.positions(2451439.50074, earth, saturn)
+    const exp = [
       { x:  +3.102, y: -0.204 },
       { x:  +3.823, y: +0.318 },
       { x:  +4.027, y: -1.061 },

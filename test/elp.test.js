@@ -14,7 +14,7 @@ describe('#elp', function () {
       { JD: 1900000.5, X: -370342.79254, Y: -37574.25533, Z: -4527.91840 },
       { JD: 1700000.5, X: -164673.04720, Y: 367791.71329, Z: 31603.98027 }
     ]
-    var moon = new elp.Moon(data.elpMppDeFull)
+    const moon = new elp.Moon(data.elpMppDeFull)
     dataTest.forEach(function (row) {
       const { x, y, z } = moon.positionXYZ(row.JD)
       assert.strictEqual(float(x).toFixed(4), float(row.X).toFixed(4))
@@ -24,7 +24,7 @@ describe('#elp', function () {
   })
 
   it('position horizon', function () {
-    var JplHorizonData = [
+    const JplHorizonData = [
       //       date                JD                range         deltaT        lon         lat
       ['1000-Jan-01 00:00', 2086307.500000000, 3.9301856664E+05, 1543.097000, 191.1932228, 1.3375209],
       ['1150-Jan-01 00:00', 2141095.500000000, 3.9712002417E+05, 1028.017543, 288.6447145, -4.8371075],
@@ -42,7 +42,7 @@ describe('#elp', function () {
       ['2950-Jan-01 00:00', 2798525.500000000, 3.7651911566E+05, 69.183485, 166.3008243, 4.3577757]
     ]
     // truncate version
-    var moon = new elp.Moon(data.elpMppDe)
+    const moon = new elp.Moon(data.elpMppDe)
     JplHorizonData.forEach(function (row) {
       const [, jd, R, deltaT, L, B] = row
       const jde = jd + deltaT / (24 * 3600)

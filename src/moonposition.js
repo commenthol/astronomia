@@ -180,7 +180,8 @@ const ta = (function () {
   ]
   return ta.map((row) => {
     const o = {}
-      ;['d', 'm', 'm_', 'f', 'Σl', 'Σr'].map((D2R, i) => {
+    const vals = ['d', 'm', 'm_', 'f', 'Σl', 'Σr']
+    vals.forEach((D2R, i) => {
       o[D2R] = row[i]
     })
     return o
@@ -267,7 +268,8 @@ const tb = (function () {
   ]
   return tb.map((row) => {
     const o = {}
-      ;['d', 'm', 'm_', 'f', 'Σb'].map((D2R, i) => {
+    const vals = ['d', 'm', 'm_', 'f', 'Σb']
+    vals.forEach((D2R, i) => {
       o[D2R] = row[i]
     })
     return o

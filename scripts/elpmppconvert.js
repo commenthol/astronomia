@@ -250,10 +250,10 @@ class ELPMPPDE405 extends ELPMPP02 {
 main()
 
 function main () {
-  var v = new ELPMPPDE405(config.attic)
+  const v = new ELPMPPDE405(config.attic)
   v.loadSync()
-  var o = v.getData()
-  var dataFull = serialize(o, {})
+  let o = v.getData()
+  const dataFull = serialize(o, {})
   fs.writeFileSync(filename('elpMppDeFull.js'), dataFull, 'utf8')
 
   // truncate version
@@ -263,7 +263,7 @@ function main () {
     R: 0.01, // meter
     T: 30 // century
   })
-  var data = serialize(o, {})
+  const data = serialize(o, {})
   fs.writeFileSync(filename('elpMppDe.js'), data, 'utf8')
 }
 

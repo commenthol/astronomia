@@ -43,10 +43,10 @@ function filename (planet) {
 
 function convertPlanet (planet) {
   console.log('converting ' + planet)
-  var v = new VSOP(planet, config.attic, { type: type })
+  const v = new VSOP(planet, config.attic, { type: type })
   v.loadSync()
-  var o = v.getData()
+  const o = v.getData()
   o.name = planet
-  var data = serialize(o, {})
+  const data = serialize(o, {})
   fs.writeFileSync(filename(planet), data, 'utf8')
 }

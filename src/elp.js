@@ -74,7 +74,7 @@ export class Moon {
 
     const P = base.horner(T, 0, 0.10180391e-4, 0.47020439e-6, -0.5417367e-9, -0.2507948e-11, 0.463486e-14)
     const Q = base.horner(T, 0, -0.113469002e-3, 0.12372674e-6, 0.12654170e-8, -0.1371808e-11, -0.320334e-14)
-    var sq = Math.sqrt(1 - P * P - Q * Q)
+    const sq = Math.sqrt(1 - P * P - Q * Q)
     const p11 = 1 - 2 * P * P
     const p12 = 2 * P * Q
     const p13 = 2 * P * sq

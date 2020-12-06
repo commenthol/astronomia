@@ -8,7 +8,7 @@ import assert from 'assert'
 import { julian, deltat } from '..'
 
 describe('#deltat', function () {
-  var tests = [
+  const tests = [
     { date: [333,  2,  6], exp: 7358.762 }, // Example 10.b, p. 80.
     { date: [900,  1,  1], exp: 2200.288 },
     { date: [947,  1,  1], exp: 1888.781 },
@@ -52,14 +52,14 @@ describe('#deltat', function () {
 
   describe('deltaT', function () {
     tests.forEach(function (t) {
-      var year = t.date[0]
-      var month = t.date[1]
-      var day = t.date[2]
+      const year = t.date[0]
+      const month = t.date[1]
+      const day = t.date[2]
       if (!t.omit) {
         it(year + '-' + month + '-' + day, function () {
-          var cal = new julian.Calendar(year, month, day)
-          var res = deltat.deltaT(cal.toYear())
-          var err = Math.abs(t.exp - res)
+          const cal = new julian.Calendar(year, month, day)
+          const res = deltat.deltaT(cal.toYear())
+          const err = Math.abs(t.exp - res)
           assert.ok(err < 1e-3, 'error is greater 1ms ' + err + ' - expected: ' + res)
         })
       }

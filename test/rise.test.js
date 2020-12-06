@@ -14,26 +14,26 @@ import {
 } from '..'
 
 describe('#rise', function () {
-  var coord = {
+  const coord = {
     lat: new sexa.Angle(false, 42, 20, 0),
     lon: new sexa.Angle(false, 71, 5, 0)   // ! positively westward
   }
-  var jd = julian.CalendarGregorianToJD(1988, 3, 20)
-  var h0 = rise.stdh0Stellar()
+  const jd = julian.CalendarGregorianToJD(1988, 3, 20)
+  const h0 = rise.stdh0Stellar()
 
-  var α3 = [
+  const α3 = [
     new sexa.RA(2, 42, 43.25).rad(),
     new sexa.RA(2, 46, 55.51).rad(),
     new sexa.RA(2, 51, 7.69).rad()
   ]
-  var δ3 = [
+  const δ3 = [
     new sexa.Angle(false, 18, 2, 51.4).rad(),
     new sexa.Angle(false, 18, 26, 27.3).rad(),
     new sexa.Angle(false, 18, 49, 38.7).rad()
   ]
 
-  var α = α3[1]
-  var δ = δ3[1]
+  const α = α3[1]
+  const δ = δ3[1]
 
   describe('stdh0', function () {
     it('stdh0Stellar', function () {
@@ -47,7 +47,7 @@ describe('#rise', function () {
   })
 
   describe('methods', function () {
-    var p = new globe.Coord(
+    const p = new globe.Coord(
       coord.lat.rad(),
       coord.lon.rad()
     )
@@ -55,8 +55,8 @@ describe('#rise', function () {
     it('approxTimes', function () {
       // Example 15.a, p. 103.0
       // Meeus gives us the value of 11h 50m 58.1s but we have a package function for this:
-      var Th0 = sidereal.apparent0UT(jd)
-      var rs = rise.approxTimes(p, h0, Th0, α, δ)
+      const Th0 = sidereal.apparent0UT(jd)
+      const rs = rise.approxTimes(p, h0, Th0, α, δ)
       // Units for approximate values given near top of p. 104 are circles.
       assert.strictEqual(float(rs.rise / 86400).toFixed(5), 0.51816)
       assert.strictEqual(float(rs.transit / 86400).toFixed(5), 0.81965)
@@ -66,11 +66,11 @@ describe('#rise', function () {
     it('times', function () {
       // Example 15.a, p. 103.0
       // Meeus gives us the value of 11h 50m 58.1s but we have a package function for this:
-      var Th0 = sidereal.apparent0UT(jd)
+      const Th0 = sidereal.apparent0UT(jd)
       // Similarly as with Th0, Meeus gives us the value of 56 for ΔT but
       // let's use our package function.
-      var ΔT = deltat.deltaT(new julian.Calendar().fromJD(jd).toYear())
-      var rs = rise.times(p, ΔT, h0, Th0, α3, δ3)
+      const ΔT = deltat.deltaT(new julian.Calendar().fromJD(jd).toYear())
+      const rs = rise.times(p, ΔT, h0, Th0, α3, δ3)
       // v1 api
       assert.strictEqual(new sexa.Time(rs[0]).toString(0), '12ʰ25ᵐ26ˢ')
       assert.strictEqual(new sexa.Time(rs[1]).toString(0), '19ʰ40ᵐ30ˢ')
@@ -83,26 +83,26 @@ describe('#rise', function () {
   })
 
   describe('PlanetRise', function () {
-    var lat = coord.lat.deg()
-    var lon = coord.lon.deg()
-    var earth = new planetposition.Planet(data.vsop87Bearth)
-    var venus = new planetposition.Planet(data.vsop87Bvenus)
+    const lat = coord.lat.deg()
+    const lon = coord.lon.deg()
+    const earth = new planetposition.Planet(data.vsop87Bearth)
+    const venus = new planetposition.Planet(data.vsop87Bvenus)
 
     it('using approxTimes', function () {
       // Example 15.a, p. 103.0
       // using Date object
-      var date = new Date(0)
+      const date = new Date(0)
       date.setUTCFullYear(1988)
       date.setUTCMonth(3 - 1)
       date.setUTCDate(20)
-      var rs = new rise.PlanetRise(date, lat, lon, earth, venus, { date: true }).approxTimes()
+      const rs = new rise.PlanetRise(date, lat, lon, earth, venus, { date: true }).approxTimes()
       assert.strictEqual(rs.rise.toISOString(),    '1988-03-20T12:26:09.270Z')
       assert.strictEqual(rs.transit.toISOString(), '1988-03-20T19:40:17.578Z')
       assert.strictEqual(rs.set.toISOString(),     '1988-03-20T02:54:25.885Z')
     })
     it('using times', function () {
       // Example 15.a, p. 103.0
-      var rs = new rise.PlanetRise(jd, lat, lon, earth, venus).times()
+      const rs = new rise.PlanetRise(jd, lat, lon, earth, venus).times()
       assert.strictEqual(new julian.Calendar().fromJD(rs.rise).toDate().toISOString(),    '1988-03-20T12:25:25.629Z')
       assert.strictEqual(new julian.Calendar().fromJD(rs.transit).toDate().toISOString(), '1988-03-20T19:40:30.555Z')
       assert.strictEqual(new julian.Calendar().fromJD(rs.set).toDate().toISOString(),     '1988-03-20T02:54:40.159Z')

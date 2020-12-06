@@ -5,7 +5,7 @@ import { fit } from '..'
 describe('#fit', function () {
   it('linear', function () {
     // Example 4.a, p. 37.0
-    var data = [
+    const data = [
       { x: 0.2982, y: 10.92 },
       { x: 0.2969, y: 11.01 },
       { x: 0.2918, y: 10.99 },
@@ -26,9 +26,9 @@ describe('#fit', function () {
       { x: 0.1755, y: 9.32 },
       { x: 0.1746, y: 9.20 }
     ]
-    var res = fit.linear(data)
-    var a = res[0]
-    var b = res[1]
+    const res = fit.linear(data)
+    const a = res[0]
+    const b = res[1]
 
     assert.strictEqual(float(a).toFixed(2), 13.67)
     assert.strictEqual(float(b).toFixed(2), 7.03)
@@ -36,7 +36,7 @@ describe('#fit', function () {
 
   it('correlationCoefficient', function () {
     // Example 4.b, p. 40.0
-    var data = [
+    const data = [
       { x: 73, y: 90.4 },
       { x: 38, y: 125.3 },
       { x: 35, y: 161.8 },
@@ -60,10 +60,10 @@ describe('#fit', function () {
       { x: 44, y: 167.1 },
       { x: 37, y: 162.1 }
     ]
-    var res = fit.linear(data)
-    var a = res[0].toFixed(2)
-    var b = res[1].toFixed(2)
-    var s = 'y = ' + a + 'x + ' + b
+    const res = fit.linear(data)
+    const a = res[0].toFixed(2)
+    const b = res[1].toFixed(2)
+    const s = 'y = ' + a + 'x + ' + b
 
     assert.strictEqual(s, 'y = -2.49x + 244.18')
     assert.strictEqual(float(fit.correlationCoefficient(data)).toFixed(3), -0.767)
@@ -73,7 +73,7 @@ describe('#fit', function () {
    * example data p. 40.0
    * useful for testing quadratic and func3
    */
-  var qdata = [
+  const qdata = [
     { x: -4, y: -6 },
     { x: -3, y: -1 },
     { x: -2, y: 2 },
@@ -84,8 +84,8 @@ describe('#fit', function () {
   ]
 
   it('quadratic', function () {
-    var res = fit.quadratic(qdata)
-    var exp = [-1, -2, 2]
+    const res = fit.quadratic(qdata)
+    const exp = [-1, -2, 2]
     assert.deepStrictEqual(res, exp)
   })
 
@@ -94,17 +94,17 @@ describe('#fit', function () {
    * This indicates a test case for Func3
    */
   it('func3', function () {
-    var f0 = function (x) { return x * x }
-    var f1 = function (x) { return x }
-    var f2 = function (x) { return 1 }
-    var res = fit.func3(qdata, f0, f1, f2)
-    var exp = [-1, -2, 2]
+    const f0 = function (x) { return x * x }
+    const f1 = function (x) { return x }
+    const f2 = function (x) { return 1 }
+    const res = fit.func3(qdata, f0, f1, f2)
+    const exp = [-1, -2, 2]
     assert.deepStrictEqual(res, exp)
   })
 
   it('func3 example', function () {
     // Example 4.c, p. 44.0
-    var data = [
+    const data = [
       { x: 3, y: 0.0433 },
       { x: 20, y: 0.2532 },
       { x: 34, y: 0.3386 },
@@ -127,13 +127,13 @@ describe('#fit', function () {
       { x: 344, y: -0.2126 }
     ]
     // fix up data to have `x` in radians
-    for (var i in data) {
+    for (const i in data) {
       data[i].x *= Math.PI / 180
     }
-    var f0 = Math.sin
-    var f1 = function (x) { return Math.sin(2 * x) }
-    var f2 = function (x) { return Math.sin(3 * x) }
-    var res = fit.func3(data, f0, f1, f2)
+    const f0 = Math.sin
+    const f1 = function (x) { return Math.sin(2 * x) }
+    const f2 = function (x) { return Math.sin(3 * x) }
+    const res = fit.func3(data, f0, f1, f2)
     // output four decimal places corresponding to precision of Y values.
     assert.strictEqual(float(res[0]).toFixed(4), 1.2000)
     assert.strictEqual(float(res[1]).toFixed(4), -0.7700)
@@ -141,7 +141,7 @@ describe('#fit', function () {
   })
 
   it('func1', function () {
-    var data = [
+    const data = [
       { x: 0, y: 0 },
       { x: 1, y: 1.2 },
       { x: 2, y: 1.4 },
@@ -149,7 +149,7 @@ describe('#fit', function () {
       { x: 4, y: 2.1 },
       { x: 5, y: 2.2 }
     ]
-    var a = fit.func1(data, Math.sqrt)
+    const a = fit.func1(data, Math.sqrt)
     assert.strictEqual(float(a).toFixed(3), 1.016) // y = 1.016√x
   })
 })
