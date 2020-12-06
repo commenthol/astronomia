@@ -34,10 +34,11 @@
     "build:es5": "BABEL_ENV=es5 babel -d es src",
     "clean": "rimraf lib es coverage .nyc_output",
     "clean:all": "rimraf node_modules && npm run clean",
-    "coverage": "nyc -r text -r html npm test",
+    "coverage": "c8 -r text -r html npm run test:slow",
     "lint": "eslint '**/*.js'",
     "prepublishOnly": "npm run all",
     "test": "mocha",
+    "test:slow": "SLOWTESTS=1 mocha",
     "zuul": "zuul test/*.js"
   },
   "babel": {
@@ -68,18 +69,18 @@
     }
   },
   "eslintConfig": {
-    "extends": "standard",
     "plugins": [
       "standard"
-    ]
+    ],
+    "extends": "standard"
   },
-  "dependencies": {},
   "devDependencies": {
     "@babel/cli": "^7.12.8",
     "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.12.7",
     "@babel/register": "^7.12.1",
     "babelify": "^10.0.0",
+    "c8": "^7.3.5",
     "core-js": "^3.8.1",
     "eslint": "^7.15.0",
     "eslint-config-standard": "^16.0.2",
@@ -88,7 +89,6 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^5.0.0",
     "mocha": "^8.2.1",
-    "nyc": "^15.1.0",
     "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2",
     "serialize-to-js": "^3.1.1",
