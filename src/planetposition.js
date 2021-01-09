@@ -111,14 +111,14 @@ export class Planet {
     const lat = sum(τ, this.series.B)
     const range = sum(τ, this.series.R)
 
-    if (this.type !== 'D') {
-      const eclFrom = new coord.Ecliptic(lon, lat)
-      const epochFrom = 2000.0
-      const epochTo = base.JDEToJulianYear(jde)
-      const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
-      return new base.Coord(eclTo.lon, eclTo.lat, range)
+    if (this.type === 'D') {
+      return new base.Coord(lon, lat, range)
     }
-    return new base.Coord(lon, lat, range)
+    const eclFrom = new coord.Ecliptic(lon, lat)
+    const epochFrom = 2000.0
+    const epochTo = base.JDEToJulianYear(jde)
+    const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
+    return new base.Coord(eclTo.lon, eclTo.lat, range)
   }
 }
 
