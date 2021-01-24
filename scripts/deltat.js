@@ -12,17 +12,19 @@ const serialize = require('serialize-to-module')
 const julian = require('..').julian
 
 const attic = path.resolve(__dirname, '../attic')
+const outdir = path.resolve(__dirname, '../data')
 const config = {
   fileHist: path.resolve(attic, 'historic_deltat.data'),
-  fileData: path.resolve(attic, 'deltat.data'),
+  fileData: path.resolve(outdir, 'deltat.data'),
   filePreds: path.resolve(attic, 'deltat.preds'),
-  fileLeapSecs: path.resolve(attic, 'tai-utc.dat'),
+  fileLeapSecs: path.resolve(outdir, 'tai-utc.dat'),
   fileFinals2000A: path.resolve(attic, 'finals2000A.data'),
-  fileOut: path.resolve(__dirname, '../data', 'deltat.js'),
+  fileOut: path.resolve(outdir, 'deltat.js'),
   comment: `/**
  * DO NOT EDIT MANUALLY
  * Use \`scripts/deltat.js\` to generate file.
- * Datasets are from <http://maia.usno.navy.mil/ser7>
+ * Datasets are from <http://maia.usno.navy.mil/ser7> and
+ * <ftp://ftp.iers.org/products/eop/rapid/standard>
  */
 `
 }
@@ -246,12 +248,17 @@ function Prediction () {
 }
 Object.assign(Prediction.prototype, DataSetDec.prototype, {
   read: function (file) {
+    // introducing a linear correction due to unavailability of delta.preds from
+    // https://www.usno.navy.mil/USNO/earth-orientation/eo-products
+    const fromYear = 2022
+    const correction = 70.91 - 69.30818 // from 2022.0
+
     const rows = datafile(file, [[14, 22], [22, 34], [34, 48]])
     rows.shift() // header row
     rows.forEach((row) => {
       const [year, deltaT] = row.map(toFloat)
-      if (year && deltaT) {
-        this._add(year, deltaT)
+      if (year && deltaT && year >= fromYear) {
+        this._add(year, deltaT - correction)
       }
     })
     return this

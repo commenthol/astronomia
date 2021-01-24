@@ -51,6 +51,8 @@ function elpmpp_conv () {
 # secondary: ftp://toshi.nofs.navy.mil
 # iers:      ftp://ftp.iers.org/products/eop/rapid/standard
 # As of https://www.usno.navy.mil/USNO server maia.usno.navy.mil is being modernized till summer 2020
+# outdated prediction data is accessible from
+# curl -v --ftp-ssl ftp://gdc.cddis.eosdis.nasa.gov/products/iers/deltat.preds
 function deltat () {
   local server="http://maia.usno.navy.mil/ser7"
   local server2="ftp://ftp.iers.org/products/eop/rapid/standard"

@@ -1,7 +1,8 @@
 /**
  * DO NOT EDIT MANUALLY
  * Use `scripts/deltat.js` to generate file.
- * Datasets are from <http://maia.usno.navy.mil/ser7>
+ * Datasets are from <http://maia.usno.navy.mil/ser7> and
+ * <ftp://ftp.iers.org/products/eop/rapid/standard>
  */
 module.exports = {
   historic: {
