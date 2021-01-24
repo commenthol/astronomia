@@ -54,21 +54,27 @@ function elpmpp_conv () {
 # outdated prediction data is accessible from
 # curl -v --ftp-ssl ftp://gdc.cddis.eosdis.nasa.gov/products/iers/deltat.preds
 function deltat () {
-  local server="http://maia.usno.navy.mil/ser7"
-  local server2="ftp://ftp.iers.org/products/eop/rapid/standard"
+  local server="ftp://ftp.iers.org/products/eop/rapid/standard"
   local urls=(
-    $server2/finals2000A.data
-    # $server/deltat.preds
-    # $server/deltat.data
-    # $server/historic_deltat.data
-    # $server/finals2000A.data
-    # $server/tai-utc.dat
+    $server/finals2000A.data
   )
-
-  for url in $urls; do
+  for url in ${urls[@]}; do
     f=$(file $url)
     echo downloading $url
     $curl $url > $target/$f
+  done
+
+  local server2="ftp://gdc.cddis.eosdis.nasa.gov/products/iers"
+  local urls2=(
+    $server2/deltat.preds
+    $server2/deltat.data
+    $server2/historic_deltat.data
+    $server2/tai-utc.dat
+  )
+  for url in ${urls2[@]}; do
+    f=$(file $url)
+    echo downloading $url
+    $curl --ftp-ssl $url > $target/$f
   done
 }
 
