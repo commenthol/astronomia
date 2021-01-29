@@ -58,14 +58,13 @@ export class Planet {
    * // for use in browser
    * import {data} from 'astronomia'
    * const earth = new planetposition.Planet(data.vsop87Bearth)
-   * const earth = new planetposition.Planet(data.vsop87Dearth, 'D')
    * ```
    */
-  constructor (planet, type) {
+  constructor (planet) {
     if (typeof planet !== 'object') throw new TypeError('need planet vsop87 data')
     this.name = planet.name
+    this.type = planet.type || 'B'
     this.series = planet
-    this.type = type || 'B'
   }
 
   /**
@@ -84,14 +83,16 @@ export class Planet {
     const lat = sum(τ, this.series.B)
     const range = sum(τ, this.series.R)
 
-    if (this.type === 'D') {
-      const eclFrom = new coord.Ecliptic(lon, lat)
-      const epochFrom = base.JDEToJulianYear(jde)
-      const epochTo = 2000.0
-      const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
-      return new base.Coord(eclTo.lon, eclTo.lat, range)
+    switch (this.type){
+      case 'B':
+        return new base.Coord(lon, lat, range)
+      case 'D':
+        const eclFrom = new coord.Ecliptic(lon, lat)
+        const epochFrom = base.JDEToJulianYear(jde)
+        const epochTo = 2000.0
+        const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
+        return new base.Coord(eclTo.lon, eclTo.lat, range)
     }
-    return new base.Coord(lon, lat, range)
   }
 
   /**
@@ -111,14 +112,16 @@ export class Planet {
     const lat = sum(τ, this.series.B)
     const range = sum(τ, this.series.R)
 
-    if (this.type === 'D') {
-      return new base.Coord(lon, lat, range)
+    switch (this.type){
+      case 'B':
+        const eclFrom = new coord.Ecliptic(lon, lat)
+        const epochFrom = 2000.0
+        const epochTo = base.JDEToJulianYear(jde)
+        const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
+        return new base.Coord(eclTo.lon, eclTo.lat, range)
+      case 'D':
+        return new base.Coord(lon, lat, range)
     }
-    const eclFrom = new coord.Ecliptic(lon, lat)
-    const epochFrom = 2000.0
-    const epochTo = base.JDEToJulianYear(jde)
-    const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
-    return new base.Coord(eclTo.lon, eclTo.lat, range)
   }
 }
 
