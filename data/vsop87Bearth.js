@@ -2605,5 +2605,6 @@ module.exports = {
       [1.2e-10, 0.65572878044, 12566.1516999828]
     ]
   },
-  name: "earth"
+  name: "earth",
+  type: "B"
 };

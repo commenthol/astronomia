@@ -7164,5 +7164,6 @@ module.exports = {
       [0, 4.00511196914, 234791.12827416777]
     ]
   },
-  name: "mercury"
+  name: "mercury",
+  type: "B"
 };

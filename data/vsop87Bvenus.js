@@ -1751,5 +1751,6 @@ module.exports = {
       [2e-11, 5.33215705373, 20426.571092422]
     ]
   },
-  name: "venus"
+  name: "venus",
+  type: "B"
 };

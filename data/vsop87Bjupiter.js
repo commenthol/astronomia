@@ -3666,5 +3666,6 @@ module.exports = {
       [1.033e-8, 4.50671820436, 529.6909650946]
     ]
   },
-  name: "jupiter"
+  name: "jupiter",
+  type: "B"
 };
