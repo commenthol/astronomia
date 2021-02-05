@@ -17,6 +17,17 @@ describe('#solar', function () {
     assert.strictEqual(res.range, 0.997608521657578)
   })
 
+  it('apparentEquatorialVSOP87D', function () {
+    // Example 25.b, p. 169, but as this code uses the full VSOP87 theory,
+    // results match those at bottom of p. 165.
+    const planet = new planetposition.Planet(data.vsop87Dearth)
+    const res = solar.apparentEquatorialVSOP87(planet, jde)
+
+    assert.strictEqual(new sexa.RA(res.ra).toString(3), '13ʰ13ᵐ30.748ˢ')
+    assert.strictEqual(new sexa.Angle(res.dec).toString(2), '-7°47′1.74″')
+    assert.strictEqual(res.range, 0.9976085202355945)
+  })
+
   it('Example true', function () {
     // Example 25.a, p. 165.
     const res = solar.true(T)

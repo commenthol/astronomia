@@ -14,6 +14,17 @@ describe('#planetposition', function () {
       assert.strictEqual(res.range, 1.421877771845356)
     })
 
+    it('Mars at 2415020.0 VSOP D', function () {
+      // Mars 1899 spherical data from vsop87.chk.
+      const jd = 2415020.0
+      const planet = new planetposition.Planet(data.vsop87Dmars)
+      const res = planet.position2000(jd)
+
+      assert.strictEqual(res.lon, 5.01857925809491)
+      assert.strictEqual(res.lat, -0.02740737901167283)
+      assert.strictEqual(res.range, 1.4218777705060395)
+    })
+
     it('Venus at 1992-12-20', function () {
       // Example 32.a, p. 219
       const jd = julian.CalendarGregorianToJD(1992, 12, 20)
@@ -35,6 +46,16 @@ describe('#planetposition', function () {
       assert.strictEqual(new sexa.Angle(res.lon).toDegString(5), '26°.11412')
       assert.strictEqual(new sexa.Angle(res.lat).toDegString(5), '-2°.6206')
       assert.strictEqual(res.range, 0.7246016739689574)
+    })
+
+    it('Venus at 1992-12-20 VSOPD', function () {
+      // Example 32.a, p. 219
+      const jd = julian.CalendarGregorianToJD(1992, 12, 20)
+      const planet = new planetposition.Planet(data.vsop87Dvenus)
+      const res = planet.position(jd)
+      assert.strictEqual(new sexa.Angle(res.lon).toDegString(5), '26°.11412')
+      assert.strictEqual(new sexa.Angle(res.lat).toDegString(5), '-2°.6206')
+      assert.strictEqual(res.range, 0.7246016759555222)
     })
   })
 

@@ -52,7 +52,6 @@ export class Planet {
    * VSOP87 representation of a Planet
    * @constructs Planet
    * @param {object} planet - planet data series
-   * @param {String} type - VSOP87 type (B or D)
    * @example
    * ```js
    * // for use in browser

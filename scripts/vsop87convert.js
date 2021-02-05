@@ -25,8 +25,10 @@ const planets = [
   'uranus',
   'neptune'
 ]
-const type = 'B'
+let type = 'B'
+main()
 
+type = 'D'
 main()
 
 function main () {
@@ -47,6 +49,7 @@ function convertPlanet (planet) {
   v.loadSync()
   const o = v.getData()
   o.name = planet
+  o.type = type
   const data = serialize(o, {})
   fs.writeFileSync(filename(planet), data, 'utf8')
 }
