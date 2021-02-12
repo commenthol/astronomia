@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { base, nearparabolic } from '..'
+import { base, nearparabolic } from '../src/index.js'
 
 describe('#nearparabolic', function () {
   describe('anomalyDistance', function () {

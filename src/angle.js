@@ -18,8 +18,8 @@
  * All angles are in radians.
  */
 
-import base from './base'
-import interp from './interpolation'
+import base from './base.js'
+import interp from './interpolation.js'
 const { abs, acos, asin, atan2, cos, hypot, sin, sqrt, tan } = Math
 
 /**

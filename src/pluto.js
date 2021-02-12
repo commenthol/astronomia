@@ -8,8 +8,8 @@
  * Pluto: Chapter 37, Pluto.
  */
 
-import base from './base'
-import elliptic from './elliptic'
+import base from './base.js'
+import elliptic from './elliptic.js'
 
 /**
  * Heliocentric returns J2000 heliocentric coordinates of Pluto.

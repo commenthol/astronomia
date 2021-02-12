@@ -8,8 +8,8 @@
  * Nutation: Chapter 22, Nutation and the Obliquity of the Ecliptic.
  */
 
-import base from './base'
-import sexa from './sexagesimal'
+import base from './base.js'
+import sexa from './sexagesimal.js'
 
 // Nutation: Chapter 22, Nutation and the Obliquity of the Ecliptic.
 

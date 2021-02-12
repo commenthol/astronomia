@@ -23,8 +23,8 @@
  * month and day of month as input.
  */
 
-import base from './base'
-import julian from './julian'
+import base from './base.js'
+import julian from './julian.js'
 
 const int = Math.trunc
 

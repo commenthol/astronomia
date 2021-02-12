@@ -10,7 +10,7 @@
  * source ftp://cyrano-se.obspm.fr/pub/2_lunar_solutions/2_elpmpp02/elpmpp02.pdf
  */
 
-import base from './base'
+import base from './base.js'
 
 const SEC2RAD = 1 / 3600 * Math.PI / 180
 
@@ -40,7 +40,7 @@ export class Moon {
    * @example
    * ```js
    * // for use in browser
-   * import {data} from 'astronomia'
+   * import {data} from 'astronomia.js'
    * const moon = new elp.Moon(data.elpMppDe)
    * ```
    */

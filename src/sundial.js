@@ -8,7 +8,7 @@
  * Sundial: Chapter 58, Calculation of a Planar Sundial.
  */
 
-import base from './base'
+import base from './base.js'
 
 /**
  * Point return type represents a point to be used in constructing the sundial.

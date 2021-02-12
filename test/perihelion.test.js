@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import float from './support/float.js'
-import { julian, perihelion, data, planetposition } from '..'
+import { julian, perihelion, data, planetposition } from '../src/index.js'
 
 function toObj (props, table) {
   return table.map(function (row) {

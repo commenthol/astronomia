@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { iterate } from '..'
+import { iterate } from '../src/index.js'
 
 describe('#iterate', function () {
   it('decimalPlaces', function () {

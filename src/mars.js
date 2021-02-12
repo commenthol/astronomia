@@ -8,11 +8,11 @@
  * Mars: Chapter 42, Ephemeris for Physical Observations of Mars.
  */
 
-import base from './base'
-import coord from './coord'
-import illum from './illum'
-import nutation from './nutation'
-import planetposition from './planetposition'
+import base from './base.js'
+import coord from './coord.js'
+import illum from './illum.js'
+import nutation from './nutation.js'
+import planetposition from './planetposition.js'
 
 /**
  * Physical computes quantities for physical observations of Mars.

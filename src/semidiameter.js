@@ -7,8 +7,8 @@
 /**
  * Semidiameter: Chapter 55, Semidiameters of the Sun, Moon, and Planets.
  */
-import base from './base'
-import parallax from './parallax'
+import base from './base.js'
+import parallax from './parallax.js'
 
 /* eslint-disable no-multi-spaces */
 /**

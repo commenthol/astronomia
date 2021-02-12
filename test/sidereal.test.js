@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { julian, sidereal, sexagesimal as sexa } from '..'
+import { julian, sidereal, sexagesimal as sexa } from '../src/index.js'
 
 describe('#sidereal', function () {
   it('Mean', function () {

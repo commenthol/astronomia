@@ -20,9 +20,9 @@
  * significant chance of typographical error.
  */
 
-import base from './base'
-import coord from './coord'
-import nutation from './nutation'
+import base from './base.js'
+import coord from './coord.js'
+import nutation from './nutation.js'
 
 /**
  * True returns true geometric longitude and anomaly of the sun referenced to the mean equinox of date.

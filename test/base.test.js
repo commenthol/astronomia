@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { base } from '..'
+import { base } from '../src/index.js'
 
 describe('#base', function () {
   describe('constants', function () {

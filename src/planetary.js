@@ -10,7 +10,7 @@
  * Incomplete: Some functions unimplemented for lack of test data.
  */
 
-import base from './base'
+import base from './base.js'
 
 /**
  * Mean computes some intermediate values for a mean planetary configuration

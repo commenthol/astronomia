@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { binary, kepler } from '..'
+import { binary, kepler } from '../src/index.js'
 
 describe('#binary', function () {
   it('position', function () {

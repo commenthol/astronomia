@@ -1,6 +1,6 @@
 {
   "name": "astronomia",
-  "version": "2.3.1",
+  "version": "3.0.0-0",
   "description": "An astronomical library",
   "keywords": [
     "astronomy",
@@ -18,86 +18,375 @@
   },
   "license": "MIT",
   "author": "commenthol <commenthol@gmail.com>",
-  "contributors": [],
-  "main": "lib",
-  "module": "es",
-  "jsnext:main": "es",
+  "maintainers": [
+    "commenthol <commenthol@gmail.com>"
+  ],
+  "contributors": [
+    "mdmunir <misbahuldmunir@gmail.com>"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./lib/index.ccjs"
+    },
+    "./angle": {
+      "import": "./src/angle.js",
+      "require": "./lib/angle.cjs"
+    },
+    "./apparent": {
+      "import": "./src/apparent.js",
+      "require": "./lib/apparent.cjs"
+    },
+    "./apsis": {
+      "import": "./src/apsis.js",
+      "require": "./lib/apsis.cjs"
+    },
+    "./base": {
+      "import": "./src/base.js",
+      "require": "./lib/base.cjs"
+    },
+    "./binary": {
+      "import": "./src/binary.js",
+      "require": "./lib/binary.cjs"
+    },
+    "./circle": {
+      "import": "./src/circle.js",
+      "require": "./lib/circle.cjs"
+    },
+    "./conjunction": {
+      "import": "./src/conjunction.js",
+      "require": "./lib/conjunction.cjs"
+    },
+    "./coord": {
+      "import": "./src/coord.js",
+      "require": "./lib/coord.cjs"
+    },
+    "./deltat": {
+      "import": "./src/deltat.js",
+      "require": "./lib/deltat.cjs"
+    },
+    "./eclipse": {
+      "import": "./src/eclipse.js",
+      "require": "./lib/eclipse.cjs"
+    },
+    "./elementequinox": {
+      "import": "./src/elementequinox.js",
+      "require": "./lib/elementequinox.cjs"
+    },
+    "./elliptic": {
+      "import": "./src/elliptic.js",
+      "require": "./lib/elliptic.cjs"
+    },
+    "./elp": {
+      "import": "./src/elp.js",
+      "require": "./lib/elp.cjs"
+    },
+    "./eqtime": {
+      "import": "./src/eqtime.js",
+      "require": "./lib/eqtime.cjs"
+    },
+    "./fit": {
+      "import": "./src/fit.js",
+      "require": "./lib/fit.cjs"
+    },
+    "./globe": {
+      "import": "./src/globe.js",
+      "require": "./lib/globe.cjs"
+    },
+    "./illum": {
+      "import": "./src/illum.js",
+      "require": "./lib/illum.cjs"
+    },
+    "./interpolation": {
+      "import": "./src/interpolation.js",
+      "require": "./lib/interpolation.cjs"
+    },
+    "./iterate": {
+      "import": "./src/iterate.js",
+      "require": "./lib/iterate.cjs"
+    },
+    "./jm": {
+      "import": "./src/jm.js",
+      "require": "./lib/jm.cjs"
+    },
+    "./julian": {
+      "import": "./src/julian.js",
+      "require": "./lib/julian.cjs"
+    },
+    "./jupiter": {
+      "import": "./src/jupiter.js",
+      "require": "./lib/jupiter.cjs"
+    },
+    "./jupitermoons": {
+      "import": "./src/jupitermoons.js",
+      "require": "./lib/jupitermoons.cjs"
+    },
+    "./kepler": {
+      "import": "./src/kepler.js",
+      "require": "./lib/kepler.cjs"
+    },
+    "./line": {
+      "import": "./src/line.js",
+      "require": "./lib/line.cjs"
+    },
+    "./mars": {
+      "import": "./src/mars.js",
+      "require": "./lib/mars.cjs"
+    },
+    "./moonillum": {
+      "import": "./src/moonillum.js",
+      "require": "./lib/moonillum.cjs"
+    },
+    "./moon": {
+      "import": "./src/moon.js",
+      "require": "./lib/moon.cjs"
+    },
+    "./moonmaxdec": {
+      "import": "./src/moonmaxdec.js",
+      "require": "./lib/moonmaxdec.cjs"
+    },
+    "./moonnode": {
+      "import": "./src/moonnode.js",
+      "require": "./lib/moonnode.cjs"
+    },
+    "./moonphase": {
+      "import": "./src/moonphase.js",
+      "require": "./lib/moonphase.cjs"
+    },
+    "./moonposition": {
+      "import": "./src/moonposition.js",
+      "require": "./lib/moonposition.cjs"
+    },
+    "./nearparabolic": {
+      "import": "./src/nearparabolic.js",
+      "require": "./lib/nearparabolic.cjs"
+    },
+    "./node": {
+      "import": "./src/node.js",
+      "require": "./lib/node.cjs"
+    },
+    "./nutation": {
+      "import": "./src/nutation.js",
+      "require": "./lib/nutation.cjs"
+    },
+    "./parabolic": {
+      "import": "./src/parabolic.js",
+      "require": "./lib/parabolic.cjs"
+    },
+    "./parallactic": {
+      "import": "./src/parallactic.js",
+      "require": "./lib/parallactic.cjs"
+    },
+    "./parallax": {
+      "import": "./src/parallax.js",
+      "require": "./lib/parallax.cjs"
+    },
+    "./perihelion": {
+      "import": "./src/perihelion.js",
+      "require": "./lib/perihelion.cjs"
+    },
+    "./planetary": {
+      "import": "./src/planetary.js",
+      "require": "./lib/planetary.cjs"
+    },
+    "./planetelements": {
+      "import": "./src/planetelements.js",
+      "require": "./lib/planetelements.cjs"
+    },
+    "./planetposition": {
+      "import": "./src/planetposition.js",
+      "require": "./lib/planetposition.cjs"
+    },
+    "./pluto": {
+      "import": "./src/pluto.js",
+      "require": "./lib/pluto.cjs"
+    },
+    "./precess": {
+      "import": "./src/precess.js",
+      "require": "./lib/precess.cjs"
+    },
+    "./refraction": {
+      "import": "./src/refraction.js",
+      "require": "./lib/refraction.cjs"
+    },
+    "./rise": {
+      "import": "./src/rise.js",
+      "require": "./lib/rise.cjs"
+    },
+    "./saturnmoons": {
+      "import": "./src/saturnmoons.js",
+      "require": "./lib/saturnmoons.cjs"
+    },
+    "./saturnring": {
+      "import": "./src/saturnring.js",
+      "require": "./lib/saturnring.cjs"
+    },
+    "./semidiameter": {
+      "import": "./src/semidiameter.js",
+      "require": "./lib/semidiameter.cjs"
+    },
+    "./sexagesimal": {
+      "import": "./src/sexagesimal.js",
+      "require": "./lib/sexagesimal.cjs"
+    },
+    "./sidereal": {
+      "import": "./src/sidereal.js",
+      "require": "./lib/sidereal.cjs"
+    },
+    "./solardisk": {
+      "import": "./src/solardisk.js",
+      "require": "./lib/solardisk.cjs"
+    },
+    "./solar": {
+      "import": "./src/solar.js",
+      "require": "./lib/solar.cjs"
+    },
+    "./solarxyz": {
+      "import": "./src/solarxyz.js",
+      "require": "./lib/solarxyz.cjs"
+    },
+    "./solstice": {
+      "import": "./src/solstice.js",
+      "require": "./lib/solstice.cjs"
+    },
+    "./stellar": {
+      "import": "./src/stellar.js",
+      "require": "./lib/stellar.cjs"
+    },
+    "./sundial": {
+      "import": "./src/sundial.js",
+      "require": "./lib/sundial.cjs"
+    },
+    "./sunrise": {
+      "import": "./src/sunrise.js",
+      "require": "./lib/sunrise.cjs"
+    },
+    "./vsop87": {
+      "import": "./src/vsop87.js",
+      "require": "./lib/vsop87.cjs"
+    },
+    "./data/deltat": {
+      "import": "./data/deltat.js",
+      "require": "./lib/data/deltat.cjs"
+    },
+    "./data/elpMppDeFull": {
+      "import": "./data/elpMppDeFull.js",
+      "require": "./lib/data/elpMppDeFull.cjs"
+    },
+    "./data/elpMppDe": {
+      "import": "./data/elpMppDe.js",
+      "require": "./lib/data/elpMppDe.cjs"
+    },
+    "./data": {
+      "import": "./data/index.js",
+      "require": "./lib/data/index.cjs"
+    },
+    "./data/vsop87Bearth": {
+      "import": "./data/vsop87Bearth.js",
+      "require": "./lib/data/vsop87Bearth.cjs"
+    },
+    "./data/vsop87Bjupiter": {
+      "import": "./data/vsop87Bjupiter.js",
+      "require": "./lib/data/vsop87Bjupiter.cjs"
+    },
+    "./data/vsop87Bmars": {
+      "import": "./data/vsop87Bmars.js",
+      "require": "./lib/data/vsop87Bmars.cjs"
+    },
+    "./data/vsop87Bmercury": {
+      "import": "./data/vsop87Bmercury.js",
+      "require": "./lib/data/vsop87Bmercury.cjs"
+    },
+    "./data/vsop87Bneptune": {
+      "import": "./data/vsop87Bneptune.js",
+      "require": "./lib/data/vsop87Bneptune.cjs"
+    },
+    "./data/vsop87Bsaturn": {
+      "import": "./data/vsop87Bsaturn.js",
+      "require": "./lib/data/vsop87Bsaturn.cjs"
+    },
+    "./data/vsop87Buranus": {
+      "import": "./data/vsop87Buranus.js",
+      "require": "./lib/data/vsop87Buranus.cjs"
+    },
+    "./data/vsop87Bvenus": {
+      "import": "./data/vsop87Bvenus.js",
+      "require": "./lib/data/vsop87Bvenus.cjs"
+    },
+    "./data/vsop87Dearth": {
+      "import": "./data/vsop87Dearth.js",
+      "require": "./lib/data/vsop87Dearth.cjs"
+    },
+    "./data/vsop87Djupiter": {
+      "import": "./data/vsop87Djupiter.js",
+      "require": "./lib/data/vsop87Djupiter.cjs"
+    },
+    "./data/vsop87Dmars": {
+      "import": "./data/vsop87Dmars.js",
+      "require": "./lib/data/vsop87Dmars.cjs"
+    },
+    "./data/vsop87Dmercury": {
+      "import": "./data/vsop87Dmercury.js",
+      "require": "./lib/data/vsop87Dmercury.cjs"
+    },
+    "./data/vsop87Dneptune": {
+      "import": "./data/vsop87Dneptune.js",
+      "require": "./lib/data/vsop87Dneptune.cjs"
+    },
+    "./data/vsop87Dsaturn": {
+      "import": "./data/vsop87Dsaturn.js",
+      "require": "./lib/data/vsop87Dsaturn.cjs"
+    },
+    "./data/vsop87Duranus": {
+      "import": "./data/vsop87Duranus.js",
+      "require": "./lib/data/vsop87Duranus.cjs"
+    },
+    "./data/vsop87Dvenus": {
+      "import": "./data/vsop87Dvenus.js",
+      "require": "./lib/data/vsop87Dvenus.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./lib/index.cjs",
   "directories": {
     "lib": "lib",
     "doc": "docs",
     "test": "test"
   },
   "scripts": {
-    "all": "npm run clean && npm run lint && npm run build && npm test",
-    "build": "npm run build:cjs && npm run build:es5",
-    "build:cjs": "babel -d lib src",
-    "build:es5": "BABEL_ENV=es5 babel -d es src",
-    "clean": "rimraf lib es coverage .nyc_output",
+    "all": "npm-run-all clean lint build test",
+    "build": "rollup -c",
+    "clean": "rimraf lib coverage .nyc_output",
     "clean:all": "rimraf node_modules && npm run clean",
     "coverage": "c8 -r text -r html npm run test:slow",
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint \"**/*.js\" \"**/*.cjs\"",
     "prepublishOnly": "npm run all",
     "test": "mocha",
     "test:slow": "SLOWTESTS=1 mocha",
     "zuul": "zuul test/*.js"
   },
-  "babel": {
-    "env": {
-      "development": {
-        "presets": [
-          "@babel/preset-env"
-        ]
-      },
-      "es5": {
-        "presets": [
-          [
-            "@babel/preset-env",
-            {
-              "targets": {
-                "node": "current",
-                "browsers": [
-                  "last 2 versions",
-                  "ie >= 11"
-                ]
-              },
-              "modules": false,
-              "loose": true
-            }
-          ]
-        ]
-      }
-    }
-  },
-  "eslintConfig": {
-    "plugins": [
-      "standard"
-    ],
-    "extends": "standard"
-  },
   "devDependencies": {
-    "@babel/cli": "^7.12.8",
-    "@babel/core": "^7.12.9",
-    "@babel/preset-env": "^7.12.7",
-    "@babel/register": "^7.12.1",
     "babelify": "^10.0.0",
-    "c8": "^7.3.5",
-    "core-js": "^3.8.1",
-    "eslint": "^7.15.0",
+    "c8": "^7.5.0",
+    "core-js": "^3.8.3",
+    "dtslint": "^4.0.7",
+    "eslint": "^7.19.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
-    "mocha": "^8.2.1",
+    "mocha": "^8.3.0",
+    "npm-run-all": "^4.1.5",
     "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2",
+    "rollup": "^2.38.5",
     "serialize-to-js": "^3.1.1",
-    "serialize-to-module": "^1.0.1"
+    "serialize-to-module": "^1.1.0",
+    "typescript": "^4.1.5"
   },
   "engines": {
-    "node": ">=6.0.0"
-  },
-  "maintainers": [
-    "commenthol <commenthol@gmail.com>"
-  ]
+    "node": ">=12.0.0"
+  }
 }

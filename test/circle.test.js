@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { base, circle, sexagesimal as sexa } from '..'
+import { base, circle, sexagesimal as sexa } from '../src/index.js'
 
 describe('#circle', function () {
   it('Smallest typeI', function () {

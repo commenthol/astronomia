@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { julian, planetelements } from '..'
+import { julian, planetelements } from '../src/index.js'
 
 describe('#planetelements', function () {
   it('mean()', function () {

@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { stellar } from '..'
+import { stellar } from '../src/index.js'
 
 describe('#stellar', function () {
   it('sum()', function () {

@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { julian, node, perihelion, planetelements } from '..'
+import { julian, node, perihelion, planetelements } from '../src/index.js'
 
 describe('#node', function () {
   it('EllipticAscending()', function () {

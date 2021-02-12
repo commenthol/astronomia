@@ -8,9 +8,9 @@
  * Julian: Chapter 7, Julian day.
  */
 
-import base from './base'
-import sexa from './sexagesimal'
-import deltat from './deltat'
+import base from './base.js'
+import sexa from './sexagesimal.js'
+import deltat from './deltat.js'
 
 const int = Math.trunc
 

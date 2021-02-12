@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { parabolic, julian } from '..'
+import { parabolic, julian } from '../src/index.js'
 
 describe('#parabolic', function () {
   it('anomalyDistance', function () {

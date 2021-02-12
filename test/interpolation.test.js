@@ -1,12 +1,12 @@
 /* eslint no-multi-spaces: 0 */
 
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
+import 'core-js/stable/index.js'
+import 'regenerator-runtime/runtime.js'
 
 import assert from 'assert'
 import float from './support/float.js'
 import { format } from 'util'
-import { base, interpolation, sexagesimal as sexa } from '..'
+import { base, interpolation, sexagesimal as sexa } from '../src/index.js'
 
 describe('#interpolation', function () {
   describe('Len3', function () {

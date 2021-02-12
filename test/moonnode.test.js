@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { julian, moonnode } from '..'
+import { julian, moonnode } from '../src/index.js'
 
 describe('#moonnode', function () {
   it('ascending', function () {

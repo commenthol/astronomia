@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { base, julian, moonillum, moonposition, solar } from '..'
+import { base, julian, moonillum, moonposition, solar } from '../src/index.js'
 
 const p = Math.PI / 180
 

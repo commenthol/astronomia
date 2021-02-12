@@ -23,7 +23,7 @@
  * For an example of a selection function, see len3ForInterpolateX. This
  * was useful for computing Delta T.
  */
-import base from './base'
+import base from './base.js'
 
 const int = Math.trunc
 

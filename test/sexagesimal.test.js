@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { sexagesimal as sexa } from '..'
+import { sexagesimal as sexa } from '../src/index.js'
 
 describe('#sexagesimal', function () {
   describe('functions', function () {

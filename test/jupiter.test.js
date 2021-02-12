@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { jupiter, data, planetposition } from '..'
+import { jupiter, data, planetposition } from '../src/index.js'
 
 describe('#jupiter', function () {
   it('physical()', function () {

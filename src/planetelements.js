@@ -10,7 +10,7 @@
  * Partial:  Only implemented for mean equinox of date.
  */
 
-import base from './base'
+import base from './base.js'
 
 // planet names used in cMean
 export const mercury = 'mercury'

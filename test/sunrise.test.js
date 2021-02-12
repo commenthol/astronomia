@@ -1,7 +1,7 @@
 /* eslint key-spacing:0 */
 
 import assert from 'assert'
-import { sunrise, julian } from '..'
+import { sunrise, julian } from '../src/index.js'
 
 const { Sunrise } = sunrise
 

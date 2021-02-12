@@ -8,8 +8,8 @@
  * Sidereal: Chapter 12, Sidereal Time at Greenwich.
  */
 
-import base from './base'
-import nutation from './nutation'
+import base from './base.js'
+import nutation from './nutation.js'
 
 /**
  * JDToCFrac returns values for use in computing sidereal time at Greenwich.

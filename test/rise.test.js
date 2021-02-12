@@ -11,7 +11,7 @@ import {
   data,
   sidereal,
   sexagesimal as sexa
-} from '..'
+} from '../src/index.js'
 
 describe('#rise', function () {
   const coord = {

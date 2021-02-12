@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { base, globe, sexagesimal as sexa } from '..'
+import { base, globe, sexagesimal as sexa } from '../src/index.js'
 
 describe('#globe', function () {
   it('parallaxConstants', function () {

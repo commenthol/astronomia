@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { parallax, base, julian, moonposition, sidereal, globe, sexagesimal as sexa } from '..'
+import { parallax, base, julian, moonposition, sidereal, globe, sexagesimal as sexa } from '../src/index.js'
 
 const D2R = Math.PI / 180
 const R2D = 180 / Math.PI

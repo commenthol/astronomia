@@ -30,7 +30,7 @@ function vsop () {
 
 ## convert VSOP87 data
 function vsop_conv () {
-  node $cwd/vsop87convert.js
+  node $cwd/vsop87convert.cjs
 }
 
 ## ELPMPP data
@@ -45,7 +45,7 @@ function elpmpp () {
 
 ## convert ELPMPP data
 function elpmpp_conv () {
-  node $cwd/elpmppconvert.js
+  node $cwd/elpmppconvert.cjs
 }
 
 ## DeltaT data
@@ -82,7 +82,7 @@ function deltat () {
 
 ## convert DeltaT data
 function deltat_conv () {
-  node $cwd/deltat.js > $target/deltat.txt
+  node $cwd/deltat.cjs > $target/deltat.txt
 }
 
 function help () {

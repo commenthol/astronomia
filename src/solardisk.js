@@ -8,9 +8,9 @@
  * Solardisk: Chapter 29, Ephemeris for Physical Observations of the Sun.
  */
 
-import base from './base'
-import nutation from './nutation'
-import solar from './solar'
+import base from './base.js'
+import nutation from './nutation.js'
+import solar from './solar.js'
 
 /**
  * Ephemeris returns the apparent orientation of the sun at the given jd.

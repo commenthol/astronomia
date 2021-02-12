@@ -8,11 +8,11 @@
  * Saturnmoons: Chapter 46, Positions of the Satellites of Saturn
  */
 
-import base from './base'
-import coord from './coord'
-import planetposition from './planetposition'
-import precess from './precess'
-import solar from './solar'
+import base from './base.js'
+import coord from './coord.js'
+import planetposition from './planetposition.js'
+import precess from './precess.js'
+import solar from './solar.js'
 
 // array positions of Saturnmoons returned from positions().
 export const mimas = 0

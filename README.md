@@ -103,7 +103,7 @@ packages can be used as a single one:
 // instead of
 const base = require('astronomia').base
 // use
-const base = require('astronomia/lib/base')
+const base = require('astronomia/base')
 ```
 
 ES6 Syntax
@@ -112,7 +112,7 @@ ES6 Syntax
 // instead of
 import {base} from 'astronomia'
 // use
-import base from 'astronomia/src/base'
+import base from 'astronomia/base'
 ```
 
 To access dedicated VSOP87 data sets use e.g.

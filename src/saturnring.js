@@ -8,10 +8,10 @@
  * Saturnrings: Chapter 45, The Ring of Saturn
  */
 
-import base from './base'
-import coord from './coord'
-import nutation from './nutation'
-import planetposition from './planetposition'
+import base from './base.js'
+import coord from './coord.js'
+import nutation from './nutation.js'
+import planetposition from './planetposition.js'
 
 /**
  * Ring computes quantities of the ring of Saturn.

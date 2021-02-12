@@ -8,7 +8,7 @@
  * Parallactic: Chapter 14, The Parallactic Angle, and three other Topics.
  */
 
-import base from './base'
+import base from './base.js'
 
 /**
  * ParallacticAngle returns parallactic angle of a celestial object.

@@ -31,10 +31,10 @@
  * 2000 January 1, 11:59:27.816 TAI or 2000 January 1, 11:58:55.816 UTC.
  */
 
-import base from './base'
-import interp from './interpolation'
-import deltat from '../data/deltat'
-import { Calendar, LeapYearGregorian } from './julian'
+import base from './base.js'
+import interp from './interpolation.js'
+import deltat from '../data/deltat.js'
+import { Calendar, LeapYearGregorian } from './julian.js'
 
 /**
  * deltaT returns the difference ΔT = TD - UT between Dynamical Time TD and

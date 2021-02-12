@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import float from './support/float.js'
-import { sundial } from '..'
+import { sundial } from '../src/index.js'
 
 const p = Math.PI / 180
 

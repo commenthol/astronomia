@@ -26,8 +26,8 @@
  * slow for Neptune.  They are offered here though as a simple implementation
  * of Meeus's presentation in the book.
  */
-import base from './base'
-import interp from './interpolation'
+import base from './base.js'
+import interp from './interpolation.js'
 
 /**
  * Planet constants for first argument of Perihelion and Aphelion functions.

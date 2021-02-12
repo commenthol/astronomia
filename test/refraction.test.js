@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import float from './support/float.js'
-import { refraction } from '..'
+import { refraction } from '../src/index.js'
 
 describe('#refraction', function () {
   it('bennett', function () {

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { elementequinox } from '..'
+import { elementequinox } from '../src/index.js'
 
 describe('#elementequinox', function () {
   it('reduceB1950ToJ2000', function () {

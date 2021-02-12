@@ -8,8 +8,8 @@
  * Line: Chapter 19, Bodies in Straight Line
  */
 
-import base from './base'
-import interp from './interpolation'
+import base from './base.js'
+import interp from './interpolation.js'
 
 /**
  * Time computes the time at which a moving body is on a straight line (great

@@ -1,4 +1,6 @@
-/* eslint standard/array-bracket-even-spacing: 0, no-multi-spaces: 0 */
+/* eslint
+  no-multi-spaces: 0
+*/
 
 import assert from 'assert'
 import float from './support/float.js'
@@ -10,7 +12,7 @@ import {
   julian,
   nutation,
   sexagesimal as sexa
-} from '..'
+} from '../src/index.js'
 
 describe('#precess', function () {
   describe('mn', function () {

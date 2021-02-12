@@ -7,9 +7,9 @@
 /**
  * Solarxyz: Chapter 26, Rectangular Coordinates of the Sun.
  */
-import base from './base'
-import nutation from './nutation'
-import solar from './solar'
+import base from './base.js'
+import nutation from './nutation.js'
+import solar from './solar.js'
 
 /**
  * Position returns rectangular coordinates referenced to the mean equinox of date.

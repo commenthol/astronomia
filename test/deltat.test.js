@@ -1,11 +1,10 @@
 /* eslint
-no-multi-spaces: 0,
-key-spacing: 0,
-standard/array-bracket-even-spacing: 0
+  no-multi-spaces: 0,
+  key-spacing: 0
 */
 
 import assert from 'assert'
-import { julian, deltat } from '..'
+import { julian, deltat } from '../src/index.js'
 
 describe('#deltat', function () {
   const tests = [
@@ -40,7 +39,7 @@ describe('#deltat', function () {
     { date: [2020,  1,  1], exp:   69.3611547 }, // might change on new deltat data set
     { date: [2020,  7,  1], exp:   69.4235824 },
     { date: [2021,  1,  1], exp:   69.3596109 },
-    { date: [2021,  7,  1], exp:   69.3376245 },
+    { date: [2021,  7,  1], exp:   69.3451738 },
     { date: [2022,  1,  1], exp:   69.30818 },
     { date: [2022,  7,  1], exp:   69.57661 },
     { date: [2022, 12,  1], exp:   69.74834 },

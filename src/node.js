@@ -8,7 +8,7 @@
  * Node: Chapter 39, Passages through the Nodes.
  */
 
-import base from './base'
+import base from './base.js'
 
 /**
  * EllipticAscending computes time and distance of passage through the ascending node of a body in an elliptical orbit.
