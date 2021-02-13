@@ -260,7 +260,7 @@ function main () {
   o = v.getTruncateData({
     L: 0.001, // second
     B: 0.001, // second
-    R: 0.01, // meter
+    R: 0.001, // meter
     T: 30 // century
   })
   const data = serialize(o, {})

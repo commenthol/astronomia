@@ -5302,5 +5302,6 @@ module.exports = {
       [2.837e-8, 3.14159265359, 0]
     ]
   },
-  name: "uranus"
+  name: "uranus",
+  type: "B"
 };

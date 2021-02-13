@@ -2055,5 +2055,6 @@ module.exports = {
       [2.295e-8, 5.67776133184, 168.0525127994]
     ]
   },
-  name: "neptune"
+  name: "neptune",
+  type: "B"
 };

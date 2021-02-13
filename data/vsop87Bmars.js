@@ -6441,5 +6441,6 @@ module.exports = {
       [2e-11, 0.40954426011, 9866.4168806652]
     ]
   },
-  name: "mars"
+  name: "mars",
+  type: "B"
 };

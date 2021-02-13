@@ -18,12 +18,14 @@ function file () {
 ## VSOP87 data
 function vsop () {
   local url=ftp://cdsarc.u-strasbg.fr/pub/cats/VI/81
-  local file="VSOP87B"
+  local files="VSOP87B VSOP87D"
   local exts="mer ven ear mar jup sat ura nep"
 
-  for ext in $exts; do
-    $curl $url/$file.$ext > $target/$file.$ext
-  done
+  for file in $files; do
+    for ext in $exts; do
+      $curl $url/$file.$ext > $target/$file.$ext
+    done
+  done 
 }
 
 ## convert VSOP87 data

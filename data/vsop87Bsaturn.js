@@ -6406,5 +6406,6 @@ module.exports = {
       [7.06e-9, 2.65805151133, 110.2063212194]
     ]
   },
-  name: "saturn"
+  name: "saturn",
+  type: "B"
 };

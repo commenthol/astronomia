@@ -25,28 +25,30 @@ const planets = [
   'uranus',
   'neptune'
 ]
-const type = 'B'
 
-main()
+main('B')
+main('D')
 
-function main () {
+function main (type) {
+  type = type || 'B'
   planets.forEach(function (planet) {
-    convertPlanet(planet)
+    convertPlanet(planet, type)
   })
 }
 
-function filename (planet) {
+function filename (planet, type) {
   return path.resolve(config.dirname,
     'vsop87' + type + planet + '.js'
   )
 }
 
-function convertPlanet (planet) {
+function convertPlanet (planet, type) {
   console.log('converting ' + planet)
   const v = new VSOP(planet, config.attic, { type: type })
   v.loadSync()
   const o = v.getData()
   o.name = planet
+  o.type = type
   const data = serialize(o, {})
-  fs.writeFileSync(filename(planet), data, 'utf8')
+  fs.writeFileSync(filename(planet, type), data, 'utf8')
 }
