@@ -82,15 +82,16 @@ export class Planet {
     const lat = sum(τ, this.series.B)
     const range = sum(τ, this.series.R)
 
-    switch (this.type){
+    switch (this.type) {
       case 'B':
         return new base.Coord(lon, lat, range)
-      case 'D':
+      case 'D': {
         const eclFrom = new coord.Ecliptic(lon, lat)
         const epochFrom = base.JDEToJulianYear(jde)
         const epochTo = 2000.0
         const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
         return new base.Coord(eclTo.lon, eclTo.lat, range)
+      }
     }
   }
 
@@ -111,13 +112,14 @@ export class Planet {
     const lat = sum(τ, this.series.B)
     const range = sum(τ, this.series.R)
 
-    switch (this.type){
-      case 'B':
+    switch (this.type) {
+      case 'B': {
         const eclFrom = new coord.Ecliptic(lon, lat)
         const epochFrom = 2000.0
         const epochTo = base.JDEToJulianYear(jde)
         const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
         return new base.Coord(eclTo.lon, eclTo.lat, range)
+      }
       case 'D':
         return new base.Coord(lon, lat, range)
     }
