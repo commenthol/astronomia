@@ -357,10 +357,10 @@
   "scripts": {
     "all": "npm-run-all clean lint build test",
     "build": "rollup -c",
-    "clean": "rimraf lib coverage .nyc_output",
+    "clean": "rimraf lib coverage",
     "clean:all": "rimraf node_modules && npm run clean",
     "coverage": "c8 -r text -r html npm run test:slow",
-    "lint": "eslint \"**/*.js\" \"**/*.cjs\"",
+    "lint": "eslint \"**/*.js\" \"**/*.cjs\" \"**/*.mjs\"",
     "prepublishOnly": "npm run all",
     "test": "mocha",
     "test:slow": "SLOWTESTS=1 mocha",

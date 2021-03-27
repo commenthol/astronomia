@@ -11,3 +11,4 @@ tmp/
 Makefile
 package-lock.json
 yarn.lock
+rollup.config.mjs

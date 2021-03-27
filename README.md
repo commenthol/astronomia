@@ -123,10 +123,6 @@ const {vsop87Bvenus} = require('astronomia').data
 const vsop87Bvenus = require('astronomia/data/vsop87Bvenus')
 ```
 
-## Migration from v1
-
-Please take a look at [./docs/migrate_v1.md](./docs/migrate_v1.md)
-
 ## Running tests
 
     npm test
