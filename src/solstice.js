@@ -8,8 +8,8 @@
  * Solstice: Chapter 27: Equinoxes and Solstices.
  */
 
-import base from './base'
-import solar from './solar'
+import base from './base.js'
+import solar from './solar.js'
 const { abs, cos, sin } = Math
 const D2R = Math.PI / 180
 

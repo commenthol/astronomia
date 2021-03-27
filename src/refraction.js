@@ -10,7 +10,7 @@
  * Functions here assume atmospheric pressure of 1010 mb, temperature of
  * 10°C, and yellow light.
  */
-import sexa from './sexagesimal'
+import sexa from './sexagesimal.js'
 const { sin, tan } = Math
 const D2R = Math.PI / 180
 

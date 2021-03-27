@@ -7,7 +7,7 @@
 /**
  * Nearparabolic: Chapter 35, Near-parabolic Motion.
  */
-import base from './base'
+import base from './base.js'
 
 /**
  * Elements holds orbital elements for near-parabolic orbits.

@@ -8,8 +8,8 @@
  * Kepler: Chapter 30, Equation of Kepler.
  */
 
-import base from './base'
-import iterate from './iterate'
+import base from './base.js'
+import iterate from './iterate.js'
 
 /**
  * True returns true anomaly ν for given eccentric anomaly E.

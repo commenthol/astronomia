@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { kepler } from '..'
+import { kepler } from '../src/index.js'
 
 describe('#kepler', function () {
   it('kepler1', function () {

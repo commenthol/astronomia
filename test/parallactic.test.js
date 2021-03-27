@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { parallactic, sexagesimal as sexa } from '..'
+import { parallactic, sexagesimal as sexa } from '../src/index.js'
 
 describe('#parallactic', function () {
   it('eclipticAtHorizon', function () {

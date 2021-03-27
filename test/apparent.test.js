@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { apparent, base, coord, julian, sexagesimal as sexa } from '..'
+import { apparent, base, coord, julian, sexagesimal as sexa } from '../src/index.js'
 
 describe('#apparent', function () {
   it('nutation', function () {

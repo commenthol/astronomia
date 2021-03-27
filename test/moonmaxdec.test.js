@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { julian, moonmaxdec, sexagesimal as sexa } from '..'
+import { julian, moonmaxdec, sexagesimal as sexa } from '../src/index.js'
 
 describe('moonmaxdec', function () {
   it('north', function () {

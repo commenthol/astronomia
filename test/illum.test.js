@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { illum } from '..'
+import { illum } from '../src/index.js'
 
 describe('#illum', function () {
   it('phaseAngle()', function () {

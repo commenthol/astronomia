@@ -8,7 +8,7 @@
  * Moonphase: Chapter 49, Phases of the Moon
  */
 
-import base from './base'
+import base from './base.js'
 
 const { sin, cos } = Math
 const ck = 1 / 1236.85

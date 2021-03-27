@@ -8,11 +8,11 @@
  * Apparent: Chapter 23, Apparent Place of a Star
  */
 
-import base from './base'
-import coord from './coord'
-import _nutation from './nutation'
-import precess from './precess'
-import solar from './solar'
+import base from './base.js'
+import coord from './coord.js'
+import _nutation from './nutation.js'
+import precess from './precess.js'
+import solar from './solar.js'
 const { cos, tan } = Math
 
 /**

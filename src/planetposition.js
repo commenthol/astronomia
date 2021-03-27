@@ -24,10 +24,10 @@
  * risk of typographical errors.
  */
 
-import base from './base'
-import sexa from './sexagesimal'
-import coord from './coord'
-import precess from './precess'
+import base from './base.js'
+import sexa from './sexagesimal.js'
+import coord from './coord.js'
+import precess from './precess.js'
 
 function sum (t, series) {
   const coeffs = []

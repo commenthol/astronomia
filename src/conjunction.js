@@ -8,7 +8,7 @@
  * Conjunction: Chapter 18: Planetary Conjunctions.
  */
 
-import interp from './interpolation'
+import interp from './interpolation.js'
 
 /**
  * Planetary computes a conjunction between two moving objects, such as planets.

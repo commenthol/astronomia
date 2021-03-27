@@ -12,7 +12,7 @@
  * base.illuminated.  Formula (48.3) is implemented as base.limb.
  */
 
-import base from './base'
+import base from './base.js'
 
 const D2R = Math.PI / 180
 

@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { planetary, base, julian, sexagesimal as sexa } from '..'
+import { planetary, base, julian, sexagesimal as sexa } from '../src/index.js'
 
 describe('#planetary', function () {
   it('mercuryInfConj()', function () {

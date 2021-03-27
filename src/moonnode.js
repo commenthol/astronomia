@@ -8,7 +8,7 @@
  * Moonnode: Chapter 51, Passages of the Moon through the Nodes.
  */
 
-import base from './base'
+import base from './base.js'
 
 /**
  * Ascending returns the date of passage of the Moon through an ascending node.

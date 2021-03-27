@@ -1,6 +1,6 @@
 import assert from 'assert'
 import { format } from 'util'
-import { julian, jm } from '..'
+import { julian, jm } from '../src/index.js'
 
 describe('#jm', function () {
   it('JewishCalendar', function () {

@@ -7,7 +7,7 @@
 /**
  * Binary: Chapter 57, Binary Stars
  */
-import base from './base'
+import base from './base.js'
 const { atan, atan2, cos, sqrt, tan } = Math
 
 /**

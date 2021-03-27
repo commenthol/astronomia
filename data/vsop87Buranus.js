@@ -1,4 +1,4 @@
-module.exports = {
+const m = {
   L: {
     "0": [
       [5.48129294297, 0, 0],
@@ -5305,3 +5305,4 @@ module.exports = {
   name: "uranus",
   type: "B"
 };
+export default m;

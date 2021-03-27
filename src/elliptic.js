@@ -10,13 +10,13 @@
  * Partial: Various formulas and algorithms are unimplemented for lack of
  * examples or test cases.
  */
-import apparent from './apparent'
-import base from './base'
-import coord from './coord'
-import kepler from './kepler'
-import nutation from './nutation'
-import planetposition from './planetposition'
-import solarxyz from './solarxyz'
+import apparent from './apparent.js'
+import base from './base.js'
+import coord from './coord.js'
+import kepler from './kepler.js'
+import nutation from './nutation.js'
+import planetposition from './planetposition.js'
+import solarxyz from './solarxyz.js'
 
 /**
  * Position returns observed equatorial coordinates of a planet at a given time.

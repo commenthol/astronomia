@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { globe, sidereal, coord, julian, sexagesimal as sexa } from '..'
+import { globe, sidereal, coord, julian, sexagesimal as sexa } from '../src/index.js'
 
 describe('#coord', function () {
   it('Equatorial.toEcliptic', function () {

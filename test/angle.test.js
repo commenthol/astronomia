@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { base, angle, julian, sexagesimal as sexa } from '..'
+import { base, angle, julian, sexagesimal as sexa } from '../src/index.js'
 
 describe('#angle', function () {
   describe('single functions', function () {

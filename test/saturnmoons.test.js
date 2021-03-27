@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import float from './support/float.js'
-import { saturnmoons, planetposition, data } from '..'
+import { saturnmoons, planetposition, data } from '../src/index.js'
 
 describe('#saturnmoons', function () {
   function comp (res, exp) {

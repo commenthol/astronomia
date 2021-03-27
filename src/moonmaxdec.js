@@ -8,7 +8,7 @@
  * Moonmaxdec: Chapter 52, Maximum Declinations of the Moon
  */
 
-import base from './base'
+import base from './base.js'
 
 /**
  * North computes the maximum northern declination of the Moon near a given date.

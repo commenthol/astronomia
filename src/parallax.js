@@ -8,10 +8,10 @@
  * Parallax: Chapter 40, Correction for Parallax.
  */
 
-import base from './base'
-import globe from './globe'
-import sidereal from './sidereal'
-import sexa from './sexagesimal'
+import base from './base.js'
+import globe from './globe.js'
+import sidereal from './sidereal.js'
+import sexa from './sexagesimal.js'
 
 const horPar = (8.794 / 3600) * Math.PI / 180 // 8".794 arcseconds in radians
 

@@ -1,12 +1,11 @@
 /* eslint
-no-multi-spaces: 0,
-key-spacing: 0,
-standard/array-bracket-even-spacing: 0
+  no-multi-spaces: 0,
+  key-spacing: 0,
 */
 
 import assert from 'assert'
 import float from './support/float.js'
-import { julian, planetposition, data, solstice, sexagesimal as sexa } from '..'
+import { julian, planetposition, data, solstice, sexagesimal as sexa } from '../src/index.js'
 
 describe('#solstice', function () {
   it('Example June', function () {

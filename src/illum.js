@@ -13,7 +13,7 @@
  * `base.limb` is the function mentioned at the bottom of p. 283.0
  */
 
-import base from './base'
+import base from './base.js'
 
 const { toDeg } = base
 const D2R = Math.PI / 180

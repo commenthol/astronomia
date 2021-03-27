@@ -10,11 +10,11 @@
  * Incomplete.  Topocentric functions are commented out for lack of test data.
  */
 
-import base from './base'
-import coord from './coord'
-import moonposition from './moonposition'
-import nutation from './nutation'
-import solar from './solar'
+import base from './base.js'
+import coord from './coord.js'
+import moonposition from './moonposition.js'
+import nutation from './nutation.js'
+import solar from './solar.js'
 
 const { sin, cos, asin, atan2 } = Math
 const D2R = Math.PI / 180

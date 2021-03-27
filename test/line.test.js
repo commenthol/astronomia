@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { julian, line, sexagesimal as sexa } from '..'
+import { julian, line, sexagesimal as sexa } from '../src/index.js'
 
 describe('#line', function () {
   it('time', function () {

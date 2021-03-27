@@ -28,8 +28,8 @@
  * opposed to two.
  */
 
-import base from './base'
-import sexa from './sexagesimal'
+import base from './base.js'
+import sexa from './sexagesimal.js'
 
 /**
 * Ecliptic coordinates are referenced to the plane of the ecliptic.

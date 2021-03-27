@@ -1,24 +1,24 @@
-var deltat = require('./deltat.js')
-var earth = require('./vsop87Bearth.js')
-var jupiter = require('./vsop87Bjupiter.js')
-var mars = require('./vsop87Bmars.js')
-var mercury = require('./vsop87Bmercury.js')
-var neptune = require('./vsop87Bneptune.js')
-var saturn = require('./vsop87Bsaturn.js')
-var uranus = require('./vsop87Buranus.js')
-var venus = require('./vsop87Bvenus.js')
-var vsop87Dearth = require('./vsop87Dearth.js')
-var vsop87Djupiter = require('./vsop87Djupiter.js')
-var vsop87Dmars = require('./vsop87Dmars.js')
-var vsop87Dmercury = require('./vsop87Dmercury.js')
-var vsop87Dneptune = require('./vsop87Dneptune.js')
-var vsop87Dsaturn = require('./vsop87Dsaturn.js')
-var vsop87Duranus = require('./vsop87Duranus.js')
-var vsop87Dvenus = require('./vsop87Dvenus.js')
-var elpMppDe = require('./elpMppDe.js')
-var elpMppDeFull = require('./elpMppDeFull.js')
+import deltat from './deltat.js'
+import earth from './vsop87Bearth.js'
+import jupiter from './vsop87Bjupiter.js'
+import mars from './vsop87Bmars.js'
+import mercury from './vsop87Bmercury.js'
+import neptune from './vsop87Bneptune.js'
+import saturn from './vsop87Bsaturn.js'
+import uranus from './vsop87Buranus.js'
+import venus from './vsop87Bvenus.js'
+import vsop87Dearth from './vsop87Dearth.js'
+import vsop87Djupiter from './vsop87Djupiter.js'
+import vsop87Dmars from './vsop87Dmars.js'
+import vsop87Dmercury from './vsop87Dmercury.js'
+import vsop87Dneptune from './vsop87Dneptune.js'
+import vsop87Dsaturn from './vsop87Dsaturn.js'
+import vsop87Duranus from './vsop87Duranus.js'
+import vsop87Dvenus from './vsop87Dvenus.js'
+import elpMppDe from './elpMppDe.js'
+import elpMppDeFull from './elpMppDeFull.js'
 
-module.exports = {
+export default {
   deltat: deltat,
   earth: earth,
   jupiter: jupiter,

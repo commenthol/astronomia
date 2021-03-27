@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { nutation, julian, sexagesimal as sexa } from '..'
+import { nutation, julian, sexagesimal as sexa } from '../src/index.js'
 
 describe('#nutation', function () {
   it('Nutation', function () {

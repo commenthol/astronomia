@@ -9,12 +9,12 @@
 
 /* eslint key-spacing: 0 */
 
-import base from './base'
-import eqtime from './eqtime'
-import sexa from './sexagesimal'
-import solar from './solar'
-import julian from './julian'
-import rise from './rise'
+import base from './base.js'
+import eqtime from './eqtime.js'
+import sexa from './sexagesimal.js'
+import solar from './solar.js'
+import julian from './julian.js'
+import rise from './rise.js'
 
 const stdh0 = {
   sunrise:          new sexa.Angle(true, 0, 50, 0).rad(),

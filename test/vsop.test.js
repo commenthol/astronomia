@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { VSOP } from '../lib/vsop87'
+import { VSOP } from '../src/vsop87.js'
 
 it.disable = function () {}
 

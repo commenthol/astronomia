@@ -7,7 +7,7 @@
 /**
  * Parabolic: Chapter 34, Parabolic Motion.
  */
-import base from './base'
+import base from './base.js'
 
 /**
  * Elements holds parabolic elements needed for computing true anomaly and distance.

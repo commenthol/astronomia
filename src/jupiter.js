@@ -8,9 +8,9 @@
  * Jupiter: Chapter 42, Ephemeris for Physical Observations of Jupiter.
  */
 
-import base from './base'
-import nutation from './nutation'
-import planetposition from './planetposition'
+import base from './base.js'
+import nutation from './nutation.js'
+import planetposition from './planetposition.js'
 
 /**
  * Physical computes quantities for physical observations of Jupiter.

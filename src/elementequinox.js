@@ -13,7 +13,7 @@
  * in package precess so that it can be a method of EclipticPrecessor.
  */
 
-import base from './base'
+import base from './base.js'
 
 /**
  * Elements are the orbital elements of a solar system object which change

@@ -8,7 +8,7 @@
  * Moonposition: Chapter 47, Position of the Moon.
  */
 
-import base from './base'
+import base from './base.js'
 const { asin, sin } = Math
 const D2R = Math.PI / 180
 

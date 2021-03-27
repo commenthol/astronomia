@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { apsis, moonposition, julian, sexagesimal as sexa } from '..'
+import { apsis, moonposition, julian, sexagesimal as sexa } from '../src/index.js'
 
 describe('#apsis', function () {
   it('meanApogee', function () {

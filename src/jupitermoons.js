@@ -8,9 +8,9 @@
  * Jupitermoons: Chapter 44, Positions of the Satellites of Jupiter.
  */
 
-import base from './base'
-import planetelements from './planetelements'
-import solar from './solar'
+import base from './base.js'
+import planetelements from './planetelements.js'
+import solar from './solar.js'
 
 // Moon names in order of position in Array
 export const io = 0

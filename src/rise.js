@@ -9,13 +9,13 @@
  * Rise: Chapter 15, Rising, Transit, and Setting.
  */
 
-import base from './base'
-import deltat from './deltat'
-import elliptic from './elliptic'
-import interp from './interpolation'
-import julian from './julian'
-import sexa from './sexagesimal'
-import sidereal from './sidereal'
+import base from './base.js'
+import deltat from './deltat.js'
+import elliptic from './elliptic.js'
+import interp from './interpolation.js'
+import julian from './julian.js'
+import sexa from './sexagesimal.js'
+import sidereal from './sidereal.js'
 const { acos, asin, cos, sin } = Math
 
 const SECS_PER_DEGREE = 240 // = 86400 / 360

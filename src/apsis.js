@@ -8,7 +8,7 @@
  * Apsis: Chapter 50, Perigee and apogee of the Moon
  */
 
-import base from './base'
+import base from './base.js'
 const { sin, cos } = Math
 
 /**

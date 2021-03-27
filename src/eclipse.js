@@ -7,8 +7,8 @@
 /**
  * Eclipse: Chapter 54, Eclipses.
  */
-import base from './base'
-import moonphase from './moonphase'
+import base from './base.js'
+import moonphase from './moonphase.js'
 
 /**
  * @private

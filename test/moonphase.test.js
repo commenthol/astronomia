@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import float from './support/float.js'
-import { julian, moonphase } from '..'
+import { julian, moonphase } from '../src/index.js'
 
 describe('#moonphase', function () {
   describe('mean', function () {

@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { fit } from '..'
+import { fit } from '../src/index.js'
 
 describe('#fit', function () {
   it('linear', function () {

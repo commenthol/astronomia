@@ -43,11 +43,11 @@
  * (The code, following Meeus's example, technically treats it as Julian years.)
  */
 
-import base from './base'
-import coord from './coord'
-import elementequinox from './elementequinox'
-import nutation from './nutation'
-import sexa from './sexagesimal'
+import base from './base.js'
+import coord from './coord.js'
+import elementequinox from './elementequinox.js'
+import nutation from './nutation.js'
+import sexa from './sexagesimal.js'
 
 /**
  * approxAnnualPrecession returns approximate annual precision in right

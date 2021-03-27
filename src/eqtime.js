@@ -8,10 +8,10 @@
  * Eqtime: Chapter 28, Equation of time.
  */
 
-import base from './base'
-import coord from './coord'
-import nutation from './nutation'
-import solar from './solar'
+import base from './base.js'
+import coord from './coord.js'
+import nutation from './nutation.js'
+import solar from './solar.js'
 const { cos, sin, tan } = Math
 
 /**

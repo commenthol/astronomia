@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { eclipse } from '..'
+import { eclipse } from '../src/index.js'
 
 describe('#eclipse', function () {
   it('Solar 1993', function () {

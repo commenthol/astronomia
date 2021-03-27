@@ -5,7 +5,7 @@ import {
   data,
   saturnring,
   sexagesimal as sexa
-} from '..'
+} from '../src/index.js'
 
 describe('#saturnring', function () {
   const earth = new planetposition.Planet(data.earth)
