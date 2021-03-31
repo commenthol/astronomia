@@ -12,6 +12,7 @@ import {
   sidereal,
   sexagesimal as sexa
 } from '../src/index.js'
+import { parallax } from '../src/moonposition.js'
 
 describe('#rise', function () {
   const coord = {
@@ -37,12 +38,27 @@ describe('#rise', function () {
 
   describe('stdh0', function () {
     it('stdh0Stellar', function () {
+      assert.strictEqual(rise.stdh0.stellar, -0.5666666666666667 * Math.PI / 180)
       assert.strictEqual(rise.stdh0Stellar(), -rise.meanRefraction)
-      assert.strictEqual(rise.stdh0.stellar, -rise.meanRefraction)
     })
     it('stdh0Solar', function () {
-      assert.strictEqual(rise.stdh0Solar(), -0.01454441043328608)
       assert.strictEqual(rise.stdh0.solar, -0.01454441043328608)
+      assert.strictEqual(rise.stdh0Solar(), -0.01454441043328608)
+    })
+    it('stdh0LunarMean', function () {
+      assert.strictEqual(rise.stdh0.lunarMean, 0.125 * Math.PI / 180)
+      assert.strictEqual(rise.stdh0.lunar, 0.7275 * Math.PI / 180)
+    })
+    describe('stdh0Lunar()', function () {
+      function test (name, distance, stdh0Deg) {
+        it(name, function () {
+          const pi = parallax(distance) // horizontal parallax
+          assert.strictEqual(rise.stdh0Lunar(pi) * 180 / Math.PI, stdh0Deg)
+        })
+      }
+      test('perigee', 359861, -0.5537718610642937)
+      test('apogee', 405948, -0.5552359277641975)
+      test('mean', 359861 + (405948 - 359861) / 2, -0.5545479548967995)
     })
   })
 
