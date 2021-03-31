@@ -51,7 +51,7 @@ export function semidiameter (s0, Δ) { // (s0, Δ float64)  float64
  * Result is semidiameter in units of package variables SaturnPolar and
  * SaturnEquatorial, nominally radians.
  */
-export function aaturnApparentPolar (Δ, B) { // (Δ, B float64)  float64
+export function saturnApparentPolar (Δ, B) { // (Δ, B float64)  float64
   let k = SaturnPolar / SaturnEquatorial
   k = 1 - k * k
   const cB = Math.cos(B)
@@ -132,7 +132,7 @@ export default {
   Pluto,
   Moon,
   semidiameter,
-  aaturnApparentPolar,
+  saturnApparentPolar,
   moonTopocentric,
   moonTopocentric2,
   asteroidDiameter,
