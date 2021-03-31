@@ -40,8 +40,8 @@ export const stdh0 = {
   stellar: -meanRefraction,
   solar: new sexa.Angle(true, 0, 50, 0).rad(),
   // not containing meanRefraction
-  lunar: new sexa.Angle(false, 0, 0, 0.7275).rad(),
-  lunarMean: new sexa.Angle(false, 0, 0, 0.125).rad()
+  lunar: sexa.angleFromDeg(0.7275),
+  lunarMean: sexa.angleFromDeg(0.125)
 }
 
 /**
