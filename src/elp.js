@@ -96,7 +96,7 @@ export class Moon {
   /**
    * Delay effect of light time
    * 
-   * @param {Number} jde 
+   * @param {Number} jde - Julian ephemeris day
    * @returns {Number} Delay time in days
    */
   lightTime (jde) {

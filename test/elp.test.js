@@ -27,12 +27,11 @@ describe('#elp', function () {
     // Example 47.a, p. 342.
     const Δψ = 0.004610 / R2D
     const jde = julian.CalendarGregorianToJD(1992, 4, 12)
-    const moon = new elp.Moon(data.elpMppDe)
+    const moon = new elp.Moon(data.elpMppDeFull)
     const τ = moon.lightTime(jde)
     const res = moon.position(jde - τ)
     assert.strictEqual(new sexa.Angle(res.lon + Δψ).toString(0), '133°10′0″')
     assert.strictEqual(new sexa.Angle(res.lat).toString(0), '-3°13′45″')
-    assert.strictEqual(float(res.range).toFixed(1), 368405.5)
+    assert.strictEqual(float(res.range).toFixed(1), 368405.6)
   })
-  
 })
