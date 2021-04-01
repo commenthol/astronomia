@@ -402,4 +402,15 @@ describe('#julian', function () {
       assert.deepStrictEqual(d.toGregorian().getDate(), { year: 1582, month: 10, day: 15 })
     })
   })
+
+  describe('JD to MJD', function() {
+    it('JD to MJD', function () {
+      const d = new julian.CalendarGregorian(1858, 11, 17)
+      assert.strictEqual(julian.JDToMJD(d.toJD()), 0.0)
+    })
+    it('MJD to JD', function () {
+      const d = julian.JDToCalendarGregorian(julian.MJDToJD(0))
+      assert.deepStrictEqual(d, { year: 1858, month: 11, day: 17 })
+    })
+  })
 })
