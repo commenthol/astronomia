@@ -12,6 +12,7 @@
 const fs = require('fs')
 const path = require('path')
 const serialize = require('serialize-to-module')
+const { pmod } = require('../lib/base.cjs')
 
 const config = {
   attic: path.resolve(__dirname, '../attic'),
@@ -137,6 +138,13 @@ class ELPMPP02 {
         ref.push(this[func](varName, line))
       }
     })
+
+    Object.keys(this.data).forEach((varName => {
+      const series = this.data[varName]
+      Object.keys(series).forEach(pos => {
+        series[pos] = series[pos].sort((a,b) => b[0] - a[0])
+      })
+    }))
   }
 
   parseMain (type, line) {
@@ -165,6 +173,12 @@ class ELPMPP02 {
       result[0] *= A405 / AELP
       result[1] += Math.PI / 2
     }
+
+    if(result[0] < 0){
+      result[0] = -result[0]
+      result[1] += Math.PI
+    }
+    result[1] = pmod(result[1], 2 * Math.PI)
     // format [A, t0, t1, t2, t3, t4]
     return result
   }
@@ -194,6 +208,8 @@ class ELPMPP02 {
     if (type === 'R') {
       result[0] *= A405 / AELP
     }
+
+    result[1] = pmod(result[1], 2 * Math.PI)
     // format [A, t0, t1, t2, t3, t4]
     return result
   }
