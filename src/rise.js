@@ -85,8 +85,7 @@ export const Stdh0LunarMean = stdh0LunarMean() // for backward-compatibility
  * @return {number} altitude of Moon in radians
  */
 export const stdh0Lunar = (π, refraction) => {
-  refraction = refraction || meanRefraction
-  return stdh0.lunar * π - refraction
+  return stdh0.lunar * π - (refraction || meanRefraction)
 }
 export const Stdh0Lunar = stdh0Lunar // for backward-compatibility
 
