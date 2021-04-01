@@ -94,6 +94,18 @@ export class Moon {
   }
 
   /**
+   * Delay effect of light time
+   * 
+   * @param {Number} jde 
+   * @returns {Number} Delay time in days
+   */
+  lightTime (jde) {
+    const T = base.J2000Century(jde)
+    const R = sum(T, this.series.R)
+    return base.lightTime(R / base.AU)
+  }
+
+  /**
    * Position returns ecliptic position of moon at equinox and ecliptic of date.
    *
    * @param {Number} jde - the date for which positions are desired.
@@ -108,7 +120,7 @@ export class Moon {
     const { L, B, R } = this._calcLBR(T)
 
     // precession
-    const pA = base.horner(T, 0, 5029.0966, 1.1120, 0.000077, -0.00002353) * SEC2RAD
+    const pA = base.horner(T, 0, 5029.0966 - 0.29965, 1.1120, 0.000077, -0.00002353) * SEC2RAD
     return new base.Coord(
       base.pmod(L + pA, 2 * Math.PI),
       B,

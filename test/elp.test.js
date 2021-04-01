@@ -1,6 +1,6 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { elp, data, nutation, base } from '../src/index.js'
+import { elp, data, nutation, base, julian, sexagesimal as sexa } from '../src/index.js'
 
 const R2D = 180 / Math.PI
 
@@ -23,37 +23,16 @@ describe('#elp', function () {
     })
   })
 
-  it('position horizon', function () {
-    const JplHorizonData = [
-      //       date                JD                range         deltaT        lon         lat
-      ['1000-Jan-01 00:00', 2086307.500000000, 3.9301856664E+05, 1543.097000, 191.1932228, 1.3375209],
-      ['1150-Jan-01 00:00', 2141095.500000000, 3.9712002417E+05, 1028.017543, 288.6447145, -4.8371075],
-      ['1300-Jan-01 00:00', 2195882.500000000, 3.7028763340E+05, 663.466000, 25.0953460, 3.4922498],
-      ['1450-Jan-01 00:00', 2250670.500000000, 3.8884144859E+05, 284.056793, 141.4192114, -0.0675729],
-      ['1600-Jan-01 00:00', 2305447.500000000, 3.8312040711E+05, 113.140000, 104.7884667, 1.4156390],
-      ['1750-Jan-01 00:00', 2360234.500000000, 4.0292344291E+05, 17.088263, 192.1970825, -5.2852296],
-      ['1900-Jan-01 00:00', 2415020.500000000, 3.6838482401E+05, -1.977000, 272.4162611, 1.1082667],
-      ['2050-Jan-01 00:00', 2469807.500000000, 3.7870904422E+05, 69.183922, 18.6755980, 3.3912135],
-      ['2200-Jan-01 00:00', 2524593.500000000, 4.0434293645E+05, 69.183800, 96.5064560, -4.2935823],
-      ['2350-Jan-01 00:00', 2579379.500000000, 3.9541954019E+05, 69.183753, 169.6857639, -2.2195292],
-      ['2500-Jan-01 00:00', 2634166.500000000, 3.5703497671E+05, 69.183691, 271.3583749, 4.9779488],
-      ['2650-Jan-01 00:00', 2688952.500000000, 3.9036654046E+05, 69.183588, 0.7988211, -2.4612485],
-      ['2800-Jan-01 00:00', 2743738.500000000, 4.0343739337E+05, 69.183555, 74.2741320, -4.3494133],
-      ['2950-Jan-01 00:00', 2798525.500000000, 3.7651911566E+05, 69.183485, 166.3008243, 4.3577757]
-    ]
-    // truncate version
+  it('position', function () {
+    // Example 47.a, p. 342.
+    const Δψ = 0.004610 / R2D
+    const jde = julian.CalendarGregorianToJD(1992, 4, 12)
     const moon = new elp.Moon(data.elpMppDe)
-    JplHorizonData.forEach(function (row) {
-      const [, jd, R, deltaT, L, B] = row
-      const jde = jd + deltaT / (24 * 3600)
-      const [Δψ] = nutation.nutation(jde)
-      let { lon, lat, range } = moon.position(jde)
-      lon = base.pmod(lon + Δψ, 2 * Math.PI)
-
-      assert.ok(Math.abs(lon * R2D - L) * 3600 < 1.0, `L got ${lon * R2D} expected ${L}`) // less than 1"
-      assert.ok(Math.abs(lat * R2D - B) * 3600 < 0.5, `B got ${lat * R2D} expected ${B}`) // less than 0.5"
-      // unsure about range
-      assert.ok(Math.abs(range - R) < 41, `R got ${range} expected ${R}`)
-    })
+    const τ = moon.lightTime(jde)
+    const res = moon.position(jde - τ)
+    assert.strictEqual(new sexa.Angle(res.lon + Δψ).toString(0), '133°10′0″')
+    assert.strictEqual(new sexa.Angle(res.lat).toString(0), '-3°13′45″')
+    assert.strictEqual(float(res.range).toFixed(1), 368405.5)
   })
+  
 })
