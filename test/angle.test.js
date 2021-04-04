@@ -113,7 +113,7 @@ describe('#angle', function () {
     it('minSepRect', function () {
       const sep = angle.minSepRect(jd1, jd3, coords1, coords2)
       const exp = 224 * Math.PI / 180 / 3600 // on p. 111
-      assert.ok(Math.abs((sep - exp) / sep) < 1e-2, new sexa.Angle(sep))
+      assert.ok(Math.abs((sep - exp) / sep) < 1e-2, new sexa.Angle(sep).toString())
     })
   })
 })

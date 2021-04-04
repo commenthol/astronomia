@@ -27,9 +27,9 @@ import solarxyz from './solarxyz.js'
  * Results are right ascension and declination, α and δ in radians.
  */
 export function position (planet, earth, jde) { // (p, earth *pp.V87Planet, jde float64)  (α, δ float64)
-  let x
-  let y
-  let z
+  let x = 0
+  let y = 0
+  let z = 0
   const posEarth = earth.position(jde)
   const [L0, B0, R0] = [posEarth.lon, posEarth.lat, posEarth.range]
   const [sB0, cB0] = base.sincos(B0)
@@ -154,10 +154,10 @@ export class Elements {
 export function astrometricJ2000 (f, jde, earth) { // (f func(float64)  (x, y, z float64), jde float64, e *pp.V87Planet) (α, δ, ψ float64)
   const sol = solarxyz.positionJ2000(earth, jde)
   const [X, Y, Z] = [sol.x, sol.y, sol.z]
-  let ξ
-  let η
-  let ζ
-  let Δ
+  let ξ = 0
+  let η = 0
+  let ζ = 0
+  let Δ = 0
 
   function fn (τ = 0) {
     // (33.10) p. 229

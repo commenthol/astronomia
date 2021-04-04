@@ -30,6 +30,13 @@
 
 import base from './base.js'
 import sexa from './sexagesimal.js'
+import { Coord as GlobeCoord } from './globe.js' // eslint-disable-line no-unused-vars
+
+/**
+ * @typedef {object} LonLat
+ * @property {Number} lon - Longitude (λ) in radians
+ * @property {Number} lat - Latitude (β) in radians
+ */
 
 /**
 * Ecliptic coordinates are referenced to the plane of the ecliptic.
@@ -38,8 +45,8 @@ export class Ecliptic {
   /**
    * IMPORTANT: Longitudes are measured *positively* westwards
    * e.g. Washington D.C. +77°04; Vienna -16°23'
-   * @param {Number} lon - Longitude (λ) in radians
-   * @param {Number} lat - Latitude (β) in radians
+   * @param {Number|LonLat} [lon] - Longitude (λ) in radians
+   * @param {Number} [lat] - Latitude (β) in radians
    */
   constructor (lon, lat) {
     if (typeof lon === 'object') {
@@ -104,8 +111,7 @@ export class Equatorial {
    * Sidereal time must be consistent with the equatorial coordinates.
    * If coordinates are apparent, sidereal time must be apparent as well.
    *
-   * @param {Equatorial} eq - equatorial coordinates (right ascension, declination)
-   * @param {globe.Coord} g - coordinates of observer on Earth
+   * @param {GlobeCoord} g - coordinates of observer on Earth
    * @param {Number} st - sidereal time at Greenwich at time of observation
    * @returns {Horizontal}
    */
@@ -126,7 +132,6 @@ export class Equatorial {
    * For conversion to B1950, see package precess and utility functions in
    * package "common".
    *
-   * @param {Equatorial} eq
    * @returns {Galactic}
    */
   toGalactic () {
@@ -158,7 +163,7 @@ export class Horizontal {
    *
    * Sidereal time must be consistent with the equatorial coordinates.
    * If coordinates are apparent, sidereal time must be apparent as well.
-   * @param {globe.Coord} g - coordinates of observer on Earth (lat, lon)
+   * @param {GlobeCoord} g - coordinates of observer on Earth (lat, lon)
    * @param {Number} st - sidereal time at Greenwich at time of observation.
    * @returns {Equatorial} (right ascension, declination)
    */

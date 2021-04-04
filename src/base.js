@@ -166,36 +166,71 @@ export function illuminated (i) {
 /**
  * celestial coordinates in right ascension and declination
  * or ecliptic coordinates in longitude and latitude
- *
- * @param {number} ra - right ascension (or longitude)
- * @param {number} dec - declination (or latitude)
- * @param {number} [range] - distance
- * @param {number} [elongation] - elongation
  */
-export function Coord (ra /* lon */, dec /* lat */, range, elongation) {
-  this._ra = ra || 0
-  this._dec = dec || 0
-  this.range = range
-  this.elongation = elongation
+export class Coord {
+  /**
+   * celestial coordinates in right ascension and declination
+   * or ecliptic coordinates in longitude and latitude
+   *
+   * @param {number} ra - right ascension (or longitude)
+   * @param {number} dec - declination (or latitude)
+   * @param {number} [range] - distance
+   * @param {number} [elongation] - elongation
+   */
+  constructor (ra, dec, range, elongation) {
+    this._ra = ra || 0
+    this._dec = dec || 0
+    this.range = range
+    this.elongation = elongation
+  }
 
-  Object.defineProperties(this, {
-    ra: {
-      get: function () { return this._ra },
-      set: function (ra) { this._ra = ra }
-    },
-    dec: {
-      get: function () { return this._dec },
-      set: function (dec) { this._dec = dec }
-    },
-    lon: {
-      get: function () { return this._ra },
-      set: function (ra) { this._ra = ra }
-    },
-    lat: {
-      get: function () { return this._dec },
-      set: function (dec) { this._dec = dec }
-    }
-  })
+  /**
+   * right ascension
+   * @return {number}
+   */
+  get ra () {
+    return this._ra
+  }
+
+  set ra (ra) {
+    this._ra = ra
+  }
+
+  /**
+   * declination
+   * @return {number}
+   */
+  get dec () {
+    return this._dec
+  }
+
+  set dec (dec) {
+    this._dec = dec
+  }
+
+  /**
+   * right ascension (or longitude)
+   * @return {number}
+   */
+  get lon () {
+    return this._ra
+  }
+
+  set lon (ra) {
+    this._ra = ra
+  }
+
+  /**
+   * declination (or latitude)
+   * @return {number}
+   */
+  get lat () {
+    return this._dec
+  }
+
+  set lat (dec) {
+    this._dec = dec
+  }
 }
 
 /**
@@ -203,8 +238,8 @@ export function Coord (ra /* lon */, dec /* lat */, range, elongation) {
  *
  * The illuminated body can be the Moon or a planet.
  *
- * @param {base.Coord} equ - equatorial coordinates of the body `{ra, dec}` (in radians)
- * @param {base.Coord} appSun - apparent coordinates of the Sun `{ra, dec}` (In radians).
+ * @param {Coord} equ - equatorial coordinates of the body `{ra, dec}` (in radians)
+ * @param {Coord} appSun - apparent coordinates of the Sun `{ra, dec}` (In radians).
  * @returns {Number} position angle of the midpoint (in radians).
  */
 export function limb (equ, appSun) {
@@ -258,7 +293,7 @@ export function pmod (x, y) {
  * horner evaluates a polynomal with coefficients c at x.  The constant
  * term is c[0].
  * @param {Number} x
- * @param {Number|Number[]} c - coefficients
+ * @param {Number[]} c - coefficients; c[0] may be of type Number[]
  * @returns {Number}
  */
 export function horner (x, ...c) {
@@ -342,16 +377,16 @@ export function modf (float) {
 /**
  * Rounds `float` value by precision
  * @param {Number} float - value to round
- * @param {Number} precision - (int) number of post decimal positions
+ * @param {Number} [precision] - (int) number of post decimal positions
  * @return {Number} rounded `float`
  */
-export function round (float, precision) {
-  precision = precision == undefined ? 14 : precision // eslint-disable-line eqeqeq
-  return parseFloat(float.toFixed(precision), 10)
+export function round (float, precision = 14) {
+  return parseFloat(float.toFixed(precision))
 }
 
 export function errorCode (msg, code) {
   const err = new Error(msg)
+  // @ts-ignore
   err.code = code
   return err
 }

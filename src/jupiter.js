@@ -10,7 +10,7 @@
 
 import base from './base.js'
 import nutation from './nutation.js'
-import planetposition from './planetposition.js'
+import planetposition, { Planet } from './planetposition.js' // eslint-disable-line no-unused-vars
 
 /**
  * Physical computes quantities for physical observations of Jupiter.
@@ -18,8 +18,8 @@ import planetposition from './planetposition.js'
  * All angular results in radians.
  *
  * @param {number} jde - Julian ephemeris day
- * @param {planetposition.Planet} earth
- * @param {planetposition.Planet} jupiter
+ * @param {Planet} earth
+ * @param {Planet} jupiter
  * @return {Array}
  *    {number} DS - Planetocentric declination of the Sun.
  *    {number} DE - Planetocentric declination of the Earth.
@@ -50,7 +50,13 @@ export function physical (jde, earth, jupiter) { // (jde float64, earth, jupiter
   const sb0 = Math.sin(b0)
   let Δ = 4.0 // surely better than 0.0
 
-  let l, b, r, x, y, z
+  let l = 0
+  let b = 0
+  let r = 0
+  let x = 0
+  let y = 0
+  let z = 0
+
   const f = function () {
     const τ = base.lightTime(Δ)
     const pos = jupiter.position(jde - τ)

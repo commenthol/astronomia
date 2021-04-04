@@ -10,7 +10,7 @@
  * source ftp://cyrano-se.obspm.fr/pub/2_lunar_solutions/2_elpmpp02/elpmpp02.pdf
  */
 
-import base from './base.js'
+import base, { Coord } from './base.js'
 
 const SEC2RAD = 1 / 3600 * Math.PI / 180
 
@@ -26,7 +26,7 @@ function sum (T, series) {
       coeffs[x] += row[0] * Math.sin(φ)
     }
   })
-  return base.horner(T, coeffs)
+  return base.horner(T, ...coeffs)
 }
 
 /**
@@ -109,7 +109,7 @@ export class Moon {
    * Position returns ecliptic position of moon at equinox and ecliptic of date.
    *
    * @param {Number} jde - the date for which positions are desired.
-   * @returns {base.Coord} Results are positions consistent with those elp data,
+   * @returns {Coord} Results are positions consistent with those elp data,
    * that is, at equinox and ecliptic of date.
    *  {Number} lon - geocentric longitude in radians.
    *  {Number} lat - geocentric latitude in radians.
@@ -121,7 +121,7 @@ export class Moon {
 
     // precession
     const pA = base.horner(T, 0, 5029.0966 - 0.29965, 1.1120, 0.000077, -0.00002353) * SEC2RAD
-    return new base.Coord(
+    return new Coord(
       base.pmod(L + pA, 2 * Math.PI),
       B,
       R)

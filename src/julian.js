@@ -26,16 +26,17 @@ const SECS_OF_DAY = 86400 // 24 * 60 * 60
  */
 export class Calendar {
   /**
-   * @param {number|Date} year - If `Date` is given then year, month, day is taken from that. Shortcut to `new Calendar().fromDate(date)`
-   * @param {number} month
-   * @param {number} day
+   * @param {number|Date} [year] - If `Date` is given then year, month, day is taken from that. Shortcut to `new Calendar().fromDate(date)`
+   * @param {number} [month]
+   * @param {number} [day]
    */
   constructor (year, month = 1, day = 1) {
-    this.year = year
-    this.month = month
-    this.day = day
     if (year instanceof Date) {
       this.fromDate(year)
+    } else {
+      this.year = year
+      this.month = month
+      this.day = day
     }
   }
 
@@ -119,7 +120,7 @@ export class Calendar {
 
   /**
    * converts a decimal year to a calendar date
-   * @param {number} decimal year
+   * @param {number} year - decimal year
    */
   fromYear (year) {
     const [y, f] = base.modf(year)
@@ -495,8 +496,10 @@ export function MJDToJD (mjd) {
 
 /**
  * converts Julian Day `jd` to Modified Julian Day `mjd`
+ * The MJD sometimes appear when mentioning orbital elements of artificial satellites.
+ * Contrary to JD the MJD begins at Greenwich mean midnight.
  * @param {Number} jd - Julian Day
- * @returns {Number} mjd - Modified Julian Day
+ * @returns {Number} mjd - Modified Julian Day MJD
  */
 export function JDToMJD (jd) {
   return jd - base.JMod

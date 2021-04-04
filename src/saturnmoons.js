@@ -10,7 +10,7 @@
 
 import base from './base.js'
 import coord from './coord.js'
-import planetposition from './planetposition.js'
+import planetposition, { Planet } from './planetposition.js' // eslint-disable-line no-unused-vars
 import precess from './precess.js'
 import solar from './solar.js'
 
@@ -42,8 +42,8 @@ const d = Math.PI / 180
  * Result units are Saturn radii.
  *
  * @param {number} jde - Julian ephemeris day
- * @param {planetposition.Planet} earth - VSOP87 planet Earth
- * @param {planetposition.Planet} saturn - VSOP87 planet Saturn
+ * @param {Planet} earth - VSOP87 planet Earth // eslint-disable-line no-unused-vars
+ * @param {Planet} saturn - VSOP87 planet Saturn // eslint-disable-line no-unused-vars
  * @return {XY[]} Array of Moon Positions in `XY`
  *   Use `M.mimas ... M.iapetus` to resolve to Moon and its position at `jde`
  */
@@ -53,12 +53,16 @@ export function positions (jde, earth, saturn) {
   const [ss, cs] = base.sincos(s)
   const sβ = Math.sin(β)
   let Δ = 9.0
-  let x, y, z, _jde
+  let x
+  let y
+  let z = 0
+  let _jde
+
   const f = function () {
     const τ = base.lightTime(Δ)
     _jde = jde - τ
     const { lon, lat, range } = saturn.position(_jde)
-    const fk5 = planetposition.toFK5(lon, lat, _jde)
+    const fk5 = planetposition.toFK5(lon, lat, _jde) // eslint-disable-line no-unused-vars
     const [l, b] = [fk5.lon, fk5.lat]
     const [sl, cl] = base.sincos(l)
     const [sb, cb] = base.sincos(b)
@@ -69,13 +73,11 @@ export function positions (jde, earth, saturn) {
   }
   f()
   f()
+
   let λ0 = Math.atan2(y, x)
   let β0 = Math.atan(z / Math.hypot(x, y))
   let ecl = new coord.Ecliptic(λ0, β0)
-  ecl = precess.eclipticPosition(ecl,
-    base.JDEToJulianYear(jde), base.JDEToJulianYear(base.B1950),
-    0, 0
-  )
+  ecl = precess.eclipticPosition(ecl, base.JDEToJulianYear(jde), base.JDEToJulianYear(base.B1950))
   λ0 = ecl.lon
   β0 = ecl.lat
   const q = new Qs(_jde)

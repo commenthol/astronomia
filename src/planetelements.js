@@ -30,12 +30,12 @@ export const neptune = 'neptune'
  *  Mean Anomolay, M = Lon - Peri
  *  Argument of Perihelion, ω = Peri - Node
  *
- * @param {Number} lon  - mean longitude, L
- * @param {Number} axis - semimajor axis, a
- * @param {Number} ecc  - eccentricity, e
- * @param {Number} inc  - inclination, i
- * @param {Number} node - longitude of ascending node, Ω
- * @param {Number} peri - longitude of perihelion, ϖ (Meeus likes π better)
+ * @param {Number|Object} [lon]  - mean longitude, L
+ * @param {Number} [axis] - semimajor axis, a
+ * @param {Number} [ecc]  - eccentricity, e
+ * @param {Number} [inc]  - inclination, i
+ * @param {Number} [node] - longitude of ascending node, Ω
+ * @param {Number} [peri] - longitude of perihelion, ϖ (Meeus likes π better)
  */
 export function Elements (lon, axis, ecc, inc, node, peri) {
   const o = (typeof lon === 'object' ? lon : {})

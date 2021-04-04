@@ -12,15 +12,15 @@
  * base.illuminated.  Formula (48.3) is implemented as base.limb.
  */
 
-import base from './base.js'
+import base, { Coord } from './base.js' // eslint-disable-line no-unused-vars
 
 const D2R = Math.PI / 180
 
 /**
  * phaseAngleEquatorial computes the phase angle of the Moon given equatorial coordinates.
  *
- * @param {base.Coord} cMoon - geocentric right ascension,  declination and distance to the Moon
- * @param {base.Coord} cSun - coordinates and distance of the Sun
+ * @param {Coord} cMoon - geocentric right ascension,  declination and distance to the Moon
+ * @param {Coord} cSun - coordinates and distance of the Sun
  * @returns {number} phase angle of the Moon in radians
  */
 export function phaseAngleEquatorial (cMoon, cSun) {
@@ -62,8 +62,8 @@ function pa (Δ, R, cψ) {
  * Arguments α, δ are geocentric right ascension and declination of the Moon;
  * α0, δ0  are coordinates of the Sun.  Angles must be in radians.
  *
- * @param {base.Coord} cMoon - eocentric right ascension and declination of the Moon
- * @param {base.Coord} cSun - coordinates of the Sun
+ * @param {Coord} cMoon - eocentric right ascension and declination of the Moon
+ * @param {Coord} cSun - coordinates of the Sun
  * @returns {number} phase angle of the Moon in radians
  */
 export function phaseAngleEquatorial2 (cMoon, cSun) {
@@ -75,8 +75,8 @@ export function phaseAngleEquatorial2 (cMoon, cSun) {
  *
  * Distances must be in the same units as each other.
  *
- * @param {base.Coord} cMoon - geocentric longitude, latitude and distance to the Moon
- * @param {base.Coord} cSun -  longitude and distance to the Sun
+ * @param {Coord} cMoon - geocentric longitude, latitude and distance to the Moon
+ * @param {Coord} cSun -  longitude and distance to the Sun
  * @returns {number} phase angle of the Moon in radians
  */
 export function phaseAngleEcliptic (cMoon, cSun) {
@@ -98,8 +98,8 @@ function cosEcl (λ, β, λ0) { // (λ, β, λ0 float64)  float64
  *
  * Angles must be in radians.
  *
- * @param {base.Coord} cMoon - geocentric longitude, latitude of the Moon
- * @param {base.Coord} cSun -  longitude of the Sun
+ * @param {Coord} cMoon - geocentric longitude, latitude of the Moon
+ * @param {Coord} cSun -  longitude of the Sun
  * @returns {number} phase angle of the Moon in radians
  */
 export function phaseAngleEcliptic2 (cMoon, cSun) {

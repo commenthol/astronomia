@@ -16,19 +16,17 @@ export class Angle {
   /**
   * constructs a new Angle value from sign, degree, minute, and second
   * components.
-  * __One argument__
-  * @param {Number} angle - (float) angle in radians
+  * @param {Number|Boolean} angleOrNeg - angle in radians or sign, true if negative (required to attribute -0°30')
   * __Four arguments__
-  * @param {Boolean} neg - sign, true if negative (required to attribute -0°30')
-  * @param {Number} d - (int) degree
-  * @param {Number} m - (int) minute
-  * @param {Number} s - (float) second
+  * @param {Number} [d] - (int) degree
+  * @param {Number} [m] - (int) minute
+  * @param {Number} [s] - (float) second
   */
-  constructor (neg, d, m, s) {
+  constructor (angleOrNeg, d, m, s) {
     if (arguments.length === 1) {
-      this.angle = neg
+      this.angle = Number(angleOrNeg)
     } else {
-      this.setDMS(neg, d, m, s)
+      this.setDMS(!!angleOrNeg, d, m, s)
     }
   }
 
@@ -42,7 +40,7 @@ export class Angle {
    * @param {Number} s - (float) second
    * @returns {Angle}
    */
-  setDMS (neg = 0, d = 0, m = 0, s = 0.0) {
+  setDMS (neg = false, d = 0, m = 0, s = 0.0) {
     this.angle = (DMSToDeg(neg, d, m, s) * Math.PI / 180)
     return this
   }
@@ -52,8 +50,8 @@ export class Angle {
    * @param {Number} angle - (float) angle in radians
    * @returns {Angle}
    */
-  setAngle (rad) {
-    this.angle = rad
+  setAngle (angle) {
+    this.angle = angle
     return this
   }
 
@@ -82,7 +80,7 @@ export class Angle {
 
   /**
    * Print angle in degree using `d°m´s.ss″`
-   * @param {Number} precision - precision of `s.ss`
+   * @param {Number} [precision] - precision of `s.ss`
    * @returns {String}
    */
   toString (precision) {
@@ -97,7 +95,7 @@ export class Angle {
 
   /**
    * Print angle in degree using `d°.ff`
-   * @param {Number} precision - precision of `.ff`
+   * @param {Number} [precision] - precision of `.ff`
    * @returns {String}
    */
   toDegString (precision) {
@@ -116,16 +114,14 @@ export class Angle {
  */
 export class HourAngle extends Angle {
   /**
-  * NewHourAngle constructs a new HourAngle value from sign, hour, minute,
-  * and second components.
-  * @param {Boolean} neg
-  * @param {Number} h - (int)
-  * @param {Number} m - (int)
-  * @param {Number} s - (float)
-  */
-  // constructor (neg, h, m, s) {
-  // super(neg, h, m, s)
-  // }
+   * NewHourAngle constructs a new HourAngle value from sign, hour, minute,
+   * and second components.
+   * @param {Boolean} neg
+   * @param {Number} h - (int)
+   * @param {Number} m - (int)
+   * @param {Number} s - (float)
+   * @constructor
+   */
 
   /**
    * SetDMS sets the value of an FAngle from sign, degree, minute, and second
@@ -137,7 +133,7 @@ export class HourAngle extends Angle {
    * @param {Number} s - (float) second
    * @returns {Angle}
    */
-  setDMS (neg = 0, h = 0, m = 0, s = 0.0) {
+  setDMS (neg = false, h = 0, m = 0, s = 0.0) {
     this.angle = (DMSToDeg(neg, h, m, s) * 15 * Math.PI / 180)
     return this
   }
@@ -205,9 +201,6 @@ export function degToDMS (deg) {
   return [neg, d, m, s]
 }
 
-/**
- * TODO
- */
 export class RA extends HourAngle {
   /**
    * constructs a new RA value from hour, minute, and second components.
@@ -218,7 +211,7 @@ export class RA extends HourAngle {
    * @param {Number} s - (float) second
    */
   constructor (h = 0, m = 0, s = 0) {
-    super()
+    super(false, h, m, s)
     const args = [].slice.call(arguments)
     if (args.length === 1) {
       this.angle = h
@@ -240,16 +233,19 @@ export class RA extends HourAngle {
  */
 export class Time {
   /**
-   * @param {Boolean} neg - set `true` if negative
-   * @param {Number} h - (int) hour
-   * @param {Number} m - (int) minute
-   * @param {Number} s - (float) second
+   * @param {boolean|number} negOrTimeInSecs - set `true` if negative; if type is number than time in seconds
+   * @param {number} [h] - (int) hour
+   * @param {number} [m] - (int) minute
+   * @param {number} [s] - (float) second
+   * @example
+   * new sexa.Time(SECS_OF_DAY)
+   * new sexa.Time(false, 15, 22, 7)
    */
-  constructor (neg, h, m, s) {
-    if (arguments.length === 1) {
-      this.time = neg
+  constructor (negOrTimeInSecs, h, m, s) {
+    if (typeof negOrTimeInSecs === 'number') {
+      this.time = negOrTimeInSecs
     } else {
-      this.setHMS(neg, h, m, s)
+      this.setHMS(negOrTimeInSecs, h, m, s)
     }
   }
 
@@ -364,12 +360,11 @@ function modf (float) {
  * Rounds `float` value by precision
  * @private
  * @param {Number} float - value to round
- * @param {Number} precision - (int) number of post decimal positions
+ * @param {Number} [precision] - (int) number of post decimal positions
  * @return {Number} rounded `float`
  */
-function round (float, precision) {
-  precision = (precision === undefined ? 10 : precision)
-  return parseFloat(float.toFixed(precision), 10)
+function round (float, precision = 10) {
+  return parseFloat(float.toFixed(precision))
 }
 
 export default {

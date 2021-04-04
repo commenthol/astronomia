@@ -28,26 +28,38 @@
  */
 import base from './base.js'
 import interp from './interpolation.js'
+import { Planet } from './planetposition.js' // eslint-disable-line no-unused-vars
 
 /**
  * Planet constants for first argument of Perihelion and Aphelion functions.
+ * @enum {number}
  */
-const planets = {}
-export const mercury = planets.mercury = 0
-export const venus = planets.venus = 1
-export const earth = planets.earth = 2
-export const mars = planets.mars = 3
-export const jupiter = planets.jupiter = 4
-export const saturn = planets.saturn = 5
-export const uranus = planets.uranus = 6
-export const neptune = planets.neptune = 7
-export const embary = planets.embary = 8
+const planetsEnum = {
+  mercury: 0,
+  venus: 1,
+  earth: 2,
+  mars: 3,
+  jupiter: 4,
+  saturn: 5,
+  uranus: 6,
+  neptune: 7,
+  embary: 8
+}
+export const mercury = planetsEnum.mercury
+export const venus = planetsEnum.venus
+export const earth = planetsEnum.earth
+export const mars = planetsEnum.mars
+export const jupiter = planetsEnum.jupiter
+export const saturn = planetsEnum.saturn
+export const uranus = planetsEnum.uranus
+export const neptune = planetsEnum.neptune
+export const embary = planetsEnum.embary
 
 /**
  * Perihelion returns an approximate jde of the perihelion event nearest the given time.
  *
- * @param {perihelion.NAME} p - planet constant from above
- * @param {Number} y - year number indicating a time near the perihelion event.
+ * @param {planetsEnum} p - planet constant from above
+ * @param {Number} year - year number indicating a time near the perihelion event.
  * @returns {Number} jde - time of the event
  */
 export function perihelion (p, year) {
@@ -57,8 +69,8 @@ export function perihelion (p, year) {
 /**
  * Aphelion returns an approximate jde of the aphelion event nearest the given time.
  *
- * @param {perihelion.NAME} p - planet constant from above
- * @param {Number} y - year number indicating a time near the aphelion event.
+ * @param {planetsEnum} p - planet constant from above
+ * @param {Number} year - year number indicating a time near the aphelion event.
  * @returns {Number} jde - time of the event
  */
 export function aphelion (p, year) {
@@ -79,7 +91,7 @@ const ap = function (p, y, a, f) { // (p int, y float64, a bool, f func(float64)
     i = earth
   }
   const k = f(ka[i].a * (y - ka[i].b))
-  let j = base.horner(k, c[i])
+  let j = base.horner(k, ...c[i])
   if (p === earth) {
     let c = ep
     if (a) {
@@ -93,25 +105,25 @@ const ap = function (p, y, a, f) { // (p int, y float64, a bool, f func(float64)
 }
 
 const ka = [
-  { a: 4.15201, b: 2000.12 }, // Mercury
+  { a: 4.15201, b: 2000.12 }, // mercury
   { a: 1.62549, b: 2000.53 }, // ...
   { a: 0.99997, b: 2000.01 },
   { a: 0.53166, b: 2001.78 },
   { a: 0.0843, b: 2011.2 },
   { a: 0.03393, b: 2003.52 },
-  { a: 0.0119, b: 2051.1 }, // Neptune
-  { a: 0.00607, b: 2047.5 } // EMBary
+  { a: 0.0119, b: 2051.1 },
+  { a: 0.00607, b: 2047.5 } // neptune
 ]
 
 const c = [
-  [2451590.257, 87.96934963],
-  [2451738.233, 224.7008188, -0.0000000327],
+  [2451590.257, 87.96934963], // mercury
+  [2451738.233, 224.7008188, -0.0000000327], // ...
   [2451547.507, 365.2596358, 0.0000000156],
   [2452195.026, 686.9957857, -0.0000001187],
   [2455636.936, 4332.897065, 0.0001367],
   [2452830.12, 10764.21676, 0.000827],
   [2470213.5, 30694.8767, -0.00541],
-  [2468895.1, 60190.33, 0.03429]
+  [2468895.1, 60190.33, 0.03429] // neptune
 ]
 
 const ec = [
@@ -128,7 +140,7 @@ const ea = [-1.352, 0.061, 0.062, 0.029, 0.031]
 /**
  * Perihelion2 returns the perihelion event nearest the given time.
  *
- * @param {planetposition.Planet} planet - VSOP87 planet (EMBary is not allowed)
+ * @param {Planet} planet - VSOP87 planet (EMBary is not allowed)
  * @param {Number} year - (float) decimal year number near the perihelion event
  * @param {Number} precision - desired precision of the time result, in days
  * @param {Function} [cb] - callback function for asynchronous processing `cb([jde, r])`
@@ -137,13 +149,13 @@ const ea = [-1.352, 0.061, 0.062, 0.029, 0.031]
  *   {Number} r - the distance of the planet from the Sun in AU.
  */
 export function perihelion2 (planet, year, precision, cb) {
-  return ap2(planets[planet.name], year, precision, planet, false, pf, cb)
+  return ap2(planetsEnum[planet.name], year, precision, planet, false, pf, cb)
 }
 
 /**
  * Aphelion2 returns the aphelion event nearest the given time.
  *
- * @param {planetposition.Planet} planet - VSOP87 planet (EMBary is not allowed)
+ * @param {Planet} planet - VSOP87 planet (EMBary is not allowed)
  * @param {Number} year - (float) decimal year number near the perihelion event
  * @param {Number} precision - desired precision of the time result, in days
  * @param {Function} [cb] - callback function for asynchronous processing `cb([jde, r])`
@@ -152,7 +164,7 @@ export function perihelion2 (planet, year, precision, cb) {
  *   {Number} r - the distance of the planet from the Sun in AU.
  */
 export function aphelion2 (planet, year, precision, cb) {
-  return ap2(planets[planet.name], year, precision, planet, true, af, cb)
+  return ap2(planetsEnum[planet.name], year, precision, planet, true, af, cb)
 }
 
 if (typeof setImmediate !== 'function') {

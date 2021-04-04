@@ -175,7 +175,7 @@ describe('#precess', function () {
       )
       const epochFrom = 2000.0
       const epochTo = base.JDEToJulianYear(julian.CalendarJulianToJD(-214, 6, 30))
-      const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
+      const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo)
       assert.strictEqual(eclTo.lon * 180 / Math.PI, 118.70416774861883)
       assert.strictEqual(eclTo.lat * 180 / Math.PI, 1.6153320055611455)
     })

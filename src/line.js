@@ -25,11 +25,10 @@ import interp from './interpolation.js'
  * @param {Number} d1 - declination Coordinate 1
  * @param {Number} r2 - right ascension Coordinate 2
  * @param {Number} d2 - declination Coordinate 2
- * @param {Number} r3 - right ascension Coordinate 3
- * @param {Number} d2 - declination Coordinate 3
- * @param {Array} d3 -
- * @param {Array} t1 - time in Julian Days
- * @param {Array} t5 - time in Julian Days
+ * @param {Number[]} r3 - right ascension Coordinate 3
+ * @param {Number[]} d3 - declination Coordinate 3
+ * @param {Number} t1 - time in Julian Days
+ * @param {Number} t5 - time in Julian Days
  * @returns {Number} time of alignment in Julian Days
  */
 export function time (r1, d1, r2, d2, r3, d3, t1, t5) { // (r1, d1, r2, d2 float64, r3, d3 []float64, t1, t5 float64)  (float64, error)

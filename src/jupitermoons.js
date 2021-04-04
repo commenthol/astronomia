@@ -11,6 +11,7 @@
 import base from './base.js'
 import planetelements from './planetelements.js'
 import solar from './solar.js'
+import { Planet } from './planetposition.js' // eslint-disable-line no-unused-vars
 
 // Moon names in order of position in Array
 export const io = 0
@@ -97,8 +98,8 @@ export function positions (jde) {
  * of Jupiter radii.
  *
  * @param {Number} jde - Julian ephemeris day
- * @param {planetposition.Planet} earth - VSOP87 Planet earth
- * @param {planetposition.Planet} jupiter - VSOP87 Planet jupiter
+ * @param {Planet} earth - VSOP87 Planet earth
+ * @param {Planet} jupiter - VSOP87 Planet jupiter
  * @param {Array} [pos] - reference to array of positions (same as return value)
  * @return {Array} x, y - coordinates of the 4 Satellites of jupiter
  */
@@ -115,7 +116,10 @@ export function e5 (jde, earth, jupiter, pos) {
     const [ss, cs] = base.sincos(s)
     const sβ = Math.sin(β)
     let τ = base.lightTime(Δ)
-    let x, y, z
+    let x = 0
+    let y = 0
+    let z = 0
+
     function f () {
       const { lon, lat, range } = jupiter.position(jde - τ)
       const [sl, cl] = base.sincos(lon)

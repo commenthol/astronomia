@@ -12,7 +12,7 @@ import base from './base.js'
 import coord from './coord.js'
 import illum from './illum.js'
 import nutation from './nutation.js'
-import planetposition from './planetposition.js'
+import planetposition, { Planet } from './planetposition.js' // eslint-disable-line no-unused-vars
 
 /**
  * Physical computes quantities for physical observations of Mars.
@@ -30,8 +30,8 @@ import planetposition from './planetposition.js'
  * All angular results (all results except k) are in radians.
  *
  * @param {number} jde - Julian ephemeris day
- * @param {planetposition.Planet} earth
- * @param {planetposition.Planet} mars
+ * @param {Planet} earth
+ * @param {Planet} mars
  */
 export function physical (jde, earth, mars) { // (jde float64, earth, mars *pp.V87Planet)  (DE, DS, ω, P, Q, d, k, q float64)
   // Step 1.0
@@ -50,7 +50,13 @@ export function physical (jde, earth, mars) { // (jde float64, earth, mars *pp.V
   const sb0 = Math.sin(b0)
   let Δ = 0.5 // surely better than 0.0
   let τ = base.lightTime(Δ)
-  let l, b, r, x, y, z
+  let l = 0
+  let b = 0
+  let r = 0
+  let x = 0
+  let y = 0
+  let z = 0
+
   function f () {
     const marsPos = mars.position(jde - τ)
     r = marsPos.range
@@ -67,6 +73,7 @@ export function physical (jde, earth, mars) { // (jde float64, earth, mars *pp.V
     Δ = Math.sqrt(x * x + y * y + z * z)
     τ = base.lightTime(Δ)
   }
+
   f()
   f()
   // Step 5.0
