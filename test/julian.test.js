@@ -403,7 +403,7 @@ describe('#julian', function () {
     })
   })
 
-  describe('JD to MJD', function() {
+  describe('JD to MJD', function () {
     it('JD to MJD', function () {
       const d = new julian.CalendarGregorian(1858, 11, 17)
       assert.strictEqual(julian.JDToMJD(d.toJD()), 0.0)
