@@ -490,7 +490,7 @@ export function DateToJDE (date) {
  * @returns {Number} jd - Julian Day
  */
 export function MJDToJD (mjd) {
-  return mjd - base.JMod
+  return mjd + base.JMod
 }
 
 /**
@@ -499,7 +499,7 @@ export function MJDToJD (mjd) {
  * @returns {Number} mjd - Modified Julian Day
  */
 export function JDToMJD (jd) {
-  return jd + base.JMod
+  return jd - base.JMod
 }
 
 /**
