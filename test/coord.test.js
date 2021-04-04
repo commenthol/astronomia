@@ -71,7 +71,7 @@ describe('#coord', function () {
     // Exercise, p. 96.
     const eq = new coord.Equatorial(
       new sexa.RA(17, 48, 59.74).rad(),
-      new sexa.Angle('-', 14, 43, 8.2).rad()
+      new sexa.Angle(true, 14, 43, 8.2).rad()
     )
     const g = eq.toGalactic()
     assert.strictEqual(new sexa.Angle(g.lon).toDegString(4), '12°.9593') // 12.9593
@@ -81,7 +81,7 @@ describe('#coord', function () {
   it('Equatorial.toGalactic.toEquatorial', function () {
     const eq0 = new coord.Equatorial(
       new sexa.RA(17, 48, 59.74).rad(),
-      new sexa.Angle('-', 14, 43, 8.2).rad()
+      new sexa.Angle(true, 14, 43, 8.2).rad()
     )
     const eq = eq0.toGalactic().toEquatorial()
     assert.deepStrictEqual(new sexa.RA(eq.ra).toDMS(), [false, 17, 48, 59.74])

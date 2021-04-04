@@ -10,19 +10,19 @@ import { base, julian } from '../src/index.js'
 describe('#julian', function () {
   describe('Gregorian', function () {
     const tests = [
-      [2000,  1, 1.5,  2451545], // more examples, p. 62
-      [1999,  1, 1,    2451179.5],
-      [1987,  1, 27,   2446822.5],
-      [1987,  6, 19.5, 2446966],
-      [1988,  1, 27,   2447187.5],
-      [1988,  6, 19.5, 2447332],
-      [1900,  1, 1,    2415020.5],
-      [1600,  1, 1,    2305447.5],
-      [1600, 12, 31,   2305812.5],
+      [2000, 1, 1.5, 2451545], // more examples, p. 62
+      [1999, 1, 1, 2451179.5],
+      [1987, 1, 27, 2446822.5],
+      [1987, 6, 19.5, 2446966],
+      [1988, 1, 27, 2447187.5],
+      [1988, 6, 19.5, 2447332],
+      [1900, 1, 1, 2415020.5],
+      [1600, 1, 1, 2305447.5],
+      [1600, 12, 31, 2305812.5],
       [1582, 10, 15.5, 2299161], // 1st day in Gregorian Calendar
-      [1582, 10, 4.5,  2299150],
-      [333,  1, 27.5, 1842712],
-      [-584,  5, 28.62999999988824, 1507906.13]
+      [1582, 10, 4.5, 2299150],
+      [333, 1, 27.5, 1842712],
+      [-584, 5, 28.62999999988824, 1507906.13]
     ]
 
     describe('CalendarGregorianToJD', function () {
@@ -63,18 +63,18 @@ describe('#julian', function () {
 
   describe('Julian', function () {
     const tests = [
-      [-4712,  1, 1.5,   0],
-      [-1000,  7, 12.5,  1356001],
-      [-1000,  2, 29,    1355866.5],
-      [-1001,  8, 17.9,  1355671.4],
-      [-123, 12, 31,    1676496.5],
-      [-122,  1, 1,     1676497.5],
-      [-584,  5, 28.63, 1507900.13],
-      [333,  1, 27.5,  1842713],
-      [837,  4, 10.3,  2026871.8], // more examples, p. 62
-      [1582, 10, 5.5,   2299161],  // 1st day in Gregorian Calendar => 1582-10-15
-      [1582, 10, 4.5,   2299160],
-      [2000, 12, 24,    2451915.5]
+      [-4712, 1, 1.5, 0],
+      [-1000, 7, 12.5, 1356001],
+      [-1000, 2, 29, 1355866.5],
+      [-1001, 8, 17.9, 1355671.4],
+      [-123, 12, 31, 1676496.5],
+      [-122, 1, 1, 1676497.5],
+      [-584, 5, 28.63, 1507900.13],
+      [333, 1, 27.5, 1842713],
+      [837, 4, 10.3, 2026871.8], // more examples, p. 62
+      [1582, 10, 5.5, 2299161],  // 1st day in Gregorian Calendar => 1582-10-15
+      [1582, 10, 4.5, 2299160],
+      [2000, 12, 24, 2451915.5]
     ]
 
     describe('CalendarJulianToJD', function () {
@@ -118,9 +118,11 @@ describe('#julian', function () {
         [1429, false]
       ]
 
-      tests.forEach(function (test) {
-        it('' + test[0], function () {
-          assert.strictEqual(julian.LeapYearJulian(test[0]), test[1])
+      tests.forEach((test) => {
+        const [year, exp] = test
+        it('' + year, function () {
+          // @ts-ignore
+          assert.strictEqual(julian.LeapYearJulian(year), exp)
         })
       })
     })
@@ -137,8 +139,10 @@ describe('#julian', function () {
       ]
 
       tests.forEach(function (test) {
-        it('' + test[0], function () {
-          assert.strictEqual(julian.LeapYearGregorian(test[0]), test[1])
+        const [year, exp] = test
+        it('' + year, function () {
+          // @ts-ignore
+          assert.strictEqual(julian.LeapYearGregorian(year), exp)
         })
       })
     })
@@ -155,16 +159,21 @@ describe('#julian', function () {
 
     describe('JDToDate', function () {
       tests.forEach(function (test) {
-        it('' + test[0], function () {
-          assert.deepStrictEqual(julian.JDToDate(test[0]), test[1])
+        const [year, exp] = test
+        it('' + year, function () {
+          // @ts-ignore
+          assert.deepStrictEqual(julian.JDToDate(year), exp)
         })
       })
     })
 
     describe('DateToJD', function () {
       tests.forEach(function (test) {
-        it(test[1].toISOString(), function () {
-          assert.deepStrictEqual(base.round(julian.DateToJD(test[1]), 2), test[0])
+        const [year, exp] = test
+        // @ts-ignore
+        it(exp.toISOString(), function () {
+          // @ts-ignore
+          assert.deepStrictEqual(base.round(julian.DateToJD(exp), 2), year)
         })
       })
     })
@@ -189,38 +198,46 @@ describe('#julian', function () {
 
     const tests = [
       [1978, 11, 14, false, 318],
-      [1988,  4, 22, true,  113]
+      [1988, 4, 22, true, 113]
     ]
 
     describe('DayOfYear', function () {
       tests.forEach(function (test) {
-        const name = [test[0], test[1], test[2]].join(' ')
+        const [year, month, day, leap, dayOfYear] = test
+        const name = [year, month, day].join(' ')
         it(name, function () {
           // Example 7.f, p. 65.
-          const res = julian.DayOfYear(test[0], test[1], test[2], test[3])
-          assert.strictEqual(res, test[4])
+          // @ts-ignore
+          const res = julian.DayOfYear(year, month, day, leap)
+          assert.strictEqual(res, dayOfYear)
         })
       })
     })
 
     describe('DayOfYearToCalendar', function () {
       tests.forEach(function (test) {
-        const name = [test[0], test[1], test[2]].join(' ')
+        const [year, month, day, leap, dayOfYear] = test
+        const name = [year, month, day].join(' ')
         it(name, function () {
           // Example 7.f, p. 65.
-          const res = julian.DayOfYearToCalendar(test[4], test[3])
-          assert.deepStrictEqual(res, { month: test[1], day: test[2] })
+          // @ts-ignore
+          const res = julian.DayOfYearToCalendar(dayOfYear, leap)
+          assert.deepStrictEqual(res, { month, day })
         })
       })
     })
 
     describe('DayOfYearToCalendarGregorian', function () {
       tests.forEach(function (test) {
-        const name = [test[0], test[1], test[2]].join(' ')
+        // eslint-disable-next-line no-unused-vars
+        const [year, month, day, leap, dayOfYear] = test
+        const name = [year, month, day].join(' ')
         it(name, function () {
           // Example 7.f, p. 65.
-          const res = julian.DayOfYearToCalendarGregorian(test[0], test[4])
-          assert.deepStrictEqual(res, new julian.CalendarGregorian(test[0], test[1], test[2]))
+          // @ts-ignore
+          const res = julian.DayOfYearToCalendarGregorian(year, dayOfYear)
+          // @ts-ignore
+          assert.deepStrictEqual(res, new julian.CalendarGregorian(year, month, day))
         })
       })
     })
@@ -228,16 +245,20 @@ describe('#julian', function () {
     describe('DayOfYearToCalendarJulian', function () {
       const tests = [
         [1978, 11, 14, false, 318],
-        [1988,  4, 22, true,  113],
-        [1236, 11, 14, true,  319],
+        [1988, 4, 22, true, 113],
+        [1236, 11, 14, true, 319],
         [750, 11, 14, false, 318]
       ]
       tests.forEach(function (test) {
-        const name = [test[0], test[1], test[2]].join(' ')
+        // eslint-disable-next-line no-unused-vars
+        const [year, month, day, leap, dayOfYear] = test
+        const name = [year, month, day].join(' ')
         it(name, function () {
           // Example 7.f, p. 65.
-          const res = julian.DayOfYearToCalendarJulian(test[0], test[4])
-          assert.deepStrictEqual(res, new julian.CalendarJulian(test[0], test[1], test[2]))
+          // @ts-ignore
+          const res = julian.DayOfYearToCalendarJulian(year, dayOfYear)
+          // @ts-ignore
+          assert.deepStrictEqual(res, new julian.CalendarJulian(year, month, day))
         })
       })
     })
@@ -359,6 +380,7 @@ describe('#julian', function () {
     it('can convert to Dynamical Time and back to Universal Time', function () {
       const d = new julian.Calendar(1, 1, 1)
       assert.strictEqual(d.toISOString(), '0001-01-01T00:00:00.000Z')
+      // @ts-ignore
       d.deltaT() // convert to Dynamical Time
       assert.strictEqual(d.toISOString(), '0001-01-01T02:56:13.459Z')
       d.deltaT(true) // convert back to Universal Time
@@ -403,7 +425,7 @@ describe('#julian', function () {
     })
   })
 
-  describe('JD to MJD', function() {
+  describe('JD to MJD', function () {
     it('JD to MJD', function () {
       const d = new julian.CalendarGregorian(1858, 11, 17)
       assert.strictEqual(julian.JDToMJD(d.toJD()), 0.0)

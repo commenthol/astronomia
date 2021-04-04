@@ -20,7 +20,8 @@
  * significant chance of typographical error.
  */
 
-import base from './base.js'
+import base, { Coord } from './base.js'
+import { Planet } from './planetposition.js' // eslint-disable-line no-unused-vars
 import coord from './coord.js'
 import nutation from './nutation.js'
 
@@ -120,7 +121,7 @@ export function true2000 (T) {
  * trueEquatorial returns the true geometric position of the Sun as equatorial coordinates.
  *
  * @param {Number} jde - Julian ephemeris day
- * @returns {base.Coord}
+ * @returns {Coord}
  *   {Number} ra - right ascension in radians
  *   {Number} dec - declination in radians
  */
@@ -139,7 +140,7 @@ export function trueEquatorial (jde) {
  * apparentEquatorial returns the apparent position of the Sun as equatorial coordinates.
  *
  * @param {Number} jde - Julian ephemeris day
- * @returns {base.Coord}
+ * @returns {Coord}
  *   {Number} ra - right ascension in radians
  *   {Number} dec - declination in radians
  */
@@ -161,7 +162,7 @@ export function apparentEquatorial (jde) {
  * Result computed by full VSOP87 theory.  Result is at equator and equinox
  * of date in the FK5 frame.  It does not include nutation or aberration.
  *
- * @param {planetposition.Planet} planet
+ * @param {Planet} planet
  * @param {Number} jde - Julian ephemeris day
  * @returns {Object}
  *   {Number} lon - ecliptic longitude in radians
@@ -188,9 +189,9 @@ export function trueVSOP87 (planet, jde) {
  * Result computed by VSOP87, at equator and equinox of date in the FK5 frame,
  * and includes effects of nutation and aberration.
  *
- * @param {planetposition.Planet} planet
+ * @param {Planet} planet
  * @param {Number} jde - Julian ephemeris day
- * @returns {base.Coord}
+ * @returns {Coord}
  *   {Number} lon - ecliptic longitude in radians
  *   {Number} lat - ecliptic latitude in radians
  *   {Number} range - range in AU
@@ -210,9 +211,9 @@ export function apparentVSOP87 (planet, jde) {
  * Result computed by VSOP87, at equator and equinox of date in the FK5 frame,
  * and includes effects of nutation and aberration.
  *
- * @param {planetposition.Planet} planet
+ * @param {Planet} planet
  * @param {Number} jde - Julian ephemeris day
- * @returns
+ * @returns {Coord}
  *   {Number} ra - right ascension in radians
  *   {Number} dec - declination in radians
  *   {Number} range - range in AU
@@ -226,7 +227,7 @@ export function apparentEquatorialVSOP87 (planet, jde) {
   const λ = lon + Δψ + a
   const ε = nutation.meanObliquity(jde) + Δε
   const { ra, dec } = new coord.Ecliptic(λ, lat).toEquatorial(ε)
-  return new base.Coord(ra, dec, range)
+  return new Coord(ra, dec, range)
 }
 
 /**

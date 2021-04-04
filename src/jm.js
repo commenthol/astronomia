@@ -162,12 +162,19 @@ export function MoslemLeapYear (year) { // (y int)  bool
 }
 
 /**
+ * @typedef {object} DateObj
+ * @property {number} year
+ * @property {number} month
+ * @property {number} day
+ */
+
+/**
  * JulianToMoslem takes a year, month, and day of the Julian calendar and returns the equivalent year, month, and day of the Moslem calendar.
  *
  * @param {Number} y - julian year
  * @param {Number} m - julian month
  * @param {Number} d - julian day
- * @returns {Array} [my, mm, md]
+ * @returns {DateObj}
  */
 export function JulianToMoslem (y, m, d) { // (y, m, d int)  (my, mm, md int)
   let W = 2

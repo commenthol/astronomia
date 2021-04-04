@@ -8,7 +8,7 @@
  * Moonposition: Chapter 47, Position of the Moon.
  */
 
-import base from './base.js'
+import base, { Coord } from './base.js' // eslint-disable-line no-unused-vars
 const { asin, sin } = Math
 const D2R = Math.PI / 180
 
@@ -41,7 +41,7 @@ function dmf (T) {
  * the effect of nutation.
  *
  * @param {number} jde - Julian ephemeris day
- * @returns {base.Coord}
+ * @returns {Coord}
  *  {number} lon - Geocentric longitude λ, in radians.
  *  {number} lat - Geocentric latitude β, in radians.
  *  {number} range - Distance Δ between centers of the Earth and Moon, in km.

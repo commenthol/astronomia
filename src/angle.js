@@ -18,7 +18,7 @@
  * All angles are in radians.
  */
 
-import base from './base.js'
+import base, { Coord } from './base.js' // eslint-disable-line no-unused-vars
 import interp from './interpolation.js'
 const { abs, acos, asin, atan2, cos, hypot, sin, sqrt, tan } = Math
 
@@ -28,8 +28,8 @@ const { abs, acos, asin, atan2, cos, hypot, sin, sqrt, tan } = Math
  * The algorithm is numerically naïve, and while patched up a bit for
  * small separations, remains unstable for separations near π.
  *
- * @param {base.Coord} c1 - coordinate of celestial body 1
- * @param {base.Coord} c2 - coordinate of celestial body 2
+ * @param {Coord} c1 - coordinate of celestial body 1
+ * @param {Coord} c2 - coordinate of celestial body 2
  * @return {Number} angular separation between two celestial bodies
  */
 export function sep (c1, c2) {
@@ -59,8 +59,8 @@ export function sep (c1, c2) {
  * @throws Error
  * @param {Number} jd1 - Julian day - time at cs1[0], cs2[0]
  * @param {Number} jd3 - Julian day - time at cs1[2], cs2[2]
- * @param {base.Coord[]} cs1 - 3 coordinates of moving object 1
- * @param {base.Coord[]} cs2 - 3 coordinates of moving object 2
+ * @param {Coord[]} cs1 - 3 coordinates of moving object 1
+ * @param {Coord[]} cs2 - 3 coordinates of moving object 2
  * @param {function} [fnSep] - alternative `sep` function e.g. `angle.sepPauwels`, `angle.sepHav`
  * @return {Number} angular separation between two celestial bodies
  */
@@ -87,8 +87,8 @@ export function minSep (jd1, jd3, cs1, cs2, fnSep) {
  * @throws Error
  * @param {Number} jd1 - Julian day - time at cs1[0], cs2[0]
  * @param {Number} jd3 - Julian day - time at cs1[2], cs2[2]
- * @param {base.Coord[]} cs1 - 3 coordinates of moving object 1
- * @param {base.Coord[]} cs2 - 3 coordinates of moving object 2
+ * @param {Coord[]} cs1 - 3 coordinates of moving object 1
+ * @param {Coord[]} cs2 - 3 coordinates of moving object 2
  * @return {Number} angular separation between two celestial bodies
  */
 export function minSepRect (jd1, jd3, cs1, cs2) {
@@ -150,8 +150,8 @@ export function hav (a) {
  * The algorithm uses the haversine function and is superior to the naïve
  * algorithm of the Sep function.
  *
- * @param {base.Coord} c1 - coordinate of celestial body 1
- * @param {base.Coord} c2 - coordinate of celestial body 2
+ * @param {Coord} c1 - coordinate of celestial body 1
+ * @param {Coord} c2 - coordinate of celestial body 2
  * @return {Number} angular separation between two celestial bodies
  */
 export function sepHav (c1, c2) {
@@ -173,8 +173,8 @@ export function minSepHav (jd1, jd3, cs1, cs2) {
  *
  * The algorithm is a numerically stable form of that used in `sep`.
  *
- * @param {base.Coord} c1 - coordinate of celestial body 1
- * @param {base.Coord} c2 - coordinate of celestial body 2
+ * @param {Coord} c1 - coordinate of celestial body 1
+ * @param {Coord} c2 - coordinate of celestial body 2
  * @return {Number} angular separation between two celestial bodies
  */
 export function sepPauwels (c1, c2) {
@@ -212,8 +212,8 @@ export function minSepPauwels (jd1, jd3, cs1, cs2) {
  *                    |
  * ````
  *
- * @param {base.Coord} c1 - coordinate of celestial body 1
- * @param {base.Coord} c2 - coordinate of celestial body 2
+ * @param {Coord} c1 - coordinate of celestial body 1
+ * @param {Coord} c2 - coordinate of celestial body 2
  * @return {Number} position angle (p)
  */
 export function relativePosition (c1, c2) {

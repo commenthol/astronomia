@@ -110,11 +110,11 @@ function interpolateData (dyear, data) {
 }
 
 /**
-* Get month of Year from fraction. Fraction differs at leap years.
-* @private
-* @param {Number} dyear - decimal year
-* @return {Object} `{year: Number, month: Number, first: Number, last}`
-*/
+ * Get month of Year from fraction. Fraction differs at leap years.
+ * @private
+ * @param {Number} dyear - decimal year
+ * @return {Object} `{year: Number, month: Number, first: Number, last}`
+ */
 function monthOfYear (dyear) {
   if (!monthOfYear.data) { // memoize yearly fractions per month
     monthOfYear.data = { 0: [], 1: [] }

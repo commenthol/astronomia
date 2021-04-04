@@ -167,7 +167,7 @@ describe('#base', function () {
       it('can evaluate f(x) = 2x³-6x²+2x-1 at x=3 using array', function () {
         // Meeus gives no test case.
         // The test case here is from Wikipedia's entry on Horner's method.
-        const res = base.horner(3, [-1, 2, -6, 2])
+        const res = base.horner(3, -1, 2, -6, 2)
         assert.strictEqual(res, 5)
       })
     })

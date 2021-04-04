@@ -10,11 +10,12 @@
  * Incomplete.  Topocentric functions are commented out for lack of test data.
  */
 
-import base from './base.js'
+import base, { Coord } from './base.js'// eslint-disable-line no-unused-vars
 import coord from './coord.js'
 import moonposition from './moonposition.js'
 import nutation from './nutation.js'
 import solar from './solar.js'
+import { Planet } from './planetposition.js' // eslint-disable-line no-unused-vars
 
 const { sin, cos, asin, atan2 } = Math
 const D2R = Math.PI / 180
@@ -36,7 +37,7 @@ const [sI, cI] = base.sincos(_I)
  * Returned values all in radians.
 
  * @param {number} jde - Julian ephemeris day
- * @param {planetposition.Planet} earth - VSOP87 Planet Earth
+ * @param {Planet} earth - VSOP87 Planet Earth
  * @return {Array}
  *    {base.Coord} cMoon - selenographic longitude, latitude of the Moon
  *    {number} P - position angle of the Moon's axis of rotation
@@ -218,8 +219,8 @@ export function TopocentricCorrections (jde, b, P, φ, δ, H, π) { // (jde, b, 
 /**
  * SunAltitude returns altitude of the Sun above the lunar horizon.
  *
- * @param {base.Coords} cOnMoon - selenographic longitude and latitude of a site on the Moon
- * @param {base.Coords} cSun - selenographic coordinates of the Sun (as returned by physical(), for example.)
+ * @param {Coord} cOnMoon - selenographic longitude and latitude of a site on the Moon
+ * @param {Coord} cSun - selenographic coordinates of the Sun (as returned by physical(), for example.)
  * @return altitude in radians.
  */
 export function sunAltitude (cOnMoon, cSun) { // (η, θ, l0, b0 float64)  float64
@@ -232,9 +233,9 @@ export function sunAltitude (cOnMoon, cSun) { // (η, θ, l0, b0 float64)  float
 /**
  * Sunrise returns time of sunrise for a point on the Moon near the given date.
  *
- * @param {base.Coord} cOnMoon - selenographic longitude and latitude of a site on the Moon
+ * @param {Coord} cOnMoon - selenographic longitude and latitude of a site on the Moon
  * @param {Number} jde - Julian ephemeris day
- * @param {planetposition.Planet} earth - VSOP87 Planet Earth
+ * @param {Planet} earth - VSOP87 Planet Earth
  * @return time of sunrise as a jde nearest the given jde.
  */
 export function sunrise (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *pp.V87Planet)  float64
@@ -245,9 +246,9 @@ export function sunrise (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *
 /**
  * Sunset returns time of sunset for a point on the Moon near the given date.
  *
- * @param {base.Coords} cOnMoon - selenographic longitude and latitude of a site on the Moon
+ * @param {Coord} cOnMoon - selenographic longitude and latitude of a site on the Moon
  * @param {Number} jde - Julian ephemeris day
- * @param {planetposition.Planet} earth - VSOP87 Planet Earth
+ * @param {Planet} earth - VSOP87 Planet Earth
  * @return time of sunset as a jde nearest the given jde.
  */
 export function sunset (cOnMoon, jde, earth) { // (η, θ, jde float64, earth *pp.V87Planet)  float64

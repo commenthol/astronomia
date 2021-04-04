@@ -139,12 +139,12 @@ class ELPMPP02 {
       }
     })
 
-    Object.keys(this.data).forEach((varName => {
+    Object.keys(this.data).forEach(varName => {
       const series = this.data[varName]
       Object.keys(series).forEach(pos => {
-        series[pos] = series[pos].sort((a,b) => b[0] - a[0])
+        series[pos] = series[pos].sort((a, b) => b[0] - a[0])
       })
-    }))
+    })
   }
 
   parseMain (type, line) {
@@ -174,7 +174,7 @@ class ELPMPP02 {
       result[1] += Math.PI / 2
     }
 
-    if(result[0] < 0){
+    if (result[0] < 0) {
       result[0] = -result[0]
       result[1] += Math.PI
     }

@@ -24,7 +24,7 @@
  * risk of typographical errors.
  */
 
-import base from './base.js'
+import base, { Coord } from './base.js' // eslint-disable-line no-unused-vars
 import sexa from './sexagesimal.js'
 import coord from './coord.js'
 import precess from './precess.js'
@@ -43,7 +43,7 @@ function sum (t, series) {
       coeffs[x] += term.a * Math.cos(term.b + term.c * t)
     }
   })
-  const res = base.horner(t, coeffs)
+  const res = base.horner(t, ...coeffs)
   return res
 }
 
@@ -70,7 +70,7 @@ export class Planet {
    * Position2000 returns ecliptic position of planets by full VSOP87 theory.
    *
    * @param {Number} jde - the date for which positions are desired.
-   * @returns {base.Coord} Results are for the dynamical equinox and ecliptic J2000.
+   * @returns {Coord} Results are for the dynamical equinox and ecliptic J2000.
    *  {Number} lon - heliocentric longitude in radians.
    *  {Number} lat - heliocentric latitude in radians.
    *  {Number} range - heliocentric range in AU.
@@ -89,7 +89,7 @@ export class Planet {
         const eclFrom = new coord.Ecliptic(lon, lat)
         const epochFrom = base.JDEToJulianYear(jde)
         const epochTo = 2000.0
-        const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
+        const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo)
         return new base.Coord(eclTo.lon, eclTo.lat, range)
       }
     }
@@ -99,7 +99,7 @@ export class Planet {
    * Position returns ecliptic position of planets at equinox and ecliptic of date.
    *
    * @param {Number} jde - the date for which positions are desired.
-   * @returns {base.Coord} Results are positions consistent with those from Meeus's
+   * @returns {Coord} Results are positions consistent with those from Meeus's
    * Apendix III, that is, at equinox and ecliptic of date.
    *  {Number} lon - heliocentric longitude in radians.
    *  {Number} lat - heliocentric latitude in radians.
@@ -117,7 +117,7 @@ export class Planet {
         const eclFrom = new coord.Ecliptic(lon, lat)
         const epochFrom = 2000.0
         const epochTo = base.JDEToJulianYear(jde)
-        const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo, 0, 0)
+        const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo)
         return new base.Coord(eclTo.lon, eclTo.lat, range)
       }
       case 'D':
@@ -132,7 +132,7 @@ export class Planet {
  * @param {Number} lon - ecliptic longitude in radians
  * @param {Number} lat - ecliptic latitude in radians
  * @param {Number} jde - Julian ephemeris day
- * @return {base.Coord}
+ * @return {Coord}
  *    {Number} lon - FK5 longitude
  *    {Number} lat - FK5 latitude
  */

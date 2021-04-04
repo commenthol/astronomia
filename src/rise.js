@@ -16,7 +16,16 @@ import interp from './interpolation.js'
 import julian from './julian.js'
 import sexa from './sexagesimal.js'
 import sidereal from './sidereal.js'
+import { Coord as GlobeCoord } from './globe.js' // eslint-disable-line no-unused-vars
+import { Planet } from './planetposition.js' // eslint-disable-line no-unused-vars
 const { acos, asin, cos, sin } = Math
+
+/**
+ * @typedef {object} RiseObj
+ * @property {number} rise - in seconds
+ * @property {number} transit - in seconds
+ * @property {number} set - in seconds
+ */
 
 const SECS_PER_DEGREE = 240 // = 86400 / 360
 const SECS_PER_DAY = 86400
@@ -47,7 +56,7 @@ export const stdh0 = {
 /**
  * Helper function to obtain corrected refraction
  * @param {number} h0 - altitude of the body in radians containing `meanRefraction` of 0°34'
- * @param {number} corr - the calcluated refraction e.g. from package `refraction` in radians
+ * @param {number} [corr] - the calcluated refraction e.g. from package `refraction` in radians
  * @return {number} refraction value in radians
  */
 export function refraction (h0, corr) {
@@ -129,8 +138,13 @@ function _th0 (Th0, m) {
   return th0 // 0...86400 in seconds angle
 }
 
-// maintain backward compatibility - will be removed in v2
-// return value in future will be an object not an array
+/**
+ * maintain backward compatibility - will be removed in v2
+ * return value in future will be an object not an array
+ * @private
+ * @param {RiseObj} rs
+ * @return {RiseObj}
+ */
 function _compatibility (rs) {
   const _rs = [rs.rise, rs.transit, rs.set]
   _rs.rise = rs.rise
@@ -146,16 +160,14 @@ function _compatibility (rs) {
  * The function argurments do not actually include the day, but do include
  * values computed from the day.
  *
- * @param {coord.Globe} p - is geographic coordinates of observer.
+ * @param {GlobeCoord} p - is geographic coordinates of observer.
  * @param {number} h0 - is "standard altitude" of the body in radians
  * @param {number} Th0 - is apparent sidereal time at 0h UT at Greenwich in seconds
  *        (range 0...86400) must be the time on the day of interest, in seconds.
  *        See sidereal.apparent0UT
- * @param {Array<number>} α3 - slices of three right ascensions
- * @param {Array<number>} δ3 - slices of three declinations.
- *        α3, δ3 must be values at 0h dynamical time for the day before, the day of,
- *        and the day after the day of interest.  Units are radians.
- * @return Result units are seconds and are in the range [0,86400)
+ * @param {number} α - right ascension (radians)
+ * @param {number} δ - declination (radians)
+ * @return {RiseObj} Result units are seconds and are in the range [0,86400)
  * @throws Error
  */
 export function approxTimes (p, h0, Th0, α, δ) {
@@ -177,7 +189,7 @@ export function approxTimes (p, h0, Th0, α, δ) {
  * The function argurments do not actually include the day, but do include
  * a number of values computed from the day.
  *
- * @param {coord.Globe} p - is geographic coordinates of observer.
+ * @param {GlobeCoord} p - is geographic coordinates of observer.
  * @param {number} ΔT - is delta T in seconds
  * @param {number} h0 - is "standard altitude" of the body in radians
  * @param {number} Th0 - is apparent sidereal time at 0h UT at Greenwich in seconds
@@ -188,7 +200,7 @@ export function approxTimes (p, h0, Th0, α, δ) {
  *        α3, δ3 must be values at 0h dynamical time for the day before, the day of,
  *        and the day after the day of interest.  Units are radians.
  *
- * @return Result units are seconds and are in the range [0,86400)
+ * @return {RiseObj} Result units are seconds and are in the range [0,86400)
  * @throws Error
  */
 export function times (p, ΔT, h0, Th0, α3, δ3) { // (p globe.Coord, ΔT, h0, Th0 float64, α3, δ3 []float64)  (mRise, mTransit, mSet float64, err error)
@@ -232,11 +244,11 @@ export class PlanetRise {
    * @param {number|Date} jd - Julian Day starting at midnight or Date object
    * @param {number} lat - geographic latitude of the observerin degrees
    * @param {number} lon - geographic longitude of the observer in degrees (measured positively westward)
-   * @param {planetposition.Planet} earth - VSOP87 Planet object for Earth
-   * @param {planetposition.Planet} planet - VSOP87 Planet object of observed body
-   * @param {object} opts
-   * @param {boolean} opts.date - return times as Date objects
-   * @param {number} opts.refraction - use different refraction than `stdh0Stellar`
+   * @param {Planet} earth - VSOP87 Planet object for Earth
+   * @param {Planet} planet - VSOP87 Planet object of observed body
+   * @param {object} [opts]
+   * @param {boolean} [opts.date] - return times as Date objects
+   * @param {number} [opts.refraction] - use different refraction than `stdh0Stellar`
    */
   constructor (jd, lat, lon, earth, planet, opts) {
     this.opts = opts || {}

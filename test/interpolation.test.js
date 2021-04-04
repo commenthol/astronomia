@@ -198,7 +198,7 @@ describe('#interpolation', function () {
     p.forEach(function (c, i) {
       assert.strictEqual(float(c).toFixed(2), exp[i])
     })
-    assert.strictEqual(base.horner(1, p), -6) // result at x=1
+    assert.strictEqual(base.horner(1, ...p), -6) // result at x=1
   })
 
   it('linear', function () {

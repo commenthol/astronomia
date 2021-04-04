@@ -46,7 +46,7 @@ export class Ellipsoid {
    *
    * @param {number} φ - geographic latitude in radians
    * @param {number} h - height in meters above the ellipsoid
-   * @return {number[]} [ρ sin φ′, ρ cos φ] parallax constants
+   * @return {number[]} [ρ sin φ′, ρ cos φ] parallax constants [ρsφ, ρcφ]
    */
   parallaxConstants (φ, h) {
     const boa = 1 - this.flat
@@ -56,7 +56,9 @@ export class Ellipsoid {
     const c = Math.cos(φ)
     const hoa = h * 1e-3 / this.radius
     // (s, c float)
-    return [su * boa + hoa * s, cu + hoa * c]
+    const ρsφ = su * boa + hoa * s
+    const ρcφ = cu + hoa * c
+    return [ρsφ, ρcφ]
   }
 
   /**
@@ -109,8 +111,8 @@ export class Ellipsoid {
    *
    * Result unit is Km.
    *
-   * @param {Coords} c1
-   * @param {Coords} c2
+   * @param {Coord} c1
+   * @param {Coord} c2
    * @return {number} radius in km
    */
   distance (c1, c2) {

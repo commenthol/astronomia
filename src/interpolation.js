@@ -90,7 +90,7 @@ export class Len3 {
    */
   interpolateXStrict (x) {
     const n = (2 * x - this.xSum) / this.xDiff
-    const y = this.interpolateNStrict(n, true)
+    const y = this.interpolateNStrict(n)
     return y
   }
 
@@ -99,8 +99,9 @@ export class Len3 {
    *
    * This is interpolation formula (3.3)
    *
-   * The interpolation factor n is x-x2 in units of the tabular x interval.
+   * @param n - The interpolation factor n is x-x2 in units of the tabular x interval.
    * (See Meeus p. 24.)
+   * @return {number} interpolation value
    */
   interpolateN (n) {
     return this.y[1] + n * 0.5 * (this.abSum + n * this.c)
@@ -109,8 +110,9 @@ export class Len3 {
   /**
    * InterpolateNStrict interpolates for (a given interpolating factor n.
    *
-   * N is restricted to the range [-1..1] corresponding to the range x1 to x3
+   * @param {number} n - n is restricted to the range [-1..1] corresponding to the range x1 to x3
    * given to the constructor of Len3.
+   * @return {number} interpolation value
    */
   interpolateNStrict (n) {
     if (n < -1 || n > 1) {
@@ -192,9 +194,9 @@ export class Len3 {
  *
  * @param {Number} x - is the target for interpolation
  * @param {Number} x1 - is the x value corresponding to the first y value of the table.
- * @param {Number} xn - is the x value corresponding to the last y value of the table.
+ * @param {Number} xN - is the x value corresponding to the last y value of the table.
  * @param {Number[]} y - is all y values in the table.  y.length should be >= 3.0
- * @returns {Number} interpolation value
+ * @returns {Len3} interpolation value
  */
 export function len3ForInterpolateX (x, x1, xN, y) {
   let y3 = y

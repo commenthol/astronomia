@@ -68,7 +68,13 @@ function cl (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V87Planet)
     const [sl0, cl0] = base.sincos(l0)
     const sb0 = Math.sin(b0)
     // Steps 3, 4.0
-    let l, b, r, x, y, z
+    let l = 0
+    let b = 0
+    let r = 0
+    let x = 0
+    let y = 0
+    let z = 0
+
     const f = function () {
       const τ = base.lightTime(Δ)
       const saturnPos = saturn.position(jde - τ)
