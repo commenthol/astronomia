@@ -1,6 +1,7 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { base, julian, planetposition, data, solar, sexagesimal as sexa } from '../src/index.js'
+import { base, julian, planetposition, solar, sexagesimal as sexa } from '../src/index.js'
+import data from '../data/index.js'
 
 describe('#solar', function () {
   const jde = julian.CalendarGregorianToJD(1992, 10, 13)

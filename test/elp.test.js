@@ -1,6 +1,7 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { elp, data, julian, sexagesimal as sexa } from '../src/index.js'
+import { elp, julian, sexagesimal as sexa } from '../src/index.js'
+import data from '../data/index.js'
 
 const R2D = 180 / Math.PI
 

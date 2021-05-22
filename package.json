@@ -1,6 +1,6 @@
 {
   "name": "astronomia",
-  "version": "3.0.4",
+  "version": "4.0.0-0",
   "description": "An astronomical library",
   "keywords": [
     "astronomy",
@@ -28,7 +28,7 @@
   "exports": {
     ".": {
       "import": "./src/index.js",
-      "require": "./lib/index.ccjs"
+      "require": "./lib/index.cjs"
     },
     "./angle": {
       "import": "./src/angle.js",
@@ -349,6 +349,7 @@
     "./package.json": "./package.json"
   },
   "main": "./lib/index.cjs",
+  "module": "./src/index.js",
   "directories": {
     "lib": "lib",
     "doc": "docs",
@@ -368,23 +369,23 @@
   },
   "devDependencies": {
     "babelify": "^10.0.0",
-    "c8": "^7.7.0",
-    "core-js": "^3.10.0",
-    "dtslint": "^4.0.8",
-    "eslint": "^7.23.0",
+    "c8": "^7.7.2",
+    "core-js": "^3.12.1",
+    "dtslint": "^4.0.9",
+    "eslint": "^7.26.0",
     "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
-    "mocha": "^8.3.2",
+    "mocha": "^8.4.0",
     "npm-run-all": "^4.1.5",
-    "regenerator-runtime": "^0.13.7",
+    "regenerator-runtime": "^0.13.8",
     "rimraf": "^3.0.2",
-    "rollup": "^2.44.0",
+    "rollup": "^2.48.0",
     "serialize-to-js": "^3.1.1",
     "serialize-to-module": "^1.1.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.4"
   },
   "engines": {
     "node": ">=12.0.0"

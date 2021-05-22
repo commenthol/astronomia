@@ -1,5 +1,6 @@
 import assert from 'assert'
-import { eqtime, data, julian, planetposition, sexagesimal as sexa } from '../src/index.js'
+import { eqtime, julian, planetposition, sexagesimal as sexa } from '../src/index.js'
+import data from '../data/index.js'
 import float from './support/float.js'
 
 describe('#eqtime', function () {

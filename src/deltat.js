@@ -34,7 +34,11 @@
 import base from './base.js'
 import interp from './interpolation.js'
 import deltat from '../data/deltat.js'
-import { Calendar, LeapYearGregorian } from './julian.js'
+
+// avoids ciclic import { LeapYearGregorian } from './julian.js'
+function LeapYearGregorian (y) {
+  return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0
+}
 
 /**
  * deltaT returns the difference ΔT = TD - UT between Dynamical Time TD and
@@ -116,13 +120,14 @@ function interpolateData (dyear, data) {
  * @return {Object} `{year: Number, month: Number, first: Number, last}`
  */
 function monthOfYear (dyear) {
-  if (!monthOfYear.data) { // memoize yearly fractions per month
-    monthOfYear.data = { 0: [], 1: [] }
-    for (let m = 0; m <= 12; m++) {
-      monthOfYear.data[0][m] = new Calendar(1999, m, 1).toYear() - 1999 // non leap year
-      monthOfYear.data[1][m] = new Calendar(2000, m, 1).toYear() - 2000 // leap year
-    }
-  }
+  // if (!monthOfYear.data) { // memoize yearly fractions per month
+  //   monthOfYear.data = { 0: [], 1: [] }
+  //   for (let m = 0; m <= 12; m++) {
+  //     monthOfYear.data[0][m] = new Calendar(1999, m, 1).toYear() - 1999 // non leap year
+  //     monthOfYear.data[1][m] = new Calendar(2000, m, 1).toYear() - 2000 // leap year
+  //   }
+  // }
+  // console.log(monthOfYear)
   const year = dyear | 0
   const f = dyear - year
   const d = LeapYearGregorian(year) ? 1 : 0
@@ -136,6 +141,42 @@ function monthOfYear (dyear) {
   const last = month < 11 ? year + data[month + 2] : year + 1 + data[(month + 2) % 12]
   return { year, month, first, last }
 }
+/**
+  monthOfYear.data[0][m] = new Calendar(1999, m, 1).toYear() - 1999 // non leap year
+  monthOfYear.data[1][m] = new Calendar(2000, m, 1).toYear() - 2000 // leap year
+ */
+monthOfYear.data = [
+  [ // non leap year
+    0,
+    0,
+    0.08493150684921602,
+    0.16164383561635987,
+    0.24657534246580326,
+    0.3287671232876619,
+    0.4136986301368779,
+    0.4958904109589639,
+    0.5808219178081799,
+    0.6657534246576233,
+    0.747945205479482,
+    0.832876712328698,
+    0.915068493150784
+  ],
+  [ // leap year
+    0,
+    0,
+    0.08743169398917416,
+    0.1639344262296163,
+    0.24863387978143692,
+    0.3306010928961314,
+    0.4153005464481794,
+    0.49726775956287383,
+    0.5819672131146945,
+    0.6666666666667425,
+    0.7486338797814369,
+    0.8333333333332575,
+    0.9153005464481794
+  ]
+]
 
 export default {
   deltaT
