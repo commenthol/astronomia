@@ -2,10 +2,10 @@ import assert from 'assert'
 import float from './support/float.js'
 import {
   planetposition,
-  data,
   saturnring,
   sexagesimal as sexa
 } from '../src/index.js'
+import data from '../data/index.js'
 
 describe('#saturnring', function () {
   const earth = new planetposition.Planet(data.earth)

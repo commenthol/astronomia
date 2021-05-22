@@ -1,6 +1,7 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { julian, moon, data, planetposition } from '../src/index.js'
+import { julian, moon, planetposition } from '../src/index.js'
+import data from '../data/index.js'
 
 const j = julian.CalendarGregorianToJD(1992, 4, 12)
 const earth = new planetposition.Planet(data.earth)

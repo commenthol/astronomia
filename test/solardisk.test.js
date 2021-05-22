@@ -1,6 +1,7 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { planetposition, data, julian, solardisk } from '../src/index.js'
+import { planetposition, julian, solardisk } from '../src/index.js'
+import data from '../data/index.js'
 
 describe('#solardisk', function () {
   const earth = new planetposition.Planet(data.earth)

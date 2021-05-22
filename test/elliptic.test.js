@@ -2,7 +2,8 @@
 
 import assert from 'assert'
 import float from './support/float.js'
-import { elliptic, planetposition, data, julian, sexagesimal as sexa } from '../src/index.js'
+import { elliptic, planetposition, julian, sexagesimal as sexa } from '../src/index.js'
+import data from '../data/index.js'
 
 describe('elliptic', function () {
   const earth = new planetposition.Planet(data.vsop87Bearth)

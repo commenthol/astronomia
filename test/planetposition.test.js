@@ -1,5 +1,6 @@
 import assert from 'assert'
-import { planetposition, data, julian, sexagesimal as sexa } from '../src/index.js'
+import { planetposition, julian, sexagesimal as sexa } from '../src/index.js'
+import data from '../data/index.js'
 
 describe('#planetposition', function () {
   describe('position2000', function () {

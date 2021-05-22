@@ -1,7 +1,8 @@
 export default {
   input: [
     './src/index.js',
-    './src/vsop87.js'
+    './src/vsop87.js',
+    './data/index.js'
   ],
   output: {
     dir: 'lib',

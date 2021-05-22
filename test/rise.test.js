@@ -8,11 +8,11 @@ import {
   globe,
   julian,
   planetposition,
-  data,
   sidereal,
   sexagesimal as sexa
 } from '../src/index.js'
 import { parallax } from '../src/moonposition.js'
+import data from '../data/index.js'
 
 describe('#rise', function () {
   const coord = {
