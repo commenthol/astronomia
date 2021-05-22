@@ -349,6 +349,7 @@
     "./package.json": "./package.json"
   },
   "main": "./lib/index.cjs",
+  "module": "./src/index.js",
   "directories": {
     "lib": "lib",
     "doc": "docs",
