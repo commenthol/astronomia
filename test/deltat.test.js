@@ -39,8 +39,8 @@ describe('#deltat', function () {
     { date: [2020,  1,  1], exp:   69.3611547 },
     { date: [2020,  7,  1], exp:   69.4235824 },
     { date: [2021,  1,  1], exp:   69.3593373 },
-    { date: [2021,  7,  1], exp:   69.3447515 }, // might change on new deltat data set
-    { date: [2022,  1,  1], exp:   69.2692484 },
+    { date: [2021,  7,  1], exp:   69.3514219 }, // might change on new deltat data set
+    { date: [2022,  1,  1], exp:   69.3144478 },
     { date: [2022,  7,  1], exp:   69.5766116 },
     { date: [2022, 12,  1], exp:   69.74834 },
     { date: [2024, 12, 31], exp:   70.75664 },
