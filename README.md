@@ -3,7 +3,7 @@
 > An astronomical library
 
 [![NPM version](https://badge.fury.io/js/astronomia.svg)](https://www.npmjs.com/package/astronomia/)
-[![Build Status](https://secure.travis-ci.org/commenthol/astronomia.svg?branch=master)](https://travis-ci.org/commenthol/astronomia)
+[![Build Status](https://api.travis-ci.com/commenthol/astronomia.svg?branch=master)](https://travis-ci.com/commenthol/astronomia)
 
 This library is a translation of [meeus][] from Go to Javascript and contains
 selected algorithms from the book "Astronomical Algorithms" by Jean Meeus,
