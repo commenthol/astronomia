@@ -282,6 +282,9 @@
       "import": "./data/index.js",
       "require": "./lib/data/index.cjs"
     },
+    "./lib/data/vsop87Bearth.cjs": {
+      "require": "./lib/data/vsop87Bearth.cjs"
+    },
     "./data/vsop87Bearth": {
       "import": "./data/vsop87Bearth.js",
       "require": "./lib/data/vsop87Bearth.cjs"
