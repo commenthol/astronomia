@@ -361,6 +361,7 @@
   "scripts": {
     "all": "npm-run-all clean lint build test",
     "build": "rollup -c",
+    "ci": "npm run test:slow",
     "clean": "rimraf lib coverage",
     "clean:all": "rimraf node_modules && npm run clean",
     "coverage": "c8 -r text -r html npm run test:slow",
