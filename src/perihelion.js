@@ -1,4 +1,4 @@
-/* eslint node/no-callback-literal:off */
+/* eslint-disable n/no-callback-literal */
 /**
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol

@@ -244,6 +244,7 @@ function sincos2 (x) {
 export default {
   Ellipsoid,
   Earth76,
+  // eslint-disable-next-line camelcase
   RotationRate1996_5,
   oneDegreeOfLongitude,
   oneDegreeOfLatitude,

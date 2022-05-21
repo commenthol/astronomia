@@ -44,7 +44,7 @@ function filename (planet, type) {
 
 function convertPlanet (planet, type) {
   console.log('converting ' + planet)
-  const v = new VSOP(planet, config.attic, { type: type })
+  const v = new VSOP(planet, config.attic, { type })
   v.loadSync()
   const o = v.getData()
   o.name = planet

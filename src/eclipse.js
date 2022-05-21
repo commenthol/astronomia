@@ -166,8 +166,8 @@ export function solar (year) { // (year float64)  (eclipseType int, central bool
 
   return {
     type: eclipseType,
-    central: central,
-    jdeMax: jdeMax,
+    central,
+    jdeMax,
     magnitude: mag,
     distance: γ,
     umbral: u,
@@ -250,14 +250,14 @@ export function lunar (year) { // (year float64)  (eclipseType int, jdeMax, γ, 
 
   return {
     type: eclipseType,
-    jdeMax: jdeMax,
+    jdeMax,
     magnitude: mag,
     distance: γ,
     umbral: σ,
     penumbral: ρ,
-    sdTotal: sdTotal,
-    sdPartial: sdPartial,
-    sdPenumbral: sdPenumbral
+    sdTotal,
+    sdPartial,
+    sdPenumbral
   }
 }
 

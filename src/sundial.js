@@ -81,8 +81,8 @@ export function general (φ, D, a, z) { // (φ, D, a, z float64)  (lines []Line,
   const u = a / aP
   const ψ = Math.asin(aP)
   return {
-    lines: lines,
-    center: center,
+    lines,
+    center,
     length: u,
     angle: ψ
   }
@@ -173,8 +173,8 @@ export function horizontal (φ, a) { // (φ, a float64)  (lines []Line, center P
   const center = new Point(0, -a / tφ)
   const u = a / Math.abs(sφ)
   return {
-    lines: lines,
-    center: center,
+    lines,
+    center,
     length: u
   }
 }
@@ -224,8 +224,8 @@ export function vertical (φ, D, a) { // (φ, D, a float64)  (lines []Line, cent
   center.y = a * tφ / cD
   const u = a / Math.abs(cφ * cD)
   return {
-    lines: lines,
-    center: center,
+    lines,
+    center,
     length: u
   }
 }

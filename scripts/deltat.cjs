@@ -50,12 +50,12 @@ DataSet.prototype = {
     if (!this.first.year || this.first.year > year ||
       (this.first.year === year && this.first.month > month)
     ) {
-      this.first = { year: year, month: month }
+      this.first = { year, month }
     }
     if (!this.last.year || this.last.year < year ||
       (this.last.year === year && this.last.month < month)
     ) {
-      this.last = { year: year, month: month }
+      this.last = { year, month }
     }
   }
 }
@@ -82,9 +82,9 @@ TaiMinusUTC.prototype = {
         const month = months.indexOf(_month)
         const taiMinusUtc = toFloat(row.substr(37, 12))
         this.data.push({
-          year: year,
-          month: month,
-          taiMinusUtc: taiMinusUtc,
+          year,
+          month,
+          taiMinusUtc,
           decYear: toYear(year, month)
         })
       }
@@ -280,11 +280,11 @@ function toYear (year, month) {
 }
 
 module.exports = {
-  Historic: Historic,
-  Data: Data,
-  Prediction: Prediction,
-  TaiMinusUTC: TaiMinusUTC,
-  Finals2000A: Finals2000A
+  Historic,
+  Data,
+  Prediction,
+  TaiMinusUTC,
+  Finals2000A
 }
 
 function main (config) {

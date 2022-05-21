@@ -115,7 +115,7 @@ export function position (eqFrom, epochFrom, epochTo, mα, mδ) { // (eqFrom, eq
 export function aberrationRonVondrak (α, δ, jd) { // (α, δ, jd float64)  (Δα, Δδ float64)
   const T = base.J2000Century(jd)
   const r = {
-    T: T,
+    T,
     L2: 3.1761467 + 1021.3285546 * T,
     L3: 1.7534703 + 628.3075849 * T,
     L4: 6.2034809 + 334.0612431 * T,
