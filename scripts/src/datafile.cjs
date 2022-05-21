@@ -15,13 +15,18 @@ const splitRows = (rows, breaks) => {
 /**
  * split data into array of arrays
  * @param {String} filename
- * @param {Number[]} breaks - breakpoints with position of column start
+ * @param {Number[]} [breaks] - breakpoints with position of column start
  * @returns {String[][]}
  */
 const datafile = (filename, breaks) => {
   const content = fs.readFileSync(filename, 'utf8')
-  const data = splitRows(content.split(/[\n\r]/), breaks)
-  return data
+  if (breaks) {
+    const data = splitRows(content.split(/[\n\r]/), breaks)
+    return data
+  } else {
+    const data = content.split(/[\n\r]/).map(line => line.split(/\t/))
+    return data
+  }
 }
 
 exports.datafile = datafile

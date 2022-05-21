@@ -55,34 +55,39 @@ function elpmpp_conv () {
 # As of https://www.usno.navy.mil/USNO server maia.usno.navy.mil is being modernized till summer 2020
 # outdated prediction data is accessible from
 # curl -v --ftp-ssl ftp://gdc.cddis.eosdis.nasa.gov/products/iers/deltat.preds
+# https://datacenter.iers.org/data/2/message_450.txt
 function deltat () {
-  local server="ftp://ftp.iers.org/products/eop/rapid/standard"
-  local urls=(
-    $server/finals2000A.data
-  )
-  for url in ${urls[@]}; do
-    f=$(file $url)
-    echo downloading $url
-    $curl $url > $target/$f
-  done
+  # local server2="ftp://gdc.cddis.eosdis.nasa.gov/products/iers"
 
-  local server2="ftp://gdc.cddis.eosdis.nasa.gov/products/iers"
+  # local server="https://datacenter.iers.org/data/10"
+  # local urls=(
+  #   $server/finals2000A.data
+  # )
+  # for url in ${urls[@]}; do
+  #   f=$(file $url)
+  #   echo downloading $url
+  #   $curl $url > $target/$f
+  # done
+
+  local server2="https://maia.usno.navy.mil/ser7"
   local urls2=(
     $server2/deltat.preds
     $server2/deltat.data
     $server2/historic_deltat.data
     $server2/tai-utc.dat
+    $server2/finals2000A.daily
+    $server2/finals2000A.daily.extended
   )
   for url in ${urls2[@]}; do
     f=$(file $url)
     echo downloading $url
-    $curl --ftp-ssl $url > $target/$f
+    $curl "$url" > $target/$f
   done
 }
 
 ## convert DeltaT data
 function deltat_conv () {
-  node $cwd/deltat.cjs > $target/deltat.txt
+  node $cwd/deltat.cjs > $cwd/../data/deltat.txt
 }
 
 function help () {

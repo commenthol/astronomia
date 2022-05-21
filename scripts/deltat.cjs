@@ -15,15 +15,15 @@ const attic = path.resolve(__dirname, '../attic')
 const outdir = path.resolve(__dirname, '../data')
 const config = {
   fileHist: path.resolve(attic, 'historic_deltat.data'),
-  fileData: path.resolve(outdir, 'deltat.data'),
+  fileData: path.resolve(attic, 'deltat.data'),
   filePreds: path.resolve(attic, 'deltat.preds'),
-  fileLeapSecs: path.resolve(outdir, 'tai-utc.dat'),
-  fileFinals2000A: path.resolve(attic, 'finals2000A.data'),
+  fileLeapSecs: path.resolve(attic, 'tai-utc.dat'),
+  fileFinals2000A: path.resolve(attic, 'finals2000A.daily.extended'),
   fileOut: path.resolve(outdir, 'deltat.js'),
   comment: `/**
  * DO NOT EDIT MANUALLY
  * Use \`scripts/deltat.js\` to generate file.
- * Datasets are from <http://maia.usno.navy.mil/ser7> and
+ * Datasets are from <https://maia.usno.navy.mil/ser7> and
  * <ftp://ftp.iers.org/products/eop/rapid/standard>
  */
 `
@@ -119,7 +119,7 @@ Object.assign(Finals2000A.prototype, DataSet.prototype, {
     const rows = datafile(file, [[0, 2], [2, 4], [4, 6], [58, 68]])
     rows.forEach(row => {
       let [year, month, day, ut1MinusUtc] = row.map(toFloat)
-      if (year > 90) {
+      if (year > 72) {
         year += 1900
       } else {
         year += 2000
@@ -253,7 +253,8 @@ Object.assign(Prediction.prototype, DataSetDec.prototype, {
     const fromYear = 2022
     const correction = 70.91 - 69.30818 // from 2022.0
 
-    const rows = datafile(file, [[14, 22], [22, 34], [34, 48]])
+    // const rows = datafile(file, [[14, 22], [22, 34], [34, 48]])
+    const rows = datafile(file)
     rows.shift() // header row
     rows.forEach((row) => {
       const [year, deltaT] = row.map(toFloat)
@@ -292,7 +293,8 @@ function main (config) {
 
   const dataSet = {
     historic: new Historic().read(config.fileHist).data,
-    data: new Data(finals2000A).read(config.fileData).mergeFinals().toData(),
+    // data: new Data(finals2000A).read(config.fileData).mergeFinals().toData(),
+    data: new Data(finals2000A).mergeFinals().toData(),
     prediction: new Prediction().read(config.filePreds).data
   }
   const out = config.comment + serialize(dataSet, { esm: true })
