@@ -9,5 +9,8 @@ es/
 *.tgz
 .eslintcache
 .nyc_output
-yarn.lock
 .DS_Store
+
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
