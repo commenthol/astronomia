@@ -13,7 +13,7 @@ import sidereal from './sidereal.js'
    * Helper function
    * If latitude or longitude is in Decimal Degrees (DD) (format: 43.63871944444445)
    * DDtoDMS() can convert it to Degrees, Minutes and Seconds (format: 43 38 19.39)
-   * DMS is the expected format of the calculateAscendant() function
+   * proper sexa.Angle object is the expected input of the calculateAscendant() function
    */
 export function DDtoDMS (float) {
   const isNegative = float.toString()[0] === '-'
