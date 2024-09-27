@@ -1,6 +1,7 @@
 /**
  * @contributor 2024 TheMascot
  * @module ascendant
+ * @license MIT
  */
 
 import sexa from './sexagesimal.js'
