@@ -1,6 +1,7 @@
 export { default as angle } from './angle.js'
 export { default as apparent } from './apparent.js'
 export { default as apsis } from './apsis.js'
+export { default as ascendant } from './ascendant.js'
 export { default as base } from './base.js'
 export { default as binary } from './binary.js'
 export { default as coord } from './coord.js'
