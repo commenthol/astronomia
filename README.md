@@ -41,6 +41,7 @@ For documentation of the different packages please take a look at the source cod
 - **angle**: Angular Separation.
 - **apparent**: Apparent Place of a Star.
 - **apsis**: Perigee and apogee of the Moon.
+- **ascendant**: Calculating ascendant based on location on Earth and exact time
 - **base**: Basic constants and methods
 - **binary**: Binary Stars.
 - **circle**: Smallest Circle containing three Celestial Bodies.
