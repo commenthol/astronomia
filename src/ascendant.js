@@ -11,9 +11,11 @@ import sidereal from './sidereal.js'
 
 /**
    * Helper function
-   * If latitude or longitude is in Decimal Degrees (DD) (format: 43.63871944444445)
-   * DDtoDMS() can convert it to Degrees, Minutes and Seconds (format: 43 38 19.39)
-   * DMS is the expected format of the calculateAscendant() function
+   * If latitude or longitude is in Decimal Degrees (DD)
+   * (format: 43.63871944444445)
+   * DDtoDMS() can convert it to Degrees, Minutes and Seconds
+   * (format: 43 38 19.39)
+   * DMS is the expected format at the calculateAscendant() function
    */
 export function DDtoDMS (float) {
   const isNegative = float.toString()[0] === '-'
@@ -29,15 +31,21 @@ export function DDtoDMS (float) {
    * based on current location on Earth and given date and time
    *
    * @param {object} latAngle - sexa.Angle object created based
-   *  on current latitude on Earth of observer (format: boolean, int, int, float)
-   * boolean is true if coordinate is from the Southern hemisphere
+   * on current latitude on Earth of observer
+   * (format: boolean(isNegative), (dd)int, (mm)int, (ss)float)
+   * boolean is true if coordinate is from the Southern hemisphere,
+   * so degree is negative
    * @param {object} lonAngle - sexa.Angle object created based
-   *  on current longitude on Earth of observer (format: boolean, int, int, float)
-   * boolean is true if coordinate is from the Western hemisphere
-   * @param {object} date - proper Javascript new Date() object (if time is not
-   *  inputted, JS will use 00:00) (format: yyyy, mm, dd, hh, mm, ss)
-   * @returns {float} - the distance of the ascendant from the spring equinox
-   * in radians
+   * on current longitude on Earth of observer
+   * (format: boolean(isNegative), (dd)int, (mm)int, (ss)float)
+   * boolean is true if coordinate is from the Western hemisphere,
+   * so degree is negative
+   * @param {object} date - proper Javascript new Date() object
+   * (if time is not inputted, JS will use 00:00)
+   * (format: yyyy, mm, dd, hh, mm, ss)
+   * correct time input is crucial in ascendant calculation
+   * @returns {float} - the ecliptic distance of the ascendant from
+   * the spring equinox in radians
    */
 
 export function calculateAscendant (latAngle, lonAngle, date) {
