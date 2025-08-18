@@ -22,13 +22,15 @@ export const callisto = 3
 const k = [17295, 21819, 27558, 36548]
 
 /**
- * XY used for returning coordinates of moons.
+ * XYZ used for returning coordinates of moons.
  * @param {number} x - in units of Jupiter radii
  * @param {number} y - in units of Jupiter radii
+ * @param {number} z - in units of Jupiter radii
  */
-function XY (x, y) {
+function XYZ (x, y, z) {
   this.x = x
   this.y = y
+  this.z = z
 }
 
 /**
@@ -37,7 +39,7 @@ function XY (x, y) {
  * Returned coordinates are in units of Jupiter radii.
  *
  * @param {Number} jde - Julian ephemeris day
- * @return {Array} x, y - coordinates of the 4 Satellites of jupiter
+ * @return {Array} x, y, z - coordinates of the 4 Satellites of jupiter
  */
 export function positions (jde) {
   const d = jde - base.J2000
@@ -83,9 +85,10 @@ export function positions (jde) {
   const r3 = 14.9883 - 0.0216 * cG
   const r4 = 26.3627 - 0.1939 * cH
   const sDE = Math.sin(DE)
+  const cDE = Math.cos(DE)
   const xy = function (u, r) {
     const [su, cu] = base.sincos(u)
-    return new XY(r * su, -r * cu * sDE)
+    return new XYZ(r * su, -r * cu * sDE, -r * cu * cDE)
   }
   return [xy(u1 + c1, r1), xy(u2 + c2, r2), xy(u3 + c3, r3), xy(u4 + c4, r4)]
 }
@@ -101,7 +104,7 @@ export function positions (jde) {
  * @param {Planet} earth - VSOP87 Planet earth
  * @param {Planet} jupiter - VSOP87 Planet jupiter
  * @param {Array} [pos] - reference to array of positions (same as return value)
- * @return {Array} x, y - coordinates of the 4 Satellites of jupiter
+ * @return {Array} x, y, z - coordinates of the 4 Satellites of jupiter
  */
 export function e5 (jde, earth, jupiter, pos) {
   pos = pos || new Array(4)
@@ -481,7 +484,7 @@ export function e5 (jde, earth, jupiter, pos) {
     x += Math.abs(z) / k[i] * Math.sqrt(1 - d * d)
     // perspective effect
     const W = Δ / (Δ + z / 2095)
-    pos[i] = new XY(x * W, y * W)
+    pos[i] = new XYZ(x * W, y * W, z)
   }
   return pos
 }

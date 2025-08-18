@@ -25,11 +25,12 @@ export const hyperion = 6
 export const iapetus = 7
 
 /**
- * XY holds coordinates returned from positions().
+ * XYZ holds coordinates returned from positions().
  */
-function XY (x, y) {
+function XYZ (x, y, z) {
   this.x = x
   this.y = y
+  this.z = z
 }
 
 const d = Math.PI / 180
@@ -44,7 +45,7 @@ const d = Math.PI / 180
  * @param {number} jde - Julian ephemeris day
  * @param {Planet} earth - VSOP87 planet Earth // eslint-disable-line no-unused-vars
  * @param {Planet} saturn - VSOP87 planet Saturn // eslint-disable-line no-unused-vars
- * @return {XY[]} Array of Moon Positions in `XY`
+ * @return {XYZ[]} Array of Moon Positions in `XYZ`
  *   Use `M.mimas ... M.iapetus` to resolve to Moon and its position at `jde`
  */
 export function positions (jde, earth, saturn) {
@@ -138,7 +139,7 @@ export function positions (jde, earth, saturn) {
     const d = X[j] / s4[j].r
     X[j] += Math.abs(Z[j]) / k[j] * Math.sqrt(1 - d * d)
     const W = Δ / (Δ + Z[j] / 2475)
-    pos[j - 1] = new XY(X[j] * W, Y[j] * W)
+    pos[j - 1] = new XYZ(X[j] * W, Y[j] * W, Z[j])
   }
   return pos
 }
