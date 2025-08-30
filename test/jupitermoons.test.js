@@ -18,6 +18,11 @@ describe('#jupitermoons', function () {
       assert.strictEqual(float(pos[2].y).toFixed(2), +0.65)
       assert.strictEqual(float(pos[3].y).toFixed(2), +1.10)
 
+      assert.strictEqual(float(pos[0].z).toFixed(2), -4.82)
+      assert.strictEqual(float(pos[1].z).toFixed(2), -5.74)
+      assert.strictEqual(float(pos[2].z).toFixed(2), -14.94)
+      assert.strictEqual(float(pos[3].z).toFixed(2), -25.22)
+
       // Output:
       // X  -3.44  +7.44  +1.24  +7.08
       // Y  +0.21  +0.25  +0.65  +1.10
@@ -38,11 +43,13 @@ describe('#jupitermoons', function () {
 
       assert.deepStrictEqual(xyToFixed(pos3[2]), {
         x: -0.0016,
-        y: -0.8424
+        y: -0.8424,
+        z: -14.9444
       })
       assert.deepStrictEqual(xyToFixed(pos4[3]), {
         x: +0.0555,
-        y: +1.4811
+        y: +1.4811,
+        z: +26.2743
       })
 
       // Output:
@@ -67,6 +74,11 @@ describe('#jupitermoons', function () {
       assert.strictEqual(float(pos[2].y).toFixed(4), +0.5900)
       assert.strictEqual(float(pos[3].y).toFixed(4), +1.0290)
 
+      assert.strictEqual(float(pos[0].z).toFixed(4), -4.8189)
+      assert.strictEqual(float(pos[1].z).toFixed(4), -5.7472)
+      assert.strictEqual(float(pos[2].z).toFixed(4), -14.9406)
+      assert.strictEqual(float(pos[3].z).toFixed(4), -25.2244)
+
       // Output:
       // X  -3.4503  +7.4418  +1.2010  +7.0720
       // Y  +0.2137  +0.2752  +0.5900  +1.0290
@@ -90,11 +102,13 @@ describe('#jupitermoons', function () {
 
       assert.deepStrictEqual(xyToFixed(pos3[2]), {
         x: +0.0032,
-        y: -0.8042
+        y: -0.8042,
+        z: -14.9433
       })
       assert.deepStrictEqual(xyToFixed(pos4[3]), {
         x: +0.0002,
-        y: +1.3990
+        y: +1.3990,
+        z: +26.2732
       })
 
       // Output:
@@ -108,6 +122,7 @@ function xyToFixed (xy, n) {
   n = n || 4
   return {
     x: float(xy.x).toFixed(n),
-    y: float(xy.y).toFixed(n)
+    y: float(xy.y).toFixed(n),
+    z: float(xy.z).toFixed(n)
   }
 }

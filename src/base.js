@@ -58,7 +58,7 @@ export const COblJ2000 = 0.917482062
  * `dist` is distance in to earth in AU. √(x² + y² + z²)
  * Result in seconds of time.
  * @param {Number} dist - distance in to earth in AU
- * @returns {Number} time for light to travel a given distance in seconds
+ * @returns {Number} time for light to travel a given distance in days
  */
 export function lightTime (dist) {
   // Formula given as (33.3) p. 224.
