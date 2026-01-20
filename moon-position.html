@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon Position Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        input[type="datetime-local"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="datetime-local"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .location-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .result-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-section h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .moon-phase {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .moon-icon {
+            font-size: 4em;
+            margin: 10px 0;
+        }
+
+        .phase-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #667eea;
+            margin-top: 10px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            color: #1565c0;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .location-group {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌙 Moon Position Calculator</h1>
+            <p>Find the moon's position in the sky for any date, time, and location</p>
+        </div>
+
+        <div class="content">
+            <div class="info-box">
+                <p><strong>💡 Tip:</strong> Enter your location coordinates to get accurate altitude and azimuth values. The default location is set to your approximate position based on your browser.</p>
+            </div>
+
+            <div class="input-group">
+                <label for="datetime">Date and Time</label>
+                <input type="datetime-local" id="datetime" required>
+            </div>
+
+            <div class="location-group">
+                <div class="input-group">
+                    <label for="latitude">Latitude (°)</label>
+                    <input type="number" id="latitude" step="0.000001" min="-90" max="90" placeholder="e.g., 40.7128" required>
+                </div>
+                <div class="input-group">
+                    <label for="longitude">Longitude (°)</label>
+                    <input type="number" id="longitude" step="0.000001" min="-180" max="180" placeholder="e.g., -74.0060" required>
+                </div>
+            </div>
+
+            <button onclick="calculateMoonPosition()">Calculate Moon Position</button>
+
+            <div class="results" id="results">
+                <h2>Moon Position Results</h2>
+
+                <div class="moon-phase">
+                    <div class="moon-icon" id="moonIcon">🌑</div>
+                    <div class="phase-name" id="phaseName">New Moon</div>
+                    <div style="margin-top: 10px; color: #666;">
+                        <span id="illumination">0.0% illuminated</span>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3>📍 Observer-Based Position</h3>
+                    <div class="result-item">
+                        <span class="result-label">Altitude</span>
+                        <span class="result-value" id="altitude">--</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Azimuth</span>
+                        <span class="result-value" id="azimuth">--</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Distance</span>
+                        <span class="result-value" id="distance">--</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Visibility</span>
+                        <span class="result-value" id="visibility">--</span>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3>🌙 Moon Phase Details</h3>
+                    <div class="result-item">
+                        <span class="result-label">Phase Angle</span>
+                        <span class="result-value" id="phaseAngle">--</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Phase</span>
+                        <span class="result-value" id="phaseValue">--</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Parallactic Angle</span>
+                        <span class="result-value" id="parallacticAngle">--</span>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3>⏰ Moon Times</h3>
+                    <div class="result-item">
+                        <span class="result-label">Moonrise</span>
+                        <span class="result-value" id="moonrise">--</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Moonset</span>
+                        <span class="result-value" id="moonset">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+    <script>
+        // Initialize with current date/time and attempt to get user's location
+        function init() {
+            // Set current date/time
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+            document.getElementById('datetime').value = localISOTime;
+
+            // Try to get user's location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        document.getElementById('latitude').value = position.coords.latitude.toFixed(6);
+                        document.getElementById('longitude').value = position.coords.longitude.toFixed(6);
+                    },
+                    (error) => {
+                        // Default to New York coordinates if geolocation fails
+                        document.getElementById('latitude').value = '40.7128';
+                        document.getElementById('longitude').value = '-74.0060';
+                    }
+                );
+            } else {
+                // Default to New York coordinates
+                document.getElementById('latitude').value = '40.7128';
+                document.getElementById('longitude').value = '-74.0060';
+            }
+        }
+
+        function getMoonPhaseInfo(phase) {
+            // phase is a value between 0 and 1
+            const phases = [
+                { name: 'New Moon', icon: '🌑', range: [0, 0.033] },
+                { name: 'Waxing Crescent', icon: '🌒', range: [0.033, 0.216] },
+                { name: 'First Quarter', icon: '🌓', range: [0.216, 0.283] },
+                { name: 'Waxing Gibbous', icon: '🌔', range: [0.283, 0.466] },
+                { name: 'Full Moon', icon: '🌕', range: [0.466, 0.533] },
+                { name: 'Waning Gibbous', icon: '🌖', range: [0.533, 0.716] },
+                { name: 'Last Quarter', icon: '🌗', range: [0.716, 0.783] },
+                { name: 'Waning Crescent', icon: '🌘', range: [0.783, 0.967] },
+                { name: 'New Moon', icon: '🌑', range: [0.967, 1] }
+            ];
+
+            for (let phaseInfo of phases) {
+                if (phase >= phaseInfo.range[0] && phase <= phaseInfo.range[1]) {
+                    return phaseInfo;
+                }
+            }
+            return phases[0];
+        }
+
+        function toDegrees(radians) {
+            return radians * (180 / Math.PI);
+        }
+
+        function formatTime(date) {
+            if (!date || isNaN(date.getTime())) {
+                return 'N/A';
+            }
+            return date.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true 
+            });
+        }
+
+        function getDirectionFromAzimuth(azimuth) {
+            const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 
+                              'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+            const index = Math.round(azimuth / 22.5) % 16;
+            return directions[index];
+        }
+
+        function calculateMoonPosition() {
+            const datetimeInput = document.getElementById('datetime').value;
+            const latitude = parseFloat(document.getElementById('latitude').value);
+            const longitude = parseFloat(document.getElementById('longitude').value);
+
+            if (!datetimeInput || isNaN(latitude) || isNaN(longitude)) {
+                alert('Please fill in all fields with valid values');
+                return;
+            }
+
+            const date = new Date(datetimeInput);
+            
+            // Calculate moon position
+            const moonPosition = SunCalc.getMoonPosition(date, latitude, longitude);
+            const moonIllumination = SunCalc.getMoonIllumination(date);
+            const moonTimes = SunCalc.getMoonTimes(date, latitude, longitude);
+
+            // Convert radians to degrees
+            const altitudeDeg = toDegrees(moonPosition.altitude);
+            const azimuthDeg = toDegrees(moonPosition.azimuth);
+            const normalizedAzimuth = (azimuthDeg + 180) % 360; // Normalize to 0-360 from North
+
+            // Get phase information
+            const phaseInfo = getMoonPhaseInfo(moonIllumination.phase);
+
+            // Update UI
+            document.getElementById('altitude').textContent = 
+                `${altitudeDeg.toFixed(2)}°`;
+            
+            document.getElementById('azimuth').textContent = 
+                `${normalizedAzimuth.toFixed(2)}° (${getDirectionFromAzimuth(normalizedAzimuth)})`;
+            
+            document.getElementById('distance').textContent = 
+                `${moonPosition.distance.toFixed(0)} km`;
+
+            document.getElementById('visibility').textContent = 
+                altitudeDeg > 0 ? 'Above horizon ✓' : 'Below horizon ✗';
+
+            // Phase details
+            document.getElementById('phaseAngle').textContent = 
+                `${toDegrees(moonIllumination.angle).toFixed(2)}°`;
+            
+            document.getElementById('phaseValue').textContent = 
+                `${(moonIllumination.phase * 100).toFixed(1)}%`;
+            
+            document.getElementById('parallacticAngle').textContent = 
+                `${toDegrees(moonPosition.parallacticAngle).toFixed(2)}°`;
+
+            document.getElementById('illumination').textContent = 
+                `${(moonIllumination.fraction * 100).toFixed(1)}% illuminated`;
+
+            // Moon phase icon and name
+            document.getElementById('moonIcon').textContent = phaseInfo.icon;
+            document.getElementById('phaseName').textContent = phaseInfo.name;
+
+            // Moon times
+            document.getElementById('moonrise').textContent = formatTime(moonTimes.rise);
+            document.getElementById('moonset').textContent = formatTime(moonTimes.set);
+
+            // Show results
+            document.getElementById('results').classList.add('show');
+        }
+
+        // Initialize on page load
+        window.onload = init;
+
+        // Allow Enter key to calculate
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculateMoonPosition();
+            }
+        });
+    </script>
+</body>
+</html>
