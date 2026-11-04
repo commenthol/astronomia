@@ -25,6 +25,12 @@ describe('#sexagesimal', function () {
       assert.deepStrictEqual(res.toDMS(), [true, 13, 47, 22])
     })
 
+    it('preserves the sign of negative angles below one degree', function () {
+      const angle = new sexa.Angle(sexa.angleFromDeg(-0.5))
+      assert.strictEqual(angle.toDegString(3), '-0°.5')
+      assert.strictEqual(angle.toString(), '-0°30′0″')
+    })
+
     it('positive', function () {
       const res = new sexa.Angle(false, 0, 32, 41)
       assert.strictEqual(res.deg(), 0.5447222222222222)
