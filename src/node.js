@@ -17,8 +17,14 @@ import base from './base.js'
  * of perihelion in radians, timeP is time of perihelion as a jd.
  *
  * Result is jde of the event and distance from the sun in AU.
+ * @param {number} axis - Semimajor axis in AU.
+ * @param {number} ecc - Eccentricity.
+ * @param {number} argP - Argument of perihelion in radians.
+ * @param {number} timeP - Time of perihelion as a Julian day.
+ * @returns {[number, number]} Julian ephemeris day and heliocentric distance in AU.
  */
-export function ellipticAscending (axis, ecc, argP, timeP) { // (axis, ecc, argP, timeP float64)  (jde, r float64)
+export function ellipticAscending(axis, ecc, argP, timeP) {
+  // (axis, ecc, argP, timeP float64)  (jde, r float64)
   return el(-argP, axis, ecc, timeP)
 }
 
@@ -29,12 +35,27 @@ export function ellipticAscending (axis, ecc, argP, timeP) { // (axis, ecc, argP
  * of perihelion in radians, timeP is time of perihelion as a jd.
  *
  * Result is jde of the event and distance from the sun in AU.
+ * @param {number} axis - Semimajor axis in AU.
+ * @param {number} ecc - Eccentricity.
+ * @param {number} argP - Argument of perihelion in radians.
+ * @param {number} timeP - Time of perihelion as a Julian day.
+ * @returns {[number, number]} Julian ephemeris day and heliocentric distance in AU.
  */
-export function ellipticDescending (axis, ecc, argP, timeP) { // (axis, ecc, argP, timeP float64)  (jde, r float64)
+export function ellipticDescending(axis, ecc, argP, timeP) {
+  // (axis, ecc, argP, timeP float64)  (jde, r float64)
   return el(Math.PI - argP, axis, ecc, timeP)
 }
 
-export function el (ν, axis, ecc, timeP) { // (ν, axis, ecc, timeP float64)  (jde, r float64)
+/**
+ * Compute passage time and heliocentric distance at true anomaly ν.
+ * @param {number} ν - True anomaly in radians.
+ * @param {number} axis - Semimajor axis in AU.
+ * @param {number} ecc - Eccentricity.
+ * @param {number} timeP - Time of perihelion as a Julian day.
+ * @returns {[number, number]} Julian ephemeris day and heliocentric distance in AU.
+ */
+export function el(ν, axis, ecc, timeP) {
+  // (ν, axis, ecc, timeP float64)  (jde, r float64)
   const E = 2 * Math.atan(Math.sqrt((1 - ecc) / (1 + ecc)) * Math.tan(ν * 0.5))
   const [sE, cE] = base.sincos(E)
   const M = E - ecc * sE
@@ -51,8 +72,13 @@ export function el (ν, axis, ecc, timeP) { // (ν, axis, ecc, timeP float64)  (
  * in radians, timeP is time of perihelion as a jd.
  *
  * Result is jde of the event and distance from the sun in AU.
+ * @param {number} q - Perihelion distance in AU.
+ * @param {number} argP - Argument of perihelion in radians.
+ * @param {number} timeP - Time of perihelion as a Julian day.
+ * @returns {[number, number]} Julian ephemeris day and heliocentric distance in AU.
  */
-export function parabolicAscending (q, argP, timeP) { // (q, argP, timeP float64)  (jde, r float64)
+export function parabolicAscending(q, argP, timeP) {
+  // (q, argP, timeP float64)  (jde, r float64)
   return pa(-argP, q, timeP)
 }
 
@@ -63,12 +89,25 @@ export function parabolicAscending (q, argP, timeP) { // (q, argP, timeP float64
  * in radians, timeP is time of perihelion as a jd.
  *
  * Result is jde of the event and distance from the sun in AU.
+ * @param {number} q - Perihelion distance in AU.
+ * @param {number} argP - Argument of perihelion in radians.
+ * @param {number} timeP - Time of perihelion as a Julian day.
+ * @returns {[number, number]} Julian ephemeris day and heliocentric distance in AU.
  */
-export function parabolicDescending (q, argP, timeP) { // (q, argP, timeP float64)  (jde, r float64)
+export function parabolicDescending(q, argP, timeP) {
+  // (q, argP, timeP float64)  (jde, r float64)
   return pa(Math.PI - argP, q, timeP)
 }
 
-export function pa (ν, q, timeP) { // (ν, q, timeP float64)  (jde, r float64)
+/**
+ * Compute passage time and heliocentric distance for a parabolic orbit.
+ * @param {number} ν - True anomaly in radians.
+ * @param {number} q - Perihelion distance in AU.
+ * @param {number} timeP - Time of perihelion as a Julian day.
+ * @returns {[number, number]} Julian ephemeris day and heliocentric distance in AU.
+ */
+export function pa(ν, q, timeP) {
+  // (ν, q, timeP float64)  (jde, r float64)
   const s = Math.tan(ν * 0.5)
   const jde = timeP + 27.403895 * s * (s * s + 3) * q * Math.sqrt(q)
   const r = q * (1 + s * s)

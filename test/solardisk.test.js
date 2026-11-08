@@ -24,7 +24,7 @@ describe('#solardisk', function () {
   it('cycle', function () {
     const j = solardisk.cycle(1699)
     const t = new julian.Calendar().fromJD(j)
-    assert.strictEqual(float(j).toFixed(4), 2444480.7230)
+    assert.strictEqual(float(j).toFixed(4), 2444480.723)
     assert.strictEqual(t.year, 1980)
     assert.strictEqual(t.month, 8)
     assert.strictEqual(float(t.day).toFixed(2), 29.22)

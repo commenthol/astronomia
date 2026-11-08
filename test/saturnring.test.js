@@ -20,10 +20,10 @@ describe('#saturnring', function () {
     const P = res[3]
     const a = res[4]
     const b = res[5]
-    assert.strictEqual(float(B * 180 / Math.PI).toFixed(3), 16.442)
-    assert.strictEqual(float(Bʹ * 180 / Math.PI).toFixed(3), 14.679)
-    assert.strictEqual(float(ΔU * 180 / Math.PI).toFixed(3), 4.198)
-    assert.strictEqual(float(P * 180 / Math.PI).toFixed(3), 6.741)
+    assert.strictEqual(float((B * 180) / Math.PI).toFixed(3), 16.442)
+    assert.strictEqual(float((Bʹ * 180) / Math.PI).toFixed(3), 14.679)
+    assert.strictEqual(float((ΔU * 180) / Math.PI).toFixed(3), 4.198)
+    assert.strictEqual(float((P * 180) / Math.PI).toFixed(3), 6.741)
     assert.strictEqual(new sexa.Angle(a).toString(2), '0°0′35.87″')
     assert.strictEqual(new sexa.Angle(b).toString(2), '0°0′10.15″')
     // B  = 16.442

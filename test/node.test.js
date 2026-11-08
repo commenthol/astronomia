@@ -5,9 +5,12 @@ import { julian, node, perihelion, planetelements } from '../src/index.js'
 describe('#node', function () {
   it('EllipticAscending()', function () {
     // Example 39.a, p. 276
-    const res = node.ellipticAscending(17.9400782, 0.96727426,
-      111.84644 * Math.PI / 180,
-      julian.CalendarGregorianToJD(1986, 2, 9.45891))
+    const res = node.ellipticAscending(
+      17.9400782,
+      0.96727426,
+      (111.84644 * Math.PI) / 180,
+      julian.CalendarGregorianToJD(1986, 2, 9.45891)
+    )
     const t = res[0]
     const r = res[1]
     const d = julian.JDToCalendar(t)
@@ -19,8 +22,10 @@ describe('#node', function () {
 
   it('EllipticDescending()', function () {
     // Example 39.a, p. 276
-    const res = node.ellipticDescending(17.9400782, 0.96727426,
-      111.84644 * Math.PI / 180,
+    const res = node.ellipticDescending(
+      17.9400782,
+      0.96727426,
+      (111.84644 * Math.PI) / 180,
       julian.CalendarGregorianToJD(1986, 2, 9.45891)
     )
     const t = res[0]
@@ -34,8 +39,9 @@ describe('#node', function () {
 
   it('parabolicAscending()', function () {
     // Example 29.b, p. 277
-    const res = node.parabolicAscending(1.324502,
-      154.9103 * Math.PI / 180,
+    const res = node.parabolicAscending(
+      1.324502,
+      (154.9103 * Math.PI) / 180,
       julian.CalendarGregorianToJD(1989, 8, 20.291)
     )
     const t = res[0]
@@ -49,8 +55,9 @@ describe('#node', function () {
 
   it('parabolicDescending()', function () {
     // Example 29.b, p. 277
-    const res = node.parabolicDescending(1.324502,
-      154.9103 * Math.PI / 180,
+    const res = node.parabolicDescending(
+      1.324502,
+      (154.9103 * Math.PI) / 180,
       julian.CalendarGregorianToJD(1989, 8, 20.291)
     )
     const t = res[0]
@@ -68,8 +75,9 @@ describe('#node', function () {
       planetelements.venus,
       julian.CalendarGregorianToJD(1979, 1, 1)
     )
-    const res = node.ellipticAscending( // eslint-disable-line no-unused-vars
-      k.axis, k.ecc,
+    const res = node.ellipticAscending(
+      k.axis,
+      k.ecc,
       k.peri - k.node,
       perihelion.perihelion(perihelion.venus, 1979)
     )

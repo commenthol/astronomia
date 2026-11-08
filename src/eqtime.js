@@ -21,22 +21,22 @@ const { cos, sin, tan } = Math
  * with `new planetposition.Planet('earth')`.
  *
  * @param {Number} jde - Julian ephemeris day
- * @param {planetposition.Planet} earth - VSOP87 planet
+ * @param {import('./planetposition.js').Planet} earth - VSOP87 planet
  * @returns {Number} equation of time as an hour angle in radians.
  */
-export function e (jde, earth) {
+export function e(jde, earth) {
   const τ = base.J2000Century(jde) * 0.1
   const L0 = l0(τ)
   // code duplicated from solar.ApparentEquatorialVSOP87 so that
   // we can keep Δψ and cε
   const { lon, lat, range } = solar.trueVSOP87(earth, jde)
   const [Δψ, Δε] = nutation.nutation(jde)
-  const a = -20.4898 / 3600 * Math.PI / 180 / range
+  const a = ((-20.4898 / 3600) * Math.PI) / 180 / range
   const λ = lon + Δψ + a
   const ε = nutation.meanObliquity(jde) + Δε
   const eq = new coord.Ecliptic(λ, lat).toEquatorial(ε)
   // (28.1) p. 183
-  const E = L0 - 0.0057183 * Math.PI / 180 - eq.ra + Δψ * cos(ε)
+  const E = L0 - (0.0057183 * Math.PI) / 180 - eq.ra + Δψ * cos(ε)
   return base.pmod(E + Math.PI, 2 * Math.PI) - Math.PI
 }
 
@@ -44,8 +44,19 @@ export function e (jde, earth) {
  * (28.2) p. 183
  */
 const l0 = function (τ) {
-  return base.horner(τ, 280.4664567, 360007.6982779, 0.03032028,
-    1.0 / 49931, -1.0 / 15300, -1.0 / 2000000) * Math.PI / 180
+  return (
+    (base.horner(
+      τ,
+      280.4664567,
+      360007.6982779,
+      0.03032028,
+      1.0 / 49931,
+      -1.0 / 15300,
+      -1.0 / 2000000
+    ) *
+      Math.PI) /
+    180
+  )
 }
 
 /**
@@ -57,7 +68,7 @@ const l0 = function (τ) {
  * @param {Number} jde - Julian ephemeris day
  * @returns {Number} equation of time as an hour angle in radians.
  */
-export function eSmart (jde) {
+export function eSmart(jde) {
   const ε = nutation.meanObliquity(jde)
   const t = tan(ε * 0.5)
   const y = t * t
@@ -68,8 +79,13 @@ export function eSmart (jde) {
   const [sin2L0, cos2L0] = base.sincos(2 * L0)
   const sinM = sin(M)
   // (28.3) p. 185
-  return y * sin2L0 - 2 * e * sinM + 4 * e * y * sinM * cos2L0 -
-    y * y * sin2L0 * cos2L0 - 1.25 * e * e * sin(2 * M)
+  return (
+    y * sin2L0 -
+    2 * e * sinM +
+    4 * e * y * sinM * cos2L0 -
+    y * y * sin2L0 * cos2L0 -
+    1.25 * e * e * sin(2 * M)
+  )
 }
 
 export default {

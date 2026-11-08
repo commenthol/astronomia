@@ -13,22 +13,36 @@
 import base from './base.js'
 
 /**
+ * @typedef {{A: number, B: number, M0: number, M1: number}} MeanCoefficients
+ * @typedef {{c: number, f: number}} AdditionalAngle
+ */
+
+/**
  * Mean computes some intermediate values for a mean planetary configuration
  * given a year and a row of coefficients from Table 36.A, p. 250.0
+ * @param {number} y - Decimal year.
+ * @param {MeanCoefficients} a - Coefficients from Table 36.A.
+ * @returns {[number, number, number]} Julian day, mean anomaly in radians, and Julian centuries.
  */
-export function mean (y, a) { // (y float64, a *ca)  (J, M, T float64)
+export function mean(y, a) {
+  // (y float64, a *ca)  (J, M, T float64)
   // (36.1) p. 250
   const k = Math.floor((365.2425 * y + 1721060 - a.A) / a.B + 0.5)
   const J = a.A + k * a.B
-  const M = base.pmod(a.M0 + k * a.M1, 360) * Math.PI / 180
+  const M = (base.pmod(a.M0 + k * a.M1, 360) * Math.PI) / 180
   const T = base.J2000Century(J)
   return [J, M, T]
 }
 
 /**
  * Sum computes a sum of periodic terms.
+ * @param {number} T - Julian centuries from J2000.
+ * @param {number} M - Mean anomaly in radians.
+ * @param {number[][]} c - Periodic-term coefficients.
+ * @returns {number} Sum of the periodic terms.
  */
-export function sum (T, M, c) { // (T, M float64, c [][]float64)  float64
+export function sum(T, M, c) {
+  // (T, M float64, c [][]float64)  float64
   let j = base.horner(T, c[0])
   let mm = 0.0
   for (let i = 1; i < c.length; i++) {
@@ -43,8 +57,13 @@ export function sum (T, M, c) { // (T, M float64, c [][]float64)  float64
 
 /**
  * ms returns a mean time corrected by a sum.
+ * @param {number} y - Decimal year.
+ * @param {MeanCoefficients} a - Mean configuration coefficients.
+ * @param {number[][]} c - Periodic-term coefficients.
+ * @returns {number} Corrected Julian ephemeris day.
  */
-export function ms (y, a, c) { // (y float64, a *ca, c [][]float64)  float64
+export function ms(y, a, c) {
+  // (y float64, a *ca, c [][]float64)  float64
   const [J, M, T] = mean(y, a)
   return J + sum(T, M, c)
 }
@@ -54,8 +73,11 @@ export function ms (y, a, c) { // (y float64, a *ca, c [][]float64)  float64
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Mercury's inferior conjunction.
  */
-export function mercuryInfConj (y) { // (y float64)  (jde float64)
+export function mercuryInfConj(y) {
+  // (y float64)  (jde float64)
   return ms(y, micA, micB)
 }
 
@@ -64,8 +86,11 @@ export function mercuryInfConj (y) { // (y float64)  (jde float64)
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Mercury's superior conjunction.
  */
-export function mercurySupConj (y) { // (y float64)  (jde float64)
+export function mercurySupConj(y) {
+  // (y float64)  (jde float64)
   return ms(y, mscA, mscB)
 }
 
@@ -74,8 +99,11 @@ export function mercurySupConj (y) { // (y float64)  (jde float64)
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Venus's inferior conjunction.
  */
-export function venusInfConj (y) { // (y float64)  (jde float64)
+export function venusInfConj(y) {
+  // (y float64)  (jde float64)
   return ms(y, vicA, vicB)
 }
 
@@ -84,19 +112,28 @@ export function venusInfConj (y) { // (y float64)  (jde float64)
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Mars's opposition.
  */
-export function marsOpp (y) { // (y float64)  (jde float64)
+export function marsOpp(y) {
+  // (y float64)  (jde float64)
   return ms(y, moA, moB)
 }
 
 /**
- * SumA computes the sum of periodic terms with "additional angles"
+ * SumA computes the sum of periodic terms with "additional angles".
+ * @param {number} T - Julian centuries from J2000.
+ * @param {number} M - Mean anomaly in radians.
+ * @param {number[][]} c - Periodic-term coefficients.
+ * @param {AdditionalAngle[]} aa - Additional-angle coefficients.
+ * @returns {number} Sum of the periodic terms.
  */
-export function sumA (T, M, c, aa) { // (T, M float64, c [][]float64, aa []caa)  float64
+export function sumA(T, M, c, aa) {
+  // (T, M float64, c [][]float64, aa []caa)  float64
   let i = c.length - 2 * aa.length
   let j = sum(T, M, c.slice(0, i))
   for (let k = 0; k < aa.length; k++) {
-    const [saa, caa] = base.sincos((aa[k].c + aa[k].f * T) * Math.PI / 180)
+    const [saa, caa] = base.sincos(((aa[k].c + aa[k].f * T) * Math.PI) / 180)
     j += saa * base.horner(T, c[i])
     i++
     j += caa * base.horner(T, c[i])
@@ -107,8 +144,14 @@ export function sumA (T, M, c, aa) { // (T, M float64, c [][]float64, aa []caa) 
 
 /**
  * Msa returns a mean time corrected by a sum.
+ * @param {number} y - Decimal year.
+ * @param {MeanCoefficients} a - Mean configuration coefficients.
+ * @param {number[][]} c - Periodic-term coefficients.
+ * @param {AdditionalAngle[]} aa - Additional-angle coefficients.
+ * @returns {number} Corrected Julian ephemeris day.
  */
-export function msa (y, a, c, aa) { // (y float64, a *ca, c [][]float64, aa []caa)  float64
+export function msa(y, a, c, aa) {
+  // (y float64, a *ca, c [][]float64, aa []caa)  float64
   const [J, M, T] = mean(y, a)
   return J + sumA(T, M, c, aa)
 }
@@ -118,8 +161,11 @@ export function msa (y, a, c, aa) { // (y float64, a *ca, c [][]float64, aa []ca
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Jupiter's opposition.
  */
-export function jupiterOpp (y) { // (y float64)  (jde float64)
+export function jupiterOpp(y) {
+  // (y float64)  (jde float64)
   return msa(y, joA, joB, jaa)
 }
 
@@ -128,8 +174,11 @@ export function jupiterOpp (y) { // (y float64)  (jde float64)
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Saturn's opposition.
  */
-export function saturnOpp (y) { // (y float64)  (jde float64)
+export function saturnOpp(y) {
+  // (y float64)  (jde float64)
   return msa(y, soA, soB, saa)
 }
 
@@ -138,8 +187,11 @@ export function saturnOpp (y) { // (y float64)  (jde float64)
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Saturn's conjunction.
  */
-export function saturnConj (y) { // (y float64)  (jde float64)
+export function saturnConj(y) {
+  // (y float64)  (jde float64)
   return msa(y, scA, scB, saa)
 }
 
@@ -148,8 +200,11 @@ export function saturnConj (y) { // (y float64)  (jde float64)
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Uranus's opposition.
  */
-export function uranusOpp (y) { // (y float64)  (jde float64)
+export function uranusOpp(y) {
+  // (y float64)  (jde float64)
   return msa(y, uoA, uoB, uaa)
 }
 
@@ -158,17 +213,25 @@ export function uranusOpp (y) { // (y float64)  (jde float64)
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Neptune's opposition.
  */
-export function neptuneOpp (y) { // (y float64)  (jde float64)
+export function neptuneOpp(y) {
+  // (y float64)  (jde float64)
   return msa(y, noA, noB, naa)
 }
 
 /**
  * El computes time and elongation of a greatest elongation event.
+ * @param {number} y - Decimal year near the event.
+ * @param {MeanCoefficients} _a - Mean configuration coefficients (retained for signature compatibility).
+ * @param {number[][]} t - Periodic-term coefficients for event time.
+ * @param {number[][]} e - Periodic-term coefficients for elongation.
+ * @returns {[number, number]} Julian ephemeris day and elongation in radians.
  */
-export function el (y, a, t, e) { // (y float64, a *ca, t, e [][]float64)  (jde, elongation float64)
+export function el(y, _a, t, e) {
   const [J, M, T] = mean(y, micA)
-  return [J + sum(T, M, t), sum(T, M, e) * Math.PI / 180]
+  return [J + sum(T, M, t), (sum(T, M, e) * Math.PI) / 180]
 }
 
 /**
@@ -176,8 +239,11 @@ export function el (y, a, t, e) { // (y float64, a *ca, t, e [][]float64)  (jde,
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {[number, number]} Julian ephemeris day and elongation in radians.
  */
-export function mercuryEastElongation (y) { // (y float64)  (jde, elongation float64)
+export function mercuryEastElongation(y) {
+  // (y float64)  (jde, elongation float64)
   return el(y, micA, met, mee)
 }
 
@@ -186,12 +252,21 @@ export function mercuryEastElongation (y) { // (y float64)  (jde, elongation flo
  *
  * Result is time (as a jde) of the event nearest the given time (as a
  * decimal year.)
+ * @param {number} y - Decimal year near the event.
+ * @returns {[number, number]} Julian ephemeris day and elongation in radians.
  */
-export function mercuryWestElongation (y) { // (y float64)  (jde, elongation float64)
+export function mercuryWestElongation(y) {
+  // (y float64)  (jde, elongation float64)
   return el(y, micA, mwt, mwe)
 }
 
-export function marsStation2 (y) { // (y float64)  (jde float64)
+/**
+ * Return the time of Mars's second station near the given year.
+ * @param {number} y - Decimal year near the event.
+ * @returns {number} Julian ephemeris day of Mars's second station.
+ */
+export function marsStation2(y) {
+  // (y float64)  (jde float64)
   const [J, M, T] = mean(y, moA)
   return J + sum(T, M, ms2)
 }
@@ -199,7 +274,7 @@ export function marsStation2 (y) { // (y float64)  (jde float64)
 /**
  * ca holds coefficients from one line of table 36.A, p. 250
  */
-function Ca (A, B, M0, M1) {
+function Ca(A, B, M0, M1) {
   this.A = A
   this.B = B
   this.M0 = M0
@@ -223,14 +298,12 @@ const noA = new Ca(2451753.122, 367.486703, 202.6544, 2.194998)
  * caa holds coefficients for "additional angles" for outer planets
  * as given on p. 251
  */
-function Caa (c, f) {
+function Caa(c, f) {
   this.c = c
   this.f = f
 }
 
-const jaa = [
-  new Caa(82.74, 40.76)
-]
+const jaa = [new Caa(82.74, 40.76)]
 
 const saa = [
   new Caa(82.74, 40.76),
@@ -239,15 +312,9 @@ const saa = [
   new Caa(220.02, 1262.87)
 ]
 
-const uaa = [
-  new Caa(207.83, 8.51),
-  new Caa(108.84, 419.96)
-]
+const uaa = [new Caa(207.83, 8.51), new Caa(108.84, 419.96)]
 
-const naa = [
-  new Caa(207.83, 8.51),
-  new Caa(276.74, 209.98)
-]
+const naa = [new Caa(207.83, 8.51), new Caa(276.74, 209.98)]
 
 /**
  * Table 33.B, p. 256
@@ -358,7 +425,7 @@ const soB = [
  */
 const scB = [
   [0.0172, -0.0006, 0.00023],
-  [-8.5885, 0.0411, 0.00020],
+  [-8.5885, 0.0411, 0.0002],
   [-1.147, 0.0352, -0.00011],
   [0.3331, -0.0034, -0.00001],
   [0.1145, -0.0045, 0.00002],

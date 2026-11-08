@@ -11,16 +11,16 @@ import base from './base.js'
 import nutation from './nutation.js'
 import solar from './solar.js'
 
+/** @typedef {{x: number, y: number, z: number}} RectangularCoordinates */
+
 /**
  * Position returns rectangular coordinates referenced to the mean equinox of date.
- * @param {planetposition.Planet} earth - VSOP87Planet Earth
+ * @param {import('./planetposition.js').Planet} earth - VSOP87Planet Earth
  * @param {Number} jde - Julian ephemeris day
- * @return {object} rectangular coordinates
- *   {Number} x
- *   {Number} y
- *   {Number} z
+ * @returns {RectangularCoordinates} Rectangular coordinates.
  */
-export function position (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z float64)
+export function position(earth, jde) {
+  // (e *pp.V87Planet, jde float64)  (x, y, z float64)
   // (26.1) p. 171
   const { lon, lat, range } = solar.trueVSOP87(earth, jde)
   const [sε, cε] = base.sincos(nutation.meanObliquity(jde))
@@ -34,25 +34,25 @@ export function position (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y
 
 /**
  * LongitudeJ2000 returns geometric longitude referenced to equinox J2000.
- * @param {planetposition.Planet} earth - VSOP87Planet Earth
+ * @param {import('./planetposition.js').Planet} earth - VSOP87Planet Earth
  * @param {Number} jde - Julian ephemeris day
  * @return {Number} geometric longitude referenced to equinox J2000.
  */
-export function longitudeJ2000 (earth, jde) {
+export function longitudeJ2000(earth, jde) {
   const lon = earth.position2000(jde).lon
-  return base.pmod(lon + Math.PI - 0.09033 / 3600 * Math.PI / 180, 2 * Math.PI)
+  return base.pmod(
+    lon + Math.PI - ((0.09033 / 3600) * Math.PI) / 180,
+    2 * Math.PI
+  )
 }
 
 /**
  * PositionJ2000 returns rectangular coordinates referenced to equinox J2000.
- * @param {planetposition.Planet} earth - VSOP87Planet Earth
+ * @param {import('./planetposition.js').Planet} earth - VSOP87Planet Earth
  * @param {Number} jde - Julian ephemeris day
- * @return {object} rectangular coordinates
- *   {Number} x
- *   {Number} y
- *   {Number} z
+ * @returns {RectangularCoordinates} Rectangular coordinates.
  */
-export function positionJ2000 (earth, jde) {
+export function positionJ2000(earth, jde) {
   const { x, y, z } = xyz(earth, jde)
   // (26.3) p. 174
   return {
@@ -62,7 +62,13 @@ export function positionJ2000 (earth, jde) {
   }
 }
 
-export function xyz (earth, jde) {
+/**
+ * Return rectangular Earth coordinates referred to J2000.
+ * @param {import('./planetposition.js').Planet} earth - VSOP87 Earth ephemeris.
+ * @param {number} jde - Julian ephemeris day.
+ * @returns {{x: number, y: number, z: number}} Rectangular coordinates in AU.
+ */
+export function xyz(earth, jde) {
   const { lon, lat, range } = earth.position2000(jde)
   const s = lon + Math.PI
   const β = -lat
@@ -81,14 +87,12 @@ export function xyz (earth, jde) {
  * Results are referenced to the mean equator and equinox of the epoch B1950
  * in the FK5 system, not FK4.
  *
- * @param {planetposition.Planet} earth - VSOP87Planet Earth
+ * @param {import('./planetposition.js').Planet} earth - VSOP87Planet Earth
  * @param {Number} jde - Julian ephemeris day
- * @return {object} rectangular coordinates
- *   {Number} x
- *   {Number} y
- *   {Number} z
+ * @returns {RectangularCoordinates} Rectangular coordinates.
  */
-export function positionB1950 (earth, jde) { // (e *pp.V87Planet, jde float64)  (x, y, z float64)
+export function positionB1950(earth, jde) {
+  // (e *pp.V87Planet, jde float64)  (x, y, z float64)
   const { x, y, z } = xyz(earth, jde)
   return {
     x: 0.999925702634 * x + 0.012189716217 * y + 0.000011134016 * z,
@@ -107,23 +111,20 @@ const θt = [2004.3109, -0.42665, -0.041833]
  * Position will be computed for given Julian day "jde" but referenced to mean
  * equinox "epoch" (year).
  *
- * @param {planetposition.Planet} earth - VSOP87Planet Earth
+ * @param {import('./planetposition.js').Planet} earth - VSOP87Planet Earth
  * @param {Number} jde - Julian ephemeris day
  * @param {Number} epoch
- * @return {object} rectangular coordinates
- *   {Number} x
- *   {Number} y
- *   {Number} z
+ * @returns {RectangularCoordinates} Rectangular coordinates.
  */
-export function positionEquinox (earth, jde, epoch) {
+export function positionEquinox(earth, jde, epoch) {
   const xyz = positionJ2000(earth, jde)
   const x0 = xyz.x
   const y0 = xyz.y
   const z0 = xyz.z
   const t = (epoch - 2000) * 0.01
-  const ζ = base.horner(t, ζt) * t * Math.PI / 180 / 3600
-  const z = base.horner(t, zt) * t * Math.PI / 180 / 3600
-  const θ = base.horner(t, θt) * t * Math.PI / 180 / 3600
+  const ζ = (base.horner(t, ζt) * t * Math.PI) / 180 / 3600
+  const z = (base.horner(t, zt) * t * Math.PI) / 180 / 3600
+  const θ = (base.horner(t, θt) * t * Math.PI) / 180 / 3600
   const [sζ, cζ] = base.sincos(ζ)
   const [sz, cz] = base.sincos(z)
   const [sθ, cθ] = base.sincos(θ)

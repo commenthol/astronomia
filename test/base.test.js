@@ -17,7 +17,8 @@ describe('#base', function () {
     })
 
     it('JulianYearToJDE J2050', function () {
-      const res = Math.abs((base.JulianYearToJDE(2050) - 2469807.5) / 2469807.5) < 1e-15
+      const res =
+        Math.abs((base.JulianYearToJDE(2050) - 2469807.5) / 2469807.5) < 1e-15
       assert.ok(res)
     })
 
@@ -145,12 +146,12 @@ describe('#base', function () {
       it('PMod deg', function () {
         // Accordingly, PMod cannot rescue any precision, whether done on degrees
         // or radians.
-        const res = Math.sin(base.pmod(W, 360) * Math.PI / 180)
+        const res = Math.sin((base.pmod(W, 360) * Math.PI) / 180)
         assert.strictEqual(res, 0.04290970351307828)
       })
 
       it('PMod rad', function () {
-        const res = Math.sin(base.pmod(W * Math.PI / 180, 2 * Math.PI))
+        const res = Math.sin(base.pmod((W * Math.PI) / 180, 2 * Math.PI))
         // assert.strictEqual(res, 0.04290970350643808) // Go
         assert.strictEqual(res, 0.042909703520976596)
       })

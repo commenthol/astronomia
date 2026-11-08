@@ -25,8 +25,13 @@ const D2R = Math.PI / 180
  * the distance from Sun to Earth.  All distances in AU.
  *
  * Result in radians.
+ * @param {number} r - Planet-to-Sun distance in AU.
+ * @param {number} Δ - Planet-to-Earth distance in AU.
+ * @param {number} R - Earth-to-Sun distance in AU.
+ * @returns {number} Phase angle in radians.
  */
-export function phaseAngle (r, Δ, R) { // (r, Δ, R float64)  float64
+export function phaseAngle(r, Δ, R) {
+  // (r, Δ, R float64)  float64
   return Math.acos((r * r + Δ * Δ - R * R) / (2 * r * Δ))
 }
 
@@ -35,8 +40,13 @@ export function phaseAngle (r, Δ, R) { // (r, Δ, R float64)  float64
  *
  * Argument r is planet's distance to Sun, Δ its distance to Earth, and R
  * the distance from Sun to Earth.  All distances in AU.
+ * @param {number} r - Planet-to-Sun distance in AU.
+ * @param {number} Δ - Planet-to-Earth distance in AU.
+ * @param {number} R - Earth-to-Sun distance in AU.
+ * @returns {number} Illuminated fraction of the planetary disk.
  */
-export function fraction (r, Δ, R) { // (r, Δ, R float64)  float64
+export function fraction(r, Δ, R) {
+  // (r, Δ, R float64)  float64
   // (41.2) p. 283
   const s = r + Δ
   return (s * s - R * R) / (4 * r * Δ)
@@ -50,8 +60,16 @@ export function fraction (r, Δ, R) { // (r, Δ, R float64)  float64
  * the planet.  All distances in AU, angles in radians.
  *
  * The phase angle result is in radians.
+ * @param {number} L - Planet heliocentric ecliptic longitude in radians.
+ * @param {number} B - Planet heliocentric ecliptic latitude in radians.
+ * @param {number} R - Planet heliocentric distance in AU.
+ * @param {number} L0 - Earth's heliocentric longitude in radians.
+ * @param {number} R0 - Earth's heliocentric distance in AU.
+ * @param {number} Δ - Planet-to-Earth distance in AU.
+ * @returns {number} Phase angle in radians.
  */
-export function phaseAngle2 (L, B, R, L0, R0, Δ) { // (L, B, R, L0, R0, Δ float64)  float64
+export function phaseAngle2(L, B, R, L0, R0, Δ) {
+  // (L, B, R, L0, R0, Δ float64)  float64
   // (41.3) p. 283
   return Math.acos((R - R0 * Math.cos(B) * Math.cos(L - L0)) / Δ)
 }
@@ -64,8 +82,16 @@ export function phaseAngle2 (L, B, R, L0, R0, Δ) { // (L, B, R, L0, R0, Δ floa
  * from Earth to the planet.  All distances in AU, angles in radians.
  *
  * The phase angle result is in radians.
+ * @param {number} L - Planet heliocentric ecliptic longitude in radians.
+ * @param {number} B - Planet heliocentric ecliptic latitude in radians.
+ * @param {number} x - Planet rectangular x-coordinate.
+ * @param {number} y - Planet rectangular y-coordinate.
+ * @param {number} z - Planet rectangular z-coordinate.
+ * @param {number} Δ - Planet-to-Earth distance in AU.
+ * @returns {number} Phase angle in radians.
  */
-export function phaseAngle3 (L, B, x, y, z, Δ) { // (L, B, x, y, z, Δ float64)  float64
+export function phaseAngle3(L, B, x, y, z, Δ) {
+  // (L, B, x, y, z, Δ float64)  float64
   // (41.4) p. 283
   const [sL, cL] = base.sincos(L)
   const [sB, cB] = base.sincos(B)
@@ -74,8 +100,11 @@ export function phaseAngle3 (L, B, x, y, z, Δ) { // (L, B, x, y, z, Δ float64)
 
 /**
  * FractionVenus computes an approximation of the illumanted fraction of Venus.
+ * @param {number} jde - Julian ephemeris day.
+ * @returns {number} Approximate illuminated fraction of Venus.
  */
-export function fractionVenus (jde) { // (jde float64)  float64
+export function fractionVenus(jde) {
+  // (jde float64)  float64
   const T = base.J2000Century(jde)
   const V = (261.51 + 22518.443 * T) * D2R
   const M = (177.53 + 35999.05 * T) * D2R
@@ -92,8 +121,13 @@ export function fractionVenus (jde) { // (jde float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
+ * @param {number} r - Mercury's distance from the Sun in AU.
+ * @param {number} Δ - Mercury's distance from Earth in AU.
+ * @param {number} i - Phase angle in radians.
+ * @returns {number} Visual magnitude of Mercury.
  */
-export function mercury (r, Δ, i) { // (r, Δ, i float64)  float64
+export function mercury(r, Δ, i) {
+  // (r, Δ, i float64)  float64
   const s = toDeg(i) - 50
   return 1.16 + 5 * Math.log10(r * Δ) + (0.02838 + 0.0001023 * s) * s
 }
@@ -104,10 +138,17 @@ export function mercury (r, Δ, i) { // (r, Δ, i float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
+ * @param {number} r - Venus's distance from the Sun in AU.
+ * @param {number} Δ - Venus's distance from Earth in AU.
+ * @param {number} i - Phase angle in radians.
+ * @returns {number} Visual magnitude of Venus.
  */
-export function venus (r, Δ, i) { // (r, Δ, i float64)  float64
+export function venus(r, Δ, i) {
+  // (r, Δ, i float64)  float64
   const iDeg = toDeg(i)
-  return -4 + 5 * Math.log10(r * Δ) + (0.01322 + 0.0000004247 * iDeg * iDeg) * iDeg
+  return (
+    -4 + 5 * Math.log10(r * Δ) + (0.01322 + 0.0000004247 * iDeg * iDeg) * iDeg
+  )
 }
 
 /**
@@ -116,8 +157,13 @@ export function venus (r, Δ, i) { // (r, Δ, i float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
+ * @param {number} r - Mars's distance from the Sun in AU.
+ * @param {number} Δ - Mars's distance from Earth in AU.
+ * @param {number} i - Phase angle in radians.
+ * @returns {number} Visual magnitude of Mars.
  */
-export function mars (r, Δ, i) { // (r, Δ, i float64)  float64
+export function mars(r, Δ, i) {
+  // (r, Δ, i float64)  float64
   return -1.3 + 5 * Math.log10(r * Δ) + 0.01486 * toDeg(i)
 }
 
@@ -127,8 +173,12 @@ export function mars (r, Δ, i) { // (r, Δ, i float64)  float64
  * Effect of phase not considered
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
+ * @param {number} r - Jupiter's distance from the Sun in AU.
+ * @param {number} Δ - Jupiter's distance from Earth in AU.
+ * @returns {number} Visual magnitude of Jupiter.
  */
-export function jupiter (r, Δ) { // (r, Δ float64)  float64
+export function jupiter(r, Δ) {
+  // (r, Δ float64)  float64
   return -8.93 + 5 * Math.log10(r * Δ)
 }
 
@@ -143,10 +193,22 @@ export function jupiter (r, Δ) { // (r, Δ float64)  float64
  * ΔU (in radians) is the difference between the Saturnicentric longitudes
  * of the Sun and the Earth, measured in the plane of the ring.
  * You can use saturndisk.Disk() to obtain B and ΔU.
+ * @param {number} r - Saturn's distance from the Sun in AU.
+ * @param {number} Δ - Saturn's distance from Earth in AU.
+ * @param {number} B - Saturnicentric latitude of Earth in radians.
+ * @param {number} ΔU - Difference in Saturnicentric longitudes in radians.
+ * @returns {number} Visual magnitude of Saturn.
  */
-export function saturn (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
+export function saturn(r, Δ, B, ΔU) {
+  // (r, Δ, B, ΔU float64)  float64
   const s = Math.sin(Math.abs(B))
-  return -8.68 + 5 * Math.log10(r * Δ) + 0.044 * Math.abs(toDeg(ΔU)) - 2.6 * s + 1.25 * s * s
+  return (
+    -8.68 +
+    5 * Math.log10(r * Δ) +
+    0.044 * Math.abs(toDeg(ΔU)) -
+    2.6 * s +
+    1.25 * s * s
+  )
 }
 
 /**
@@ -154,8 +216,12 @@ export function saturn (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
  * Formula by G. Müller
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
+ * @param {number} r - Uranus's distance from the Sun in AU.
+ * @param {number} Δ - Uranus's distance from Earth in AU.
+ * @returns {number} Visual magnitude of Uranus.
  */
-export function uranus (r, Δ) { // (r, Δ float64)  float64
+export function uranus(r, Δ) {
+  // (r, Δ float64)  float64
   return -6.85 + 5 * Math.log10(r * Δ)
 }
 
@@ -164,8 +230,12 @@ export function uranus (r, Δ) { // (r, Δ float64)  float64
  * Formulae by G. Müller
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
+ * @param {number} r - Neptune's distance from the Sun in AU.
+ * @param {number} Δ - Neptune's distance from Earth in AU.
+ * @returns {number} Visual magnitude of Neptune.
  */
-export function neptune (r, Δ) { // (r, Δ float64)  float64
+export function neptune(r, Δ) {
+  // (r, Δ float64)  float64
   return -7.05 + 5 * Math.log10(r * Δ)
 }
 
@@ -175,10 +245,20 @@ export function neptune (r, Δ) { // (r, Δ float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
+ * @param {number} r - Mercury's distance from the Sun in AU.
+ * @param {number} Δ - Mercury's distance from Earth in AU.
+ * @param {number} i - Phase angle in radians.
+ * @returns {number} Visual magnitude of Mercury using the 1984 formula.
  */
-export function mercury84 (r, Δ, i) { // (r, Δ, i float64)  float64
-  return base.horner(toDeg(i), -0.42 + 5 * Math.log10(r * Δ),
-    0.038, -0.000273, 0.000002)
+export function mercury84(r, Δ, i) {
+  // (r, Δ, i float64)  float64
+  return base.horner(
+    toDeg(i),
+    -0.42 + 5 * Math.log10(r * Δ),
+    0.038,
+    -0.000273,
+    0.000002
+  )
 }
 
 /**
@@ -187,10 +267,20 @@ export function mercury84 (r, Δ, i) { // (r, Δ, i float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
+ * @param {number} r - Venus's distance from the Sun in AU.
+ * @param {number} Δ - Venus's distance from Earth in AU.
+ * @param {number} i - Phase angle in radians.
+ * @returns {number} Visual magnitude of Venus using the 1984 formula.
  */
-export function venus84 (r, Δ, i) { // (r, Δ, i float64)  float64
-  return base.horner(toDeg(i), -4.4 + 5 * Math.log10(r * Δ),
-    0.0009, 0.000239, -0.00000065)
+export function venus84(r, Δ, i) {
+  // (r, Δ, i float64)  float64
+  return base.horner(
+    toDeg(i),
+    -4.4 + 5 * Math.log10(r * Δ),
+    0.0009,
+    0.000239,
+    -0.00000065
+  )
 }
 
 /**
@@ -199,8 +289,13 @@ export function venus84 (r, Δ, i) { // (r, Δ, i float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
+ * @param {number} r - Mars's distance from the Sun in AU.
+ * @param {number} Δ - Mars's distance from Earth in AU.
+ * @param {number} i - Phase angle in radians.
+ * @returns {number} Visual magnitude of Mars using the 1984 formula.
  */
-export function mars84 (r, Δ, i) { // (r, Δ, i float64)  float64
+export function mars84(r, Δ, i) {
+  // (r, Δ, i float64)  float64
   return -1.52 + 5 * Math.log10(r * Δ) + 0.016 * toDeg(i)
 }
 
@@ -210,8 +305,13 @@ export function mars84 (r, Δ, i) { // (r, Δ, i float64)  float64
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth,
  * and i the phase angle in radians.
+ * @param {number} r - Jupiter's distance from the Sun in AU.
+ * @param {number} Δ - Jupiter's distance from Earth in AU.
+ * @param {number} i - Phase angle in radians.
+ * @returns {number} Visual magnitude of Jupiter using the 1984 formula.
  */
-export function jupiter84 (r, Δ, i) { // (r, Δ, i float64)  float64
+export function jupiter84(r, Δ, i) {
+  // (r, Δ, i float64)  float64
   return -9.4 + 5 * Math.log10(r * Δ) + 0.005 * toDeg(i)
 }
 
@@ -224,10 +324,22 @@ export function jupiter84 (r, Δ, i) { // (r, Δ, i float64)  float64
  * Saturn's ring.
  * ΔU (in radians) is the difference between the Saturnicentric longitudes
  * of the Sun and the Earth, measured in the plane of the ring.
+ * @param {number} r - Saturn's distance from the Sun in AU.
+ * @param {number} Δ - Saturn's distance from Earth in AU.
+ * @param {number} B - Saturnicentric latitude of Earth in radians.
+ * @param {number} ΔU - Difference in Saturnicentric longitudes in radians.
+ * @returns {number} Visual magnitude of Saturn using the 1984 formula.
  */
-export function saturn84 (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
+export function saturn84(r, Δ, B, ΔU) {
+  // (r, Δ, B, ΔU float64)  float64
   const s = Math.sin(Math.abs(B))
-  return -8.88 + 5 * Math.log10(r * Δ) + 0.044 * Math.abs(toDeg(ΔU)) - 2.6 * s + 1.25 * s * s
+  return (
+    -8.88 +
+    5 * Math.log10(r * Δ) +
+    0.044 * Math.abs(toDeg(ΔU)) -
+    2.6 * s +
+    1.25 * s * s
+  )
 }
 
 /**
@@ -235,8 +347,12 @@ export function saturn84 (r, Δ, B, ΔU) { // (r, Δ, B, ΔU float64)  float64
  * The formula is that adopted in "Astronomical Almanac" in 1984.0
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
+ * @param {number} r - Uranus's distance from the Sun in AU.
+ * @param {number} Δ - Uranus's distance from Earth in AU.
+ * @returns {number} Visual magnitude of Uranus using the 1984 formula.
  */
-export function uranus84 (r, Δ) { // (r, Δ float64)  float64
+export function uranus84(r, Δ) {
+  // (r, Δ float64)  float64
   return -7.19 + 5 * Math.log10(r * Δ)
 }
 
@@ -245,8 +361,12 @@ export function uranus84 (r, Δ) { // (r, Δ float64)  float64
  * The formula is that adopted in "Astronomical Almanac" in 1984.0
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
+ * @param {number} r - Neptune's distance from the Sun in AU.
+ * @param {number} Δ - Neptune's distance from Earth in AU.
+ * @returns {number} Visual magnitude of Neptune using the 1984 formula.
  */
-export function neptune84 (r, Δ) { // (r, Δ float64)  float64
+export function neptune84(r, Δ) {
+  // (r, Δ float64)  float64
   return -6.87 + 5 * Math.log10(r * Δ)
 }
 
@@ -255,8 +375,12 @@ export function neptune84 (r, Δ) { // (r, Δ float64)  float64
  * The formula is that adopted in "Astronomical Almanac" in 1984.0
  *
  * Argument r is the planet's distance from the Sun, Δ the distance from Earth.
+ * @param {number} r - Pluto's distance from the Sun in AU.
+ * @param {number} Δ - Pluto's distance from Earth in AU.
+ * @returns {number} Visual magnitude of Pluto using the 1984 formula.
  */
-export function pluto84 (r, Δ) { // (r, Δ float64)  float64
+export function pluto84(r, Δ) {
+  // (r, Δ float64)  float64
   return -1 + 5 * Math.log10(r * Δ)
 }
 

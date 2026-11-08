@@ -14,15 +14,16 @@
  */
 export class Angle {
   /**
-  * constructs a new Angle value from sign, degree, minute, and second
-  * components.
-  * @param {Number|Boolean} angleOrNeg - angle in radians or sign, true if negative (required to attribute -0°30')
-  * __Four arguments__
-  * @param {Number} [d] - (int) degree
-  * @param {Number} [m] - (int) minute
-  * @param {Number} [s] - (float) second
-  */
-  constructor (angleOrNeg, d, m, s) {
+   * constructs a new Angle value from sign, degree, minute, and second
+   * components.
+   * @param {Number|Boolean} angleOrNeg - angle in radians or sign, true if negative (required to attribute -0°30')
+   * __Four arguments__
+   * @param {Number} [d] - (int) degree
+   * @param {Number} [m] - (int) minute
+   * @param {Number} [s] - (float) second
+   * @param {...unknown} _args - Additional arguments are ignored.
+   */
+  constructor(angleOrNeg, d, m, s, ..._args) {
     if (arguments.length === 1) {
       this.angle = Number(angleOrNeg)
     } else {
@@ -40,8 +41,8 @@ export class Angle {
    * @param {Number} s - (float) second
    * @returns {Angle}
    */
-  setDMS (neg = false, d = 0, m = 0, s = 0.0) {
-    this.angle = (DMSToDeg(neg, d, m, s) * Math.PI / 180)
+  setDMS(neg = false, d = 0, m = 0, s = 0.0) {
+    this.angle = (DMSToDeg(neg, d, m, s) * Math.PI) / 180
     return this
   }
 
@@ -50,7 +51,7 @@ export class Angle {
    * @param {Number} angle - (float) angle in radians
    * @returns {Angle}
    */
-  setAngle (angle) {
+  setAngle(angle) {
     this.angle = angle
     return this
   }
@@ -59,7 +60,7 @@ export class Angle {
    * Rad returns the angle in radians.
    * @returns {Number} angle in radians
    */
-  rad () {
+  rad() {
     return this.angle
   }
 
@@ -67,14 +68,15 @@ export class Angle {
    * Deg returns the angle in degrees.
    * @returns {Number} angle in degree
    */
-  deg () {
-    return this.angle * 180 / Math.PI
+  deg() {
+    return (this.angle * 180) / Math.PI
   }
 
   /**
    * toDMS converts to parsed sexagesimal angle component.
+   * @returns {[boolean, number, number, number]} Sign, degrees, minutes, and seconds.
    */
-  toDMS () {
+  toDMS() {
     return degToDMS(this.deg())
   }
 
@@ -83,13 +85,10 @@ export class Angle {
    * @param {Number} [precision] - precision of `s.ss`
    * @returns {String}
    */
-  toString (precision) {
-    let [neg, d, m, s] = this.toDMS()
-    s = round(s, precision).toString().replace(/^0\./, '.')
-    const str = (neg ? '-' : '') +
-      (d + '°') +
-      (m + '′') +
-      (s + '″')
+  toString(precision) {
+    const [neg, d, m, s] = this.toDMS()
+    const seconds = round(s, precision).toString().replace(/^0\./, '.')
+    const str = (neg ? '-' : '') + (d + '°') + (m + '′') + (seconds + '″')
     return str
   }
 
@@ -134,8 +133,8 @@ export class HourAngle extends Angle {
    * @param {Number} s - (float) second
    * @returns {Angle}
    */
-  setDMS (neg = false, h = 0, m = 0, s = 0.0) {
-    this.angle = (DMSToDeg(neg, h, m, s) * 15 * Math.PI / 180)
+  setDMS(neg = false, h = 0, m = 0, s = 0.0) {
+    this.angle = (DMSToDeg(neg, h, m, s) * 15 * Math.PI) / 180
     return this
   }
 
@@ -143,11 +142,12 @@ export class HourAngle extends Angle {
    * Hour returns the hour angle as hours of time.
    * @returns hour angle
    */
-  hour () {
-    return this.angle * 12 / Math.PI // 12 = 180 / 15
+  hour() {
+    return (this.angle * 12) / Math.PI // 12 = 180 / 15
   }
 
-  deg () {
+  /** @returns {number} Hour angle in hours. */
+  deg() {
     return this.hour()
   }
 
@@ -156,13 +156,10 @@ export class HourAngle extends Angle {
    * @param {Number} precision - precision of `s.ss`
    * @returns {String}
    */
-  toString (precision) {
-    let [neg, h, m, s] = this.toDMS()
-    s = round(s, precision).toString().replace(/^0\./, '.')
-    const str = (neg ? '-' : '') +
-      (h + 'ʰ') +
-      (m + 'ᵐ') +
-      (s + 'ˢ')
+  toString(precision) {
+    const [neg, h, m, s] = this.toDMS()
+    const seconds = round(s, precision).toString().replace(/^0\./, '.')
+    const str = (neg ? '-' : '') + (h + 'ʰ') + (m + 'ᵐ') + (seconds + 'ˢ')
     return str
   }
 }
@@ -176,8 +173,8 @@ export class HourAngle extends Angle {
  * @param {Number} s - (float) second
  * @returns {Number} angle in degree
  */
-export function DMSToDeg (neg, d, m, s) {
-  s = (((d * 60 + m) * 60) + s) / 3600
+export function DMSToDeg(neg, d, m, s) {
+  s = ((d * 60 + m) * 60 + s) / 3600
   if (neg) {
     return -s
   }
@@ -187,14 +184,10 @@ export function DMSToDeg (neg, d, m, s) {
 /**
  * DegToDMS converts from decimal degrees to parsed sexagesimal angle component.
  * @param {Number} deg - angle in degree
- * @returns {Array} [neg, d, m, s]
- *  {Boolean} neg - sign, true if negative
- *  {Number} d - (int) degree
- *  {Number} m - (int) minute
- *  {Number} s - (float) second
+ * @returns {[boolean, number, number, number]} Sign, degrees, minutes, and seconds.
  */
-export function degToDMS (deg) {
-  const neg = (deg < 0)
+export function degToDMS(deg) {
+  const neg = deg < 0
   deg = Math.abs(deg)
   let [d, s] = modf(deg % 360)
   const [m, s1] = modf(s * 60)
@@ -210,20 +203,22 @@ export class RA extends HourAngle {
    * @param {Number} h - (int) hour
    * @param {Number} m - (int) minute
    * @param {Number} s - (float) second
+   * @param {...unknown} _args - Additional arguments are ignored.
    */
-  constructor (h = 0, m = 0, s = 0) {
+  constructor(h = 0, m = 0, s = 0, ..._args) {
     super(false, h, m, s)
     const args = [].slice.call(arguments)
     if (args.length === 1) {
       this.angle = h
     } else {
       const hr = DMSToDeg(false, h, m, s) % 24
-      this.angle = hr * 15 * Math.PI / 180
+      this.angle = (hr * 15 * Math.PI) / 180
     }
   }
 
-  hour () {
-    const h = this.angle * 12 / Math.PI
+  /** @returns {number} Right ascension in the range [0, 24) hours. */
+  hour() {
+    const h = (this.angle * 12) / Math.PI
     return (24 + (h % 24)) % 24
   }
 }
@@ -242,7 +237,7 @@ export class Time {
    * new sexa.Time(SECS_OF_DAY)
    * new sexa.Time(false, 15, 22, 7)
    */
-  constructor (negOrTimeInSecs, h, m, s) {
+  constructor(negOrTimeInSecs, h, m, s) {
     if (typeof negOrTimeInSecs === 'number') {
       this.time = negOrTimeInSecs
     } else {
@@ -250,8 +245,16 @@ export class Time {
     }
   }
 
-  setHMS (neg = false, h = 0, m = 0, s = 0) {
-    s += ((h * 60 + m) * 60)
+  /**
+   * Set time from sign, hour, minute, and second components.
+   * @param {boolean} [neg=false] - Whether the time is negative.
+   * @param {number} [h=0] - Hours.
+   * @param {number} [m=0] - Minutes.
+   * @param {number} [s=0] - Seconds.
+   * @returns {void}
+   */
+  setHMS(neg = false, h = 0, m = 0, s = 0) {
+    s += (h * 60 + m) * 60
     if (neg) {
       s = -s
     }
@@ -261,54 +264,50 @@ export class Time {
   /**
    * @returns {Number} time in seconds.
    */
-  sec () {
+  sec() {
     return this.time
   }
 
   /**
    * @returns {Number} time in minutes.
    */
-  min () {
+  min() {
     return this.time / 60
   }
 
   /**
    * @returns {Number} time in hours.
    */
-  hour () {
+  hour() {
     return this.time / 3600
   }
 
   /**
    * @returns {Number} time in days.
    */
-  day () {
+  day() {
     return this.time / 3600 / 24
   }
 
   /**
    * @returns {Number} time in radians, where 1 day = 2 Pi radians.
    */
-  rad () {
-    return this.time * Math.PI / 12 / 3600
+  rad() {
+    return (this.time * Math.PI) / 12 / 3600
   }
 
   /**
    * convert time to HMS
-   * @returns {Array} [neg, h, m, s]
-   *  {Boolean} neg - sign, true if negative
-   *  {Number} h - (int) hour
-   *  {Number} m - (int) minute
-   *  {Number} s - (float) second
+   * @returns {[boolean, number, number, number]} Sign, hours, minutes, and seconds.
    */
-  toHMS () {
+  toHMS() {
     let t = this.time
-    const neg = (t < 0)
-    t = (neg ? -t : t)
+    const neg = t < 0
+    t = neg ? -t : t
     const h = Math.trunc(t / 3600)
-    t = t - (h * 3600)
+    t = t - h * 3600
     const m = Math.trunc(t / 60)
-    const s = t - (m * 60)
+    const s = t - m * 60
     return [neg, h, m, s]
   }
 
@@ -317,7 +316,7 @@ export class Time {
    * @param {Number} precision - precision of `.ss`
    * @returns {String}
    */
-  toString (precision) {
+  toString(precision) {
     const [neg, h, m, s] = this.toHMS()
     let [si, sf] = modf(s)
     if (precision === 0) {
@@ -326,22 +325,25 @@ export class Time {
     } else {
       sf = round(sf, precision).toString().substr(1)
     }
-    const str = (neg ? '-' : '') +
-      (h + 'ʰ') +
-      (m + 'ᵐ') +
-      (si + 'ˢ') +
-      (sf || '')
+    const str =
+      (neg ? '-' : '') + (h + 'ʰ') + (m + 'ᵐ') + (si + 'ˢ') + (sf || '')
     return str
   }
 }
 
 // units
-export const angleFromDeg = (deg) => deg * Math.PI / 180
-export const angleFromMin = (min) => min / 60 * Math.PI / 180
-export const angleFromSec = (sec) => sec / 3600 * Math.PI / 180
-export const degFromAngle = (angle) => angle * 180 / Math.PI
-export const secFromAngle = (angle) => angle * 3600 * 180 / Math.PI
-export const secFromHourAngle = (ha) => ha * 240 * 180 / Math.PI
+/** @param {number} deg - Angle in degrees. @returns {number} Angle in radians. */
+export const angleFromDeg = (deg) => (deg * Math.PI) / 180
+/** @param {number} min - Angle in arcminutes. @returns {number} Angle in radians. */
+export const angleFromMin = (min) => ((min / 60) * Math.PI) / 180
+/** @param {number} sec - Angle in arcseconds. @returns {number} Angle in radians. */
+export const angleFromSec = (sec) => ((sec / 3600) * Math.PI) / 180
+/** @param {number} angle - Angle in radians. @returns {number} Angle in degrees. */
+export const degFromAngle = (angle) => (angle * 180) / Math.PI
+/** @param {number} angle - Angle in radians. @returns {number} Angle in arcseconds. */
+export const secFromAngle = (angle) => (angle * 3600 * 180) / Math.PI
+/** @param {number} ha - Hour angle in radians. @returns {number} Hour angle in seconds of time. */
+export const secFromHourAngle = (ha) => (ha * 240 * 180) / Math.PI
 
 /**
  * separate fix `i` from fraction `f`
@@ -351,7 +353,7 @@ export const secFromHourAngle = (ha) => ha * 240 * 180 / Math.PI
  *  {Number} i - (int) fix value
  *  {Number} f - (float) fractional portion; always > 1
  */
-function modf (float) {
+function modf(float) {
   const i = Math.trunc(float)
   const f = Math.abs(float - i)
   return [i, f]
@@ -364,7 +366,7 @@ function modf (float) {
  * @param {Number} [precision] - (int) number of post decimal positions
  * @return {Number} rounded `float`
  */
-function round (float, precision = 10) {
+function round(float, precision = 10) {
   return parseFloat(float.toFixed(precision))
 }
 

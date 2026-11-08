@@ -8,12 +8,12 @@
  * Parallax: Chapter 40, Correction for Parallax.
  */
 
-import base, { Coord } from './base.js' // eslint-disable-line no-unused-vars
+import base, { Coord } from './base.js'
 import globe from './globe.js'
 import sidereal from './sidereal.js'
 import sexa from './sexagesimal.js'
 
-const horPar = (8.794 / 3600) * Math.PI / 180 // 8".794 arcseconds in radians
+const horPar = ((8.794 / 3600) * Math.PI) / 180 // 8".794 arcseconds in radians
 
 /**
  * Horizontal returns equatorial horizontal parallax of a body.
@@ -21,7 +21,7 @@ const horPar = (8.794 / 3600) * Math.PI / 180 // 8".794 arcseconds in radians
  * @param {number} Δ - distance in AU.
  * @return {number} parallax in radians.
  */
-export function horizontal (Δ) {
+export function horizontal(Δ) {
   // (40.1) p. 279
   return Math.asin(Math.sin(horPar) / Δ)
   // return horPar / Δ // with sufficient accuracy
@@ -42,7 +42,7 @@ export function horizontal (Δ) {
  * @param {number} jde - time of observation
  * @return {Coord} observed topocentric ra and dec in radians.
  */
-export function topocentric (c, ρsφ, ρcφ, lon, jde) {
+export function topocentric(c, ρsφ, ρcφ, lon, jde) {
   const [α, δ, Δ] = [c.ra, c.dec, c.range]
   const π = horizontal(Δ)
   const θ0 = new sexa.Time(sidereal.apparent(jde)).rad()
@@ -70,14 +70,14 @@ export function topocentric (c, ρsφ, ρcφ, lon, jde) {
  * @param {number} jde - time of observation
  * @return {Coord} observed topocentric ra and dec in radians.
  */
-export function topocentric2 (c, ρsφ, ρcφ, lon, jde) {
+export function topocentric2(c, ρsφ, ρcφ, lon, jde) {
   const [α, δ, Δ] = [c.ra, c.dec, c.range]
   const π = horizontal(Δ)
   const θ0 = new sexa.Time(sidereal.apparent(jde)).rad()
   const H = base.pmod(θ0 - lon - α, 2 * Math.PI)
   const [sH, cH] = base.sincos(H)
   const [sδ, cδ] = base.sincos(δ)
-  const Δα = -π * ρcφ * sH / cδ // (40.4) p. 280
+  const Δα = (-π * ρcφ * sH) / cδ // (40.4) p. 280
   const Δδ = -π * (ρsφ * cδ - ρcφ * cH * sδ) // (40.5) p. 280
   return new base.Coord(Δα, Δδ)
 }
@@ -94,11 +94,9 @@ export function topocentric2 (c, ρsφ, ρcφ, lon, jde) {
  * @param {number} ρcφ - parallax constants (see package globe.)
  * @param {number} lon - geographic longitude of the observer (measured positively westwards!)
  * @param {number} jde - time of observation
- * @return {Array}
- *    {number} H_ - topocentric hour angle
- *    {number} δ_ - topocentric declination
+ * @return {[number, number]} Topocentric hour angle and declination, in radians.
  */
-export function topocentric3 (c, ρsφ, ρcφ, lon, jde) {
+export function topocentric3(c, ρsφ, ρcφ, lon, jde) {
   const [α, δ, Δ] = [c.ra, c.dec, c.range]
   const π = horizontal(Δ)
   const θ0 = new sexa.Time(sidereal.apparent(jde)).rad()
@@ -133,12 +131,9 @@ export function topocentric3 (c, ρsφ, ρcφ, lon, jde) {
  * @param {number} ε - is the obliquity of the ecliptic
  * @param {number} θ - local sidereal time
  * @param {number} π - equatorial horizontal parallax of the body
- * @return {Array}
- *    {number} λ_ - observed topocentric longitude
- *    {number} β_ - observed topocentric latitude
- *    {number} s_ - observed topocentric semidiameter
+ * @return {[number, number, number]} Topocentric longitude, latitude, and semidiameter, in radians.
  */
-export function topocentricEcliptical (c, s, φ, h, ε, θ, π) {
+export function topocentricEcliptical(c, s, φ, h, ε, θ, π) {
   const [λ, β] = [c.lon, c.lat]
   const [S, C] = globe.Earth76.parallaxConstants(φ, h)
   const [sλ, cλ] = base.sincos(λ)
@@ -152,8 +147,8 @@ export function topocentricEcliptical (c, s, φ, h, ε, θ, π) {
     λ_ += 2 * Math.PI
   }
   const cλ_ = Math.cos(λ_)
-  const β_ = Math.atan(cλ_ * (sβ - sπ * (S * cε - C * sε * sθ)) / N)
-  const s_ = Math.asin(cλ_ * Math.cos(β_) * Math.sin(s) / N)
+  const β_ = Math.atan((cλ_ * (sβ - sπ * (S * cε - C * sε * sθ))) / N)
+  const s_ = Math.asin((cλ_ * Math.cos(β_) * Math.sin(s)) / N)
   return [λ_, β_, s_]
 }
 

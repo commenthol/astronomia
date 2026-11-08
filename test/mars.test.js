@@ -5,7 +5,7 @@ import data from '../data/index.js'
 
 describe('#mars', function () {
   it('physical()', function () {
-  // Example 42.a, p. 291
+    // Example 42.a, p. 291
     const e = new planetposition.Planet(data.earth)
     const m = new planetposition.Planet(data.mars)
     const re = mars.physical(2448935.500683, e, m)
@@ -18,14 +18,14 @@ describe('#mars', function () {
     const k = re[6]
     const q = re[7]
     const res = [
-      float(DE * 180 / Math.PI).toFixed(2),
-      float(DS * 180 / Math.PI).toFixed(2),
-      float(ω * 180 / Math.PI).toFixed(2),
-      float(P * 180 / Math.PI).toFixed(2),
-      float(Q * 180 / Math.PI).toFixed(2),
-      float(d * 180 / Math.PI * 60 * 60).toFixed(2), // display as arc sec
+      float((DE * 180) / Math.PI).toFixed(2),
+      float((DS * 180) / Math.PI).toFixed(2),
+      float((ω * 180) / Math.PI).toFixed(2),
+      float((P * 180) / Math.PI).toFixed(2),
+      float((Q * 180) / Math.PI).toFixed(2),
+      float(((d * 180) / Math.PI) * 60 * 60).toFixed(2), // display as arc sec
       float(k).toFixed(4),
-      float(q * 180 / Math.PI * 60 * 60).toFixed(2) // display as arc sec
+      float(((q * 180) / Math.PI) * 60 * 60).toFixed(2) // display as arc sec
     ]
     const exp = [
       +12.44, // DE

@@ -25,6 +25,13 @@ const { acos, asin, cos, sin } = Math
  * @property {number} rise - in seconds
  * @property {number} transit - in seconds
  * @property {number} set - in seconds
+ * @typedef {object} RiseTimes
+ * @property {number|Date} rise - Rise time as Julian day or Date.
+ * @property {number|Date} transit - Transit time as Julian day or Date.
+ * @property {number|Date} set - Set time as Julian day or Date.
+ * @typedef {object} PlanetRiseOptions
+ * @property {boolean} [date] - Return times as Date objects.
+ * @property {number} [refraction] - Refraction correction in radians.
  */
 
 const SECS_PER_DEGREE = 240 // = 86400 / 360
@@ -59,7 +66,7 @@ export const stdh0 = {
  * @param {number} [corr] - the calcluated refraction e.g. from package `refraction` in radians
  * @return {number} refraction value in radians
  */
-export function refraction (h0, corr) {
+export function refraction(h0, corr) {
   if (!corr) {
     return h0
   } else {
@@ -69,17 +76,24 @@ export function refraction (h0, corr) {
 
 /**
  * standard altitude for stars, planets at apparent rising, seting
+ * @param {number} [_refraction] - Optional refraction correction in radians.
+ * @returns {number} Standard altitude in radians.
  */
-export const stdh0Stellar = (_refraction) => refraction(stdh0.stellar, _refraction)
+export const stdh0Stellar = (_refraction) =>
+  refraction(stdh0.stellar, _refraction)
 export const Stdh0Stellar = stdh0Stellar() // for backward-compatibility
 /**
  * standard altitude for sun for upper limb of the disk
+ * @param {number} [_refraction] - Optional refraction correction in radians.
+ * @returns {number} Standard altitude in radians.
  */
 export const stdh0Solar = (_refraction) => refraction(stdh0.solar, _refraction)
 export const Stdh0Solar = stdh0Solar() // for backward-compatibility
 
 /**
  * standard altitude for moon (low accuracy)
+ * @param {number} [_refraction] - Optional refraction correction in radians.
+ * @returns {number} Standard altitude in radians.
  */
 export const stdh0LunarMean = (_refraction) => {
   return stdh0.lunarMean - refraction(_refraction)
@@ -99,9 +113,12 @@ export const stdh0Lunar = (π, refraction) => {
 export const Stdh0Lunar = stdh0Lunar // for backward-compatibility
 
 /**
- * @return {number} local angle in radians
+ * @param {number} lat - Geographic latitude in radians.
+ * @param {number} h0 - Standard altitude in radians.
+ * @param {number} δ - Declination in radians.
+ * @return {number} Local hour angle in radians.
  */
-export function hourAngle (lat, h0, δ) {
+export function hourAngle(lat, h0, δ) {
   // approximate local hour angle
   const cosH = (sin(h0) - sin(lat) * sin(δ)) / (cos(lat) * cos(δ)) // (15.1) p. 102
   if (cosH < -1) {
@@ -119,9 +136,9 @@ export function hourAngle (lat, h0, δ) {
  * @param {number} th0 - sidereal.apparent0UT in seconds of day `[0...86400[`
  * @return {number} time of transit in seconds of day `[0, 86400[`
  */
-function _mt (lon, α, th0) {
+function _mt(lon, α, th0) {
   // const mt = (((lon + α) * 180 / Math.PI - (th0 * 360 / 86400)) * 86400 / 360)
-  const mt = (lon + α) * SECS_PER_DEGREE * 180 / Math.PI - th0
+  const mt = ((lon + α) * SECS_PER_DEGREE * 180) / Math.PI - th0
   return mt
 }
 
@@ -130,11 +147,11 @@ function _mt (lon, α, th0) {
  * @param {number} m - motion in seconds of day `[0...86400[`
  * @return {number} new siderial time seconds of day `[0...86400[`
  */
-function _th0 (Th0, m) {
+function _th0(Th0, m) {
   // in original formula Th0 = 0...360 and m = 0...1 -> return value would be in 0...360 degrees
   // Th0 /= 240
   // m /= 86400
-  const th0 = base.pmod(Th0 + m * 360.985647 / 360, SECS_PER_DAY) // p103
+  const th0 = base.pmod(Th0 + (m * 360.985647) / 360, SECS_PER_DAY) // p103
   return th0 // 0...86400 in seconds angle
 }
 
@@ -143,10 +160,14 @@ function _th0 (Th0, m) {
  * return value in future will be an object not an array
  * @private
  * @param {RiseObj} rs
- * @return {RiseObj}
+ * @return {RiseObj & [number, number, number]}
  */
-function _compatibility (rs) {
-  const _rs = [rs.rise, rs.transit, rs.set]
+function _compatibility(rs) {
+  const _rs = /** @type {RiseObj & [number, number, number]} */ ([
+    rs.rise,
+    rs.transit,
+    rs.set
+  ])
   _rs.rise = rs.rise
   _rs.transit = rs.transit
   _rs.set = rs.set
@@ -170,8 +191,8 @@ function _compatibility (rs) {
  * @return {RiseObj} Result units are seconds and are in the range [0,86400)
  * @throws Error
  */
-export function approxTimes (p, h0, Th0, α, δ) {
-  const H0 = hourAngle(p.lat, h0, δ) * SECS_PER_DEGREE * 180 / Math.PI // in degrees per day === seconds
+export function approxTimes(p, h0, Th0, α, δ) {
+  const H0 = (hourAngle(p.lat, h0, δ) * SECS_PER_DEGREE * 180) / Math.PI // in degrees per day === seconds
   // approximate transit, rise, set times.
   // (15.2) p. 102.0
   const mt = _mt(p.lon, α, Th0)
@@ -203,7 +224,8 @@ export function approxTimes (p, h0, Th0, α, δ) {
  * @return {RiseObj} Result units are seconds and are in the range [0,86400)
  * @throws Error
  */
-export function times (p, ΔT, h0, Th0, α3, δ3) { // (p globe.Coord, ΔT, h0, Th0 float64, α3, δ3 []float64)  (mRise, mTransit, mSet float64, err error)
+export function times(p, ΔT, h0, Th0, α3, δ3) {
+  // (p globe.Coord, ΔT, h0, Th0 float64, α3, δ3 []float64)  (mRise, mTransit, mSet float64, err error)
   const rs = approxTimes(p, h0, Th0, α3[1], δ3[1])
   const d3α = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, α3)
   const d3δ = new interp.Len3(-SECS_PER_DAY, SECS_PER_DAY, δ3)
@@ -225,8 +247,9 @@ export function times (p, ΔT, h0, Th0, α3, δ3) { // (p globe.Coord, ΔT, h0, 
     const th0 = _th0(Th0, m)
     const H = -1 * _mt(p.lon, α, th0)
     const Hrad = (H / SECS_PER_DEGREE) * D2R
-    const h = asin(((sLat * sin(δ)) + (cLat * cos(δ) * cos(Hrad)))) // formula 13.6
-    const Δm = (SECS_PER_DAY * (h - h0) / (cos(δ) * cLat * sin(Hrad) * 2 * Math.PI)) // formula p103 3
+    const h = asin(sLat * sin(δ) + cLat * cos(δ) * cos(Hrad)) // formula 13.6
+    const Δm =
+      (SECS_PER_DAY * (h - h0)) / (cos(δ) * cLat * sin(Hrad) * 2 * Math.PI) // formula p103 3
     return m + Δm
   }
 
@@ -246,11 +269,9 @@ export class PlanetRise {
    * @param {number} lon - geographic longitude of the observer in degrees (measured positively westward)
    * @param {Planet} earth - VSOP87 Planet object for Earth
    * @param {Planet} planet - VSOP87 Planet object of observed body
-   * @param {object} [opts]
-   * @param {boolean} [opts.date] - return times as Date objects
-   * @param {number} [opts.refraction] - use different refraction than `stdh0Stellar`
+   * @param {PlanetRiseOptions} [opts] - Optional result and refraction settings.
    */
-  constructor (jd, lat, lon, earth, planet, opts) {
+  constructor(jd, lat, lon, earth, planet, opts) {
     this.opts = opts || {}
     this.refraction = this.opts.refraction || stdh0Stellar()
     if (jd instanceof Date) {
@@ -266,17 +287,22 @@ export class PlanetRise {
     this.planet = planet
   }
 
-  approxTimes () {
+  /** @returns {RiseTimes} Approximate rise, transit, and set times. */
+  approxTimes() {
     const body = elliptic.position(this.planet, this.earth, this.jde)
     const Th0 = sidereal.apparent0UT(this.jd)
     const rs = approxTimes(
-      { lat: this.lat, lon: this.lon }, this.refraction,
-      Th0, body.ra, body.dec
+      { lat: this.lat, lon: this.lon },
+      this.refraction,
+      Th0,
+      body.ra,
+      body.dec
     )
     return this._rsToJD(rs)
   }
 
-  times () {
+  /** @returns {RiseTimes} Refined rise, transit, and set times. */
+  times() {
     const body = [
       elliptic.position(this.planet, this.earth, this.jde - 1),
       elliptic.position(this.planet, this.earth, this.jde),
@@ -284,21 +310,34 @@ export class PlanetRise {
     ]
     const Th0 = sidereal.apparent0UT(this.jd)
     const rs = times(
-      { lat: this.lat, lon: this.lon }, this.ΔT, this.refraction,
-      Th0, this._toArr(body, 'ra'), this._toArr(body, 'dec')
+      { lat: this.lat, lon: this.lon },
+      this.ΔT,
+      this.refraction,
+      Th0,
+      this._toArr(body, 'ra'),
+      this._toArr(body, 'dec')
     )
     return this._rsToJD(rs)
   }
 
-  /** @private */
-  _toArr (body, p) {
+  /**
+   * @private
+   * @param {import('./coord.js').Equatorial[]} body - Equatorial positions.
+   * @param {'ra'|'dec'} p - Coordinate property to extract.
+   * @returns {number[]} Coordinate values.
+   */
+  _toArr(body, p) {
     return body.map((item) => {
       return item[p]
     })
   }
 
-  /** @private */
-  _rsToJD (rs) {
+  /**
+   * @private
+   * @param {RiseObj} rs - Rise, transit, and set times in seconds.
+   * @returns {RiseTimes} Times converted to Julian days or Date objects.
+   */
+  _rsToJD(rs) {
     return {
       rise: this._toJD(rs.rise),
       transit: this._toJD(rs.transit),
@@ -306,8 +345,12 @@ export class PlanetRise {
     }
   }
 
-  /** @private */
-  _toJD (secs) {
+  /**
+   * @private
+   * @param {number} secs - Seconds from the start of the day.
+   * @returns {number|Date} Julian day or Date, depending on the options.
+   */
+  _toJD(secs) {
     const jd = this.jd + secs / 86400
     if (this.opts.date) {
       return new julian.Calendar().fromJD(jd).toDate()

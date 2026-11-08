@@ -18,23 +18,23 @@ export class Ellipsoid {
    * @param {number} radius - equatorial radius
    * @param {number} flat - ellipsiod flattening
    */
-  constructor (radius, flat) {
+  constructor(radius, flat) {
     this.radius = radius
     this.flat = flat
   }
 
   /** A is a common identifier for equatorial radius. */
-  A () {
+  A() {
     return this.radius
   }
 
   /** B is a common identifier for polar radius. */
-  B () {
+  B() {
     return this.radius * (1 - this.flat)
   }
 
   /** eccentricity of a meridian. */
-  eccentricity () {
+  eccentricity() {
     return Math.sqrt((2 - this.flat) * this.flat)
   }
 
@@ -48,13 +48,13 @@ export class Ellipsoid {
    * @param {number} h - height in meters above the ellipsoid
    * @return {number[]} [ρ sin φ′, ρ cos φ] parallax constants [ρsφ, ρcφ]
    */
-  parallaxConstants (φ, h) {
+  parallaxConstants(φ, h) {
     const boa = 1 - this.flat
     const su = Math.sin(Math.atan(boa * Math.tan(φ)))
     const cu = Math.cos(Math.atan(boa * Math.tan(φ)))
     const s = Math.sin(φ)
     const c = Math.cos(φ)
-    const hoa = h * 1e-3 / this.radius
+    const hoa = (h * 1e-3) / this.radius
     // (s, c float)
     const ρsφ = su * boa + hoa * s
     const ρcφ = cu + hoa * c
@@ -68,7 +68,7 @@ export class Ellipsoid {
    * @param {number} φ - geographic latitude in radians
    * @returns {number} // TODO
    */
-  rho (φ) {
+  rho(φ) {
     // Magic numbers...
     return 0.9983271 + 0.0016764 * Math.cos(2 * φ) - 0.0000035 * Math.cos(4 * φ)
   }
@@ -82,10 +82,10 @@ export class Ellipsoid {
    * @param {number} φ
    * @return {number} radius in km
    */
-  radiusAtLatitude (φ) {
+  radiusAtLatitude(φ) {
     const s = Math.sin(φ)
     const c = Math.cos(φ)
-    return this.A() * c / Math.sqrt(1 - (2 - this.flat) * this.flat * s * s)
+    return (this.A() * c) / Math.sqrt(1 - (2 - this.flat) * this.flat * s * s)
   }
 
   /**
@@ -96,10 +96,10 @@ export class Ellipsoid {
    * @param {number} φ
    * @return {number} radius in km
    */
-  radiusOfCurvature (φ) {
+  radiusOfCurvature(φ) {
     const s = Math.sin(φ)
     const e2 = (2 - this.flat) * this.flat
-    return this.A() * (1 - e2) / Math.pow(1 - e2 * s * s, 1.5)
+    return (this.A() * (1 - e2)) / Math.pow(1 - e2 * s * s, 1.5)
   }
 
   /**
@@ -115,7 +115,7 @@ export class Ellipsoid {
    * @param {Coord} c2
    * @return {number} radius in km
    */
-  distance (c1, c2) {
+  distance(c1, c2) {
     // From AA, ch 11, p 84.
     const [s2f, c2f] = sincos2((c1.lat + c2.lat) / 2)
     const [s2g, c2g] = sincos2((c1.lat - c2.lat) / 2)
@@ -140,7 +140,7 @@ export const Earth76 = new Ellipsoid(6378.14, 1 / 298.257)
  *
  * Unit is radian/second.
  */
-export const RotationRate1996_5 = 7.292114992e-5 // eslint-disable-line camelcase
+export const RotationRate1996_5 = 7.292114992e-5
 
 /**
  * oneDegreeOfLongitude returns the length of one degree of longitude.
@@ -152,8 +152,8 @@ export const RotationRate1996_5 = 7.292114992e-5 // eslint-disable-line camelcas
  * @param {number} rp
  * @return {number} distance in Km
  */
-export function oneDegreeOfLongitude (rp) {
-  return rp * Math.PI / 180
+export function oneDegreeOfLongitude(rp) {
+  return (rp * Math.PI) / 180
 }
 
 /**
@@ -166,8 +166,8 @@ export function oneDegreeOfLongitude (rp) {
  * @param {number} rm
  * @return {number} distance in Km
  */
-export function oneDegreeOfLatitude (rm) {
-  return rm * Math.PI / 180
+export function oneDegreeOfLatitude(rm) {
+  return (rm * Math.PI) / 180
 }
 
 /**
@@ -178,11 +178,14 @@ export function oneDegreeOfLatitude (rm) {
  * @param {number} φ
  * @returns {number} difference in Deg
  */
-export function geocentricLatitudeDifference (φ) {
+export function geocentricLatitudeDifference(φ) {
   // This appears to be an approximation with hard coded magic numbers.
   // No explanation is given in the text. The ellipsoid is not specified.
   // Perhaps the approximation works well enough for all ellipsoids?
-  return (692.73 * Math.sin(2 * φ) - 1.16 * Math.sin(4 * φ)) * Math.PI / (180 * 3600)
+  return (
+    ((692.73 * Math.sin(2 * φ) - 1.16 * Math.sin(4 * φ)) * Math.PI) /
+    (180 * 3600)
+  )
 }
 
 /**
@@ -195,7 +198,7 @@ export class Coord {
    * @param {number} lat - latitude (φ) in radians
    * @param {number} lon - longitude (ψ, or L) in radians (measured positively westward)
    */
-  constructor (lat = 0, lon = 0) {
+  constructor(lat = 0, lon = 0) {
     this.lat = lat
     this.lon = lon
   }
@@ -211,7 +214,7 @@ export class Coord {
  * @returns {number} cosine `cos` of the angle between two points.
  * Use `d = Math.acos(cos)` to obtain geocentric angular distance in radians
  */
-export function approxAngularDistance (p1, p2) {
+export function approxAngularDistance(p1, p2) {
   const s1 = Math.sin(p1.lat)
   const c1 = Math.cos(p1.lat)
   const s2 = Math.sin(p2.lat)
@@ -228,14 +231,14 @@ export function approxAngularDistance (p1, p2) {
  * @param {number} d - geocentric angular distance in radians
  * @returns linear distance in Km
  */
-export function approxLinearDistance (d) {
+export function approxLinearDistance(d) {
   return 6371 * d
 }
 
 /**
  * @private
  */
-function sincos2 (x) {
+function sincos2(x) {
   const s = Math.sin(x)
   const c = Math.cos(x)
   return [s * s, c * c]
@@ -244,7 +247,6 @@ function sincos2 (x) {
 export default {
   Ellipsoid,
   Earth76,
-  // eslint-disable-next-line camelcase
   RotationRate1996_5,
   oneDegreeOfLongitude,
   oneDegreeOfLatitude,

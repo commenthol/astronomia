@@ -13,28 +13,52 @@ import moonphase from './moonphase.js'
 /**
  * @private
  */
-const g = function (k, jm, c1, c2) { // (k, jm, c1, c2 float64)  (eclipse bool, jdeMax, γ, u, Mʹ float64)
+const g = function (k, jm, c1, c2) {
+  // (k, jm, c1, c2 float64)  (eclipse bool, jdeMax, γ, u, Mʹ float64)
   const ck = 1 / 1236.85
   const p = Math.PI / 180
   const T = k * ck
-  const F = base.horner(T, 160.7108 * p, 390.67050284 * p / ck,
-    -0.0016118 * p, -0.00000227 * p, 0.000000011 * p)
+  const F = base.horner(
+    T,
+    160.7108 * p,
+    (390.67050284 * p) / ck,
+    -0.0016118 * p,
+    -0.00000227 * p,
+    0.000000011 * p
+  )
   if (Math.abs(Math.sin(F)) > 0.36) {
     return [false] // no eclipse
   }
   const eclipse = true
   const E = base.horner(T, 1, -0.002516, -0.0000074)
-  const M = base.horner(T, 2.5534 * p, 29.1053567 * p / ck,
-    -0.0000014 * p, -0.00000011 * p)
-  const Mʹ = base.horner(T, 201.5643 * p, 385.81693528 * p / ck,
-    0.0107582 * p, 0.00001238 * p, -0.000000058 * p)
-  const Ω = base.horner(T, 124.7746 * p, -1.56375588 * p / ck,
-    0.0020672 * p, 0.00000215 * p)
+  const M = base.horner(
+    T,
+    2.5534 * p,
+    (29.1053567 * p) / ck,
+    -0.0000014 * p,
+    -0.00000011 * p
+  )
+  const Mʹ = base.horner(
+    T,
+    201.5643 * p,
+    (385.81693528 * p) / ck,
+    0.0107582 * p,
+    0.00001238 * p,
+    -0.000000058 * p
+  )
+  const Ω = base.horner(
+    T,
+    124.7746 * p,
+    (-1.56375588 * p) / ck,
+    0.0020672 * p,
+    0.00000215 * p
+  )
   const sΩ = Math.sin(Ω)
   const F1 = F - 0.02665 * p * sΩ
-  const A1 = base.horner(T, 299.77 * p, 0.107408 * p / ck, -0.009173 * p)
+  const A1 = base.horner(T, 299.77 * p, (0.107408 * p) / ck, -0.009173 * p)
   // (54.1) p. 380
-  const jdeMax = jm +
+  const jdeMax =
+    jm +
     c1 * Math.sin(Mʹ) +
     c2 * Math.sin(M) * E +
     0.0161 * Math.sin(2 * Mʹ) +
@@ -51,14 +75,16 @@ const g = function (k, jm, c1, c2) { // (k, jm, c1, c2 float64)  (eclipse bool, 
     -0.0002 * Math.sin(M - 2 * F1) * E +
     -0.0002 * Math.sin(2 * Mʹ - M) * E +
     -0.0002 * sΩ
-  const P = 0.207 * Math.sin(M) * E +
+  const P =
+    0.207 * Math.sin(M) * E +
     0.0024 * Math.sin(2 * M) * E +
     -0.0392 * Math.sin(Mʹ) +
     0.0116 * Math.sin(2 * Mʹ) +
     -0.0073 * Math.sin(Mʹ + M) * E +
     0.0067 * Math.sin(Mʹ - M) * E +
     0.0118 * Math.sin(2 * F1)
-  const Q = 5.2207 +
+  const Q =
+    5.2207 +
     -0.0048 * Math.cos(M) * E +
     0.002 * Math.cos(2 * M) * E +
     -0.3299 * Math.cos(Mʹ) +
@@ -67,7 +93,8 @@ const g = function (k, jm, c1, c2) { // (k, jm, c1, c2 float64)  (eclipse bool, 
   const [sF1, cF1] = base.sincos(F1)
   const W = Math.abs(cF1)
   const γ = (P * cF1 + Q * sF1) * (1 - 0.0048 * W)
-  const u = 0.0059 +
+  const u =
+    0.0059 +
     0.0046 * Math.cos(M) * E +
     -0.0182 * Math.cos(Mʹ) +
     0.0004 * Math.cos(2 * Mʹ) +
@@ -89,11 +116,33 @@ export const TYPE = {
 }
 
 /**
+ * @typedef {object} SolarEclipse
+ * @property {number} type - Eclipse type identifier.
+ * @property {boolean} [central] - Whether the eclipse is central.
+ * @property {number} [jdeMax] - Julian ephemeris day of maximum eclipse.
+ * @property {number} [magnitude] - Eclipse magnitude.
+ * @property {number} [distance] - Shadow-center distance from Earth's center.
+ * @property {number} [umbral] - Radius of the umbral cone.
+ * @property {number} [penumbral] - Radius of the penumbral cone.
+ * @typedef {object} LunarEclipse
+ * @property {number} type - Eclipse type identifier.
+ * @property {number} [jdeMax] - Julian ephemeris day of maximum eclipse.
+ * @property {number} [magnitude] - Eclipse magnitude.
+ * @property {number} [distance] - Shadow-center distance from the Moon's center.
+ * @property {number} [umbral] - Radius of the umbral cone.
+ * @property {number} [penumbral] - Radius of the penumbral cone.
+ * @property {number} [sdTotal] - Totality semiduration in days.
+ * @property {number} [sdPartial] - Partial-phase semiduration in days.
+ * @property {number} [sdPenumbral] - Penumbral-phase semiduration in days.
+ */
+
+/**
  * Snap returns k at specified quarter q nearest year y.
  * Cut and paste from moonphase.  Time corresponding to k needed in these
  * algorithms but otherwise not meaningful enough to export from moonphase.
  */
-const snap = function (y, q) { // (y, q float64)  float64
+const snap = function (y, q) {
+  // (y, q float64)  float64
   const k = (y - 2000) * 12.3685 // (49.2) p. 350
   return Math.floor(k - q + 0.5) + q
 }
@@ -122,12 +171,20 @@ const snap = function (y, q) { // (y, q float64)  float64
  * eclipse types.
  *
  * γ, u, and p are in units of equatorial Earth radii.
+ * @param {number} year - Decimal year near the eclipse.
+ * @returns {SolarEclipse} Solar eclipse circumstances. Fields other than `type` are omitted when no eclipse occurs.
  */
-export function solar (year) { // (year float64)  (eclipseType int, central bool, jdeMax, γ, u, p, mag float64)
+export function solar(year) {
+  // (year float64)  (eclipseType int, central bool, jdeMax, γ, u, p, mag float64)
   let eclipseType = TYPE.None
   let mag
 
-  const [e, jdeMax, γ, u, _] = g(snap(year, 0), moonphase.meanNew(year), -0.4075, 0.1721) // eslint-disable-line no-unused-vars
+  const [e, jdeMax, γ, u] = g(
+    snap(year, 0),
+    moonphase.meanNew(year),
+    -0.4075,
+    0.1721
+  )
 
   const p = u + 0.5461
   if (!e) {
@@ -141,8 +198,10 @@ export function solar (year) { // (year float64)  (eclipseType int, central bool
 
   if (!central) {
     eclipseType = TYPE.Partial // most common case
-    if (aγ < 1.026) { // umbral cone may touch earth
-      if (aγ < 0.9972 + Math.abs(u)) { // total or annular
+    if (aγ < 1.026) {
+      // umbral cone may touch earth
+      if (aγ < 0.9972 + Math.abs(u)) {
+        // total or annular
         eclipseType = TYPE.Total // report total in both cases
       }
     }
@@ -198,16 +257,23 @@ export function solar (year) { // (year float64)  (eclipseType int, central bool
  * sd- return values are semidurations of the phases of the eclipse, in days.
  *
  * γ, σ, and ρ are in units of equatorial Earth radii.
+ * @param {number} year - Decimal year near the eclipse.
+ * @returns {LunarEclipse} Lunar eclipse circumstances. Fields other than `type` are omitted when no eclipse occurs.
  */
-export function lunar (year) { // (year float64)  (eclipseType int, jdeMax, γ, ρ, σ, mag, sdTotal, sdPartial, sdPenumbral float64)
+export function lunar(year) {
+  // (year float64)  (eclipseType int, jdeMax, γ, ρ, σ, mag, sdTotal, sdPartial, sdPenumbral float64)
   let eclipseType = TYPE.None
   let mag
   let sdTotal
   let sdPartial
   let sdPenumbral
 
-  const [e, jdeMax, γ, u, Mʹ] = g(snap(year, 0.5),
-    moonphase.meanFull(year), -0.4065, 0.1727)
+  const [e, jdeMax, γ, u, Mʹ] = g(
+    snap(year, 0.5),
+    moonphase.meanFull(year),
+    -0.4065,
+    0.1727
+  )
   if (!e) {
     return { type: eclipseType } // no eclipse
   }

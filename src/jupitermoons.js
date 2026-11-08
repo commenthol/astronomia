@@ -13,6 +13,8 @@ import planetelements from './planetelements.js'
 import solar from './solar.js'
 import { Planet } from './planetposition.js' // eslint-disable-line no-unused-vars
 
+/** @typedef {{x: number, y: number, z: number}} XYZPosition */
+
 // Moon names in order of position in Array
 export const io = 0
 export const europa = 1
@@ -23,11 +25,12 @@ const k = [17295, 21819, 27558, 36548]
 
 /**
  * XYZ used for returning coordinates of moons.
- * @param {number} x - in units of Jupiter radii
- * @param {number} y - in units of Jupiter radii
- * @param {number} z - in units of Jupiter radii
+ * @param {number} x - Coordinate in Jupiter radii.
+ * @param {number} y - Coordinate in Jupiter radii.
+ * @param {number} z - Coordinate in Jupiter radii.
+ * @constructor
  */
-function XYZ (x, y, z) {
+function XYZ(x, y, z) {
   this.x = x
   this.y = y
   this.z = z
@@ -38,10 +41,10 @@ function XYZ (x, y, z) {
  *
  * Returned coordinates are in units of Jupiter radii.
  *
- * @param {Number} jde - Julian ephemeris day
- * @return {Array} x, y, z - coordinates of the 4 Satellites of jupiter
+ * @param {number} jde - Julian ephemeris day.
+ * @return {XYZPosition[]} Rectangular positions of the four Galilean moons in Jupiter radii.
  */
-export function positions (jde) {
+export function positions(jde) {
   const d = jde - base.J2000
   const p = Math.PI / 180
   const V = 172.74 * p + 0.00111588 * p * d
@@ -60,11 +63,13 @@ export function positions (jde) {
   const r = 5.20872 - 0.25208 * cN - 0.00611 * c2N
   const [sK, cK] = base.sincos(K)
   const Δ = Math.sqrt(r * r + R * R - 2 * r * R * cK)
-  const ψ = Math.asin(R / Δ * sK)
+  const ψ = Math.asin((R / Δ) * sK)
   const λ = 34.35 * p + 0.083091 * p * d + 0.329 * p * sV + B
   const DS = 3.12 * p * Math.sin(λ + 42.8 * p)
-  const DE = DS - 2.22 * p * Math.sin(ψ) * Math.cos(λ + 22 * p) -
-    1.3 * p * (r - Δ) / Δ * Math.sin(λ - 100.5 * p)
+  const DE =
+    DS -
+    2.22 * p * Math.sin(ψ) * Math.cos(λ + 22 * p) -
+    ((1.3 * p * (r - Δ)) / Δ) * Math.sin(λ - 100.5 * p)
   const dd = d - Δ / 173
   const u1 = 163.8069 * p + 203.4058646 * p * dd + ψ - B
   const u2 = 358.414 * p + 101.2916335 * p * dd + ψ - B
@@ -103,10 +108,10 @@ export function positions (jde) {
  * @param {Number} jde - Julian ephemeris day
  * @param {Planet} earth - VSOP87 Planet earth
  * @param {Planet} jupiter - VSOP87 Planet jupiter
- * @param {Array} [pos] - reference to array of positions (same as return value)
- * @return {Array} x, y, z - coordinates of the 4 Satellites of jupiter
+ * @param {XYZPosition[]} [pos] - Optional array to populate with the four moon positions.
+ * @return {XYZPosition[]} Rectangular positions of the four Galilean moons in Jupiter radii.
  */
-export function e5 (jde, earth, jupiter, pos) {
+export function e5(jde, earth, jupiter, pos) {
   pos = pos || new Array(4)
 
   // variables assigned in following block
@@ -123,7 +128,7 @@ export function e5 (jde, earth, jupiter, pos) {
     let y = 0
     let z = 0
 
-    function f () {
+    function f() {
       const { lon, lat, range } = jupiter.position(jde - τ)
       const [sl, cl] = base.sincos(lon)
       const [sb, cb] = base.sincos(lat)
@@ -155,7 +160,8 @@ export function e5 (jde, earth, jupiter, pos) {
   const ω2 = 100.4411 * p - 0.03263064 * p * t
   const ω3 = 119.1942 * p - 0.00717703 * p * t
   const ω4 = 322.6186 * p - 0.00175934 * p * t
-  const Γ = 0.33033 * p * Math.sin(163.679 * p + 0.0010512 * p * t) +
+  const Γ =
+    0.33033 * p * Math.sin(163.679 * p + 0.0010512 * p * t) +
     0.03439 * p * Math.sin(34.486 * p - 0.0161731 * p * t)
   const Φλ = 199.6766 * p + 0.1737919 * p * t
   let ψ = 316.5182 * p - 0.00000208 * p * t
@@ -163,7 +169,8 @@ export function e5 (jde, earth, jupiter, pos) {
   const Gʹ = 31.97853 * p + 0.0334597339 * p * t
   const Π = 13.469942 * p
 
-  const Σ1 = 0.47259 * p * Math.sin(2 * (l1 - l2)) +
+  const Σ1 =
+    0.47259 * p * Math.sin(2 * (l1 - l2)) +
     -0.03478 * p * Math.sin(π3 - π4) +
     0.01081 * p * Math.sin(l2 - 2 * l3 + π3) +
     0.00738 * p * Math.sin(Φλ) +
@@ -184,7 +191,8 @@ export function e5 (jde, earth, jupiter, pos) {
     0.00085 * p * Math.sin(l1 + π3 - 2 * Π - 2 * G) +
     0.00083 * p * Math.sin(ω2 - ω3) +
     0.00053 * p * Math.sin(ψ - ω2)
-  const Σ2 = 1.06476 * p * Math.sin(2 * (l2 - l3)) +
+  const Σ2 =
+    1.06476 * p * Math.sin(2 * (l2 - l3)) +
     0.04256 * p * Math.sin(l1 - 2 * l2 + π3) +
     0.03581 * p * Math.sin(l2 - π3) +
     0.02395 * p * Math.sin(l1 - 2 * l2 + π4) +
@@ -221,7 +229,8 @@ export function e5 (jde, earth, jupiter, pos) {
     0.00041 * p * Math.sin(π4 - Π) +
     0.00032 * p * Math.sin(ω2 - ω3) +
     0.00032 * p * Math.sin(2 * (l3 - G - Π))
-  const Σ3 = 0.1649 * p * Math.sin(l3 - π3) +
+  const Σ3 =
+    0.1649 * p * Math.sin(l3 - π3) +
     0.09081 * p * Math.sin(l3 - π4) +
     -0.06907 * p * Math.sin(l2 - l3) +
     0.03784 * p * Math.sin(π3 - π4) +
@@ -249,7 +258,7 @@ export function e5 (jde, earth, jupiter, pos) {
     -0.00057 * p * Math.sin(l3 - 2 * l4 + π4) +
     0.00056 * p * Math.sin(l3 + π3 - 2 * Π - 2 * G) +
     -0.00052 * p * Math.sin(l2 - 2 * l3 + π1) +
-    -0.00050 * p * Math.sin(π2 - π3) +
+    -0.0005 * p * Math.sin(π2 - π3) +
     0.00048 * p * Math.sin(l3 - 2 * l4 + π3) +
     -0.00045 * p * Math.sin(2 * l2 - 3 * l3 + π4) +
     -0.00041 * p * Math.sin(π2 - π4) +
@@ -264,7 +273,8 @@ export function e5 (jde, earth, jupiter, pos) {
     0.00021 * p * Math.sin(2 * (l3 - Π - G)) +
     -0.00021 * p * Math.sin(l3 - π2) +
     0.00017 * p * Math.sin(2 * (l3 - π3))
-  const Σ4 = 0.84287 * p * Math.sin(l4 - π4) +
+  const Σ4 =
+    0.84287 * p * Math.sin(l4 - π4) +
     0.03431 * p * Math.sin(π4 - π3) +
     -0.03305 * p * Math.sin(2 * (ψ - Π)) +
     -0.03211 * p * Math.sin(G) +
@@ -329,91 +339,103 @@ export function e5 (jde, earth, jupiter, pos) {
   ;(function () {
     const L = [L1, L2, L3, L4]
     const B = [
-      Math.atan(0.0006393 * Math.sin(L1 - ω1) +
-        0.0001825 * Math.sin(L1 - ω2) +
-        0.0000329 * Math.sin(L1 - ω3) +
-        -0.0000311 * Math.sin(L1 - ψ) +
-        0.0000093 * Math.sin(L1 - ω4) +
-        0.0000075 * Math.sin(3 * L1 - 4 * l2 - 1.9927 * Σ1 + ω2) +
-        0.0000046 * Math.sin(L1 + ψ - 2 * Π - 2 * G)),
-      Math.atan(0.0081004 * Math.sin(L2 - ω2) +
-        0.0004512 * Math.sin(L2 - ω3) +
-        -0.0003284 * Math.sin(L2 - ψ) +
-        0.0001160 * Math.sin(L2 - ω4) +
-        0.0000272 * Math.sin(l1 - 2 * l3 + 1.0146 * Σ2 + ω2) +
-        -0.0000144 * Math.sin(L2 - ω1) +
-        0.0000143 * Math.sin(L2 + ψ - 2 * Π - 2 * G) +
-        0.0000035 * Math.sin(L2 - ψ + G) +
-        -0.0000028 * Math.sin(l1 - 2 * l3 + 1.0146 * Σ2 + ω3)),
-      Math.atan(0.0032402 * Math.sin(L3 - ω3) +
-        -0.0016911 * Math.sin(L3 - ψ) +
-        0.0006847 * Math.sin(L3 - ω4) +
-        -0.0002797 * Math.sin(L3 - ω2) +
-        0.0000321 * Math.sin(L3 + ψ - 2 * Π - 2 * G) +
-        0.0000051 * Math.sin(L3 - ψ + G) +
-        -0.0000045 * Math.sin(L3 - ψ - G) +
-        -0.0000045 * Math.sin(L3 + ψ - 2 * Π) +
-        0.0000037 * Math.sin(L3 + ψ - 2 * Π - 3 * G) +
-        0.000003 * Math.sin(2 * l2 - 3 * L3 + 4.03 * Σ3 + ω2) +
-        -0.0000021 * Math.sin(2 * l2 - 3 * L3 + 4.03 * Σ3 + ω3)),
-      Math.atan(-0.0076579 * Math.sin(L4 - ψ) +
-        0.0044134 * Math.sin(L4 - ω4) +
-        -0.0005112 * Math.sin(L4 - ω3) +
-        0.0000773 * Math.sin(L4 + ψ - 2 * Π - 2 * G) +
-        0.0000104 * Math.sin(L4 - ψ + G) +
-        -0.0000102 * Math.sin(L4 - ψ - G) +
-        0.0000088 * Math.sin(L4 + ψ - 2 * Π - 3 * G) +
-        -0.0000038 * Math.sin(L4 + ψ - 2 * Π - G))
+      Math.atan(
+        0.0006393 * Math.sin(L1 - ω1) +
+          0.0001825 * Math.sin(L1 - ω2) +
+          0.0000329 * Math.sin(L1 - ω3) +
+          -0.0000311 * Math.sin(L1 - ψ) +
+          0.0000093 * Math.sin(L1 - ω4) +
+          0.0000075 * Math.sin(3 * L1 - 4 * l2 - 1.9927 * Σ1 + ω2) +
+          0.0000046 * Math.sin(L1 + ψ - 2 * Π - 2 * G)
+      ),
+      Math.atan(
+        0.0081004 * Math.sin(L2 - ω2) +
+          0.0004512 * Math.sin(L2 - ω3) +
+          -0.0003284 * Math.sin(L2 - ψ) +
+          0.000116 * Math.sin(L2 - ω4) +
+          0.0000272 * Math.sin(l1 - 2 * l3 + 1.0146 * Σ2 + ω2) +
+          -0.0000144 * Math.sin(L2 - ω1) +
+          0.0000143 * Math.sin(L2 + ψ - 2 * Π - 2 * G) +
+          0.0000035 * Math.sin(L2 - ψ + G) +
+          -0.0000028 * Math.sin(l1 - 2 * l3 + 1.0146 * Σ2 + ω3)
+      ),
+      Math.atan(
+        0.0032402 * Math.sin(L3 - ω3) +
+          -0.0016911 * Math.sin(L3 - ψ) +
+          0.0006847 * Math.sin(L3 - ω4) +
+          -0.0002797 * Math.sin(L3 - ω2) +
+          0.0000321 * Math.sin(L3 + ψ - 2 * Π - 2 * G) +
+          0.0000051 * Math.sin(L3 - ψ + G) +
+          -0.0000045 * Math.sin(L3 - ψ - G) +
+          -0.0000045 * Math.sin(L3 + ψ - 2 * Π) +
+          0.0000037 * Math.sin(L3 + ψ - 2 * Π - 3 * G) +
+          0.000003 * Math.sin(2 * l2 - 3 * L3 + 4.03 * Σ3 + ω2) +
+          -0.0000021 * Math.sin(2 * l2 - 3 * L3 + 4.03 * Σ3 + ω3)
+      ),
+      Math.atan(
+        -0.0076579 * Math.sin(L4 - ψ) +
+          0.0044134 * Math.sin(L4 - ω4) +
+          -0.0005112 * Math.sin(L4 - ω3) +
+          0.0000773 * Math.sin(L4 + ψ - 2 * Π - 2 * G) +
+          0.0000104 * Math.sin(L4 - ψ + G) +
+          -0.0000102 * Math.sin(L4 - ψ - G) +
+          0.0000088 * Math.sin(L4 + ψ - 2 * Π - 3 * G) +
+          -0.0000038 * Math.sin(L4 + ψ - 2 * Π - G)
+      )
     ]
     R = [
-      5.90569 * (1 +
-        -0.0041339 * Math.cos(2 * (l1 - l2)) +
-        -0.0000387 * Math.cos(l1 - π3) +
-        -0.0000214 * Math.cos(l1 - π4) +
-        0.000017 * Math.cos(l1 - l2) +
-        -0.0000131 * Math.cos(4 * (l1 - l2)) +
-        0.0000106 * Math.cos(l1 - l3) +
-        -0.0000066 * Math.cos(l1 + π3 - 2 * Π - 2 * G)),
-      9.39657 * (1 +
-        0.0093848 * Math.cos(l1 - l2) +
-        -0.0003116 * Math.cos(l2 - π3) +
-        -0.0001744 * Math.cos(l2 - π4) +
-        -0.0001442 * Math.cos(l2 - π2) +
-        0.0000553 * Math.cos(l2 - l3) +
-        0.0000523 * Math.cos(l1 - l3) +
-        -0.0000290 * Math.cos(2 * (l1 - l2)) +
-        0.0000164 * Math.cos(2 * (l2 - ω2)) +
-        0.0000107 * Math.cos(l1 - 2 * l3 + π3) +
-        -0.0000102 * Math.cos(l2 - π1) +
-        -0.0000091 * Math.cos(2 * (l1 - l3))),
-      14.98832 * (1 +
-        -0.0014388 * Math.cos(l3 - π3) +
-        -0.0007917 * Math.cos(l3 - π4) +
-        0.0006342 * Math.cos(l2 - l3) +
-        -0.0001761 * Math.cos(2 * (l3 - l4)) +
-        0.0000294 * Math.cos(l3 - l4) +
-        -0.0000156 * Math.cos(3 * (l3 - l4)) +
-        0.0000156 * Math.cos(l1 - l3) +
-        -0.0000153 * Math.cos(l1 - l2) +
-        0.000007 * Math.cos(2 * l2 - 3 * l3 + π3) +
-        -0.0000051 * Math.cos(l3 + π3 - 2 * Π - 2 * G)),
-      26.36273 * (1 +
-        -0.0073546 * Math.cos(l4 - π4) +
-        0.0001621 * Math.cos(l4 - π3) +
-        0.0000974 * Math.cos(l3 - l4) +
-        -0.0000543 * Math.cos(l4 + π4 - 2 * Π - 2 * G) +
-        -0.0000271 * Math.cos(2 * (l4 - π4)) +
-        0.0000182 * Math.cos(l4 - Π) +
-        0.0000177 * Math.cos(2 * (l3 - l4)) +
-        -0.0000167 * Math.cos(2 * l4 - ψ - ω4) +
-        0.0000167 * Math.cos(ψ - ω4) +
-        -0.0000155 * Math.cos(2 * (l4 - Π - G)) +
-        0.0000142 * Math.cos(2 * (l4 - ψ)) +
-        0.0000105 * Math.cos(l1 - l4) +
-        0.0000092 * Math.cos(l2 - l4) +
-        -0.0000089 * Math.cos(l4 - Π - G) +
-        -0.0000062 * Math.cos(l4 + π4 - 2 * Π - 3 * G) +
-        0.0000048 * Math.cos(2 * (l4 - ω4)))
+      5.90569 *
+        (1 +
+          -0.0041339 * Math.cos(2 * (l1 - l2)) +
+          -0.0000387 * Math.cos(l1 - π3) +
+          -0.0000214 * Math.cos(l1 - π4) +
+          0.000017 * Math.cos(l1 - l2) +
+          -0.0000131 * Math.cos(4 * (l1 - l2)) +
+          0.0000106 * Math.cos(l1 - l3) +
+          -0.0000066 * Math.cos(l1 + π3 - 2 * Π - 2 * G)),
+      9.39657 *
+        (1 +
+          0.0093848 * Math.cos(l1 - l2) +
+          -0.0003116 * Math.cos(l2 - π3) +
+          -0.0001744 * Math.cos(l2 - π4) +
+          -0.0001442 * Math.cos(l2 - π2) +
+          0.0000553 * Math.cos(l2 - l3) +
+          0.0000523 * Math.cos(l1 - l3) +
+          -0.000029 * Math.cos(2 * (l1 - l2)) +
+          0.0000164 * Math.cos(2 * (l2 - ω2)) +
+          0.0000107 * Math.cos(l1 - 2 * l3 + π3) +
+          -0.0000102 * Math.cos(l2 - π1) +
+          -0.0000091 * Math.cos(2 * (l1 - l3))),
+      14.98832 *
+        (1 +
+          -0.0014388 * Math.cos(l3 - π3) +
+          -0.0007917 * Math.cos(l3 - π4) +
+          0.0006342 * Math.cos(l2 - l3) +
+          -0.0001761 * Math.cos(2 * (l3 - l4)) +
+          0.0000294 * Math.cos(l3 - l4) +
+          -0.0000156 * Math.cos(3 * (l3 - l4)) +
+          0.0000156 * Math.cos(l1 - l3) +
+          -0.0000153 * Math.cos(l1 - l2) +
+          0.000007 * Math.cos(2 * l2 - 3 * l3 + π3) +
+          -0.0000051 * Math.cos(l3 + π3 - 2 * Π - 2 * G)),
+      26.36273 *
+        (1 +
+          -0.0073546 * Math.cos(l4 - π4) +
+          0.0001621 * Math.cos(l4 - π3) +
+          0.0000974 * Math.cos(l3 - l4) +
+          -0.0000543 * Math.cos(l4 + π4 - 2 * Π - 2 * G) +
+          -0.0000271 * Math.cos(2 * (l4 - π4)) +
+          0.0000182 * Math.cos(l4 - Π) +
+          0.0000177 * Math.cos(2 * (l3 - l4)) +
+          -0.0000167 * Math.cos(2 * l4 - ψ - ω4) +
+          0.0000167 * Math.cos(ψ - ω4) +
+          -0.0000155 * Math.cos(2 * (l4 - Π - G)) +
+          0.0000142 * Math.cos(2 * (l4 - ψ)) +
+          0.0000105 * Math.cos(l1 - l4) +
+          0.0000092 * Math.cos(l2 - l4) +
+          -0.0000089 * Math.cos(l4 - Π - G) +
+          -0.0000062 * Math.cos(l4 + π4 - 2 * Π - 3 * G) +
+          0.0000048 * Math.cos(2 * (l4 - ω4)))
     ]
     // p. 311
     const T0 = (jde - 2433282.423) / base.JulianCentury
@@ -439,10 +461,13 @@ export function e5 (jde, earth, jupiter, pos) {
   const B = new Array(5).fill(0)
   const C = new Array(5).fill(0)
   const [sI, cI] = base.sincos(I)
-  const Ω = planetelements.node(planetelements.jupiter, jde)
+  const jupiterName = /** @type {Parameters<typeof planetelements.node>[0]} */ (
+    String(planetelements.jupiter)
+  )
+  const Ω = planetelements.node(jupiterName, jde)
   const [sΩ, cΩ] = base.sincos(Ω)
   const [sΦ, cΦ] = base.sincos(ψ - Ω)
-  const [si, ci] = base.sincos(planetelements.inc(planetelements.jupiter, jde))
+  const [si, ci] = base.sincos(planetelements.inc(jupiterName, jde))
   const [sλ0, cλ0] = base.sincos(λ0)
   const [sβ0, cβ0] = base.sincos(β0)
 
@@ -481,7 +506,7 @@ export function e5 (jde, earth, jupiter, pos) {
     const z = B[i]
     // differential light time
     const d = x / R[i]
-    x += Math.abs(z) / k[i] * Math.sqrt(1 - d * d)
+    x += (Math.abs(z) / k[i]) * Math.sqrt(1 - d * d)
     // perspective effect
     const W = Δ / (Δ + z / 2095)
     pos[i] = new XYZ(x * W, y * W, z)

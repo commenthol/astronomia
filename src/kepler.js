@@ -18,7 +18,7 @@ import iterate from './iterate.js'
  * @param {number} E - eccentric anomaly in radians.
  * @return true anomaly ν in radians.
  */
-export function trueAnomaly (E, e) {
+export function trueAnomaly(E, e) {
   // (30.1) p. 195
   return 2 * Math.atan(Math.sqrt((1 + e) / (1 - e)) * Math.tan(E * 0.5))
 }
@@ -33,7 +33,8 @@ export function trueAnomaly (E, e) {
  * @param {number} a - semimajor axis
  * @return {number} radius distance in unit of `a`
  */
-export function radius (E, e, a) { // (E, e, a float64)  float64
+export function radius(E, e, a) {
+  // (E, e, a float64)  float64
   // (30.2) p. 195
   return a * (1 - e * Math.cos(E))
 }
@@ -54,7 +55,7 @@ export function radius (E, e, a) { // (E, e, a float64)  float64
  * @param {number} places - (int) desired number of decimal places in the result
  * @return {number} eccentric anomaly `E` in radians.
  */
-export function kepler1 (e, m, places) {
+export function kepler1(e, m, places) {
   const f = function (E0) {
     return m + e * Math.sin(E0) // (30.5) p. 195
   }
@@ -77,7 +78,8 @@ export function kepler1 (e, m, places) {
  * @param {number} places - (int) desired number of decimal places in the result
  * @return {number} eccentric anomaly `E` in radians.
  */
-export function kepler2 (e, m, places) { // (e, M float64, places int)  (E float64, err error)
+export function kepler2(e, m, places) {
+  // (e, M float64, places int)  (E float64, err error)
   const f = function (E0) {
     const [se, ce] = base.sincos(E0)
     return E0 + (m + e * se - E0) / (1 - e * ce) // (30.7) p. 199
@@ -97,7 +99,8 @@ export function kepler2 (e, m, places) { // (e, M float64, places int)  (E float
  * @param {number} places - (int) desired number of decimal places in the result
  * @return {number} eccentric anomaly `E` in radians.
  */
-export function kepler2a (e, m, places) { // (e, M float64, places int)  (E float64, err error)
+export function kepler2a(e, m, places) {
+  // (e, M float64, places int)  (E float64, err error)
   const f = function (E0) {
     const [se, ce] = base.sincos(E0)
     // method of Leingärtner, p. 205
@@ -118,7 +121,8 @@ export function kepler2a (e, m, places) { // (e, M float64, places int)  (E floa
  * @param {number} places - (int) desired number of decimal places in the result
  * @return {number} eccentric anomaly `E` in radians.
  */
-export function kepler2b (e, m, places) { // (e, M float64, places int)  (E float64, err error)
+export function kepler2b(e, m, places) {
+  // (e, M float64, places int)  (E float64, err error)
   const f = function (E0) {
     const [se, ce] = base.sincos(E0)
     let d = (m + e * se - E0) / (1 - e * ce)
@@ -141,7 +145,8 @@ export function kepler2b (e, m, places) { // (e, M float64, places int)  (E floa
  * @param {number} m - mean anomaly in radians
  * @return {number} eccentric anomaly `E` in radians.
  */
-export function kepler3 (e, m) { // (e, m float64)  (E float64)
+export function kepler3(e, m) {
+  // (e, m float64)  (E float64)
   // adapted from BASIC, p. 206
   m = base.pmod(m, 2 * Math.PI)
   let f = 1
@@ -175,7 +180,8 @@ export function kepler3 (e, m) { // (e, m float64)  (E float64)
  * @param {number} m - mean anomaly in radians
  * @return {number} eccentric anomaly `E` in radians.
  */
-export function kepler4 (e, m) { // (e, m float64)  (E float64)
+export function kepler4(e, m) {
+  // (e, m float64)  (E float64)
   const [sm, cm] = base.sincos(m)
   return Math.atan2(sm, cm - e) // (30.8) p. 206
 }

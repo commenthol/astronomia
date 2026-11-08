@@ -11,7 +11,7 @@ describe('#fit', function () {
       { x: 0.2918, y: 10.99 },
       { x: 0.2905, y: 10.78 },
       { x: 0.2707, y: 10.87 },
-      { x: 0.2574, y: 10.80 },
+      { x: 0.2574, y: 10.8 },
       { x: 0.2485, y: 10.75 },
       { x: 0.2287, y: 10.14 },
       { x: 0.2238, y: 10.21 },
@@ -22,9 +22,9 @@ describe('#fit', function () {
       { x: 0.1889, y: 9.63 },
       { x: 0.1781, y: 9.65 },
       { x: 0.1772, y: 9.44 },
-      { x: 0.1770, y: 9.44 },
+      { x: 0.177, y: 9.44 },
       { x: 0.1755, y: 9.32 },
-      { x: 0.1746, y: 9.20 }
+      { x: 0.1746, y: 9.2 }
     ]
     const res = fit.linear(data)
     const a = res[0]
@@ -66,7 +66,10 @@ describe('#fit', function () {
     const s = 'y = ' + a + 'x + ' + b
 
     assert.strictEqual(s, 'y = -2.49x + 244.18')
-    assert.strictEqual(float(fit.correlationCoefficient(data)).toFixed(3), -0.767)
+    assert.strictEqual(
+      float(fit.correlationCoefficient(data)).toFixed(3),
+      -0.767
+    )
   })
 
   /**
@@ -94,9 +97,15 @@ describe('#fit', function () {
    * This indicates a test case for Func3
    */
   it('func3', function () {
-    const f0 = function (x) { return x * x }
-    const f1 = function (x) { return x }
-    const f2 = function (x) { return 1 }
+    const f0 = function (x) {
+      return x * x
+    }
+    const f1 = function (x) {
+      return x
+    }
+    const f2 = function () {
+      return 1
+    }
     const res = fit.func3(qdata, f0, f1, f2)
     const exp = [-1, -2, 2]
     assert.deepStrictEqual(res, exp)
@@ -108,7 +117,7 @@ describe('#fit', function () {
       { x: 3, y: 0.0433 },
       { x: 20, y: 0.2532 },
       { x: 34, y: 0.3386 },
-      { x: 50, y: 0.3560 },
+      { x: 50, y: 0.356 },
       { x: 75, y: 0.4983 },
       { x: 88, y: 0.7577 },
       { x: 111, y: 1.4585 },
@@ -122,7 +131,7 @@ describe('#fit', function () {
       { x: 248, y: -1.4889 },
       { x: 269, y: -0.8372 },
       { x: 290, y: -0.4377 },
-      { x: 303, y: -0.3640 },
+      { x: 303, y: -0.364 },
       { x: 320, y: -0.3508 },
       { x: 344, y: -0.2126 }
     ]
@@ -131,13 +140,17 @@ describe('#fit', function () {
       data[i].x *= Math.PI / 180
     }
     const f0 = Math.sin
-    const f1 = function (x) { return Math.sin(2 * x) }
-    const f2 = function (x) { return Math.sin(3 * x) }
+    const f1 = function (x) {
+      return Math.sin(2 * x)
+    }
+    const f2 = function (x) {
+      return Math.sin(3 * x)
+    }
     const res = fit.func3(data, f0, f1, f2)
     // output four decimal places corresponding to precision of Y values.
-    assert.strictEqual(float(res[0]).toFixed(4), 1.2000)
-    assert.strictEqual(float(res[1]).toFixed(4), -0.7700)
-    assert.strictEqual(float(res[2]).toFixed(4), 0.3900)
+    assert.strictEqual(float(res[0]).toFixed(4), 1.2)
+    assert.strictEqual(float(res[1]).toFixed(4), -0.77)
+    assert.strictEqual(float(res[2]).toFixed(4), 0.39)
   })
 
   it('func1', function () {

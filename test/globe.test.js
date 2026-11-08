@@ -27,7 +27,7 @@ describe('#globe', function () {
 
     it('radiusAtLatitude', function () {
       // Example 11.b p 84.
-      φ = 42 * Math.PI / 180
+      φ = (42 * Math.PI) / 180
       rp = globe.Earth76.radiusAtLatitude(φ)
       // Rp = 4747.001 km
       assert.strictEqual(base.round(rp, 3), 4747.001)

@@ -10,7 +10,8 @@
 import fs from 'fs'
 import path from 'path'
 
-const REGVSOP = /^\sVSOP87.*VARIABLE (\d) \((LBR|XYZ)\).{1,20}\*T\*\*(\d)\s{1,20}(\d{1,20}) TERMS/
+const REGVSOP =
+  /^\sVSOP87.*VARIABLE (\d) \((LBR|XYZ)\).{1,20}\*T\*\*(\d)\s{1,20}(\d{1,20}) TERMS/
 
 // planet names in VSOP87 files
 const planets = [
@@ -28,7 +29,7 @@ const planets = [
 const exts = ['mer', 'ven', 'ear', 'mar', 'jup', 'sat', 'ura', 'nep']
 
 const toFloat = function (f) {
-  return parseFloat(f, 10)
+  return parseFloat(f)
 }
 
 export class VSOP {
@@ -41,7 +42,7 @@ export class VSOP {
    * @param {Object} [opts]
    * @param {String} [opts.type] - file type A, B, C, D - See vsop87.txt
    */
-  constructor (planet, dirname, opts) {
+  constructor(planet, dirname, opts) {
     planet = planet.toLowerCase()
     if (~planets.indexOf(planet)) {
       opts = opts || {}
@@ -49,19 +50,26 @@ export class VSOP {
       this.dirname = dirname
       this.type = opts.type || 'B' // HELIOCENTRIC DYNAMICAL ECLIPTIC AND EQUINOX J2000
     } else {
-      throw (new Error('Invalid planet ' + planet))
+      throw new Error('Invalid planet ' + planet)
     }
   }
 
-  /** get file extension for planet */
-  _getExt () {
+  /** @returns {string} File extension for the configured planet. */
+  _getExt() {
     return exts[planets.indexOf(this.planet)]
   }
 
-  /** load data from file */
-  load (cb) {
+  /**
+   * Load and parse the configured VSOP87 data file.
+   * @param {(error: Error|null) => void} cb - Completion callback.
+   * @returns {void}
+   */
+  load(cb) {
     const ext = this._getExt()
-    const filename = path.resolve(this.dirname, 'VSOP87' + this.type + '.' + ext)
+    const filename = path.resolve(
+      this.dirname,
+      'VSOP87' + this.type + '.' + ext
+    )
     fs.readFile(filename, 'utf8', (err, data) => {
       if (!err) {
         this.parse(data)
@@ -70,19 +78,26 @@ export class VSOP {
     })
   }
 
-  /** sync loading */
-  loadSync () {
+  /**
+   * Load and parse the configured VSOP87 data file synchronously.
+   * @returns {void}
+   */
+  loadSync() {
     const ext = this._getExt()
-    const filename = path.resolve(this.dirname, 'VSOP87' + this.type + '.' + ext)
+    const filename = path.resolve(
+      this.dirname,
+      'VSOP87' + this.type + '.' + ext
+    )
     const data = fs.readFileSync(filename, 'utf8')
     this.parse(data)
   }
 
   /**
    * parse data
-   * @param {String} data - content of VSOP file
+   * @param {string} data - Content of the VSOP file.
+   * @returns {void}
    */
-  parse (data) {
+  parse(data) {
     this.data = {}
     const lines = data.split(/\n/)
     let varName
@@ -91,7 +106,7 @@ export class VSOP {
     lines.forEach((line) => {
       if (REGVSOP.test(line)) {
         const [, varCnt, type, pos] = line.match(REGVSOP)
-        varName = type.split('')[varCnt - 1]
+        varName = type.split('')[Number(varCnt) - 1]
         if (!this.data[varName]) this.data[varName] = {}
         ref = this.data[varName][pos] = []
       } else {
@@ -108,14 +123,14 @@ export class VSOP {
 
   /**
    * get parsed data
-   * @return {Object}
    * ```js
    * { L: { '0': [[<A>, <B>, <C>], ...], '1': [], '2': [], '3': [], '4': [], '5': [] },
    *   B: { '0': [], '1': [], '2': [], '3': [], '4': [], '5': [] },
    *   R: { '0': [], '1': [], '2': [], '3': [], '4': [], '5': [] } }
    * ```
+   * @returns {Record<string, Record<string, number[][]>>} Parsed VSOP87 coefficients.
    */
-  getData () {
+  getData() {
     return this.data
   }
 }

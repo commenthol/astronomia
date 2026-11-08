@@ -14,14 +14,14 @@ const { abs, cos, sin } = Math
 const D2R = Math.PI / 180
 
 // table 27.a - for years from -1000 to +1000
-const mc0 = [1721139.29189, 365242.13740, 0.06134, 0.00111, -0.00071]
+const mc0 = [1721139.29189, 365242.1374, 0.06134, 0.00111, -0.00071]
 const jc0 = [1721233.25401, 365241.72562, -0.05323, 0.00907, 0.00025]
 const sc0 = [1721325.70455, 365242.49558, -0.11677, -0.00297, 0.00074]
 const dc0 = [1721414.39987, 365242.88257, -0.00769, -0.00933, -0.00006]
 
 // table 27.b - for years from +1000 to +3000
 const mc2 = [2451623.80984, 365242.37404, 0.05169, -0.00411, -0.00057]
-const jc2 = [2451716.56767, 365241.62603, 0.00325, 0.00888, -0.00030]
+const jc2 = [2451716.56767, 365241.62603, 0.00325, 0.00888, -0.0003]
 const sc2 = [2451810.21715, 365242.01767, -0.11575, 0.00337, 0.00078]
 const dc2 = [2451900.05952, 365242.74049, -0.06223, -0.00823, 0.00032]
 
@@ -71,7 +71,7 @@ const terms = (function () {
  * @param {Number} y - (int) year
  * @returns {Number} JDE
  */
-export function march (y) {
+export function march(y) {
   if (y < 1000) {
     return eq(y, mc0)
   }
@@ -87,7 +87,7 @@ export function march (y) {
  * @param {Number} y - (int) year
  * @returns {Number} JDE
  */
-export function june (y) {
+export function june(y) {
   if (y < 1000) {
     return eq(y, jc0)
   }
@@ -103,7 +103,7 @@ export function june (y) {
  * @param {Number} y - (int) year
  * @returns {Number} JDE
  */
-export function september (y) {
+export function september(y) {
   if (y < 1000) {
     return eq(y, sc0)
   }
@@ -119,7 +119,7 @@ export function september (y) {
  * @param {Number} y - (int) year
  * @returns {Number} JDE
  */
-export function december (y) {
+export function december(y) {
   if (y < 1000) {
     return eq(y, dc0)
   }
@@ -134,7 +134,7 @@ export function december (y) {
  * @param {Array} c - term from table 27.a / 27.b
  * @returns {Number} JDE
  */
-function eq (y, c) {
+function eq(y, c) {
   const J0 = base.horner(y * 0.001, c)
   const T = base.J2000Century(J0)
   const W = 35999.373 * D2R * T - 2.47 * D2R
@@ -144,7 +144,7 @@ function eq (y, c) {
     const t = terms[i]
     S += t.a * cos((t.b + t.c * T) * D2R)
   }
-  return J0 + 0.00001 * S / Δλ
+  return J0 + (0.00001 * S) / Δλ
 }
 
 /**
@@ -153,11 +153,11 @@ function eq (y, c) {
  * Result is accurate to one second of time.
  *
  * @param {Number} year - (int) year
- * @param {planetposition.Planet} planet - must be a V87Planet object representing Earth, obtained with
+ * @param {import('./planetposition.js').Planet} planet - must be a V87Planet object representing Earth, obtained with
  * the package planetposition
  * @returns {Number} JDE
  */
-export function march2 (year, planet) {
+export function march2(year, planet) {
   return longitude(year, planet, 0)
 }
 
@@ -167,11 +167,11 @@ export function march2 (year, planet) {
  * Result is accurate to one second of time.
  *
  * @param {Number} year - (int) year
- * @param {planetposition.Planet} planet - must be a V87Planet object representing Earth, obtained with
+ * @param {import('./planetposition.js').Planet} planet - must be a V87Planet object representing Earth, obtained with
  * the package planetposition
  * @returns {Number} JDE
  */
-export function june2 (year, planet) {
+export function june2(year, planet) {
   return longitude(year, planet, Math.PI / 2)
 }
 
@@ -181,11 +181,11 @@ export function june2 (year, planet) {
  * Result is accurate to one second of time.
  *
  * @param {Number} year - (int) year
- * @param {planetposition.Planet} planet - must be a V87Planet object representing Earth, obtained with
+ * @param {import('./planetposition.js').Planet} planet - must be a V87Planet object representing Earth, obtained with
  * the package planetposition
  * @returns {Number} JDE
  */
-export function september2 (year, planet) {
+export function september2(year, planet) {
   return longitude(year, planet, Math.PI)
 }
 
@@ -195,23 +195,23 @@ export function september2 (year, planet) {
  * Result is accurate to one second of time.
  *
  * @param {Number} year - (int) year
- * @param {planetposition.Planet} planet - must be a V87Planet object representing Earth, obtained with
+ * @param {import('./planetposition.js').Planet} planet - must be a V87Planet object representing Earth, obtained with
  * the package planetposition
  * @returns {Number} JDE
  */
-export function december2 (year, planet) {
-  return longitude(year, planet, Math.PI * 3 / 2)
+export function december2(year, planet) {
+  return longitude(year, planet, (Math.PI * 3) / 2)
 }
 
 /**
  * Longitude returns the JDE for a given `year`, VSOP87 Planet `planet` at a
  * given geocentric solar longitude `lon`
  * @param {Number} year - (int)
- * @param {planetposition.Planet} planet
+ * @param {import('./planetposition.js').Planet} planet
  * @param {Number} lon - geocentric solar longitude in radians
  * @returns {Number} JDE
  */
-export function longitude (year, planet, lon) {
+export function longitude(year, planet, lon) {
   let c
   let ct
 
@@ -228,7 +228,7 @@ export function longitude (year, planet, lon) {
     c = ct[0]
   } else if (lon < Math.PI) {
     c = ct[1]
-  } else if (lon < Math.PI * 3 / 2) {
+  } else if (lon < (Math.PI * 3) / 2) {
     c = ct[2]
   } else {
     c = ct[3]
@@ -238,16 +238,16 @@ export function longitude (year, planet, lon) {
 }
 
 /**
-  * Accurate calculation of solstices/ equinoxes
-  * Result is accurate to one second of time.
-  *
-  * @param {Number} year - (int) year
-  * @param {planetposition.Planet} planet - vsop87 planet
-  * @param {Number} lon - longitude in radians
-  * @param {Array} c - term from table 27.a / 27.b
-  * @returns {Number} JDE
-  */
-function eq2 (year, planet, lon, c) {
+ * Accurate calculation of solstices/ equinoxes
+ * Result is accurate to one second of time.
+ *
+ * @param {Number} year - (int) year
+ * @param {import('./planetposition.js').Planet} planet - vsop87 planet
+ * @param {Number} lon - longitude in radians
+ * @param {Array} c - term from table 27.a / 27.b
+ * @returns {Number} JDE
+ */
+function eq2(year, planet, lon, c) {
   let J0 = base.horner(year * 0.001, c)
 
   for (;;) {

@@ -1,5 +1,11 @@
 import assert from 'assert'
-import { globe, sidereal, coord, julian, sexagesimal as sexa } from '../src/index.js'
+import {
+  globe,
+  sidereal,
+  coord,
+  julian,
+  sexagesimal as sexa
+} from '../src/index.js'
 
 describe('#coord', function () {
   it('Equatorial.toEcliptic', function () {
@@ -8,7 +14,7 @@ describe('#coord', function () {
       new sexa.RA(7, 45, 18.946).rad(),
       new sexa.Angle(false, 28, 1, 34.26).rad()
     )
-    const obl = 23.4392911 * Math.PI / 180
+    const obl = (23.4392911 * Math.PI) / 180
     const ecl = eq.toEcliptic(obl)
     const λ = new sexa.Angle(ecl.lon).toDegString(5)
     const β = new sexa.Angle(ecl.lat).toDegString(5)
@@ -22,11 +28,16 @@ describe('#coord', function () {
       new sexa.RA(7, 45, 18.946).rad(),
       new sexa.Angle(false, 28, 1, 34.26).rad()
     )
-    const obl = 23.4392911 * Math.PI / 180
+    const obl = (23.4392911 * Math.PI) / 180
     const eq = eq0.toEcliptic(obl).toEquatorial(obl) // apply reverse transform
 
     assert.deepStrictEqual(new sexa.RA(eq.ra).toDMS(), [false, 7, 45, 18.946])
-    assert.deepStrictEqual(new sexa.Angle(eq.dec).toDMS(), [false, 28, 1, 34.26])
+    assert.deepStrictEqual(new sexa.Angle(eq.dec).toDMS(), [
+      false,
+      28,
+      1,
+      34.26
+    ])
   })
 
   it('Equatorial.toHorizontal', function () {

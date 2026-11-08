@@ -39,8 +39,8 @@ import { Coord as GlobeCoord } from './globe.js' // eslint-disable-line no-unuse
  */
 
 /**
-* Ecliptic coordinates are referenced to the plane of the ecliptic.
-*/
+ * Ecliptic coordinates are referenced to the plane of the ecliptic.
+ */
 export class Ecliptic {
   /**
    * IMPORTANT: Longitudes are measured *positively* westwards
@@ -48,7 +48,7 @@ export class Ecliptic {
    * @param {Number|LonLat} [lon] - Longitude (λ) in radians
    * @param {Number} [lat] - Latitude (β) in radians
    */
-  constructor (lon, lat) {
+  constructor(lon, lat) {
     if (typeof lon === 'object') {
       lat = lon.lat
       lon = lon.lon
@@ -62,7 +62,7 @@ export class Ecliptic {
    * @param {Number} ε - Obliquity
    * @returns {Equatorial}
    */
-  toEquatorial (ε) {
+  toEquatorial(ε) {
     const [εsin, εcos] = base.sincos(ε)
     const [sβ, cβ] = base.sincos(this.lat)
     const [sλ, cλ] = base.sincos(this.lon)
@@ -83,7 +83,7 @@ export class Equatorial {
    * @param {Number} ra - (float) Right ascension (α) in radians
    * @param {Number} dec - (float) Declination (δ) in radians
    */
-  constructor (ra = 0, dec = 0) {
+  constructor(ra = 0, dec = 0) {
     this.ra = ra
     this.dec = dec
   }
@@ -93,7 +93,7 @@ export class Equatorial {
    * @param {Number} ε - Obliquity
    * @returns {Ecliptic}
    */
-  toEcliptic (ε) {
+  toEcliptic(ε) {
     const [εsin, εcos] = base.sincos(ε)
     const [sα, cα] = base.sincos(this.ra)
     const [sδ, cδ] = base.sincos(this.dec)
@@ -115,7 +115,7 @@ export class Equatorial {
    * @param {Number} st - sidereal time at Greenwich at time of observation
    * @returns {Horizontal}
    */
-  toHorizontal (g, st) {
+  toHorizontal(g, st) {
     const H = new sexa.Time(st).rad() - g.lon - this.ra
     const [sH, cH] = base.sincos(H)
     const [sφ, cφ] = base.sincos(g.lat)
@@ -134,7 +134,7 @@ export class Equatorial {
    *
    * @returns {Galactic}
    */
-  toGalactic () {
+  toGalactic() {
     const [sdα, cdα] = base.sincos(galacticNorth1950.ra - this.ra)
     const [sgδ, cgδ] = base.sincos(galacticNorth1950.dec)
     const [sδ, cδ] = base.sincos(this.dec)
@@ -153,7 +153,11 @@ export class Equatorial {
  * @param {Number} alt - Altitude (h) in radians
  */
 export class Horizontal {
-  constructor (az = 0, alt = 0) {
+  /**
+   * @param {number} [az=0] - Azimuth in radians.
+   * @param {number} [alt=0] - Altitude in radians.
+   */
+  constructor(az = 0, alt = 0) {
     this.az = az
     this.alt = alt
   }
@@ -167,11 +171,11 @@ export class Horizontal {
    * @param {Number} st - sidereal time at Greenwich at time of observation.
    * @returns {Equatorial} (right ascension, declination)
    */
-  toEquatorial (g, st) {
+  toEquatorial(g, st) {
     const [sA, cA] = base.sincos(this.az)
     const [sh, ch] = base.sincos(this.alt)
     const [sφ, cφ] = base.sincos(g.lat)
-    const H = Math.atan2(sA, cA * sφ + sh / ch * cφ)
+    const H = Math.atan2(sA, cA * sφ + (sh / ch) * cφ)
     const ra = base.pmod(new sexa.Time(st).rad() - g.lon - H, 2 * Math.PI)
     const dec = Math.asin(sφ * sh - cφ * ch * cA)
     return new Equatorial(ra, dec)
@@ -184,7 +188,11 @@ export class Horizontal {
  * @param {Number} lat - Latitude (b) in radians
  */
 export class Galactic {
-  constructor (lon = 0, lat = 0) {
+  /**
+   * @param {number} [lon=0] - Galactic longitude in radians.
+   * @param {number} [lat=0] - Galactic latitude in radians.
+   */
+  constructor(lon = 0, lat = 0) {
     this.lon = lon
     this.lat = lat
   }
@@ -198,9 +206,11 @@ export class Galactic {
    *
    * @returns {Equatorial} (right ascension, declination)
    */
-  toEquatorial () {
+  toEquatorial() {
     // (-galactic0Lon1950 - math.Pi/2) = magic number of -123 deg
-    const [sdLon, cdLon] = base.sincos(this.lon - galactic0Lon1950 - Math.PI / 2)
+    const [sdLon, cdLon] = base.sincos(
+      this.lon - galactic0Lon1950 - Math.PI / 2
+    )
     const [sgδ, cgδ] = base.sincos(galacticNorth1950.dec)
     const [sb, cb] = base.sincos(this.lat)
     const y = Math.atan2(sdLon, cdLon * sgδ - (sb / cb) * cgδ)
@@ -212,22 +222,22 @@ export class Galactic {
 }
 
 /**
-* equatorial coords for galactic north
-* IAU B1950.0 coordinates of galactic North Pole
-*/
+ * equatorial coords for galactic north
+ * IAU B1950.0 coordinates of galactic North Pole
+ */
 export const galacticNorth = new Equatorial(
   new sexa.RA(12, 49, 0).rad(),
-  27.4 * Math.PI / 180
+  (27.4 * Math.PI) / 180
 )
 export const galacticNorth1950 = galacticNorth
 
 /**
-* Galactic Longitude 0°
-* Meeus gives 33 as the origin of galactic longitudes relative to the
-* ascending node of of the galactic equator.  33 + 90 = 123, the IAU
-* value for origin relative to the equatorial pole.
-*/
-export const galacticLon0 = 33 * Math.PI / 180
+ * Galactic Longitude 0°
+ * Meeus gives 33 as the origin of galactic longitudes relative to the
+ * ascending node of of the galactic equator.  33 + 90 = 123, the IAU
+ * value for origin relative to the equatorial pole.
+ */
+export const galacticLon0 = (33 * Math.PI) / 180
 export const galactic0Lon1950 = galacticLon0
 
 export default {

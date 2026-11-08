@@ -26,7 +26,7 @@
  * @param {Number} maxIterations - (int)
  * @returns {Number}
  */
-export function decimalPlaces (better, start, places, maxIterations) {
+export function decimalPlaces(better, start, places, maxIterations) {
   const d = Math.pow(10, -places)
   for (let i = 0; i < maxIterations; i++) {
     const n = better(start)
@@ -52,7 +52,7 @@ export function decimalPlaces (better, start, places, maxIterations) {
  * @param {Number} maxIterations - (int)
  * @returns {Number}
  */
-export function fullPrecision (better, start, maxIterations) {
+export function fullPrecision(better, start, maxIterations) {
   for (let i = 0; i < maxIterations; i++) {
     const n = better(start)
     if (Math.abs((n - start) / n) < 1e-15) {
@@ -74,7 +74,7 @@ export function fullPrecision (better, start, maxIterations) {
  * @param {Number} upper - (float)
  * @returns {Number}
  */
-export function binaryRoot (f, lower, upper) {
+export function binaryRoot(f, lower, upper) {
   let yLower = f(lower)
   let mid = 0
   for (let j = 0; j < 52; j++) {
@@ -93,8 +93,8 @@ export function binaryRoot (f, lower, upper) {
   return mid
 }
 
-function signbit (v) {
-  return (v < 0)
+function signbit(v) {
+  return v < 0
 }
 
 export default {

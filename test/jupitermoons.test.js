@@ -16,7 +16,7 @@ describe('#jupitermoons', function () {
       assert.strictEqual(float(pos[0].y).toFixed(2), +0.21)
       assert.strictEqual(float(pos[1].y).toFixed(2), +0.25)
       assert.strictEqual(float(pos[2].y).toFixed(2), +0.65)
-      assert.strictEqual(float(pos[3].y).toFixed(2), +1.10)
+      assert.strictEqual(float(pos[3].y).toFixed(2), +1.1)
 
       assert.strictEqual(float(pos[0].z).toFixed(2), -4.82)
       assert.strictEqual(float(pos[1].z).toFixed(2), -5.74)
@@ -35,10 +35,14 @@ describe('#jupitermoons', function () {
       // zero (indicating conjunction) and Y coordinates near the values given by
       // Meeus.
 
-      let jde = new julian.Calendar().fromDate(new Date('1988-11-23T07:28:00Z')).toJDE()
+      let jde = new julian.Calendar()
+        .fromDate(new Date('1988-11-23T07:28:00Z'))
+        .toJDE()
       const pos3 = jupitermoons.positions(jde)
 
-      jde = new julian.Calendar().fromDate(new Date('1988-11-23T05:15:00Z')).toJDE()
+      jde = new julian.Calendar()
+        .fromDate(new Date('1988-11-23T05:15:00Z'))
+        .toJDE()
       const pos4 = jupitermoons.positions(jde)
 
       assert.deepStrictEqual(xyToFixed(pos3[2]), {
@@ -66,13 +70,13 @@ describe('#jupitermoons', function () {
 
       assert.strictEqual(float(pos[0].x).toFixed(4), -3.4503)
       assert.strictEqual(float(pos[1].x).toFixed(4), +7.4418)
-      assert.strictEqual(float(pos[2].x).toFixed(4), +1.2010)
-      assert.strictEqual(float(pos[3].x).toFixed(4), +7.0720)
+      assert.strictEqual(float(pos[2].x).toFixed(4), +1.201)
+      assert.strictEqual(float(pos[3].x).toFixed(4), +7.072)
 
       assert.strictEqual(float(pos[0].y).toFixed(4), +0.2137)
       assert.strictEqual(float(pos[1].y).toFixed(4), +0.2752)
-      assert.strictEqual(float(pos[2].y).toFixed(4), +0.5900)
-      assert.strictEqual(float(pos[3].y).toFixed(4), +1.0290)
+      assert.strictEqual(float(pos[2].y).toFixed(4), +0.59)
+      assert.strictEqual(float(pos[3].y).toFixed(4), +1.029)
 
       assert.strictEqual(float(pos[0].z).toFixed(4), -4.8189)
       assert.strictEqual(float(pos[1].z).toFixed(4), -5.7472)
@@ -94,10 +98,14 @@ describe('#jupitermoons', function () {
       const e = new planetposition.Planet(data.earth)
       const j = new planetposition.Planet(data.jupiter)
 
-      let jde = new julian.Calendar().fromDate(new Date('1988-11-23T07:28:00Z')).toJDE()
+      let jde = new julian.Calendar()
+        .fromDate(new Date('1988-11-23T07:28:00Z'))
+        .toJDE()
       const pos3 = jupitermoons.e5(jde, e, j)
 
-      jde = new julian.Calendar().fromDate(new Date('1988-11-23T05:15:00Z')).toJDE()
+      jde = new julian.Calendar()
+        .fromDate(new Date('1988-11-23T05:15:00Z'))
+        .toJDE()
       const pos4 = jupitermoons.e5(jde, e, j)
 
       assert.deepStrictEqual(xyToFixed(pos3[2]), {
@@ -107,7 +115,7 @@ describe('#jupitermoons', function () {
       })
       assert.deepStrictEqual(xyToFixed(pos4[3]), {
         x: +0.0002,
-        y: +1.3990,
+        y: +1.399,
         z: +26.2732
       })
 
@@ -118,7 +126,7 @@ describe('#jupitermoons', function () {
   })
 })
 
-function xyToFixed (xy, n) {
+function xyToFixed(xy, n) {
   n = n || 4
   return {
     x: float(xy.x).toFixed(n),

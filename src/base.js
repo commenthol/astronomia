@@ -35,7 +35,7 @@
  *
  * FloorDiv and FloorDiv64 are optimizations for the INT function described
  * on p. 60, chapter 7.
-*/
+ */
 
 // ---- constants ----
 
@@ -60,7 +60,7 @@ export const COblJ2000 = 0.917482062
  * @param {Number} dist - distance in to earth in AU
  * @returns {Number} time for light to travel a given distance in days
  */
-export function lightTime (dist) {
+export function lightTime(dist) {
   // Formula given as (33.3) p. 224.
   return 0.0057755183 * dist
 }
@@ -102,7 +102,7 @@ export const meanSiderealYear = 365.25636 // days
  * @param {Number} jy - Julian year
  * @returns {Number} jde - Julian ephemeris day
  */
-export function JulianYearToJDE (jy) {
+export function JulianYearToJDE(jy) {
   return J2000 + JulianYear * (jy - 2000)
 }
 
@@ -111,7 +111,7 @@ export function JulianYearToJDE (jy) {
  * @param {Number} jde - Julian ephemeris day
  * @returns {Number} jy - Julian year
  */
-export function JDEToJulianYear (jde) {
+export function JDEToJulianYear(jde) {
   return 2000 + (jde - J2000) / JulianYear
 }
 
@@ -120,7 +120,7 @@ export function JDEToJulianYear (jde) {
  * @param {Number} by - Besselian year
  * @returns {Number} jde - Julian ephemeris day
  */
-export function BesselianYearToJDE (by) {
+export function BesselianYearToJDE(by) {
   return B1900 + BesselianYear * (by - 1900)
 }
 
@@ -129,7 +129,7 @@ export function BesselianYearToJDE (by) {
  * @param {Number} jde - Julian ephemeris day
  * @returns {Number} by - Besselian year
  */
-export function JDEToBesselianYear (jde) {
+export function JDEToBesselianYear(jde) {
   return 1900 + (jde - B1900) / BesselianYear
 }
 
@@ -140,7 +140,7 @@ export function JDEToBesselianYear (jde) {
  * @param {Number} jde - Julian ephemeris day
  * @returns {Number} number of Julian centuries since J2000
  */
-export function J2000Century (jde) {
+export function J2000Century(jde) {
   // The formula is given in a number of places in the book, for example
   // (12.1) p. 87.
   // (22.1) p. 143.
@@ -158,7 +158,7 @@ export function J2000Century (jde) {
  * @param {Number} i - phase angle in radians.
  * @returns {Number} illuminated fraction of a body's disk.
  */
-export function illuminated (i) {
+export function illuminated(i) {
   // (41.1) p. 283, also (48.1) p. 345.
   return (1 + Math.cos(i)) * 0.5
 }
@@ -177,7 +177,7 @@ export class Coord {
    * @param {number} [range] - distance
    * @param {number} [elongation] - elongation
    */
-  constructor (ra, dec, range, elongation) {
+  constructor(ra, dec, range, elongation) {
     this._ra = ra || 0
     this._dec = dec || 0
     this.range = range
@@ -188,11 +188,12 @@ export class Coord {
    * right ascension
    * @return {number}
    */
-  get ra () {
+  get ra() {
     return this._ra
   }
 
-  set ra (ra) {
+  /** @param {number} ra - Right ascension in radians. */
+  set ra(ra) {
     this._ra = ra
   }
 
@@ -200,11 +201,12 @@ export class Coord {
    * declination
    * @return {number}
    */
-  get dec () {
+  get dec() {
     return this._dec
   }
 
-  set dec (dec) {
+  /** @param {number} dec - Declination in radians. */
+  set dec(dec) {
     this._dec = dec
   }
 
@@ -212,11 +214,12 @@ export class Coord {
    * right ascension (or longitude)
    * @return {number}
    */
-  get lon () {
+  get lon() {
     return this._ra
   }
 
-  set lon (ra) {
+  /** @param {number} ra - Longitude in radians. */
+  set lon(ra) {
     this._ra = ra
   }
 
@@ -224,11 +227,12 @@ export class Coord {
    * declination (or latitude)
    * @return {number}
    */
-  get lat () {
+  get lat() {
     return this._dec
   }
 
-  set lat (dec) {
+  /** @param {number} dec - Latitude in radians. */
+  set lat(dec) {
     this._dec = dec
   }
 }
@@ -242,7 +246,7 @@ export class Coord {
  * @param {Coord} appSun - apparent coordinates of the Sun `{ra, dec}` (In radians).
  * @returns {Number} position angle of the midpoint (in radians).
  */
-export function limb (equ, appSun) {
+export function limb(equ, appSun) {
   const α = equ.ra
   const δ = equ.dec
   const α0 = appSun.ra
@@ -254,7 +258,7 @@ export function limb (equ, appSun) {
   const cδ0 = Math.cos(δ0)
   const sα0α = Math.sin(α0 - α)
   const cα0α = Math.cos(α0 - α)
-  let χ = Math.atan2(cδ0 * sα0α, (sδ0 * cδ - cδ0 * sδ * cα0α))
+  let χ = Math.atan2(cδ0 * sα0α, sδ0 * cδ - cδ0 * sδ * cα0α)
   if (χ < 0) {
     χ += 2 * Math.PI
   }
@@ -268,7 +272,7 @@ export function limb (equ, appSun) {
  * SmallAngle is threshold used by various routines for switching between
  * trigonometric functions and Pythagorean approximations.
  */
-export const SmallAngle = 10 * Math.PI / 180 / 60 // about .003 radians
+export const SmallAngle = (10 * Math.PI) / 180 / 60 // about .003 radians
 /** cosine of SmallAngle */
 export const CosSmallAngle = Math.cos(SmallAngle) // about .999996
 
@@ -281,7 +285,7 @@ export const CosSmallAngle = Math.cos(SmallAngle) // about .999996
  * @param {Number} y
  * @returns {Number} x % y - The result may not be useful if y is negative.
  */
-export function pmod (x, y) {
+export function pmod(x, y) {
   let r = x % y
   if (r < 0) {
     r += y
@@ -290,21 +294,19 @@ export function pmod (x, y) {
 }
 
 /**
- * horner evaluates a polynomal with coefficients c at x.  The constant
+ * horner evaluates a polynomial with coefficients c at x.  The constant
  * term is c[0].
- * @param {Number} x
- * @param {Number[]} c - coefficients; c[0] may be of type Number[]
- * @returns {Number}
+ * @param {number} x - Value at which to evaluate the polynomial.
+ * @param {...(number|number[])} c - Coefficients, passed individually or as one array.
+ * @returns {number} Polynomial value.
  */
-export function horner (x, ...c) {
-  if (Array.isArray(c[0])) {
-    c = c[0]
-  }
-  let i = c.length - 1
-  let y = c[i]
+export function horner(x, ...c) {
+  const coefficients = /** @type {number[]} */ (Array.isArray(c[0]) ? c[0] : c)
+  let i = coefficients.length - 1
+  let y = coefficients[i]
   while (i > 0) {
     i--
-    y = y * x + c[i]
+    y = y * x + coefficients[i]
   }
   return y
 }
@@ -315,7 +317,7 @@ export function horner (x, ...c) {
  * @param {Number} y
  * @returns {Number} (int)
  */
-export function floorDiv (x, y) {
+export function floorDiv(x, y) {
   const q = x / y
   return Math.floor(q)
 }
@@ -328,7 +330,7 @@ export function floorDiv (x, y) {
  * @param {Number} b
  * @returns {Number} comparison result
  */
-export function cmp (a, b) {
+export function cmp(a, b) {
   if (a < b) return -1
   if (a > b) return 1
   return 0
@@ -339,7 +341,7 @@ export function cmp (a, b) {
  * @param {Number} ε
  * @returns {Number[]} [sin(ε), cos(ε)]
  */
-export function sincos (ε) {
+export function sincos(ε) {
   return [Math.sin(ε), Math.cos(ε)]
 }
 
@@ -348,7 +350,7 @@ export function sincos (ε) {
  * @param  {Number} deg - Angle in degrees
  * @return {Number} Angle in radians
  */
-export function toRad (deg) {
+export function toRad(deg) {
   return (Math.PI / 180.0) * deg
 }
 
@@ -357,18 +359,16 @@ export function toRad (deg) {
  * @param  {Number} rad - Angle in radians
  * @return {Number} Angle in degrees
  */
-export function toDeg (rad) {
+export function toDeg(rad) {
   return (180.0 / Math.PI) * rad
 }
 
 /**
  * separate fix `i` from fraction `f`
  * @param {Number} float
- * @returns {Array} [i, f]
- *  {Number} i - (int) fix value
- *  {Number} f - (float) fractional portion; always > 1
+ * @returns {[number, number]} Integer part and absolute fractional part.
  */
-export function modf (float) {
+export function modf(float) {
   const i = Math.trunc(float)
   const f = Math.abs(float - i)
   return [i, f]
@@ -380,15 +380,21 @@ export function modf (float) {
  * @param {Number} [precision] - (int) number of post decimal positions
  * @return {Number} rounded `float`
  */
-export function round (float, precision = 14) {
+export function round(float, precision = 14) {
   return parseFloat(float.toFixed(precision))
 }
 
-export function errorCode (msg, code) {
+/**
+ * Create an Error carrying a numeric code.
+ * @param {string} msg - Error message.
+ * @param {number} code - Numeric error code.
+ * @returns {Error & {code: number}} Coded error.
+ */
+export function errorCode(msg, code) {
   const err = new Error(msg)
   // @ts-ignore
   err.code = code
-  return err
+  return /** @type {Error & {code: number}} */ (err)
 }
 
 export default {

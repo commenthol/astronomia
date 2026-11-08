@@ -18,8 +18,9 @@ const { atan, atan2, cos, sqrt, tan } = Math
  * @param {Number} P - is period of revolution in mean solar years
  * @returns {Number} mean anomaly in radians.
  */
-export function meanAnomaly (year, T, P) { // (year, T, P float64)  float64
-  const n = 2 * Math.PI / P
+export function meanAnomaly(year, T, P) {
+  // (year, T, P float64)  float64
+  const n = (2 * Math.PI) / P
   return base.pmod(n * (year - T), 2 * Math.PI)
 }
 
@@ -38,7 +39,8 @@ export function meanAnomaly (year, T, P) { // (year, T, P float64)  float64
  *  {Number} θ -is the apparent position angle in radians,
  *  {Number} ρ is the angular distance in arc seconds.
  */
-export function position (a, e, i, Ω, ω, E) { // (a, e, i, Ω, ω, E float64)  (θ, ρ float64)
+export function position(a, e, i, Ω, ω, E) {
+  // (a, e, i, Ω, ω, E float64)  (θ, ρ float64)
   const r = a * (1 - e * cos(E))
   const ν = 2 * atan(sqrt((1 + e) / (1 - e)) * tan(E / 2))
   const [sinνω, cosνω] = base.sincos(ν + ω)
@@ -61,7 +63,8 @@ export function position (a, e, i, Ω, ω, E) { // (a, e, i, Ω, ω, E float64) 
  * @param {Number} ω - is longitude of periastron
  * @returns {Number} apparent eccenticity of a binary star
  */
-export function apparentEccentricity (e, i, ω) { // (e, i, ω float64)  float64
+export function apparentEccentricity(e, i, ω) {
+  // (e, i, ω float64)  float64
   const cosi = cos(i)
   const [sinω, cosω] = base.sincos(ω)
   const A = (1 - e * e * cosω * cosω) * cosi * cosi
@@ -69,7 +72,7 @@ export function apparentEccentricity (e, i, ω) { // (e, i, ω float64)  float64
   const C = 1 - e * e * sinω * sinω
   const d = A - C
   const sqrtD = sqrt(d * d + 4 * B * B)
-  return sqrt(2 * sqrtD / (A + C + sqrtD))
+  return sqrt((2 * sqrtD) / (A + C + sqrtD))
 }
 
 export default {

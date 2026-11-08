@@ -17,7 +17,7 @@ import data from '../data/index.js'
 describe('#rise', function () {
   const coord = {
     lat: new sexa.Angle(false, 42, 20, 0),
-    lon: new sexa.Angle(false, 71, 5, 0)   // ! positively westward
+    lon: new sexa.Angle(false, 71, 5, 0) // ! positively westward
   }
   const jd = julian.CalendarGregorianToJD(1988, 3, 20)
   const h0 = rise.stdh0Stellar()
@@ -38,7 +38,10 @@ describe('#rise', function () {
 
   describe('stdh0', function () {
     it('stdh0Stellar', function () {
-      assert.strictEqual(rise.stdh0.stellar, -0.5666666666666667 * Math.PI / 180)
+      assert.strictEqual(
+        rise.stdh0.stellar,
+        (-0.5666666666666667 * Math.PI) / 180
+      )
       assert.strictEqual(rise.stdh0Stellar(), -rise.meanRefraction)
     })
     it('stdh0Solar', function () {
@@ -46,14 +49,14 @@ describe('#rise', function () {
       assert.strictEqual(rise.stdh0Solar(), -0.01454441043328608)
     })
     it('stdh0LunarMean', function () {
-      assert.strictEqual(rise.stdh0.lunarMean, 0.125 * Math.PI / 180)
-      assert.strictEqual(rise.stdh0.lunar, 0.7275 * Math.PI / 180)
+      assert.strictEqual(rise.stdh0.lunarMean, (0.125 * Math.PI) / 180)
+      assert.strictEqual(rise.stdh0.lunar, (0.7275 * Math.PI) / 180)
     })
     describe('stdh0Lunar()', function () {
-      function test (name, distance, stdh0Deg) {
+      function test(name, distance, stdh0Deg) {
         it(name, function () {
           const pi = parallax(distance) // horizontal parallax
-          assert.strictEqual(rise.stdh0Lunar(pi) * 180 / Math.PI, stdh0Deg)
+          assert.strictEqual((rise.stdh0Lunar(pi) * 180) / Math.PI, stdh0Deg)
         })
       }
       test('perigee', 359861, -0.5537718610642937)
@@ -63,10 +66,7 @@ describe('#rise', function () {
   })
 
   describe('methods', function () {
-    const p = new globe.Coord(
-      coord.lat.rad(),
-      coord.lon.rad()
-    )
+    const p = new globe.Coord(coord.lat.rad(), coord.lon.rad())
 
     it('approxTimes', function () {
       // Example 15.a, p. 103.0
@@ -92,9 +92,9 @@ describe('#rise', function () {
       assert.strictEqual(new sexa.Time(rs[1]).toString(0), '19ʰ40ᵐ30ˢ')
       assert.strictEqual(new sexa.Time(rs[2]).toString(0), '2ʰ54ᵐ40ˢ')
       // new v2 api
-      assert.strictEqual(new sexa.Time(rs.rise).toString(0),    '12ʰ25ᵐ26ˢ')
+      assert.strictEqual(new sexa.Time(rs.rise).toString(0), '12ʰ25ᵐ26ˢ')
       assert.strictEqual(new sexa.Time(rs.transit).toString(0), '19ʰ40ᵐ30ˢ')
-      assert.strictEqual(new sexa.Time(rs.set).toString(0),     '2ʰ54ᵐ40ˢ')
+      assert.strictEqual(new sexa.Time(rs.set).toString(0), '2ʰ54ᵐ40ˢ')
     })
   })
 
@@ -111,17 +111,28 @@ describe('#rise', function () {
       date.setUTCFullYear(1988)
       date.setUTCMonth(3 - 1)
       date.setUTCDate(20)
-      const rs = new rise.PlanetRise(date, lat, lon, earth, venus, { date: true }).approxTimes()
-      assert.strictEqual(rs.rise.toISOString(),    '1988-03-20T12:26:09.270Z')
+      const rs = new rise.PlanetRise(date, lat, lon, earth, venus, {
+        date: true
+      }).approxTimes()
+      assert.strictEqual(rs.rise.toISOString(), '1988-03-20T12:26:09.270Z')
       assert.strictEqual(rs.transit.toISOString(), '1988-03-20T19:40:17.578Z')
-      assert.strictEqual(rs.set.toISOString(),     '1988-03-20T02:54:25.885Z')
+      assert.strictEqual(rs.set.toISOString(), '1988-03-20T02:54:25.885Z')
     })
     it('using times', function () {
       // Example 15.a, p. 103.0
       const rs = new rise.PlanetRise(jd, lat, lon, earth, venus).times()
-      assert.strictEqual(new julian.Calendar().fromJD(rs.rise).toDate().toISOString(),    '1988-03-20T12:25:25.629Z')
-      assert.strictEqual(new julian.Calendar().fromJD(rs.transit).toDate().toISOString(), '1988-03-20T19:40:30.555Z')
-      assert.strictEqual(new julian.Calendar().fromJD(rs.set).toDate().toISOString(),     '1988-03-20T02:54:40.159Z')
+      assert.strictEqual(
+        new julian.Calendar().fromJD(rs.rise).toDate().toISOString(),
+        '1988-03-20T12:25:25.629Z'
+      )
+      assert.strictEqual(
+        new julian.Calendar().fromJD(rs.transit).toDate().toISOString(),
+        '1988-03-20T19:40:30.555Z'
+      )
+      assert.strictEqual(
+        new julian.Calendar().fromJD(rs.set).toDate().toISOString(),
+        '1988-03-20T02:54:40.159Z'
+      )
     })
   })
 })

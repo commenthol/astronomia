@@ -26,8 +26,19 @@ export const iapetus = 7
 
 /**
  * XYZ holds coordinates returned from positions().
+ * @typedef {object} XYZPosition
+ * @property {number} x - Rectangular x-coordinate in Saturn radii.
+ * @property {number} y - Rectangular y-coordinate in Saturn radii.
+ * @property {number} z - Rectangular z-coordinate in Saturn radii.
  */
-function XYZ (x, y, z) {
+/**
+ * @typedef {object} SatelliteElements
+ * @property {number} λ - Longitude in radians.
+ * @property {number} r - Orbital radius in Saturn radii.
+ * @property {number} γ - Latitude in radians.
+ * @property {number} Ω - Longitude of the ascending node in radians.
+ */
+function XYZ(x, y, z) {
   this.x = x
   this.y = y
   this.z = z
@@ -45,10 +56,10 @@ const d = Math.PI / 180
  * @param {number} jde - Julian ephemeris day
  * @param {Planet} earth - VSOP87 planet Earth // eslint-disable-line no-unused-vars
  * @param {Planet} saturn - VSOP87 planet Saturn // eslint-disable-line no-unused-vars
- * @return {XYZ[]} Array of Moon Positions in `XYZ`
+ * @return {XYZPosition[]} Array of Moon positions in Saturn radii.
  *   Use `M.mimas ... M.iapetus` to resolve to Moon and its position at `jde`
  */
-export function positions (jde, earth, saturn) {
+export function positions(jde, earth, saturn) {
   const sol = solar.trueVSOP87(earth, jde)
   const [s, β, R] = [sol.lon, sol.lat, sol.range]
   const [ss, cs] = base.sincos(s)
@@ -63,7 +74,7 @@ export function positions (jde, earth, saturn) {
     const τ = base.lightTime(Δ)
     _jde = jde - τ
     const { lon, lat, range } = saturn.position(_jde)
-    const fk5 = planetposition.toFK5(lon, lat, _jde) // eslint-disable-line no-unused-vars
+    const fk5 = planetposition.toFK5(lon, lat, _jde)
     const [l, b] = [fk5.lon, fk5.lat]
     const [sl, cl] = base.sincos(l)
     const [sb, cb] = base.sincos(b)
@@ -78,7 +89,11 @@ export function positions (jde, earth, saturn) {
   let λ0 = Math.atan2(y, x)
   let β0 = Math.atan(z / Math.hypot(x, y))
   let ecl = new coord.Ecliptic(λ0, β0)
-  ecl = precess.eclipticPosition(ecl, base.JDEToJulianYear(jde), base.JDEToJulianYear(base.B1950))
+  ecl = precess.eclipticPosition(
+    ecl,
+    base.JDEToJulianYear(jde),
+    base.JDEToJulianYear(base.B1950)
+  )
   λ0 = ecl.lon
   β0 = ecl.lat
   const q = new Qs(_jde)
@@ -137,7 +152,7 @@ export function positions (jde, earth, saturn) {
     Y[j] = A[j] * sD + C[j] * cD
     Z[j] = B[j]
     const d = X[j] / s4[j].r
-    X[j] += Math.abs(Z[j]) / k[j] * Math.sqrt(1 - d * d)
+    X[j] += (Math.abs(Z[j]) / k[j]) * Math.sqrt(1 - d * d)
     const W = Δ / (Δ + Z[j] / 2475)
     pos[j - 1] = new XYZ(X[j] * W, Y[j] * W, Z[j])
   }
@@ -146,14 +161,31 @@ export function positions (jde, earth, saturn) {
 
 const k = [0, 20947, 23715, 26382, 29876, 35313, 53800, 59222, 91820]
 
-function R4 (λ, r, γ, Ω) {
+/**
+ * Internal orbital position parameters for a Saturnian moon.
+ * @param {number} [λ=0] - Longitude in radians.
+ * @param {number} [r=0] - Orbital radius in Saturn radii.
+ * @param {number} [γ=0] - Latitude in radians.
+ * @param {number} [Ω=0] - Longitude of the ascending node in radians.
+ * @property {number} λ - Longitude in radians.
+ * @property {number} r - Orbital radius in Saturn radii.
+ * @property {number} γ - Latitude in radians.
+ * @property {number} Ω - Longitude of the ascending node in radians.
+ * @constructor
+ */
+function R4(λ, r, γ, Ω) {
   this.λ = λ || 0
   this.r = r || 0
   this.γ = γ || 0
   this.Ω = Ω || 0
 }
 
-export function Qs (jde) {
+/**
+ * Prepare periodic quantities for the positions of Saturn's moons.
+ * @param {number} jde - Julian ephemeris day.
+ * @constructor
+ */
+export function Qs(jde) {
   this.t1 = jde - 2411093
   this.t2 = this.t1 / 365.25
   this.t3 = (jde - 2433282.423) / 365.25 + 1950
@@ -190,17 +222,23 @@ export function Qs (jde) {
   this.cW4 = Math.cos(this.W4)
   this.sW7 = Math.sin(this.W7)
   this.cW7 = Math.cos(this.W7)
-  return this
 }
 
+/** @returns {SatelliteElements} Geocentric orbital elements of Mimas. */
 Qs.prototype.mimas = function () {
   const r = new R4()
-  const L = 127.64 * d + 381.994497 * d * this.t1 -
-    43.57 * d * this.sW0 - 0.72 * d * this.s3W0 - 0.02144 * d * this.s5W0
+  const L =
+    127.64 * d +
+    381.994497 * d * this.t1 -
+    43.57 * d * this.sW0 -
+    0.72 * d * this.s3W0 -
+    0.02144 * d * this.s5W0
   const p = 106.1 * d + 365.549 * d * this.t2
   const M = L - p
-  const C = 2.18287 * d * Math.sin(M) +
-    0.025988 * d * Math.sin(2 * M) + 0.00043 * d * Math.sin(3 * M)
+  const C =
+    2.18287 * d * Math.sin(M) +
+    0.025988 * d * Math.sin(2 * M) +
+    0.00043 * d * Math.sin(3 * M)
   r.λ = L + C
   r.r = 3.06879 / (1 + 0.01905 * Math.cos(M + C))
   r.γ = 1.563 * d
@@ -208,9 +246,14 @@ Qs.prototype.mimas = function () {
   return r
 }
 
+/** @returns {SatelliteElements} Geocentric orbital elements of Enceladus. */
 Qs.prototype.enceladus = function () {
   const r = new R4()
-  const L = 200.317 * d + 262.7319002 * d * this.t1 + 0.25667 * d * this.sW1 + 0.20883 * d * this.sW2
+  const L =
+    200.317 * d +
+    262.7319002 * d * this.t1 +
+    0.25667 * d * this.sW1 +
+    0.20883 * d * this.sW2
   const p = 309.107 * d + 123.44121 * d * this.t2
   const M = L - p
   const C = 0.55577 * d * Math.sin(M) + 0.00168 * d * Math.sin(2 * M)
@@ -221,19 +264,29 @@ Qs.prototype.enceladus = function () {
   return r
 }
 
+/** @returns {SatelliteElements} Geocentric orbital elements of Tethys. */
 Qs.prototype.tethys = function () {
   const r = new R4()
-  r.λ = 285.306 * d + 190.69791226 * d * this.t1 +
-    2.063 * d * this.sW0 + 0.03409 * d * this.s3W0 + 0.001015 * d * this.s5W0
+  r.λ =
+    285.306 * d +
+    190.69791226 * d * this.t1 +
+    2.063 * d * this.sW0 +
+    0.03409 * d * this.s3W0 +
+    0.001015 * d * this.s5W0
   r.r = 4.880998
   r.γ = 1.0976 * d
   r.Ω = 111.33 * d - 72.2441 * d * this.t2
   return r
 }
 
+/** @returns {SatelliteElements} Geocentric orbital elements of Dione. */
 Qs.prototype.dione = function () {
   const r = new R4()
-  const L = 254.712 * d + 131.53493193 * d * this.t1 - 0.0215 * d * this.sW1 - 0.01733 * d * this.sW2
+  const L =
+    254.712 * d +
+    131.53493193 * d * this.t1 -
+    0.0215 * d * this.sW1 -
+    0.01733 * d * this.sW2
   const p = 174.8 * d + 30.82 * d * this.t2
   const M = L - p
   const C = 0.24717 * d * Math.sin(M) + 0.00033 * d * Math.sin(2 * M)
@@ -244,6 +297,7 @@ Qs.prototype.dione = function () {
   return r
 }
 
+/** @returns {SatelliteElements} Geocentric orbital elements of Rhea. */
 Qs.prototype.rhea = function () {
   const pʹ = 342.7 * d + 10.057 * d * this.t2
   const [spʹ, cpʹ] = base.sincos(pʹ)
@@ -260,6 +314,16 @@ Qs.prototype.rhea = function () {
   return this.subr(λʹ, p, e, a, Ω, i)
 }
 
+/**
+ * Convert orbital elements to the satellite position parameters.
+ * @param {number} λʹ - Mean longitude in radians.
+ * @param {number} p - Longitude of periapsis in radians.
+ * @param {number} e - Eccentricity.
+ * @param {number} a - Semimajor axis in Saturn radii.
+ * @param {number} Ω - Longitude of ascending node in radians.
+ * @param {number} i - Inclination in radians.
+ * @returns {SatelliteElements} Satellite position parameters.
+ */
 Qs.prototype.subr = function (λʹ, p, e, a, Ω, i) {
   const r = new R4()
   const M = λʹ - p
@@ -267,11 +331,13 @@ Qs.prototype.subr = function (λʹ, p, e, a, Ω, i) {
   const e3 = e2 * e
   const e4 = e2 * e2
   const e5 = e3 * e2
-  const C = (2 * e - 0.25 * e3 + 0.0520833333 * e5) * Math.sin(M) +
+  const C =
+    (2 * e - 0.25 * e3 + 0.0520833333 * e5) * Math.sin(M) +
     (1.25 * e2 - 0.458333333 * e4) * Math.sin(2 * M) +
     (1.083333333 * e3 - 0.671875 * e5) * Math.sin(3 * M) +
-    1.072917 * e4 * Math.sin(4 * M) + 1.142708 * e5 * Math.sin(5 * M)
-  r.r = a * (1 - e2) / (1 + e * Math.cos(M + C)) // return value
+    1.072917 * e4 * Math.sin(4 * M) +
+    1.142708 * e5 * Math.sin(5 * M)
+  r.r = (a * (1 - e2)) / (1 + e * Math.cos(M + C)) // return value
   const g = Ω - 168.8112 * d
   const [si, ci] = base.sincos(i)
   const [sg, cg] = base.sincos(g)
@@ -286,6 +352,7 @@ Qs.prototype.subr = function (λʹ, p, e, a, Ω, i) {
   return r
 }
 
+/** @returns {SatelliteElements} Geocentric orbital elements of Titan. */
 Qs.prototype.titan = function () {
   const L = 261.1582 * d + 22.57697855 * d * this.t4 + 0.074025 * d * this.sW3
   const iʹ = 27.45141 * d + 0.295999 * d * this.cW3
@@ -318,14 +385,20 @@ Qs.prototype.titan = function () {
   const u = 2 * this.W5 - 2 * θ + ψ
   const [su, cu] = base.sincos(u)
   const h = 0.9375 * eʹ * eʹ * sq + 0.1875 * s * s * Math.sin(2 * (this.W5 - θ))
-  const λʹ = L - 0.254744 * d *
-    (this.e1 * Math.sin(this.W6) + 0.75 * this.e1 * this.e1 * Math.sin(2 * this.W6) + h)
+  const λʹ =
+    L -
+    0.254744 *
+      d *
+      (this.e1 * Math.sin(this.W6) +
+        0.75 * this.e1 * this.e1 * Math.sin(2 * this.W6) +
+        h)
   const i = iʹ + 0.031843 * d * s * cu
-  const Ω = Ωʹ + 0.031843 * d * s * su / siʹ
+  const Ω = Ωʹ + (0.031843 * d * s * su) / siʹ
   const a = 20.216193
   return this.subr(λʹ, p, e, a, Ω, i)
 }
 
+/** @returns {SatelliteElements} Geocentric orbital elements of Hyperion. */
 Qs.prototype.hyperion = function () {
   const η = 92.39 * d + 0.5621071 * d * this.t6
   const ζ = 148.19 * d - 19.18 * d * this.t8
@@ -347,21 +420,55 @@ Qs.prototype.hyperion = function () {
   const [sχ, cχ] = base.sincos(χ)
   const [scs, ccs] = base.sincos(cs)
   const a = 24.50601 - 0.08686 * cη - 0.00166 * cζpη + 0.00175 * cζmη
-  const e = 0.103458 - 0.004099 * cη - 0.000167 * cζpη + 0.000235 * cζmη +
-    0.02303 * cζ - 0.00212 * c2ζ + 0.000151 * c3ζ + 0.00013 * cφ
-  const p = ϖ + 0.15648 * d * sχ - 0.4457 * d * sη - 0.2657 * d * sζpη - 0.3573 * d * sζmη -
-    12.872 * d * sζ + 1.668 * d * s2ζ - 0.2419 * d * s3ζ - 0.07 * d * sφ
-  const λʹ = 177.047 * d + 16.91993829 * d * this.t6 + 0.15648 * d * sχ + 9.142 * d * sη +
-    0.007 * d * Math.sin(2 * η) - 0.014 * d * Math.sin(3 * η) + 0.2275 * d * sζpη +
-    0.2112 * d * sζmη - 0.26 * d * sζ - 0.0098 * d * s2ζ -
-    0.013 * d * Math.sin(as) + 0.017 * d * Math.sin(bs) - 0.0303 * d * sφ
-  const i = 27.3347 * d + 0.6434886 * d * cχ + 0.315 * d * this.cW3 + 0.018 * d * Math.cos(θ) -
+  const e =
+    0.103458 -
+    0.004099 * cη -
+    0.000167 * cζpη +
+    0.000235 * cζmη +
+    0.02303 * cζ -
+    0.00212 * c2ζ +
+    0.000151 * c3ζ +
+    0.00013 * cφ
+  const p =
+    ϖ +
+    0.15648 * d * sχ -
+    0.4457 * d * sη -
+    0.2657 * d * sζpη -
+    0.3573 * d * sζmη -
+    12.872 * d * sζ +
+    1.668 * d * s2ζ -
+    0.2419 * d * s3ζ -
+    0.07 * d * sφ
+  const λʹ =
+    177.047 * d +
+    16.91993829 * d * this.t6 +
+    0.15648 * d * sχ +
+    9.142 * d * sη +
+    0.007 * d * Math.sin(2 * η) -
+    0.014 * d * Math.sin(3 * η) +
+    0.2275 * d * sζpη +
+    0.2112 * d * sζmη -
+    0.26 * d * sζ -
+    0.0098 * d * s2ζ -
+    0.013 * d * Math.sin(as) +
+    0.017 * d * Math.sin(bs) -
+    0.0303 * d * sφ
+  const i =
+    27.3347 * d +
+    0.6434886 * d * cχ +
+    0.315 * d * this.cW3 +
+    0.018 * d * Math.cos(θ) -
     0.018 * d * ccs
-  const Ω = 168.6812 * d + 1.40136 * d * cχ + 0.68599 * d * this.sW3 - 0.0392 * d * scs +
+  const Ω =
+    168.6812 * d +
+    1.40136 * d * cχ +
+    0.68599 * d * this.sW3 -
+    0.0392 * d * scs +
     0.0366 * d * Math.sin(θʹ)
   return this.subr(λʹ, p, e, a, Ω, i)
 }
 
+/** @returns {SatelliteElements} Geocentric orbital elements of Iapetus. */
 Qs.prototype.iapetus = function () {
   const L = 261.1582 * d + 22.57697855 * d * this.t4
   const ϖʹ = 91.796 * d + 0.562 * d * this.t7
@@ -372,8 +479,20 @@ Qs.prototype.iapetus = function () {
   const eʹ = 0.028298 + 0.001156 * this.t11
   const ϖ0 = 352.91 * d + 11.71 * d * this.t11
   const μ = 76.3852 * d + 4.53795125 * d * this.t10
-  const iʹ = base.horner(this.t11, 18.4602 * d, -0.9518 * d, -0.072 * d, 0.0054 * d)
-  const Ωʹ = base.horner(this.t11, 143.198 * d, -3.919 * d, 0.116 * d, 0.008 * d)
+  const iʹ = base.horner(
+    this.t11,
+    18.4602 * d,
+    -0.9518 * d,
+    -0.072 * d,
+    0.0054 * d
+  )
+  const Ωʹ = base.horner(
+    this.t11,
+    143.198 * d,
+    -3.919 * d,
+    0.116 * d,
+    0.008 * d
+  )
   const l = μ - ϖ0
   const g = ϖ0 - Ωʹ - ψ
   const g1 = ϖ0 - Ωʹ - φ
@@ -398,13 +517,30 @@ Qs.prototype.iapetus = function () {
   const [su2φ, cu2φ] = base.sincos(u2 + φ)
   const [s5, c5] = base.sincos(l + g1 + lT + gT + φ)
   const a = 58.935028 + 0.004638 * cu1 + 0.058222 * cu2
-  const e = eʹ - 0.0014097 * cg1gT + 0.0003733 * cu52g +
-    0.000118 * cu3 + 0.0002408 * cl + 0.0002849 * clu2 + 0.000619 * cu4
-  const w = 0.08077 * d * sg1gT + 0.02139 * d * su52g - 0.00676 * d * su3 +
-    0.0138 * d * sl + 0.01632 * d * slu2 + 0.03547 * d * su4
+  const e =
+    eʹ -
+    0.0014097 * cg1gT +
+    0.0003733 * cu52g +
+    0.000118 * cu3 +
+    0.0002408 * cl +
+    0.0002849 * clu2 +
+    0.000619 * cu4
+  const w =
+    0.08077 * d * sg1gT +
+    0.02139 * d * su52g -
+    0.00676 * d * su3 +
+    0.0138 * d * sl +
+    0.01632 * d * slu2 +
+    0.03547 * d * su4
   const p = ϖ0 + w / eʹ
-  const λʹ = μ - 0.04299 * d * su2 - 0.00789 * d * su1 - 0.06312 * d * Math.sin(ls) -
-    0.00295 * d * Math.sin(2 * ls) - 0.02231 * d * Math.sin(u5) + 0.0065 * d * su5ψ
+  const λʹ =
+    μ -
+    0.04299 * d * su2 -
+    0.00789 * d * su1 -
+    0.06312 * d * Math.sin(ls) -
+    0.00295 * d * Math.sin(2 * ls) -
+    0.02231 * d * Math.sin(u5) +
+    0.0065 * d * su5ψ
   const i = iʹ + 0.04204 * d * cu5ψ + 0.00235 * d * c5 + 0.0036 * d * cu2φ
   const wʹ = 0.04204 * d * su5ψ + 0.00235 * d * s5 + 0.00358 * d * su2φ
   const Ω = Ωʹ + wʹ / Math.sin(iʹ)

@@ -1,4 +1,3 @@
-/* eslint-disable n/no-callback-literal */
 /**
  * @copyright 2013 Sonia Keys
  * @copyright 2016 commenthol
@@ -58,34 +57,37 @@ export const embary = planetsEnum.embary
 /**
  * Perihelion returns an approximate jde of the perihelion event nearest the given time.
  *
- * @param {planetsEnum} p - planet constant from above
+ * @param {number} p - planet constant from above
  * @param {Number} year - year number indicating a time near the perihelion event.
  * @returns {Number} jde - time of the event
  */
-export function perihelion (p, year) {
+export function perihelion(p, year) {
   return ap(p, year, false, pf)
 }
 
 /**
  * Aphelion returns an approximate jde of the aphelion event nearest the given time.
  *
- * @param {planetsEnum} p - planet constant from above
+ * @param {number} p - planet constant from above
  * @param {Number} year - year number indicating a time near the aphelion event.
  * @returns {Number} jde - time of the event
  */
-export function aphelion (p, year) {
+export function aphelion(p, year) {
   return ap(p, year, true, af)
 }
 
-const pf = function (x) { // (x float64)  float64
+const pf = function (x) {
+  // (x float64)  float64
   return Math.floor(x + 0.5)
 }
 
-const af = function (x) { // (x float64)  float64
+const af = function (x) {
+  // (x float64)  float64
   return Math.floor(x) + 0.5
 }
 
-const ap = function (p, y, a, f) { // (p int, y float64, a bool, f func(float64)  float64) float64
+const ap = function (p, y, a, f) {
+  // (p int, y float64, a bool, f func(float64)  float64) float64
   let i = p
   if (i === embary) {
     i = earth
@@ -98,7 +100,7 @@ const ap = function (p, y, a, f) { // (p int, y float64, a bool, f func(float64)
       c = ea
     }
     for (let i = 0; i < 5; i++) {
-      j += c[i] * Math.sin((ec[i].a + ec[i].b * k) * Math.PI / 180)
+      j += c[i] * Math.sin(((ec[i].a + ec[i].b * k) * Math.PI) / 180)
     }
   }
   return j
@@ -140,37 +142,30 @@ const ea = [-1.352, 0.061, 0.062, 0.029, 0.031]
 /**
  * Perihelion2 returns the perihelion event nearest the given time.
  *
- * @param {Planet} planet - VSOP87 planet (EMBary is not allowed)
- * @param {Number} year - (float) decimal year number near the perihelion event
- * @param {Number} precision - desired precision of the time result, in days
- * @param {Function} [cb] - callback function for asynchronous processing `cb([jde, r])`
- * @returns {Array} [jde, r]
- *   {Number} jde - time of the event
- *   {Number} r - the distance of the planet from the Sun in AU.
+ * @param {Planet} planet - VSOP87 planet (EMBary is not allowed).
+ * @param {number} year - Decimal year near the perihelion event.
+ * @param {number} precision - Desired time precision in days.
+ * @param {(result: [number, number]) => void} [cb] - Optional asynchronous callback receiving Julian day and heliocentric distance.
+ * @returns {[number, number]|void} Event Julian day and distance in AU, or void when using the callback.
  */
-export function perihelion2 (planet, year, precision, cb) {
+export function perihelion2(planet, year, precision, cb) {
   return ap2(planetsEnum[planet.name], year, precision, planet, false, pf, cb)
 }
 
 /**
  * Aphelion2 returns the aphelion event nearest the given time.
  *
- * @param {Planet} planet - VSOP87 planet (EMBary is not allowed)
- * @param {Number} year - (float) decimal year number near the perihelion event
- * @param {Number} precision - desired precision of the time result, in days
- * @param {Function} [cb] - callback function for asynchronous processing `cb([jde, r])`
- * @returns {Array} [jde, r]
- *   {Number} jde - time of the event
- *   {Number} r - the distance of the planet from the Sun in AU.
+ * @param {Planet} planet - VSOP87 planet (EMBary is not allowed).
+ * @param {number} year - Decimal year near the aphelion event.
+ * @param {number} precision - Desired time precision in days.
+ * @param {(result: [number, number]) => void} [cb] - Optional asynchronous callback receiving Julian day and heliocentric distance.
+ * @returns {[number, number]|void} Event Julian day and distance in AU, or void when using the callback.
  */
-export function aphelion2 (planet, year, precision, cb) {
+export function aphelion2(planet, year, precision, cb) {
   return ap2(planetsEnum[planet.name], year, precision, planet, true, af, cb)
 }
 
-if (typeof setImmediate !== 'function') {
-  const setImmediate = setTimeout // eslint-disable-line no-unused-vars
-}
-
+/** @returns {[number, number]|void} */
 const ap2 = function (p, y, d, v, a, f, cb) {
   const j1 = ap(p, y, a, f)
   if (p !== neptune) {
@@ -180,7 +175,7 @@ const ap2 = function (p, y, d, v, a, f, cb) {
   if (cb) {
     ap2a(j1 - 5000, d, a, v, ([j0, r0]) => {
       ap2a(j1 + 5000, d, a, v, ([j2, r2]) => {
-        if ((r0 > r2) === a) {
+        if (r0 > r2 === a) {
           cb([j0, r0])
           return
         }
@@ -188,15 +183,16 @@ const ap2 = function (p, y, d, v, a, f, cb) {
       })
     })
   } else {
-    const [j0, r0] = ap2a(j1 - 5000, d, a, v)
-    const [j2, r2] = ap2a(j1 + 5000, d, a, v)
-    if ((r0 > r2) === a) {
+    const [j0, r0] = /** @type {[number, number]} */ (ap2a(j1 - 5000, d, a, v))
+    const [j2, r2] = /** @type {[number, number]} */ (ap2a(j1 + 5000, d, a, v))
+    if (r0 > r2 === a) {
       return [j0, r0]
     }
     return [j2, r2]
   }
 }
 
+/** @returns {[number, number]|void} */
 const ap2a = function (j1, d, a, v, cb) {
   let j0 = j1 - d
   let j2 = j1 + d
@@ -205,13 +201,14 @@ const ap2a = function (j1, d, a, v, cb) {
   rr[0] = v.position2000(j0).range
   rr[2] = v.position2000(j2).range
 
-  function end () {
+  /** @returns {[number, number]} Event Julian day and heliocentric distance. */
+  function end() {
     const l = new interp.Len3(j0, j2, rr)
     const [jde, r] = l.extremum()
     return [jde, r]
   }
 
-  function run () {
+  function run() {
     if (a) {
       if (rr[1] > rr[0] && rr[1] > rr[2]) {
         cb && cb(end())
@@ -223,7 +220,7 @@ const ap2a = function (j1, d, a, v, cb) {
         return true
       }
     }
-    if ((rr[0] < rr[2]) === a) {
+    if (rr[0] < rr[2] === a) {
       j0 = j1
       j1 = j2
       j2 += d
@@ -239,7 +236,7 @@ const ap2a = function (j1, d, a, v, cb) {
       rr[0] = v.position2000(j0).range
     }
     if (cb) {
-      setImmediate(run, 0)
+      setTimeout(run, 0)
     }
   }
 

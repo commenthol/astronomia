@@ -12,8 +12,8 @@ describe('#elp', function () {
       { JD: 2500000.5, X: 274034.59103, Y: 252067.53689, Z: -18998.75519 },
       { JD: 2300000.5, X: 353104.31359, Y: -195254.11808, Z: 34943.54592 },
       { JD: 2100000.5, X: -19851.27674, Y: -385646.17717, Z: -27597.66134 },
-      { JD: 1900000.5, X: -370342.79254, Y: -37574.25533, Z: -4527.91840 },
-      { JD: 1700000.5, X: -164673.04720, Y: 367791.71329, Z: 31603.98027 }
+      { JD: 1900000.5, X: -370342.79254, Y: -37574.25533, Z: -4527.9184 },
+      { JD: 1700000.5, X: -164673.0472, Y: 367791.71329, Z: 31603.98027 }
     ]
     const moon = new elp.Moon(data.elpMppDeFull)
     dataTest.forEach(function (row) {
@@ -26,7 +26,7 @@ describe('#elp', function () {
 
   it('position', function () {
     // Example 47.a, p. 342.
-    const Δψ = 0.004610 / R2D
+    const Δψ = 0.00461 / R2D
     const jde = julian.CalendarGregorianToJD(1992, 4, 12)
     const moon = new elp.Moon(data.elpMppDeFull)
     const τ = moon.lightTime(jde)

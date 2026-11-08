@@ -1,6 +1,12 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { apparent, base, coord, julian, sexagesimal as sexa } from '../src/index.js'
+import {
+  apparent,
+  base,
+  coord,
+  julian,
+  sexagesimal as sexa
+} from '../src/index.js'
 
 describe('#apparent', function () {
   it('nutation', function () {
@@ -30,7 +36,10 @@ describe('#apparent', function () {
       new sexa.RA(2, 44, 11.986).rad(),
       new sexa.Angle(false, 49, 13, 42.48).rad()
     )
-    const eqTo = apparent.position(eq, 2000, base.JDEToJulianYear(jd),
+    const eqTo = apparent.position(
+      eq,
+      2000,
+      base.JDEToJulianYear(jd),
       new sexa.HourAngle(false, 0, 0, 0.03425).rad(),
       new sexa.Angle(true, 0, 0, 0.0895).rad()
     )
@@ -56,7 +65,8 @@ describe('#apparent', function () {
       new sexa.Angle(false, 49, 13, 42.48).rad()
     )
     const eqTo = apparent.positionRonVondrak(
-      eq, base.JDEToJulianYear(jd),
+      eq,
+      base.JDEToJulianYear(jd),
       new sexa.HourAngle(false, 0, 0, 0.03425),
       new sexa.Angle(true, 0, 0, 0.0895)
     )

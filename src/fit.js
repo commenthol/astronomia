@@ -13,8 +13,11 @@
  *
  * Argument p is a list of data points.  Results a and b are coefficients
  * of the best fit line y = ax + b.
+ * @param {{x: number, y: number}[]} points - Sample points.
+ * @returns {[number, number]} Slope and intercept of the best-fit line.
  */
-export function linear (points) { // (p []struct{ X, Y float64 })  (a, b float64)
+export function linear(points) {
+  // (p []struct{ X, Y float64 })  (a, b float64)
   let sx = 0
   let sy = 0
   let sx2 = 0
@@ -37,8 +40,11 @@ export function linear (points) { // (p []struct{ X, Y float64 })  (a, b float64
 
 /**
  * CorrelationCoefficient returns a correlation coefficient for sample data.
+ * @param {{x: number, y: number}[]} points - Sample points.
+ * @returns {number} Correlation coefficient.
  */
-export function correlationCoefficient (points) { // (p []struct{ X, Y float64 })  float64
+export function correlationCoefficient(points) {
+  // (p []struct{ X, Y float64 })  float64
   let sx = 0
   let sy = 0
   let sx2 = 0
@@ -55,7 +61,10 @@ export function correlationCoefficient (points) { // (p []struct{ X, Y float64 }
   }
   const n = points.length
   // (4.3) p. 38
-  return (n * sxy - sx * sy) / (Math.sqrt(n * sx2 - sx * sx) * Math.sqrt(n * sy2 - sy * sy))
+  return (
+    (n * sxy - sx * sy) /
+    (Math.sqrt(n * sx2 - sx * sx) * Math.sqrt(n * sy2 - sy * sy))
+  )
 }
 
 /**
@@ -63,8 +72,10 @@ export function correlationCoefficient (points) { // (p []struct{ X, Y float64 }
  *
  * Argument p is a list of data points.  Results a, b, and c are coefficients
  * of the best fit quadratic y = ax² + bx + c.
+ * @param {{x: number, y: number}[]} points - Sample points.
+ * @returns {[number, number, number]} Quadratic coefficients a, b, and c.
  */
-export function quadratic (points) {
+export function quadratic(points) {
   let P = 0
   let Q = 0
   let R = 0
@@ -88,9 +99,12 @@ export function quadratic (points) {
   // (4.5) p. 43
   const D = N * Q * S + 2 * P * Q * R - Q * Q * Q - P * P * S - N * R * R
   // (4.6) p. 43
-  const a = (N * Q * V + P * R * T + P * Q * U - Q * Q * T - P * P * V - N * R * U) / D
-  const b = (N * S * U + P * Q * V + Q * R * T - Q * Q * U - P * S * T - N * R * V) / D
-  const c = (Q * S * T + Q * R * U + P * R * V - Q * Q * V - P * S * U - R * R * T) / D
+  const a =
+    (N * Q * V + P * R * T + P * Q * U - Q * Q * T - P * P * V - N * R * U) / D
+  const b =
+    (N * S * U + P * Q * V + Q * R * T - Q * Q * U - P * S * T - N * R * V) / D
+  const c =
+    (Q * S * T + Q * R * U + P * R * V - Q * Q * V - P * S * U - R * R * T) / D
   return [a, b, c]
 }
 
@@ -100,8 +114,13 @@ export function quadratic (points) {
  *
  * Given sample data and three functions in x, Func3 returns coefficients
  * a, b, and c fitting y = aƒ₀(x) + bƒ₁(x) + cƒ₂(x) to sample data.
+ * @param {{x: number, y: number}[]} points - Sample points.
+ * @param {(x: number) => number} f0 - First basis function.
+ * @param {(x: number) => number} f1 - Second basis function.
+ * @param {(x: number) => number} f2 - Third basis function.
+ * @returns {[number, number, number]} Regression coefficients.
  */
-export function func3 (points, f0, f1, f2) {
+export function func3(points, f0, f1, f2) {
   let M = 0
   let P = 0
   let Q = 0
@@ -129,9 +148,12 @@ export function func3 (points, f0, f1, f2) {
   }
   // (4.7) p. 44
   const D = M * R * T + 2 * P * Q * S - M * S * S - R * Q * Q - T * P * P
-  const a = (U * (R * T - S * S) + V * (Q * S - P * T) + W * (P * S - Q * R)) / D
-  const b = (U * (S * Q - P * T) + V * (M * T - Q * Q) + W * (P * Q - M * S)) / D
-  const c = (U * (P * S - R * Q) + V * (P * Q - M * S) + W * (M * R - P * P)) / D
+  const a =
+    (U * (R * T - S * S) + V * (Q * S - P * T) + W * (P * S - Q * R)) / D
+  const b =
+    (U * (S * Q - P * T) + V * (M * T - Q * Q) + W * (P * Q - M * S)) / D
+  const c =
+    (U * (P * S - R * Q) + V * (P * Q - M * S) + W * (M * R - P * P)) / D
   return [a, b, c]
 }
 
@@ -140,8 +162,11 @@ export function func3 (points, f0, f1, f2) {
  *
  * Given sample data and a function in x, Func1 returns coefficient
  * a fitting y = aƒ(x).
+ * @param {{x: number, y: number}[]} points - Sample points.
+ * @param {(x: number) => number} f - Basis function.
+ * @returns {number} Regression coefficient.
  */
-export function func1 (points, f) {
+export function func1(points, f) {
   let syf = 0
   let sf2 = 0
   // (4.8) p. 45

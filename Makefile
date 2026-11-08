@@ -1,6 +1,6 @@
 all: build
 
-test: v12. v14. v15.
+test: v24. v26.
 
 v%:
 	n $@ \

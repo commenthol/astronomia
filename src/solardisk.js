@@ -21,12 +21,17 @@ import solar from './solar.js'
  *  L0: Heliographic longitude of the center of the solar disk.
  *
  * All results in radians.
+ * @param {number} jd - Julian day.
+ * @param {import('./planetposition.js').Planet} earth - Earth ephemeris.
+ * @returns {[number, number, number]} Solar position angle, disk-center latitude, and disk-center longitude, in radians.
  */
-export function ephemeris (jd, earth) { // (jd float64, e *pp.V87Planet)  (P, B0, L0 float64)
-  const θ = (jd - 2398220) * 2 * Math.PI / 25.38
-  const I = 7.25 * Math.PI / 180
-  const K = 73.6667 * Math.PI / 180 +
-    1.3958333 * Math.PI / 180 * (jd - 2396758) / base.JulianCentury
+export function ephemeris(jd, earth) {
+  // (jd float64, e *pp.V87Planet)  (P, B0, L0 float64)
+  const θ = ((jd - 2398220) * 2 * Math.PI) / 25.38
+  const I = (7.25 * Math.PI) / 180
+  const K =
+    (73.6667 * Math.PI) / 180 +
+    (((1.3958333 * Math.PI) / 180) * (jd - 2396758)) / base.JulianCentury
 
   const solarPos = solar.trueVSOP87(earth, jd)
   const L = solarPos.lon
@@ -34,7 +39,7 @@ export function ephemeris (jd, earth) { // (jd float64, e *pp.V87Planet)  (P, B0
   const [Δψ, Δε] = nutation.nutation(jd)
   const ε0 = nutation.meanObliquity(jd)
   const ε = ε0 + Δε
-  const λ = L - 20.4898 / 3600 * Math.PI / 180 / R
+  const λ = L - ((20.4898 / 3600) * Math.PI) / 180 / R
   const λp = λ + Δψ
 
   const [sλK, cλK] = base.sincos(λ - K)
@@ -55,10 +60,13 @@ export function ephemeris (jd, earth) { // (jd float64, e *pp.V87Planet)  (P, B0
  * Argument c is the "Carrington" cycle number.
  *
  * Result is a dynamical time (not UT).
+ * @param {number} c - Carrington cycle number.
+ * @returns {number} Julian ephemeris day at the start of the cycle.
  */
-export function cycle (c) { // (c int)  (jde float64)
+export function cycle(c) {
+  // (c int)  (jde float64)
   const jde = 2398140.227 + 27.2752316 * c
-  const m = 281.96 * Math.PI / 180 + 26.882476 * Math.PI / 180 * c
+  const m = (281.96 * Math.PI) / 180 + ((26.882476 * Math.PI) / 180) * c
   const [s2m, c2m] = base.sincos(2 * m)
   return jde + 0.1454 * Math.sin(m) - 0.0085 * s2m - 0.0141 * c2m
 }

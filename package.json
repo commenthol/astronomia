@@ -1,6 +1,6 @@
 {
   "name": "astronomia",
-  "version": "4.2.0",
+  "version": "4.3.0-0",
   "description": "An astronomical library",
   "keywords": [
     "astronomy",
@@ -27,325 +27,406 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./types/src/index.d.ts",
       "import": "./src/index.js",
       "require": "./lib/index.cjs"
     },
     "./angle": {
+      "types": "./types/src/angle.d.ts",
       "import": "./src/angle.js",
       "require": "./lib/angle.cjs"
     },
     "./apparent": {
+      "types": "./types/src/apparent.d.ts",
       "import": "./src/apparent.js",
       "require": "./lib/apparent.cjs"
     },
     "./apsis": {
+      "types": "./types/src/apsis.d.ts",
       "import": "./src/apsis.js",
       "require": "./lib/apsis.cjs"
     },
     "./base": {
+      "types": "./types/src/base.d.ts",
       "import": "./src/base.js",
       "require": "./lib/base.cjs"
     },
     "./binary": {
+      "types": "./types/src/binary.d.ts",
       "import": "./src/binary.js",
       "require": "./lib/binary.cjs"
     },
     "./circle": {
+      "types": "./types/src/circle.d.ts",
       "import": "./src/circle.js",
       "require": "./lib/circle.cjs"
     },
     "./conjunction": {
+      "types": "./types/src/conjunction.d.ts",
       "import": "./src/conjunction.js",
       "require": "./lib/conjunction.cjs"
     },
     "./coord": {
+      "types": "./types/src/coord.d.ts",
       "import": "./src/coord.js",
       "require": "./lib/coord.cjs"
     },
     "./deltat": {
+      "types": "./types/src/deltat.d.ts",
       "import": "./src/deltat.js",
       "require": "./lib/deltat.cjs"
     },
     "./eclipse": {
+      "types": "./types/src/eclipse.d.ts",
       "import": "./src/eclipse.js",
       "require": "./lib/eclipse.cjs"
     },
     "./elementequinox": {
+      "types": "./types/src/elementequinox.d.ts",
       "import": "./src/elementequinox.js",
       "require": "./lib/elementequinox.cjs"
     },
     "./elliptic": {
+      "types": "./types/src/elliptic.d.ts",
       "import": "./src/elliptic.js",
       "require": "./lib/elliptic.cjs"
     },
     "./elp": {
+      "types": "./types/src/elp.d.ts",
       "import": "./src/elp.js",
       "require": "./lib/elp.cjs"
     },
     "./eqtime": {
+      "types": "./types/src/eqtime.d.ts",
       "import": "./src/eqtime.js",
       "require": "./lib/eqtime.cjs"
     },
     "./fit": {
+      "types": "./types/src/fit.d.ts",
       "import": "./src/fit.js",
       "require": "./lib/fit.cjs"
     },
     "./globe": {
+      "types": "./types/src/globe.d.ts",
       "import": "./src/globe.js",
       "require": "./lib/globe.cjs"
     },
     "./illum": {
+      "types": "./types/src/illum.d.ts",
       "import": "./src/illum.js",
       "require": "./lib/illum.cjs"
     },
     "./interpolation": {
+      "types": "./types/src/interpolation.d.ts",
       "import": "./src/interpolation.js",
       "require": "./lib/interpolation.cjs"
     },
     "./iterate": {
+      "types": "./types/src/iterate.d.ts",
       "import": "./src/iterate.js",
       "require": "./lib/iterate.cjs"
     },
     "./jm": {
+      "types": "./types/src/jm.d.ts",
       "import": "./src/jm.js",
       "require": "./lib/jm.cjs"
     },
     "./julian": {
+      "types": "./types/src/julian.d.ts",
       "import": "./src/julian.js",
       "require": "./lib/julian.cjs"
     },
     "./jupiter": {
+      "types": "./types/src/jupiter.d.ts",
       "import": "./src/jupiter.js",
       "require": "./lib/jupiter.cjs"
     },
     "./jupitermoons": {
+      "types": "./types/src/jupitermoons.d.ts",
       "import": "./src/jupitermoons.js",
       "require": "./lib/jupitermoons.cjs"
     },
     "./kepler": {
+      "types": "./types/src/kepler.d.ts",
       "import": "./src/kepler.js",
       "require": "./lib/kepler.cjs"
     },
     "./line": {
+      "types": "./types/src/line.d.ts",
       "import": "./src/line.js",
       "require": "./lib/line.cjs"
     },
     "./mars": {
+      "types": "./types/src/mars.d.ts",
       "import": "./src/mars.js",
       "require": "./lib/mars.cjs"
     },
     "./moonillum": {
+      "types": "./types/src/moonillum.d.ts",
       "import": "./src/moonillum.js",
       "require": "./lib/moonillum.cjs"
     },
     "./moon": {
+      "types": "./types/src/moon.d.ts",
       "import": "./src/moon.js",
       "require": "./lib/moon.cjs"
     },
     "./moonmaxdec": {
+      "types": "./types/src/moonmaxdec.d.ts",
       "import": "./src/moonmaxdec.js",
       "require": "./lib/moonmaxdec.cjs"
     },
     "./moonnode": {
+      "types": "./types/src/moonnode.d.ts",
       "import": "./src/moonnode.js",
       "require": "./lib/moonnode.cjs"
     },
     "./moonphase": {
+      "types": "./types/src/moonphase.d.ts",
       "import": "./src/moonphase.js",
       "require": "./lib/moonphase.cjs"
     },
     "./moonposition": {
+      "types": "./types/src/moonposition.d.ts",
       "import": "./src/moonposition.js",
       "require": "./lib/moonposition.cjs"
     },
     "./nearparabolic": {
+      "types": "./types/src/nearparabolic.d.ts",
       "import": "./src/nearparabolic.js",
       "require": "./lib/nearparabolic.cjs"
     },
     "./node": {
+      "types": "./types/src/node.d.ts",
       "import": "./src/node.js",
       "require": "./lib/node.cjs"
     },
     "./nutation": {
+      "types": "./types/src/nutation.d.ts",
       "import": "./src/nutation.js",
       "require": "./lib/nutation.cjs"
     },
     "./parabolic": {
+      "types": "./types/src/parabolic.d.ts",
       "import": "./src/parabolic.js",
       "require": "./lib/parabolic.cjs"
     },
     "./parallactic": {
+      "types": "./types/src/parallactic.d.ts",
       "import": "./src/parallactic.js",
       "require": "./lib/parallactic.cjs"
     },
     "./parallax": {
+      "types": "./types/src/parallax.d.ts",
       "import": "./src/parallax.js",
       "require": "./lib/parallax.cjs"
     },
     "./perihelion": {
+      "types": "./types/src/perihelion.d.ts",
       "import": "./src/perihelion.js",
       "require": "./lib/perihelion.cjs"
     },
     "./planetary": {
+      "types": "./types/src/planetary.d.ts",
       "import": "./src/planetary.js",
       "require": "./lib/planetary.cjs"
     },
     "./planetelements": {
+      "types": "./types/src/planetelements.d.ts",
       "import": "./src/planetelements.js",
       "require": "./lib/planetelements.cjs"
     },
     "./planetposition": {
+      "types": "./types/src/planetposition.d.ts",
       "import": "./src/planetposition.js",
       "require": "./lib/planetposition.cjs"
     },
     "./pluto": {
+      "types": "./types/src/pluto.d.ts",
       "import": "./src/pluto.js",
       "require": "./lib/pluto.cjs"
     },
     "./precess": {
+      "types": "./types/src/precess.d.ts",
       "import": "./src/precess.js",
       "require": "./lib/precess.cjs"
     },
     "./refraction": {
+      "types": "./types/src/refraction.d.ts",
       "import": "./src/refraction.js",
       "require": "./lib/refraction.cjs"
     },
     "./rise": {
+      "types": "./types/src/rise.d.ts",
       "import": "./src/rise.js",
       "require": "./lib/rise.cjs"
     },
     "./saturnmoons": {
+      "types": "./types/src/saturnmoons.d.ts",
       "import": "./src/saturnmoons.js",
       "require": "./lib/saturnmoons.cjs"
     },
     "./saturnring": {
+      "types": "./types/src/saturnring.d.ts",
       "import": "./src/saturnring.js",
       "require": "./lib/saturnring.cjs"
     },
     "./semidiameter": {
+      "types": "./types/src/semidiameter.d.ts",
       "import": "./src/semidiameter.js",
       "require": "./lib/semidiameter.cjs"
     },
     "./sexagesimal": {
+      "types": "./types/src/sexagesimal.d.ts",
       "import": "./src/sexagesimal.js",
       "require": "./lib/sexagesimal.cjs"
     },
     "./sidereal": {
+      "types": "./types/src/sidereal.d.ts",
       "import": "./src/sidereal.js",
       "require": "./lib/sidereal.cjs"
     },
     "./solardisk": {
+      "types": "./types/src/solardisk.d.ts",
       "import": "./src/solardisk.js",
       "require": "./lib/solardisk.cjs"
     },
     "./solar": {
+      "types": "./types/src/solar.d.ts",
       "import": "./src/solar.js",
       "require": "./lib/solar.cjs"
     },
     "./solarxyz": {
+      "types": "./types/src/solarxyz.d.ts",
       "import": "./src/solarxyz.js",
       "require": "./lib/solarxyz.cjs"
     },
     "./solstice": {
+      "types": "./types/src/solstice.d.ts",
       "import": "./src/solstice.js",
       "require": "./lib/solstice.cjs"
     },
     "./stellar": {
+      "types": "./types/src/stellar.d.ts",
       "import": "./src/stellar.js",
       "require": "./lib/stellar.cjs"
     },
     "./sundial": {
+      "types": "./types/src/sundial.d.ts",
       "import": "./src/sundial.js",
       "require": "./lib/sundial.cjs"
     },
     "./sunrise": {
+      "types": "./types/src/sunrise.d.ts",
       "import": "./src/sunrise.js",
       "require": "./lib/sunrise.cjs"
     },
     "./vsop87": {
+      "types": "./types/src/vsop87.d.ts",
       "import": "./src/vsop87.js",
       "require": "./lib/vsop87.cjs"
     },
     "./data/deltat": {
+      "types": "./types/data/deltat.d.ts",
       "import": "./data/deltat.js",
       "require": "./lib/data/deltat.cjs"
     },
     "./data/elpMppDeFull": {
+      "types": "./types/data/elpMppDeFull.d.ts",
       "import": "./data/elpMppDeFull.js",
       "require": "./lib/data/elpMppDeFull.cjs"
     },
     "./data/elpMppDe": {
+      "types": "./types/data/elpMppDe.d.ts",
       "import": "./data/elpMppDe.js",
       "require": "./lib/data/elpMppDe.cjs"
     },
     "./data": {
+      "types": "./types/data/index.d.ts",
       "import": "./data/index.js",
       "require": "./lib/data/index.cjs"
     },
     "./lib/data/vsop87Bearth.cjs": {
+      "types": "./types/data/vsop87Bearth.d.ts",
       "require": "./lib/data/vsop87Bearth.cjs"
     },
     "./data/vsop87Bearth": {
+      "types": "./types/data/vsop87Bearth.d.ts",
       "import": "./data/vsop87Bearth.js",
       "require": "./lib/data/vsop87Bearth.cjs"
     },
     "./data/vsop87Bjupiter": {
+      "types": "./types/data/vsop87Bjupiter.d.ts",
       "import": "./data/vsop87Bjupiter.js",
       "require": "./lib/data/vsop87Bjupiter.cjs"
     },
     "./data/vsop87Bmars": {
+      "types": "./types/data/vsop87Bmars.d.ts",
       "import": "./data/vsop87Bmars.js",
       "require": "./lib/data/vsop87Bmars.cjs"
     },
     "./data/vsop87Bmercury": {
+      "types": "./types/data/vsop87Bmercury.d.ts",
       "import": "./data/vsop87Bmercury.js",
       "require": "./lib/data/vsop87Bmercury.cjs"
     },
     "./data/vsop87Bneptune": {
+      "types": "./types/data/vsop87Bneptune.d.ts",
       "import": "./data/vsop87Bneptune.js",
       "require": "./lib/data/vsop87Bneptune.cjs"
     },
     "./data/vsop87Bsaturn": {
+      "types": "./types/data/vsop87Bsaturn.d.ts",
       "import": "./data/vsop87Bsaturn.js",
       "require": "./lib/data/vsop87Bsaturn.cjs"
     },
     "./data/vsop87Buranus": {
+      "types": "./types/data/vsop87Buranus.d.ts",
       "import": "./data/vsop87Buranus.js",
       "require": "./lib/data/vsop87Buranus.cjs"
     },
     "./data/vsop87Bvenus": {
+      "types": "./types/data/vsop87Bvenus.d.ts",
       "import": "./data/vsop87Bvenus.js",
       "require": "./lib/data/vsop87Bvenus.cjs"
     },
     "./data/vsop87Dearth": {
+      "types": "./types/data/vsop87Dearth.d.ts",
       "import": "./data/vsop87Dearth.js",
       "require": "./lib/data/vsop87Dearth.cjs"
     },
     "./data/vsop87Djupiter": {
+      "types": "./types/data/vsop87Djupiter.d.ts",
       "import": "./data/vsop87Djupiter.js",
       "require": "./lib/data/vsop87Djupiter.cjs"
     },
     "./data/vsop87Dmars": {
+      "types": "./types/data/vsop87Dmars.d.ts",
       "import": "./data/vsop87Dmars.js",
       "require": "./lib/data/vsop87Dmars.cjs"
     },
     "./data/vsop87Dmercury": {
+      "types": "./types/data/vsop87Dmercury.d.ts",
       "import": "./data/vsop87Dmercury.js",
       "require": "./lib/data/vsop87Dmercury.cjs"
     },
     "./data/vsop87Dneptune": {
+      "types": "./types/data/vsop87Dneptune.d.ts",
       "import": "./data/vsop87Dneptune.js",
       "require": "./lib/data/vsop87Dneptune.cjs"
     },
     "./data/vsop87Dsaturn": {
+      "types": "./types/data/vsop87Dsaturn.d.ts",
       "import": "./data/vsop87Dsaturn.js",
       "require": "./lib/data/vsop87Dsaturn.cjs"
     },
     "./data/vsop87Duranus": {
+      "types": "./types/data/vsop87Duranus.d.ts",
       "import": "./data/vsop87Duranus.js",
       "require": "./lib/data/vsop87Duranus.cjs"
     },
     "./data/vsop87Dvenus": {
+      "types": "./types/data/vsop87Dvenus.d.ts",
       "import": "./data/vsop87Dvenus.js",
       "require": "./lib/data/vsop87Dvenus.cjs"
     },
@@ -353,6 +434,7 @@
   },
   "main": "./lib/index.cjs",
   "module": "./src/index.js",
+  "types": "./types/src/index.d.ts",
   "directories": {
     "lib": "lib",
     "doc": "docs",
@@ -361,39 +443,41 @@
   "files": [
     "data",
     "lib",
-    "src"
+    "src",
+    "types"
   ],
   "scripts": {
-    "all": "npm-run-all clean lint build test",
+    "all": "run-s clean pretty lint types build test",
     "build": "rollup -c",
-    "ci": "npm run test:slow",
-    "clean": "rimraf lib coverage",
+    "ci": "run-s clean pretty lint types build test:slow",
+    "clean": "rimraf lib types coverage",
     "clean:all": "rimraf node_modules && npm run clean",
     "coverage": "c8 -r text -r html npm run test:slow",
-    "lint": "eslint --ext .js,.cjs,.mjs .",
-    "prepublishOnly": "npm run all",
+    "lint": "eslint src test",
+    "pretty": "prettier -w src test",
     "test": "mocha",
     "test:slow": "SLOWTESTS=1 mocha",
-    "zuul": "zuul test/*.js"
+    "types": "tsc -p ./tsconfig.json"
+  },
+  "mocha": {
+    "checkLeaks": true,
+    "reporter": "dot"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.3",
-    "babelify": "^10.0.0",
-    "c8": "^10.1.3",
-    "core-js": "^3.45.1",
-    "eslint": "^8.57.1",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-promise": "^6.6.0",
-    "mocha": "^11.7.1",
-    "npm-run-all": "^4.1.5",
-    "regenerator-runtime": "^0.14.1",
-    "rimraf": "^6.0.1",
-    "rollup": "^2.79.2",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.6",
+    "c8": "^12.0.0",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.14.0",
+    "mocha": "^12.0.3",
+    "npm-run-all2": "^9.0.4",
+    "prettier": "^3.9.10",
+    "rimraf": "^6.1.4",
+    "rollup": "^4.68.0",
     "serialize-to-js": "^3.1.2",
     "serialize-to-module": "^1.1.0",
-    "typescript": "^5.9.2"
+    "typescript": "^7.0.2"
   },
   "engines": {
     "node": ">=12.0.0"

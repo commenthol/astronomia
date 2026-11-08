@@ -29,7 +29,7 @@ import sexa from './sexagesimal.js'
 import coord from './coord.js'
 import precess from './precess.js'
 
-function sum (t, series) {
+function sum(t, series) {
   const coeffs = []
   Object.keys(series).forEach((x) => {
     coeffs[x] = 0
@@ -47,11 +47,17 @@ function sum (t, series) {
   return res
 }
 
+/**
+ * @typedef {{name?: string, type?: 'B'|'D', L: Record<string, number[][]>, B: Record<string, number[][]>, R: Record<string, number[][]>}} PlanetSeries
+ * @property {string} name - Planet name.
+ * @property {'B'|'D'} type - VSOP87 coordinate type.
+ * @property {PlanetSeries} series - VSOP87 coefficient series.
+ */
 export class Planet {
   /**
    * VSOP87 representation of a Planet
    * @constructs Planet
-   * @param {object} planet - planet data series
+   * @param {PlanetSeries} planet - VSOP87 planet data series.
    * @example
    * ```js
    * // for use in browser
@@ -59,8 +65,9 @@ export class Planet {
    * const earth = new planetposition.Planet(data.vsop87Bearth)
    * ```
    */
-  constructor (planet) {
-    if (typeof planet !== 'object') throw new TypeError('need planet vsop87 data')
+  constructor(planet) {
+    if (typeof planet !== 'object')
+      throw new TypeError('need planet vsop87 data')
     this.name = planet.name
     this.type = planet.type || 'B'
     this.series = planet
@@ -75,7 +82,7 @@ export class Planet {
    *  {Number} lat - heliocentric latitude in radians.
    *  {Number} range - heliocentric range in AU.
    */
-  position2000 (jde) {
+  position2000(jde) {
     const T = base.J2000Century(jde)
     const τ = T * 0.1
     const lon = base.pmod(sum(τ, this.series.L), 2 * Math.PI)
@@ -105,7 +112,7 @@ export class Planet {
    *  {Number} lat - heliocentric latitude in radians.
    *  {Number} range - heliocentric range in AU.
    */
-  position (jde) {
+  position(jde) {
     const T = base.J2000Century(jde)
     const τ = T * 0.1
     const lon = base.pmod(sum(τ, this.series.L), 2 * Math.PI)
@@ -136,14 +143,15 @@ export class Planet {
  *    {Number} lon - FK5 longitude
  *    {Number} lat - FK5 latitude
  */
-export function toFK5 (lon, lat, jde) {
+export function toFK5(lon, lat, jde) {
   // formula 32.3, p. 219.
   const T = base.J2000Century(jde)
   // const Lp = lon - 1.397 * Math.PI / 180 * T - 0.00031 * Math.PI / 180 * T * T
   const Lp = lon - sexa.angleFromDeg((1.397 + 0.00031 * T) * T)
   const [sLp, cLp] = base.sincos(Lp)
   // (32.3) p. 219
-  const L5 = lon + sexa.angleFromSec(-0.09033 + 0.03916 * (cLp + sLp) * Math.tan(lat))
+  const L5 =
+    lon + sexa.angleFromSec(-0.09033 + 0.03916 * (cLp + sLp) * Math.tan(lat))
   const B5 = lat + sexa.angleFromSec(0.03916 * (cLp - sLp))
   return new base.Coord(L5, B5)
 }

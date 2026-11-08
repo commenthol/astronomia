@@ -1,6 +1,7 @@
 export default {
   input: [
     './src/index.js',
+    './src/semidiameter.js',
     './src/vsop87.js',
     './data/index.js'
   ],
