@@ -29,19 +29,18 @@ import nutation from './nutation.js'
  * True returns true geometric longitude and anomaly of the sun referenced to the mean equinox of date.
  *
  * @param {Number} T - number of Julian centuries since J2000. See base.J2000Century.
- * @returns {Object}
- *   {Number} lon = true geometric longitude, ☉, in radians
- *   {Number} ano = true anomaly in radians
+ * @returns {{lon: number, ano: number}} True geometric longitude and anomaly, in radians.
  */
-export function trueLongitude (T) {
+export function trueLongitude(T) {
   // (25.2) p. 163
-  const L0 = base.horner(T, 280.46646, 36000.76983, 0.0003032) *
-    Math.PI / 180
+  const L0 = (base.horner(T, 280.46646, 36000.76983, 0.0003032) * Math.PI) / 180
   const m = meanAnomaly(T)
-  const C = (base.horner(T, 1.914602, -0.004817, -0.000014) *
-    Math.sin(m) +
-    (0.019993 - 0.000101 * T) * Math.sin(2 * m) +
-    0.000289 * Math.sin(3 * m)) * Math.PI / 180
+  const C =
+    ((base.horner(T, 1.914602, -0.004817, -0.000014) * Math.sin(m) +
+      (0.019993 - 0.000101 * T) * Math.sin(2 * m) +
+      0.000289 * Math.sin(3 * m)) *
+      Math.PI) /
+    180
   const lon = base.pmod(L0 + C, 2 * Math.PI)
   const ano = base.pmod(m + C, 2 * Math.PI)
   return { lon, ano }
@@ -53,9 +52,9 @@ export function trueLongitude (T) {
  * @param {Number} T - number of Julian centuries since J2000. See base.J2000Century.
  * @returns {Number} Result is in radians and is not normalized to the range 0..2π.
  */
-export function meanAnomaly (T) {
+export function meanAnomaly(T) {
   // (25.3) p. 163
-  return base.horner(T, 357.52911, 35999.05029, -0.0001537) * Math.PI / 180
+  return (base.horner(T, 357.52911, 35999.05029, -0.0001537) * Math.PI) / 180
 }
 
 /**
@@ -64,7 +63,7 @@ export function meanAnomaly (T) {
  * @param {Number} T - number of Julian centuries since J2000. See base.J2000Century.
  * @returns {Number} eccentricity of the Earth's orbit around the sun.
  */
-export function eccentricity (T) {
+export function eccentricity(T) {
   // (25.4) p. 163
   return base.horner(T, 0.016708634, -0.000042037, -0.0000001267)
 }
@@ -75,11 +74,11 @@ export function eccentricity (T) {
  * @param {Number} T - number of Julian centuries since J2000. See base.J2000Century.
  * @returns {Number} Sun-Earth distance in AU
  */
-export function radius (T) {
-  const {lon, ano} = trueLongitude(T) // eslint-disable-line
+export function radius(T) {
+  const { lon, ano } = trueLongitude(T) // eslint-disable-line
   const e = eccentricity(T)
   // (25.5) p. 164
-  return 1.000001018 * (1 - e * e) / (1 + e * Math.cos(ano))
+  return (1.000001018 * (1 - e * e)) / (1 + e * Math.cos(ano))
 }
 
 /**
@@ -89,17 +88,19 @@ export function radius (T) {
  * @param {Number} T - number of Julian centuries since J2000. See base.J2000Century.
  * @returns {Number} apparent longitude of the Sun referenced to the true equinox of date.
  */
-export function apparentLongitude (T) {
+export function apparentLongitude(T) {
   const Ω = node(T)
-  const {lon, ano} = trueLongitude(T) // eslint-disable-line
-  return lon - 0.00569 * Math.PI / 180 - 0.00478 * Math.PI / 180 * Math.sin(Ω)
+  const { lon, ano } = trueLongitude(T) // eslint-disable-line
+  return (
+    lon - (0.00569 * Math.PI) / 180 - ((0.00478 * Math.PI) / 180) * Math.sin(Ω)
+  )
 }
 
 /**
  * @private
  */
-function node (T) {
-  return 125.04 * Math.PI / 180 - 1934.136 * Math.PI / 180 * T
+function node(T) {
+  return (125.04 * Math.PI) / 180 - ((1934.136 * Math.PI) / 180) * T
 }
 
 /**
@@ -107,13 +108,11 @@ function node (T) {
  * Results are accurate to .01 degree for years 1900 to 2100.
  *
  * @param {Number} T - number of Julian centuries since J2000. See base.J2000Century.
- * @returns {Object}
- *   {Number} lon - true geometric longitude, ☉, in radians
- *   {Number} ano - true anomaly in radians
+ * @returns {{lon: number, ano: number}} True geometric longitude and anomaly, in radians.
  */
-export function true2000 (T) {
+export function true2000(T) {
   let { lon, ano } = trueLongitude(T)
-  lon -= 0.01397 * Math.PI / 180 * T * 100
+  lon -= ((0.01397 * Math.PI) / 180) * T * 100
   return { lon, ano }
 }
 
@@ -125,8 +124,8 @@ export function true2000 (T) {
  *   {Number} ra - right ascension in radians
  *   {Number} dec - declination in radians
  */
-export function trueEquatorial (jde) {
-  const {lon, ano} = trueLongitude(base.J2000Century(jde)) // eslint-disable-line
+export function trueEquatorial(jde) {
+  const { lon, ano } = trueLongitude(base.J2000Century(jde)) // eslint-disable-line
   const ε = nutation.meanObliquity(jde)
   const [ss, cs] = base.sincos(lon)
   const [sε, cε] = base.sincos(ε)
@@ -144,13 +143,15 @@ export function trueEquatorial (jde) {
  *   {Number} ra - right ascension in radians
  *   {Number} dec - declination in radians
  */
-export function apparentEquatorial (jde) {
+export function apparentEquatorial(jde) {
   const T = base.J2000Century(jde)
   const λ = apparentLongitude(T)
   const ε = nutation.meanObliquity(jde)
   const [sλ, cλ] = base.sincos(λ)
   // (25.8) p. 165
-  const [sε, cε] = base.sincos(ε + 0.00256 * Math.PI / 180 * Math.cos(node(T)))
+  const [sε, cε] = base.sincos(
+    ε + ((0.00256 * Math.PI) / 180) * Math.cos(node(T))
+  )
   const ra = Math.atan2(cε * sλ, cλ)
   const dec = Math.asin(sε * sλ)
   return new base.Coord(ra, dec)
@@ -164,21 +165,22 @@ export function apparentEquatorial (jde) {
  *
  * @param {Planet} planet
  * @param {Number} jde - Julian ephemeris day
- * @returns {Object}
- *   {Number} lon - ecliptic longitude in radians
- *   {Number} lat - ecliptic latitude in radians
- *   {Number} range - range in AU
+ * @returns {Coord} Geocentric ecliptic longitude and latitude in radians and distance in AU.
  */
-export function trueVSOP87 (planet, jde) {
+export function trueVSOP87(planet, jde) {
   let { lon, lat, range } = planet.position(jde)
   const s = lon + Math.PI
   // FK5 correction.
-  const λp = base.horner(base.J2000Century(jde),
-    s, -1.397 * Math.PI / 180, -0.00031 * Math.PI / 180)
+  const λp = base.horner(
+    base.J2000Century(jde),
+    s,
+    (-1.397 * Math.PI) / 180,
+    (-0.00031 * Math.PI) / 180
+  )
   const [sλp, cλp] = base.sincos(λp)
-  const Δβ = 0.03916 / 3600 * Math.PI / 180 * (cλp - sλp)
+  const Δβ = (((0.03916 / 3600) * Math.PI) / 180) * (cλp - sλp)
   // (25.9) p. 166
-  lon = base.pmod(s - 0.09033 / 3600 * Math.PI / 180, 2 * Math.PI)
+  lon = base.pmod(s - ((0.09033 / 3600) * Math.PI) / 180, 2 * Math.PI)
   lat = Δβ - lat
   return new base.Coord(lon, lat, range)
 }
@@ -196,7 +198,7 @@ export function trueVSOP87 (planet, jde) {
  *   {Number} lat - ecliptic latitude in radians
  *   {Number} range - range in AU
  */
-export function apparentVSOP87 (planet, jde) {
+export function apparentVSOP87(planet, jde) {
   // note: see duplicated code in ApparentEquatorialVSOP87.
   let { lon, lat, range } = trueVSOP87(planet, jde)
   const Δψ = nutation.nutation(jde)[0]
@@ -218,7 +220,7 @@ export function apparentVSOP87 (planet, jde) {
  *   {Number} dec - declination in radians
  *   {Number} range - range in AU
  */
-export function apparentEquatorialVSOP87 (planet, jde) {
+export function apparentEquatorialVSOP87(planet, jde) {
   // note: duplicate code from ApparentVSOP87 so we can keep Δε.
   // see also duplicate code in time.E().
   const { lon, lat, range } = trueVSOP87(planet, jde)
@@ -238,9 +240,9 @@ export function apparentEquatorialVSOP87 (planet, jde) {
  * @param {Number} range
  * @returns {Number} aberation
  */
-export function aberration (range) {
+export function aberration(range) {
   // (25.10) p. 167
-  return -20.4898 / 3600 * Math.PI / 180 / range
+  return ((-20.4898 / 3600) * Math.PI) / 180 / range
 }
 
 export default {

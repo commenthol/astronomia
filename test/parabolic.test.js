@@ -11,7 +11,7 @@ describe('#parabolic', function () {
     )
     const j = julian.CalendarGregorianToJD(1998, 8, 5)
     const res = e.anomalyDistance(j)
-    assert.strictEqual(float(res.ano * 180 / Math.PI).toFixed(5), 66.78862) // deg
+    assert.strictEqual(float((res.ano * 180) / Math.PI).toFixed(5), 66.78862) // deg
     assert.strictEqual(float(res.dist).toFixed(6), 2.133911) // AU
   })
 })

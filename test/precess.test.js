@@ -84,7 +84,10 @@ describe('#precess', function () {
       const epochFrom = 2000.0
       const jdTo = julian.CalendarGregorianToJD(2028, 11, 13.19)
       const epochTo = base.JDEToJulianYear(jdTo)
-      eq = precess.position(eq, epochFrom, epochTo,
+      eq = precess.position(
+        eq,
+        epochFrom,
+        epochTo,
         new sexa.HourAngle(false, 0, 0, 0.03425).rad(),
         new sexa.Angle(true, 0, 0, 0.0895).rad()
       )
@@ -101,14 +104,19 @@ describe('#precess', function () {
         new sexa.HourAngle(true, 0, 0, 0.0169).rad(), // eq motions from p. 132.
         new sexa.Angle(false, 0, 0, 0.006).rad(),
         2000.0,
-        new coord.Equatorial( // eq coordinates from p. 132.
+        new coord.Equatorial(
+          // eq coordinates from p. 132.
           new sexa.RA(10, 8, 22.3).rad(), // RA
           new sexa.Angle(false, 11, 58, 2).rad() // Dec
         ).toEcliptic(ε)
       )
-      let d = Math.abs((ecl.lon - new sexa.Angle(true, 0, 0, 0.2348).rad()) / ecl.lon)
+      let d = Math.abs(
+        (ecl.lon - new sexa.Angle(true, 0, 0, 0.2348).rad()) / ecl.lon
+      )
       assert.ok(d * 169 < 1, 'lon: 169 = significant digits of given lon')
-      d = Math.abs((ecl.lat - new sexa.Angle(true, 0, 0, 0.0813).rad()) / ecl.lat)
+      d = Math.abs(
+        (ecl.lat - new sexa.Angle(true, 0, 0, 0.0813).rad()) / ecl.lat
+      )
       assert.ok(d * 6 < 1, 'lat: 6 = significant digit of given lat')
     })
   })
@@ -146,11 +154,7 @@ describe('#precess', function () {
     )
     const mα = new sexa.HourAngle(false, 0, 0, 0.19877).rad()
     const mδ = new sexa.Angle(false, 0, 0, -0.0152).rad()
-    const epochs = [
-      base.JDEToJulianYear(base.B1900),
-      2050,
-      2100
-    ]
+    const epochs = [base.JDEToJulianYear(base.B1900), 2050, 2100]
     const exp = [
       ['1ʰ22ᵐ33.9ˢ', '88°46′26.18″'],
       ['3ʰ48ᵐ16.43ˢ', '89°27′15.38″'],
@@ -170,33 +174,38 @@ describe('#precess', function () {
     it('Example', function () {
       // Example 21.c, p. 137.
       const eclFrom = new coord.Ecliptic(
-        149.48194 * Math.PI / 180, // lon
-        1.76549   * Math.PI / 180  // lat
+        (149.48194 * Math.PI) / 180, // lon
+        (1.76549 * Math.PI) / 180 // lat
       )
       const epochFrom = 2000.0
-      const epochTo = base.JDEToJulianYear(julian.CalendarJulianToJD(-214, 6, 30))
+      const epochTo = base.JDEToJulianYear(
+        julian.CalendarJulianToJD(-214, 6, 30)
+      )
       const eclTo = precess.eclipticPosition(eclFrom, epochFrom, epochTo)
-      assert.strictEqual(eclTo.lon * 180 / Math.PI, 118.70416774861883)
-      assert.strictEqual(eclTo.lat * 180 / Math.PI, 1.6153320055611455)
+      assert.strictEqual((eclTo.lon * 180) / Math.PI, 118.70416774861883)
+      assert.strictEqual((eclTo.lat * 180) / Math.PI, 1.6153320055611455)
     })
 
     it('reduceElements', function () {
       // Example 24.a, p. 160.
       let ele = new elementequinox.Elements(
-        47.122   * Math.PI / 180, // inc
-        45.7481  * Math.PI / 180, // node
-        151.4486 * Math.PI / 180  // peri
+        (47.122 * Math.PI) / 180, // inc
+        (45.7481 * Math.PI) / 180, // node
+        (151.4486 * Math.PI) / 180 // peri
       )
       const JFrom = base.JDEToJulianYear(base.BesselianYearToJDE(1744))
       const JTo = base.JDEToJulianYear(base.BesselianYearToJDE(1950))
       const p = new precess.EclipticPrecessor(JFrom, JTo)
       ele = p.reduceElements(ele)
 
-      assert.strictEqual(ele.inc * 180 / Math.PI, 47.13795835860312)   // i
-      assert.strictEqual(float(ele.node * 180 / Math.PI).toFixed(13), 48.6036896626305) // Ω
+      assert.strictEqual((ele.inc * 180) / Math.PI, 47.13795835860312) // i
+      assert.strictEqual(
+        float((ele.node * 180) / Math.PI).toFixed(13),
+        48.6036896626305
+      ) // Ω
       /* 48.603689662630515 in node <6.9.1 */
       /* 48.60368966263054 in node 7.0.1 */
-      assert.strictEqual(ele.peri * 180 / Math.PI, 151.47823843361917) // ω
+      assert.strictEqual((ele.peri * 180) / Math.PI, 151.47823843361917) // ω
     })
   })
 
@@ -208,13 +217,13 @@ describe('#precess', function () {
     )
     const mra = new sexa.HourAngle(false, 0, 0, -0.03847)
     const mdec = new sexa.Angle(false, 0, 0, -1.2053)
-    const r = 2.64           // given in correct unit
+    const r = 2.64 // given in correct unit
     const mr = -7.6 / 977792 // magic conversion factor
 
     const tests = [
       [1000.0, '6ʰ45ᵐ47.16ˢ', '-16°22′56.03″'],
       [0.0, '6ʰ46ᵐ25.09ˢ', '-16°3′.77″'],
-      [-1000.0, '6ʰ47ᵐ2.67ˢ',  '-15°43′12.27″'],
+      [-1000.0, '6ʰ47ᵐ2.67ˢ', '-15°43′12.27″'],
       [-2000.0, '6ʰ47ᵐ39.91ˢ', '-15°23′30.57″'],
       [-10000.0, '6ʰ52ᵐ25.72ˢ', '-12°50′6.7″']
     ]
@@ -222,7 +231,15 @@ describe('#precess', function () {
     tests.forEach(function (test) {
       const epoch = test[0]
       it('' + epoch, function () {
-        const eqTo = precess.properMotion3D(eqFrom, 2000, epoch, r, mr, mra, mdec)
+        const eqTo = precess.properMotion3D(
+          eqFrom,
+          2000,
+          epoch,
+          r,
+          mr,
+          mra,
+          mdec
+        )
         assert.strictEqual(new sexa.RA(eqTo.ra).toString(2), test[1])
         assert.strictEqual(new sexa.Angle(eqTo.dec).toString(2), test[2])
       })

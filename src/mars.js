@@ -30,10 +30,12 @@ import planetposition, { Planet } from './planetposition.js' // eslint-disable-l
  * All angular results (all results except k) are in radians.
  *
  * @param {number} jde - Julian ephemeris day
- * @param {Planet} earth
- * @param {Planet} mars
+ * @param {Planet} earth - VSOP87 ephemeris for Earth.
+ * @param {Planet} mars - VSOP87 ephemeris for Mars.
+ * @returns {[number, number, number, number, number, number, number, number]} Areographic declinations, central meridian, position angles, apparent diameter, illuminated fraction, and defect of illumination.
  */
-export function physical (jde, earth, mars) { // (jde float64, earth, mars *pp.V87Planet)  (DE, DS, ω, P, Q, d, k, q float64)
+export function physical(jde, earth, mars) {
+  // (jde float64, earth, mars *pp.V87Planet)  (DE, DS, ω, P, Q, d, k, q float64)
   // Step 1.0
   const T = base.J2000Century(jde)
   const p = Math.PI / 180
@@ -57,7 +59,7 @@ export function physical (jde, earth, mars) { // (jde float64, earth, mars *pp.V
   let y = 0
   let z = 0
 
-  function f () {
+  function f() {
     const marsPos = mars.position(jde - τ)
     r = marsPos.range
     const fk5 = planetposition.toFK5(marsPos.lon, marsPos.lat, jde)
@@ -85,8 +87,8 @@ export function physical (jde, earth, mars) { // (jde float64, earth, mars *pp.V
   const DE = Math.asin(-sβ0 * sβ - cβ0 * cβ * Math.cos(λ0 - λ))
   // Step 7.0
   const N = 49.5581 * p + 0.7721 * p * T
-  const lʹ = l - 0.00697 * p / r
-  const bʹ = b - 0.000225 * p * Math.cos(l - N) / r
+  const lʹ = l - (0.00697 * p) / r
+  const bʹ = b - (0.000225 * p * Math.cos(l - N)) / r
   // Step 8.0
   const [sbʹ, cbʹ] = base.sincos(bʹ)
   const DS = Math.asin(-sβ0 * sbʹ - cβ0 * cbʹ * Math.cos(λ0 - lʹ))
@@ -112,7 +114,7 @@ export function physical (jde, earth, mars) { // (jde float64, earth, mars *pp.V
   const [Δψ, Δε] = nutation.nutation(jde)
   // Step 14.0
   const [sl0λ, cl0λ] = base.sincos(l0 - λ)
-  λ += 0.005693 * p * cl0λ / cβ
+  λ += (0.005693 * p * cl0λ) / cβ
   β += 0.005693 * p * sl0λ * sβ
   // Step 15.0
   λ0 += Δψ
@@ -143,7 +145,7 @@ export function physical (jde, earth, mars) { // (jde float64, earth, mars *pp.V
   const χ = Math.atan2(cδs * sαsα, sδs * cδ - cδs * sδ * cαsα)
   const Q = χ + Math.PI
   // Step 19.0
-  const d = 9.36 / 60 / 60 * Math.PI / 180 / Δ
+  const d = ((9.36 / 60 / 60) * Math.PI) / 180 / Δ
   const k = illum.fraction(r, Δ, R)
   const q = (1 - k) * d
   return [DE, DS, ω, P, Q, d, k, q]

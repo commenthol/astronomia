@@ -26,23 +26,33 @@ import sexa from './sexagesimal.js'
  * @param {number} jde - Julian ephemeris day
  * @return {number[]} [Δψ, Δε] - [longitude, obliquity] in radians
  */
-export function nutation (jde) {
+export function nutation(jde) {
   const T = base.J2000Century(jde)
   // Mean elongation of the Moon from the sun
-  const D = base.horner(T,
-    297.85036, 445267.11148, -0.0019142, 1.0 / 189474) * Math.PI / 180
+  const D =
+    (base.horner(T, 297.85036, 445267.11148, -0.0019142, 1.0 / 189474) *
+      Math.PI) /
+    180
   // Mean anomaly of the Sun (Earth)
-  const M = base.horner(T,
-    357.52772, 35999.050340, -0.0001603, -1.0 / 300000) * Math.PI / 180
+  const M =
+    (base.horner(T, 357.52772, 35999.05034, -0.0001603, -1.0 / 300000) *
+      Math.PI) /
+    180
   // Mean anomaly of the Moon
-  const N = base.horner(T,
-    134.96298, 477198.867398, 0.0086972, 1.0 / 56250) * Math.PI / 180
+  const N =
+    (base.horner(T, 134.96298, 477198.867398, 0.0086972, 1.0 / 56250) *
+      Math.PI) /
+    180
   // Moon's argument of latitude
-  const F = base.horner(T,
-    93.27191, 483202.017538, -0.0036825, 1.0 / 327270) * Math.PI / 180
+  const F =
+    (base.horner(T, 93.27191, 483202.017538, -0.0036825, 1.0 / 327270) *
+      Math.PI) /
+    180
   // Longitude of the ascending node of the Moon's mean orbit on the ecliptic, measured from mean equinox of date
-  const Ω = base.horner(T,
-    125.04452, -1934.136261, 0.0020708, 1.0 / 450000) * Math.PI / 180
+  const Ω =
+    (base.horner(T, 125.04452, -1934.136261, 0.0020708, 1.0 / 450000) *
+      Math.PI) /
+    180
   let Δψ = 0
   let Δε = 0
   // sum in reverse order to accumulate smaller terms first
@@ -53,8 +63,8 @@ export function nutation (jde) {
     Δψ += s * (row.s0 + row.s1 * T)
     Δε += c * (row.c0 + row.c1 * T)
   }
-  Δψ *= 0.0001 / 3600 * (Math.PI / 180)
-  Δε *= 0.0001 / 3600 * (Math.PI / 180)
+  Δψ *= (0.0001 / 3600) * (Math.PI / 180)
+  Δε *= (0.0001 / 3600) * (Math.PI / 180)
   return [Δψ, Δε] // (Δψ, Δε float)
 }
 /**
@@ -68,17 +78,20 @@ export function nutation (jde) {
  * @param {number} jde - Julian ephemeris day
  * @return {number[]} [Δψ, Δε] - [longitude, obliquity] in radians
  */
-export function approxNutation (jde) {
+export function approxNutation(jde) {
   const T = (jde - base.J2000) / 36525
-  const Ω = (125.04452 - 1934.136261 * T) * Math.PI / 180
-  const L = (280.4665 + 36000.7698 * T) * Math.PI / 180
-  const N = (218.3165 + 481267.8813 * T) * Math.PI / 180
+  const Ω = ((125.04452 - 1934.136261 * T) * Math.PI) / 180
+  const L = ((280.4665 + 36000.7698 * T) * Math.PI) / 180
+  const N = ((218.3165 + 481267.8813 * T) * Math.PI) / 180
   const [sΩ, cΩ] = base.sincos(Ω)
   const [s2L, c2L] = base.sincos(2 * L)
   const [s2N, c2N] = base.sincos(2 * N)
   const [s2Ω, c2Ω] = base.sincos(2 * Ω)
-  const Δψ = (-17.2 * sΩ - 1.32 * s2L - 0.23 * s2N + 0.21 * s2Ω) / 3600 * (Math.PI / 180)
-  const Δε = (9.2 * cΩ + 0.57 * c2L + 0.1 * c2N - 0.09 * c2Ω) / 3600 * (Math.PI / 180)
+  const Δψ =
+    ((-17.2 * sΩ - 1.32 * s2L - 0.23 * s2N + 0.21 * s2Ω) / 3600) *
+    (Math.PI / 180)
+  const Δε =
+    ((9.2 * cΩ + 0.57 * c2L + 0.1 * c2N - 0.09 * c2Ω) / 3600) * (Math.PI / 180)
   return [Δψ, Δε] // (Δψ, Δε float)
 }
 
@@ -94,14 +107,14 @@ export function approxNutation (jde) {
  * @param {number} jde - Julian ephemeris day
  * @return {number} mean obliquity (ε₀)
  */
-export function meanObliquity (jde) {
+export function meanObliquity(jde) {
   // (22.2) p. 147
   return base.horner(
     base.J2000Century(jde),
     new sexa.Angle(false, 23, 26, 21.448).rad(),
-    -46.815 / 3600 * (Math.PI / 180),
-    -0.00059 / 3600 * (Math.PI / 180),
-    0.001813 / 3600 * (Math.PI / 180)
+    (-46.815 / 3600) * (Math.PI / 180),
+    (-0.00059 / 3600) * (Math.PI / 180),
+    (0.001813 / 3600) * (Math.PI / 180)
   )
 }
 
@@ -119,21 +132,21 @@ export function meanObliquity (jde) {
  * @param {number} jde - Julian ephemeris day
  * @return {number} mean obliquity (ε₀)
  */
-export function meanObliquityLaskar (jde) {
+export function meanObliquityLaskar(jde) {
   // (22.3) p. 147
   return base.horner(
     base.J2000Century(jde) * 0.01,
     new sexa.Angle(false, 23, 26, 21.448).rad(),
-    -4680.93 / 3600 * (Math.PI / 180),
-    -1.55 / 3600 * (Math.PI / 180),
-    1999.25 / 3600 * (Math.PI / 180),
-    -51.38 / 3600 * (Math.PI / 180),
-    -249.67 / 3600 * (Math.PI / 180),
-    -39.05 / 3600 * (Math.PI / 180),
-    7.12 / 3600 * (Math.PI / 180),
-    27.87 / 3600 * (Math.PI / 180),
-    5.79 / 3600 * (Math.PI / 180),
-    2.45 / 3600 * (Math.PI / 180)
+    (-4680.93 / 3600) * (Math.PI / 180),
+    (-1.55 / 3600) * (Math.PI / 180),
+    (1999.25 / 3600) * (Math.PI / 180),
+    (-51.38 / 3600) * (Math.PI / 180),
+    (-249.67 / 3600) * (Math.PI / 180),
+    (-39.05 / 3600) * (Math.PI / 180),
+    (7.12 / 3600) * (Math.PI / 180),
+    (27.87 / 3600) * (Math.PI / 180),
+    (5.79 / 3600) * (Math.PI / 180),
+    (2.45 / 3600) * (Math.PI / 180)
   )
 }
 
@@ -146,7 +159,7 @@ export function meanObliquityLaskar (jde) {
  * @param {number} jde - Julian ephemeris day
  * @return {number} nutation in right ascension
  */
-export function nutationInRA (jde) {
+export function nutationInRA(jde) {
   const [Δψ, Δε] = nutation(jde)
   const ε0 = meanObliquity(jde)
   return Δψ * Math.cos(ε0 + Δε)

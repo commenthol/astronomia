@@ -41,8 +41,10 @@ const int = Math.trunc
  *  dNY:    (int) Day number of the Jewish new year.
  *  months: (int) Number of months in this year.
  *  days:   (int) Number of days in this year.
+ * @param {number} y - Julian or Gregorian calendar year.
+ * @returns {[number, number, number, number, number, number, number]} Jewish year, Pesach date, new-year date, month count, and year length.
  */
-export function JewishCalendar (y) {
+export function JewishCalendar(y) {
   const A = y + 3760
   const D = bigD(y)
   let mP = 3
@@ -91,7 +93,8 @@ export function JewishCalendar (y) {
   return [A, mP, dP, mNY, dNY, months, days]
 }
 
-const bigD = function (y) { // (y int)  int
+const bigD = function (y) {
+  // (y int)  int
   const C = base.floorDiv(y, 100)
   // const S int
   let S = 0
@@ -100,8 +103,8 @@ const bigD = function (y) { // (y int)  int
   }
   const a = (12 * y + 12) % 19
   const b = y % 4
-  const Q = -1.904412361576 + 1.554241796621 * (a) + 0.25 * (b) -
-    0.003177794022 * (y) + (S)
+  const Q =
+    -1.904412361576 + 1.554241796621 * a + 0.25 * b - 0.003177794022 * y + S
   const fq = Math.floor(Q)
   const iq = int(fq)
   const j = (iq + 3 * y + 5 * b + 2 - S) % 7
@@ -127,7 +130,8 @@ const bigD = function (y) { // (y int)  int
  * @param {Number} d - day
  * @returns {Number} jd - Julian day
  */
-export function MoslemToJD (y, m, d) { // (y, m, d int)  (jY, jDN int)
+export function MoslemToJD(y, m, d) {
+  // (y, m, d int)  (jY, jDN int)
   const N = d + base.floorDiv(295001 * (m - 1) + 9900, 10000)
   const Q = base.floorDiv(y, 30)
   const R = y % 30
@@ -156,7 +160,8 @@ export function MoslemToJD (y, m, d) { // (y, m, d int)  (jY, jDN int)
  * @param {Number} year
  * @returns {Boolean} true if leap year
  */
-export function MoslemLeapYear (year) { // (y int)  bool
+export function MoslemLeapYear(year) {
+  // (y int)  bool
   const R = year % 30
   return (11 * R + 3) % 30 > 18
 }
@@ -176,7 +181,8 @@ export function MoslemLeapYear (year) { // (y int)  bool
  * @param {Number} d - julian day
  * @returns {DateObj}
  */
-export function JulianToMoslem (y, m, d) { // (y, m, d int)  (my, mm, md int)
+export function JulianToMoslem(y, m, d) {
+  // (y, m, d int)  (my, mm, md int)
   let W = 2
   if (y % 4 === 0) {
     W = 1
@@ -186,7 +192,7 @@ export function JulianToMoslem (y, m, d) { // (y, m, d int)  (my, mm, md int)
   const B = base.floorDiv(A, 4)
   const C2 = (function (A) {
     const C = A % 4
-    const C1 = 365.25001 * (C)
+    const C1 = 365.25001 * C
     const C2 = Math.floor(C1)
     if (C1 - C2 > 0.5) {
       return int(C2) + 1
@@ -246,8 +252,10 @@ const mmonths = [
 
 /**
  * String returns the Romanization of the month ("Muḥarram", "Ṣafar", ...).
+ * @param {number} m - Moslem calendar month number (1-12).
+ * @returns {string} Romanized month name.
  */
-export function moslemMonth (m) {
+export function moslemMonth(m) {
   return mmonths[m]
 }
 

@@ -35,7 +35,9 @@ export const errorNot3 = new Error('Argument y must be length 3')
 export const errorNot4 = new Error('Argument y must be length 4')
 export const errorNot5 = new Error('Argument y must be length 5')
 export const errorNoXRange = new Error('Argument x3 (or x5) cannot equal x1')
-export const errorNOutOfRange = new Error('Interpolating factor n must be in range -1 to 1')
+export const errorNOutOfRange = new Error(
+  'Interpolating factor n must be in range -1 to 1'
+)
 export const errorNoExtremum = new Error('No extremum in table')
 export const errorExtremumOutside = new Error('Extremum falls outside of table')
 export const errorZeroOutside = new Error('Zero falls outside of table')
@@ -56,7 +58,7 @@ export class Len3 {
    * @param {Number} x3 - is the x value corresponding to the last y value of the table.
    * @param {Number[]} y - is all y values in the table. y.length should be >= 3.0
    */
-  constructor (x1, x3, y) {
+  constructor(x1, x3, y) {
     if (y.length !== 3) {
       throw errorNot3
     }
@@ -78,8 +80,10 @@ export class Len3 {
 
   /**
    * InterpolateX interpolates for a given x value.
+   * @param {number} x - Abscissa to interpolate.
+   * @returns {number} Interpolated value.
    */
-  interpolateX (x) {
+  interpolateX(x) {
     const n = (2 * x - this.xSum) / this.xDiff
     return this.interpolateN(n)
   }
@@ -87,8 +91,10 @@ export class Len3 {
   /**
    * InterpolateXStrict interpolates for a given x value,
    * restricting x to the range x1 to x3 given to the constructor NewLen3.
+   * @param {number} x - Abscissa to interpolate.
+   * @returns {number} Interpolated value.
    */
-  interpolateXStrict (x) {
+  interpolateXStrict(x) {
     const n = (2 * x - this.xSum) / this.xDiff
     const y = this.interpolateNStrict(n)
     return y
@@ -99,11 +105,11 @@ export class Len3 {
    *
    * This is interpolation formula (3.3)
    *
-   * @param n - The interpolation factor n is x-x2 in units of the tabular x interval.
+   * @param {number} n - The interpolation factor n is x-x2 in units of the tabular x interval.
    * (See Meeus p. 24.)
    * @return {number} interpolation value
    */
-  interpolateN (n) {
+  interpolateN(n) {
     return this.y[1] + n * 0.5 * (this.abSum + n * this.c)
   }
 
@@ -114,7 +120,7 @@ export class Len3 {
    * given to the constructor of Len3.
    * @return {number} interpolation value
    */
-  interpolateNStrict (n) {
+  interpolateNStrict(n) {
     if (n < -1 || n > 1) {
       throw errorNOutOfRange
     }
@@ -126,8 +132,9 @@ export class Len3 {
    *
    * Results are restricted to the range of the table given to the constructor
    * new Len3.
+   * @returns {[number, number]} Abscissa and value at the extremum.
    */
-  extremum () {
+  extremum() {
     if (this.c === 0) {
       throw errorNoExtremum
     }
@@ -157,19 +164,24 @@ export class Len3 {
    *
    * Results are restricted to the range of the table given to the constructor
    * NewLen3.
+   * @param {boolean} strong - Use the more robust iterative estimate when true.
+   * @returns {number} Abscissa where the interpolated value is zero.
    */
-  zero (strong) {
+  zero(strong) {
     let f
     if (strong) {
       // (3.7), p. 27
       f = (n0) => {
-        return n0 - (2 * this.y[1] + n0 * (this.abSum + this.c * n0)) /
-        (this.abSum + 2 * this.c * n0)
+        return (
+          n0 -
+          (2 * this.y[1] + n0 * (this.abSum + this.c * n0)) /
+            (this.abSum + 2 * this.c * n0)
+        )
       }
     } else {
       // (3.6), p. 26
       f = (n0) => {
-        return -2 * this.y[1] / (this.abSum + this.c * n0)
+        return (-2 * this.y[1]) / (this.abSum + this.c * n0)
       }
     }
     const [n0, ok] = iterate(0, f)
@@ -198,7 +210,7 @@ export class Len3 {
  * @param {Number[]} y - is all y values in the table.  y.length should be >= 3.0
  * @returns {Len3} interpolation value
  */
-export function len3ForInterpolateX (x, x1, xN, y) {
+export function len3ForInterpolateX(x, x1, xN, y) {
   let y3 = y
   if (y.length > 3) {
     const interval = (xN - x1) / (y.length - 1)
@@ -220,11 +232,9 @@ export function len3ForInterpolateX (x, x1, xN, y) {
 
 /**
  * @private
- * @param {Number} n0
- * @param {Function} f
- * @returns {Array}
- *   {Number} n1
- *   {Boolean} ok - if `false` failure to converge
+ * @param {number} n0 - Initial interpolation factor.
+ * @param {(n: number) => number} f - Iterative update function.
+ * @returns {[number, boolean]} Converged factor and success flag.
  */
 export const iterate = function (n0, f) {
   for (let limit = 0; limit < 50; limit++) {
@@ -245,7 +255,7 @@ export const iterate = function (n0, f) {
  * @param {Number[]} y - 4 values
  * @returns {Number} interpolation result
  */
-export function len4Half (y) {
+export function len4Half(y) {
   if (y.length !== 4) {
     throw errorNot4
   }
@@ -262,8 +272,11 @@ export class Len5 {
    *
    * X values must be equally spaced, so only the first and last are suppliethis.
    * X1 must not equal x5.  Y must be a slice of five y values.
+   * @param {number} x1 - Abscissa of the first table row.
+   * @param {number} x5 - Abscissa of the last table row.
+   * @param {number[]} y - Five ordinate values.
    */
-  constructor (x1, x5, y) {
+  constructor(x1, x5, y) {
     if (y.length !== 5) {
       throw errorNot5
     }
@@ -291,7 +304,8 @@ export class Len5 {
     // other intermediate values
     this.xSum = x5 + x1
     this.xDiff = x5 - x1
-    this.interpCoeff = [ // (3.8) p. 28
+    this.interpCoeff = [
+      // (3.8) p. 28
       this.y3,
       (this.b + this.c) / 2 - (this.h + this.j) / 12,
       this.f / 2 - this.k / 24,
@@ -301,9 +315,11 @@ export class Len5 {
   }
 
   /**
-   * InterpolateX interpolates for (a given x value.
+   * InterpolateX interpolates for a given x value.
+   * @param {number} x - Abscissa to interpolate.
+   * @returns {number} Interpolated value.
    */
-  interpolateX (x) {
+  interpolateX(x) {
     const n = (4 * x - 2 * this.xSum) / this.xDiff
     return this.interpolateN(n)
   }
@@ -311,8 +327,10 @@ export class Len5 {
   /**
    * InterpolateXStrict interpolates for a given x value,
    * restricting x to the range x1 to x5 given to the the constructor NewLen5.
+   * @param {number} x - Abscissa to interpolate.
+   * @returns {number} Interpolated value.
    */
-  interpolateXStrict (x) {
+  interpolateXStrict(x) {
     const n = (4 * x - 2 * this.xSum) / this.xDiff
     const y = this.interpolateNStrict(n)
     return y
@@ -323,8 +341,10 @@ export class Len5 {
    *
    * The interpolation factor n is x-x3 in units of the tabular x interval.
    * (See Meeus p. 28.)
+   * @param {number} n - Interpolating factor relative to the table interval.
+   * @returns {number} Interpolated value.
    */
-  interpolateN (n) {
+  interpolateN(n) {
     return base.horner(n, ...this.interpCoeff)
   }
 
@@ -333,8 +353,10 @@ export class Len5 {
    *
    * N is restricted to the range [-1..1].  This is only half the range given
    * to the constructor NewLen5, but is the recommendation given on p. 31.0
+   * @param {number} n - Interpolating factor restricted to [-1, 1].
+   * @returns {number} Interpolated value.
    */
-  interpolateNStrict (n) {
+  interpolateNStrict(n) {
     if (n < -1 || n > 1) {
       throw errorNOutOfRange
     }
@@ -347,8 +369,9 @@ export class Len5 {
    * Results are restricted to the range of the table given to the constructor
    * NewLen5.  (Meeus actually recommends restricting the range to one unit of
    * the tabular interval, but that seems a little harsh.)
+   * @returns {[number, number]} Abscissa and value at the extremum.
    */
-  extremum () {
+  extremum() {
     // (3.9) p. 29
     const nCoeff = [
       6 * (this.b + this.c) - this.h - this.j,
@@ -391,8 +414,10 @@ export class Len5 {
    *
    * Results are restricted to the range of the table given to the constructor
    * NewLen5.
+   * @param {boolean} strong - Use the more robust iterative estimate when true.
+   * @returns {number} Abscissa where the interpolated value is zero.
    */
-  zero (strong) {
+  zero(strong) {
     let f
     if (strong) {
       // (3.11), p. 29
@@ -403,8 +428,7 @@ export class Len5 {
       const numCoeff = [this.y3, Q, P, N, M]
       const denCoeff = [Q, 2 * P, 3 * N, 4 * M]
       f = function (n0) {
-        return n0 -
-          base.horner(n0, ...numCoeff) / base.horner(n0, ...denCoeff)
+        return n0 - base.horner(n0, ...numCoeff) / base.horner(n0, ...denCoeff)
       }
     } else {
       // (3.10), p. 29
@@ -441,10 +465,10 @@ export class Len5 {
  * have to be in order. They must however, be distinct.
  *
  * @param {Number} x - x-value of interpolation
- * @param {Array} table - `[[x0, y0], ... [xN, yN]]` of x, y values
+ * @param {Array<[number, number]>} table - Rows of abscissa and ordinate values.
  * @returns {Number} interpolation result `y` of `x`
  */
-export function lagrange (x, table) {
+export function lagrange(x, table) {
   // method of BASIC program, p. 33.0
   let sum = 0
   table.forEach((ti, i) => {
@@ -471,34 +495,36 @@ export function lagrange (x, table) {
  * The returned polynomial will be of degree n-1 where n is the number of rows
  * in the table.  It can be evaluated for x using base.horner.
  *
- * @param {Array} table - `[[x0, y0], ... [xN, yN]]`
- * @returns {Array} - polynomial array
+ * @param {Array<[number, number] | {x: number, y: number}>} table - Abscissa and ordinate rows.
+ * @returns {number[]} Polynomial coefficients.
  */
-export function lagrangePoly (table) {
+export function lagrangePoly(table) {
   // Method not fully described by Meeus, but needed for (numerical solution
   // to Example 3.g.
   const sum = new Array(table.length).fill(0)
   const prod = new Array(table.length).fill(0)
   const last = table.length - 1
   for (let i = 0; i < table.length; i++) {
-    const xi = table[i][0] || table[i].x || 0
-    const yi = table[i][1] || table[i].y || 0
+    const point = table[i]
+    const xi = (Array.isArray(point) ? point[0] : point.x) || 0
+    const yi = (Array.isArray(point) ? point[1] : point.y) || 0
     prod[last] = 1
     let den = 1.0
     let n = last
     for (let j = 0; j < table.length; j++) {
       if (i !== j) {
-        const xj = table[j][0] || table[j].x || 0
+        const nextPoint = table[j]
+        const xj = (Array.isArray(nextPoint) ? nextPoint[0] : nextPoint.x) || 0
         prod[n - 1] = prod[n] * -xj
         for (let k = n; k < last; k++) {
           prod[k] -= prod[k + 1] * xj
         }
         n--
-        den *= (xi - xj)
+        den *= xi - xj
       }
     }
     prod.forEach((pj, j) => {
-      sum[j] += yi * pj / den
+      sum[j] += (yi * pj) / den
     })
   }
   return sum
@@ -506,8 +532,13 @@ export function lagrangePoly (table) {
 
 /**
  * Linear Interpolation of x
+ * @param {number} x - Abscissa to interpolate.
+ * @param {number} x1 - First table abscissa.
+ * @param {number} xN - Last table abscissa.
+ * @param {number[]} y - Ordinates at equally spaced abscissae.
+ * @returns {number} Interpolated value.
  */
-export function linear (x, x1, xN, y) {
+export function linear(x, x1, xN, y) {
   const interval = (xN - x1) / (y.length - 1)
   if (interval === 0) {
     throw errorNoXRange
@@ -520,7 +551,7 @@ export function linear (x, x1, xN, y) {
   }
   const y2 = y.slice(nearestX, nearestX + 2)
   const x01 = x1 + nearestX * interval
-  return y2[0] + (y[1] - y[0]) * (x - x01) / interval
+  return y2[0] + ((y[1] - y[0]) * (x - x01)) / interval
 }
 
 export default {

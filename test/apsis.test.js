@@ -1,6 +1,11 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { apsis, moonposition, julian, sexagesimal as sexa } from '../src/index.js'
+import {
+  apsis,
+  moonposition,
+  julian,
+  sexagesimal as sexa
+} from '../src/index.js'
 
 describe('#apsis', function () {
   it('meanApogee', function () {
@@ -20,7 +25,7 @@ describe('#apsis', function () {
   it('apogeeParallax', function () {
     // Example 50.a, p. 357.0
     const p = apsis.apogeeParallax(1988.75)
-    assert.strictEqual(float(p * 180 / Math.PI * 3600).toFixed(3), 3240.679)
+    assert.strictEqual(float(((p * 180) / Math.PI) * 3600).toFixed(3), 3240.679)
     assert.strictEqual(new sexa.Angle(p).toString(3), '0°54′.679″')
   })
 
@@ -47,7 +52,7 @@ describe('#apsis', function () {
 
   it('perigeeParallax', function () {
     const p = apsis.perigeeParallax(1997.93)
-    assert.strictEqual(float(p * 180 / Math.PI * 3600).toFixed(3), 3566.637)
+    assert.strictEqual(float(((p * 180) / Math.PI) * 3600).toFixed(3), 3566.637)
     assert.strictEqual(new sexa.Angle(p).toString(3), '0°59′26.637″')
   })
 
@@ -67,12 +72,12 @@ describe('#apsis', function () {
     const per = apsis.perigee(y)
     const dist = moonposition.position(per).range
     const par = moonposition.parallax(dist)
-    const Δ = Math.abs(perPar - par) / Math.PI * 180 * 3600 // difference in arc seconds
+    const Δ = (Math.abs(perPar - par) / Math.PI) * 180 * 3600 // difference in arc seconds
     assert.ok(Δ < 0.1, Δ + ' should be less than 0.1')
   })
 
   it('apogeeDistance', function () {
-    const y = 1997.90
+    const y = 1997.9
     const p = apsis.apogeeParallax(y)
     const d = apsis.distance(p)
     assert.strictEqual(float(d).toFixed(0), 404695)
@@ -82,12 +87,12 @@ describe('#apsis', function () {
   })
 
   it('comparing apogeeParallax with parallax from position', function () {
-    const y = 1997.90
+    const y = 1997.9
     const apoPar = apsis.apogeeParallax(y)
     const apo = apsis.apogee(y)
     const dist = moonposition.position(apo).range
     const par = moonposition.parallax(dist)
-    const Δ = Math.abs(apoPar - par) / Math.PI * 180 * 3600 // difference in arc seconds
+    const Δ = (Math.abs(apoPar - par) / Math.PI) * 180 * 3600 // difference in arc seconds
     assert.ok(Δ < 0.1, Δ + ' should be less than 0.1')
   })
 })

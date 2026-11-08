@@ -4,6 +4,7 @@ output/
 attic/
 tmp/
 lib/
+lib.0/
 es/
 *.log
 *.tgz
@@ -11,6 +12,5 @@ es/
 .nyc_output
 .DS_Store
 
-package-lock.json
 pnpm-lock.yaml
 yarn.lock

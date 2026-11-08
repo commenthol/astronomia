@@ -19,14 +19,19 @@ import base from './base.js'
  * Elements are the orbital elements of a solar system object which change
  * from one equinox to another.
  *
- * @param {Number} inc  - inclination
- * @param {Number} node - longitude of ascending node (Ω)
- * @param {Number} peri - argument of perihelion (ω)
+ * @param {number|Elements} [inc=0] - Inclination, or an object containing orbital elements.
+ * @param {number} [node=0] - Longitude of ascending node (Ω).
+ * @param {number} [peri=0] - Argument of perihelion (ω).
  */
 export class Elements {
-  constructor (inc, node, peri) {
-    if (typeof inc === 'object') {
-      node = inc.pode
+  /**
+   * @param {number|Elements} [inc=0] - Orbital inclination, or orbital elements.
+   * @param {number} [node=0] - Longitude of the ascending node in radians.
+   * @param {number} [peri=0] - Argument of perihelion in radians.
+   */
+  constructor(inc, node, peri) {
+    if (inc && typeof inc === 'object') {
+      node = inc.node
       peri = inc.peri
       inc = inc.inc
     }
@@ -46,24 +51,28 @@ const C = 0.9999999935
  * @param {Elements} eFrom
  * @returns {Elements} eTo
  */
-export function reduceB1950ToJ2000 (eFrom) {
-  const W = eFrom.node - 174.298782 * Math.PI / 180
+export function reduceB1950ToJ2000(eFrom) {
+  const W = eFrom.node - (174.298782 * Math.PI) / 180
   const [si, ci] = base.sincos(eFrom.inc)
   const [sW, cW] = base.sincos(W)
   const A = si * sW
   const B = C * si * cW - S * ci
   const eTo = new Elements()
   eTo.inc = Math.asin(Math.hypot(A, B))
-  eTo.node = base.pmod(174.997194 * Math.PI / 180 + Math.atan2(A, B),
-    2 * Math.PI)
-  eTo.peri = base.pmod(eFrom.peri + Math.atan2(-S * sW, C * si - S * ci * cW),
-    2 * Math.PI)
+  eTo.node = base.pmod(
+    (174.997194 * Math.PI) / 180 + Math.atan2(A, B),
+    2 * Math.PI
+  )
+  eTo.peri = base.pmod(
+    eFrom.peri + Math.atan2(-S * sW, C * si - S * ci * cW),
+    2 * Math.PI
+  )
   return eTo
 }
 
-const Lp = 4.50001688 * Math.PI / 180
-const L = 5.19856209 * Math.PI / 180
-const J = 0.00651966 * Math.PI / 180
+const Lp = (4.50001688 * Math.PI) / 180
+const L = (5.19856209 * Math.PI) / 180
+const J = (0.00651966 * Math.PI) / 180
 
 /**
  * ReduceB1950ToJ2000 reduces orbital elements of a solar system body from
@@ -72,17 +81,21 @@ const J = 0.00651966 * Math.PI / 180
  * @param {Elements} eFrom
  * @returns {Elements} eTo
  */
-export function reduceB1950FK4ToJ2000FK5 (eFrom) {
+export function reduceB1950FK4ToJ2000FK5(eFrom) {
   const W = L + eFrom.node
   const [si, ci] = base.sincos(eFrom.inc)
   const [sJ, cJ] = base.sincos(J)
   const [sW, cW] = base.sincos(W)
   const eTo = new Elements()
   eTo.inc = Math.acos(ci * cJ - si * sJ * cW)
-  eTo.node = base.pmod(Math.atan2(si * sW, ci * sJ + si * cJ * cW) - Lp,
-    2 * Math.PI)
-  eTo.peri = base.pmod(eFrom.peri + Math.atan2(sJ * sW, si * cJ + ci * sJ * cW),
-    2 * Math.PI)
+  eTo.node = base.pmod(
+    Math.atan2(si * sW, ci * sJ + si * cJ * cW) - Lp,
+    2 * Math.PI
+  )
+  eTo.peri = base.pmod(
+    eFrom.peri + Math.atan2(sJ * sW, si * cJ + ci * sJ * cW),
+    2 * Math.PI
+  )
   return eTo
 }
 

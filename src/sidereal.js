@@ -22,7 +22,7 @@ import nutation from './nutation.js'
  * @param {number} jd - Julian Days
  * @return {number[]} [century, fraction] century and fraction of jd after 0h UT
  */
-export function JDToCFrac (jd) {
+export function JDToCFrac(jd) {
   const [j0, f] = base.modf(jd + 0.5)
   return [base.J2000Century(j0 - 0.5), f] // (cen, dayFrac /* float */)
 }
@@ -45,14 +45,14 @@ export const iau82 = [24110.54841, 8640184.812866, 0.093104, -0.0000062]
  * @param {number} jd - Julian Days
  * @return {number}
  */
-export function mean (jd) {
+export function mean(jd) {
   return base.pmod(_mean(jd), 86400)
 }
 
 /**
  * @private
  */
-function _mean (jd) {
+function _mean(jd) {
   const [s, f] = _mean0UT(jd)
   return s + f * 1.00273790935 * 86400
 }
@@ -65,7 +65,7 @@ function _mean (jd) {
  * @param {number} jd - Julian Days
  * @return {number}
  */
-export function mean0UT (jd /* float */) {
+export function mean0UT(jd /* float */) {
   const [s, _] = _mean0UT(jd) // eslint-disable-line
   return base.pmod(s, 86400)
 }
@@ -73,7 +73,7 @@ export function mean0UT (jd /* float */) {
 /**
  * @private
  */
-function _mean0UT (jd /* float */) {
+function _mean0UT(jd /* float */) {
   const [cen, f] = JDToCFrac(jd)
   // (12.2) p. 87
   return [base.horner(cen, ...iau82), f] // (sidereal, dayFrac /* float */)
@@ -89,10 +89,10 @@ function _mean0UT (jd /* float */) {
  * @param {number} jd - Julian Days
  * @return {number}
  */
-export function apparent (jd) {
+export function apparent(jd) {
   const s = _mean(jd) // seconds of time
   const n = nutation.nutationInRA(jd) // angle (radians) of RA
-  const ns = n * 3600 * 180 / Math.PI / 15 // convert RA to time in seconds
+  const ns = (n * 3600 * 180) / Math.PI / 15 // convert RA to time in seconds
   return base.pmod(s + ns, 86400)
 }
 
@@ -105,12 +105,12 @@ export function apparent (jd) {
  * @param {number} jd - Julian Days
  * @return {number}
  */
-export function apparent0UT (jd) {
+export function apparent0UT(jd) {
   const [j0, f] = base.modf(jd + 0.5)
   const cen = (j0 - 0.5 - base.J2000) / 36525
   const s = base.horner(cen, ...iau82) + f * 1.00273790935 * 86400
   const n = nutation.nutationInRA(j0) // angle (radians) of RA
-  const ns = n * 3600 * 180 / Math.PI / 15 // convert RA to time in seconds
+  const ns = (n * 3600 * 180) / Math.PI / 15 // convert RA to time in seconds
   return base.pmod(s + ns, 86400)
 }
 

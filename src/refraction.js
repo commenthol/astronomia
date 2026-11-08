@@ -27,8 +27,11 @@ const gt15app2 = new sexa.Angle(false, 0, 0, 0.0824).rad()
  *
  * Result is refraction to be subtracted from h0 to obtain the true altitude
  * of the body.  Unit is radians.
+ * @param {number} h0 - Measured apparent altitude in radians.
+ * @returns {number} Refraction to subtract to obtain true altitude, in radians.
  */
-export function gt15True (h0) { // (h0 float64)  float64
+export function gt15True(h0) {
+  // (h0 float64)  float64
   // (16.1) p. 105
   const t = tan(Math.PI / 2 - h0)
   return gt15true1 * t - gt15true2 * t * t * t
@@ -42,8 +45,11 @@ export function gt15True (h0) { // (h0 float64)  float64
  *
  * Result is refraction to be added to h to obtain the apparent altitude
  * of the body.  Unit is radians.
+ * @param {number} h - True airless altitude in radians.
+ * @returns {number} Refraction to add to obtain apparent altitude, in radians.
  */
-export function gt15Apparent (h) { // (h float64)  float64
+export function gt15Apparent(h) {
+  // (h float64)  float64
   // (16.2) p. 105
   const t = tan(Math.PI / 2 - h)
   return gt15app1 * t - gt15app2 * t * t * t
@@ -58,8 +64,11 @@ export function gt15Apparent (h) { // (h float64)  float64
  *
  * Result is refraction to be subtracted from h0 to obtain the true altitude
  * of the body.  Unit is radians.
+ * @param {number} h0 - Measured apparent altitude in radians.
+ * @returns {number} Refraction to subtract to obtain true altitude, in radians.
  */
-export function bennett (h0) { // (h0 float64)  float64
+export function bennett(h0) {
+  // (h0 float64)  float64
   // (16.3) p. 106
   const c1 = D2R / 60
   const c731 = 7.31 * D2R * D2R
@@ -74,8 +83,11 @@ export function bennett (h0) { // (h0 float64)  float64
  * result.
  *
  * Results are accurate to 0.015 arc min.  Result unit is radians.
+ * @param {number} h0 - Measured apparent altitude in radians.
+ * @returns {number} Refraction to subtract to obtain true altitude, in radians.
  */
-export function bennett2 (h0) { // (h0 float64)  float64
+export function bennett2(h0) {
+  // (h0 float64)  float64
   const cMin = 60 / D2R
   const c06 = 0.06 / cMin
   const c147 = 14.7 * cMin * D2R
@@ -94,10 +106,13 @@ export function bennett2 (h0) { // (h0 float64)  float64
  *
  * Results are consistent with Bennett to within 4 arc sec.
  * Result unit is radians.
+ * @param {number} h - True airless altitude in radians.
+ * @returns {number} Refraction to add to obtain apparent altitude, in radians.
  */
-export function saemundsson (h) { // (h float64)  float64
+export function saemundsson(h) {
+  // (h float64)  float64
   // (16.4) p. 106
-  const c102 = 1.02 * D2R / 60
+  const c102 = (1.02 * D2R) / 60
   const c103 = 10.3 * D2R * D2R
   const c511 = 5.11 * D2R
   return c102 / tan(h + c103 / (h + c511))

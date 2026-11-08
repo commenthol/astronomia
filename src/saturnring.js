@@ -24,8 +24,13 @@ import planetposition from './planetposition.js'
  *  bEdge  Minor axis of the out edge of the outer ring.
  *
  * All results in radians.
+ * @param {number} jde - Julian ephemeris day.
+ * @param {import('./planetposition.js').Planet} earth - Earth ephemeris.
+ * @param {import('./planetposition.js').Planet} saturn - Saturn ephemeris.
+ * @returns {[number, number, number, number, number, number]} Ring latitudes, longitude difference, position angle, and apparent axes.
  */
-export function ring (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V87Planet)  (B, Bʹ, ΔU, P, aEdge, bEdge float64)
+export function ring(jde, earth, saturn) {
+  // (jde float64, earth, saturn *pp.V87Planet)  (B, Bʹ, ΔU, P, aEdge, bEdge float64)
   const [f1, f2] = cl(jde, earth, saturn)
   const [ΔU, B] = f1()
   const [Bʹ, P, aEdge, bEdge] = f2()
@@ -36,16 +41,22 @@ export function ring (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V
  * UB computes quantities required by illum.Saturn().
  *
  * Same as ΔU and B returned by Ring().  Results in radians.
+ * @param {number} jde - Julian ephemeris day.
+ * @param {import('./planetposition.js').Planet} earth - Earth ephemeris.
+ * @param {import('./planetposition.js').Planet} saturn - Saturn ephemeris.
+ * @returns {[number, number]} Saturnicentric longitude difference and latitude.
  */
-export function ub (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V87Planet)  (ΔU, B float64)
+export function ub(jde, earth, saturn) {
+  // (jde float64, earth, saturn *pp.V87Planet)  (ΔU, B float64)
   const [f1, f2] = cl(jde, earth, saturn) // eslint-disable-line no-unused-vars
-  return f1()
+  return /** @type {[number, number]} */ (f1())
 }
 
 /**
  * cl splits the work into two closures.
  */
-function cl (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V87Planet)  (f1 func() (ΔU, B float64),
+function cl(jde, earth, saturn) {
+  // (jde float64, earth, saturn *pp.V87Planet)  (f1 func() (ΔU, B float64),
   // f2 func() (Bʹ, P, aEdge, bEdge float64))
   const p = Math.PI / 180
   let i, Ω
@@ -54,7 +65,8 @@ function cl (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V87Planet)
   let λ, β
   let si, ci, sβ, cβ, sB
   let sbʹ, cbʹ, slʹΩ, clʹΩ
-  const f1 = function () { // (ΔU, B float64)
+  const f1 = function () {
+    // (ΔU, B float64)
     // (45.1), p. 318
     const T = base.J2000Century(jde)
     i = base.horner(T, 28.075216 * p, -0.012998 * p, 0.000004 * p)
@@ -103,8 +115,8 @@ function cl (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V87Planet)
     const B = Math.asin(sB) // return value
     // Step 7.0
     const N = 113.6655 * p + 0.8771 * p * T
-    const lʹ = l - 0.01759 * p / r
-    const bʹ = b - 0.000764 * p * Math.cos(l - N) / r
+    const lʹ = l - (0.01759 * p) / r
+    const bʹ = b - (0.000764 * p * Math.cos(l - N)) / r
     // Setup for steps 8, 9.0
     sbʹ = Math.sin(bʹ)
     cbʹ = Math.cos(bʹ)
@@ -117,9 +129,10 @@ function cl (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V87Planet)
     const ΔU = Math.abs(U1 - U2) // return value
     return [ΔU, B]
   }
-  const f2 = function () { // (Bʹ, P, aEdge, bEdge) {
+  const f2 = function () {
+    // (Bʹ, P, aEdge, bEdge) {
     // Remainder of step 6.0
-    const aEdge = 375.35 / 3600 * p / Δ // return value
+    const aEdge = ((375.35 / 3600) * p) / Δ // return value
     const bEdge = aEdge * Math.abs(sB) // return value
     // Step 8.0
     const sBʹ = si * cbʹ * slʹΩ - ci * sbʹ
@@ -132,7 +145,7 @@ function cl (jde, earth, saturn) { // (jde float64, earth, saturn *pp.V87Planet)
     const β0 = Math.PI / 2 - i
     // Step 12.0
     const [sl0λ, cl0λ] = base.sincos(l0 - λ)
-    λ += 0.005693 * p * cl0λ / cβ
+    λ += (0.005693 * p * cl0λ) / cβ
     β += 0.005693 * p * sl0λ * sβ
     // Step 13.0
     λ0 += Δψ

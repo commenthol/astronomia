@@ -30,7 +30,7 @@ describe('#moonillum', function () {
     const λ0 = solar.apparentLongitude(T)
     const R = solar.radius(T) * base.AU
     const i = moonillum.phaseAngleEcliptic(pos, new base.Coord(λ0, 0, R))
-    const ref = 69.0756 * Math.PI / 180
+    const ref = (69.0756 * Math.PI) / 180
     const err = Math.abs((i - ref) / ref)
     assert.ok(err < 1e-4)
   })
@@ -48,7 +48,7 @@ describe('#moonillum', function () {
   it('phaseAngle3', function () {
     const i = moonillum.phaseAngle3(j)
     const k = base.illuminated(i)
-    assert.strictEqual(float(i * 180 / Math.PI).toFixed(2), 68.88)
+    assert.strictEqual(float((i * 180) / Math.PI).toFixed(2), 68.88)
     assert.strictEqual(float(k).toFixed(4), 0.6801)
   })
 })

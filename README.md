@@ -30,7 +30,6 @@ this package runs in modern browsers.
 - Safari: >=10
 - Mobile Safari: >=10
 - Edge: >=13
-- IE: >=10 (needs `core-js/es6` polyfill)
 
 ## Usage
 

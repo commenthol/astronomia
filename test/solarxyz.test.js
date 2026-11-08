@@ -42,7 +42,7 @@ describe('#solarxyz', function () {
     // Example 26.b, p. 175
     const pos = solarxyz.positionEquinox(earth, 2448908.5, 2044)
 
-    assert.strictEqual(float(pos.x).toFixed(8), -0.93368100)
+    assert.strictEqual(float(pos.x).toFixed(8), -0.933681)
     assert.strictEqual(float(pos.y).toFixed(8), -0.32237347)
     assert.strictEqual(float(pos.z).toFixed(8), -0.13977803)
   })

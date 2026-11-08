@@ -20,16 +20,10 @@ import planetposition, { Planet } from './planetposition.js' // eslint-disable-l
  * @param {number} jde - Julian ephemeris day
  * @param {Planet} earth
  * @param {Planet} jupiter
- * @return {Array}
- *    {number} DS - Planetocentric declination of the Sun.
- *    {number} DE - Planetocentric declination of the Earth.
- *    {number} ω1 - Longitude of the System I central meridian of the illuminated disk,
- *                  as seen from Earth.
- *    {number} ω2 - Longitude of the System II central meridian of the illuminated disk,
- *                  as seen from Earth.
- *    {number} P -  Geocentric position angle of Jupiter's northern rotation pole.
+ * @return {[number, number, number, number, number]} Solar and terrestrial planetocentric declinations, System I and II central meridians, and pole position angle (radians).
  */
-export function physical (jde, earth, jupiter) { // (jde float64, earth, jupiter *pp.V87Planet)  (DS, DE, ω1, ω2, P float64)
+export function physical(jde, earth, jupiter) {
+  // (jde float64, earth, jupiter *pp.V87Planet)  (DS, DE, ω1, ω2, P float64)
   // Step 1.0
   const d = jde - 2433282.5
   const T1 = d / base.JulianCentury
@@ -84,7 +78,7 @@ export function physical (jde, earth, jupiter) { // (jde float64, earth, jupiter
   const [sε0, cε0] = base.sincos(ε0)
   const [sl, cl] = base.sincos(l)
   const [sb, cb] = base.sincos(b)
-  const αs = Math.atan2(cε0 * sl - sε0 * sb / cb, cl)
+  const αs = Math.atan2(cε0 * sl - (sε0 * sb) / cb, cl)
   const δs = Math.asin(cε0 * sb + sε0 * cb * sl)
   // Step 10.0
   const [sδs, cδs] = base.sincos(δs)
@@ -116,8 +110,8 @@ export function physical (jde, earth, jupiter) { // (jde float64, earth, jupiter
   // Step 16.0
   const [sε, cε] = base.sincos(ε)
   const [sα, cα] = base.sincos(α)
-  α += 0.005693 * p * (cα * cl0 * cε + sα * sl0) / cδ
-  δ += 0.005693 * p * (cl0 * cε * (sε / cε * cδ - sα * sδ) + cα * sδ * sl0)
+  α += (0.005693 * p * (cα * cl0 * cε + sα * sl0)) / cδ
+  δ += 0.005693 * p * (cl0 * cε * ((sε / cε) * cδ - sα * sδ) + cα * sδ * sl0)
   // Step 17.0
   const tδ = sδ / cδ
   const Δα = (cε + sε * sα * tδ) * Δψ - cα * tδ * Δε
@@ -148,16 +142,11 @@ export function physical (jde, earth, jupiter) { // (jde float64, earth, jupiter
  * Results are less accurate than with Physical().
  * All angular results in radians.
  *
- * @param {number} jde - Julian ephemeris day
- * @return {Array}
- *    {number} DS - Planetocentric declination of the Sun.
- *    {number} DE - Planetocentric declination of the Earth.
- *    {number} ω1 - Longitude of the System I central meridian of the illuminated disk,
- *                  as seen from Earth.
- *    {number} ω2 - Longitude of the System II central meridian of the illuminated disk,
- *                  as seen from Earth.
+ * @param {number} jde - Julian ephemeris day.
+ * @return {[number, number, number, number]} Solar and terrestrial planetocentric declinations and System I and II central meridians (radians).
  */
-export function physical2 (jde) { // (jde float64)  (DS, DE, ω1, ω2 float64)
+export function physical2(jde) {
+  // (jde float64)  (DS, DE, ω1, ω2 float64)
   const d = jde - base.J2000
   const p = Math.PI / 180
   const V = 172.74 * p + 0.00111588 * p * d
@@ -176,7 +165,7 @@ export function physical2 (jde) { // (jde float64)  (DS, DE, ω1, ω2 float64)
   const r = 5.20872 - 0.25208 * cN - 0.00611 * c2N
   const [sK, cK] = base.sincos(K)
   const Δ = Math.sqrt(r * r + R * R - 2 * r * R * cK)
-  const ψ = Math.asin(R / Δ * sK)
+  const ψ = Math.asin((R / Δ) * sK)
   const dd = d - Δ / 173
   let ω1 = 210.98 * p + 877.8169088 * p * dd + ψ - B
   let ω2 = 187.23 * p + 870.1869088 * p * dd + ψ - B
@@ -189,8 +178,10 @@ export function physical2 (jde) { // (jde float64)  (DS, DE, ω1, ω2 float64)
   ω2 = base.pmod(ω2 + C, 2 * Math.PI)
   const λ = 34.35 * p + 0.083091 * p * d + 0.329 * p * sV + B
   const DS = 3.12 * p * Math.sin(λ + 42.8 * p)
-  const DE = DS - 2.22 * p * Math.sin(ψ) * Math.cos(λ + 22 * p) -
-    1.3 * p * (r - Δ) / Δ * Math.sin(λ - 100.5 * p)
+  const DE =
+    DS -
+    2.22 * p * Math.sin(ψ) * Math.cos(λ + 22 * p) -
+    ((1.3 * p * (r - Δ)) / Δ) * Math.sin(λ - 100.5 * p)
   return [DS, DE, ω1, ω2]
 }
 

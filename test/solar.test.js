@@ -1,6 +1,12 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { base, julian, planetposition, solar, sexagesimal as sexa } from '../src/index.js'
+import {
+  base,
+  julian,
+  planetposition,
+  solar,
+  sexagesimal as sexa
+} from '../src/index.js'
 import data from '../data/index.js'
 
 describe('#solar', function () {
@@ -35,13 +41,13 @@ describe('#solar', function () {
 
     assert.strictEqual(jde, 2448908.5)
     assert.strictEqual(float(T).toFixed(9), -0.072183436)
-    assert.strictEqual(float(res.lon * 180 / Math.PI).toFixed(5), 199.90987)
+    assert.strictEqual(float((res.lon * 180) / Math.PI).toFixed(5), 199.90987)
     assert.strictEqual(float(res.ano).toFixed(5), 4.83625)
   })
 
   it('Example meanAnomaly', function () {
     // Example 25.a, p. 165.
-    const res = solar.meanAnomaly(T) * 180 / Math.PI
+    const res = (solar.meanAnomaly(T) * 180) / Math.PI
     assert.strictEqual(float(res).toFixed(5), -2241.00603)
   })
 

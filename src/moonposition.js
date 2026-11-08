@@ -20,17 +20,43 @@ const EARTH_RADIUS = 6378.137 // km
  * @param {Number} distance - distance between centers of the Earth and Moon, in km.
  * @returns {Number} Result in radians.
  */
-export function parallax (distance) {
+export function parallax(distance) {
   // p. 337
   return asin(EARTH_RADIUS / distance)
 }
 
-function dmf (T) {
-  const d = base.horner(T, 297.8501921 * D2R, 445267.1114034 * D2R, -0.0018819 * D2R, D2R / 545868, -D2R / 113065000)
-  const m = base.horner(T, 357.5291092 * D2R, 35999.0502909 * D2R, -0.0001536 * D2R, D2R / 24490000)
-  const m_ = base.horner(T, 134.9633964 * D2R, 477198.8675055 * D2R,
-    0.0087414 * D2R, D2R / 69699, -D2R / 14712000)
-  const f = base.horner(T, 93.272095 * D2R, 483202.0175233 * D2R, -0.0036539 * D2R, -D2R / 3526000, D2R / 863310000)
+function dmf(T) {
+  const d = base.horner(
+    T,
+    297.8501921 * D2R,
+    445267.1114034 * D2R,
+    -0.0018819 * D2R,
+    D2R / 545868,
+    -D2R / 113065000
+  )
+  const m = base.horner(
+    T,
+    357.5291092 * D2R,
+    35999.0502909 * D2R,
+    -0.0001536 * D2R,
+    D2R / 24490000
+  )
+  const m_ = base.horner(
+    T,
+    134.9633964 * D2R,
+    477198.8675055 * D2R,
+    0.0087414 * D2R,
+    D2R / 69699,
+    -D2R / 14712000
+  )
+  const f = base.horner(
+    T,
+    93.272095 * D2R,
+    483202.0175233 * D2R,
+    -0.0036539 * D2R,
+    -D2R / 3526000,
+    D2R / 863310000
+  )
   return [d, m, m_, f]
 }
 
@@ -46,9 +72,16 @@ function dmf (T) {
  *  {number} lat - Geocentric latitude β, in radians.
  *  {number} range - Distance Δ between centers of the Earth and Moon, in km.
  */
-export function position (jde) {
+export function position(jde) {
   const T = base.J2000Century(jde)
-  const l_ = base.horner(T, 218.3164477 * D2R, 481267.88123421 * D2R, -0.0015786 * D2R, D2R / 538841, -D2R / 65194000)
+  const l_ = base.horner(
+    T,
+    218.3164477 * D2R,
+    481267.88123421 * D2R,
+    -0.0015786 * D2R,
+    D2R / 538841,
+    -D2R / 65194000
+  )
   const [d, m, m_, f] = dmf(T)
   const a1 = 119.75 * D2R + 131.849 * D2R * T
   const a2 = 53.09 * D2R + 479264.29 * D2R * T
@@ -57,8 +90,13 @@ export function position (jde) {
   const e2 = e * e
   let Σl = 3958 * sin(a1) + 1962 * sin(l_ - f) + 318 * sin(a2)
   let Σr = 0.0
-  let Σb = -2235 * sin(l_) + 382 * sin(a3) + 175 * sin(a1 - f) +
-    175 * sin(a1 + f) + 127 * sin(l_ - m_) - 115 * sin(l_ + m_)
+  let Σb =
+    -2235 * sin(l_) +
+    382 * sin(a3) +
+    175 * sin(a1 - f) +
+    175 * sin(a1 + f) +
+    127 * sin(l_ - m_) -
+    115 * sin(l_ + m_)
   ta.forEach((r) => {
     const [sina, cosa] = base.sincos(d * r.d + m * r.m + m_ * r.m_ + f * r.f)
     switch (r.m) {
@@ -282,7 +320,7 @@ const tb = (function () {
  * @param {number} jde - Julian ephemeris day
  * @returns result in radians.
  */
-export function node (jde) {
+export function node(jde) {
   return base.pmod(
     base.horner(
       base.J2000Century(jde),
@@ -291,7 +329,8 @@ export function node (jde) {
       0.0020754 * D2R,
       D2R / 467441,
       -D2R / 60616000
-    ), 2 * Math.PI
+    ),
+    2 * Math.PI
   )
 }
 
@@ -301,7 +340,7 @@ export function node (jde) {
  * @param {number} jde - Julian ephemeris day
  * @returns result in radians.
  */
-export function perigee (jde) {
+export function perigee(jde) {
   return base.pmod(
     base.horner(
       base.J2000Century(jde),
@@ -310,7 +349,8 @@ export function perigee (jde) {
       -0.01032 * D2R,
       -D2R / 80053,
       D2R / 18999000
-    ), 2 * Math.PI
+    ),
+    2 * Math.PI
   )
 }
 
@@ -322,14 +362,16 @@ export function perigee (jde) {
  * @param {number} jde - Julian ephemeris day
  * @returns result in radians.
  */
-export function trueNode (jde) {
+export function trueNode(jde) {
   const [d, m, m_, f] = dmf(base.J2000Century(jde))
-  return node(jde) +
+  return (
+    node(jde) +
     -1.4979 * D2R * sin(2 * (d - f)) +
     -0.15 * D2R * sin(m) +
     -0.1226 * D2R * sin(2 * d) +
     0.1176 * D2R * sin(2 * f) +
     -0.0801 * D2R * sin(2 * (m_ - f))
+  )
 }
 
 export default {

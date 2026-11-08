@@ -7,8 +7,8 @@ describe('#pluto', function () {
   it('heliocentric()', function () {
     // Example 37.a, p. 266
     const res = pluto.heliocentric(2448908.5)
-    assert.strictEqual(float(res.lon * 180 / Math.PI).toFixed(5), 232.74071)
-    assert.strictEqual(float(res.lat * 180 / Math.PI).toFixed(5), 14.58782)
+    assert.strictEqual(float((res.lon * 180) / Math.PI).toFixed(5), 232.74071)
+    assert.strictEqual(float((res.lat * 180) / Math.PI).toFixed(5), 14.58782)
     assert.strictEqual(float(res.range).toFixed(6), 29.711111)
   })
 

@@ -1,6 +1,14 @@
 import assert from 'assert'
 import float from './support/float.js'
-import { parallax, base, julian, moonposition, sidereal, globe, sexagesimal as sexa } from '../src/index.js'
+import {
+  parallax,
+  base,
+  julian,
+  moonposition,
+  sidereal,
+  globe,
+  sexagesimal as sexa
+} from '../src/index.js'
 
 const D2R = Math.PI / 180
 const R2D = 180 / Math.PI
@@ -28,7 +36,11 @@ describe('#parallax', function () {
 
   describe('RA, Dec of Mars', function () {
     // UT at Palomar Observatory on '2003-08-28T03:17:00Z'
-    const jd = julian.CalendarGregorianToJD(2003, 8, 28 + new sexa.Time(false, 3, 17, 0).day())
+    const jd = julian.CalendarGregorianToJD(
+      2003,
+      8,
+      28 + new sexa.Time(false, 3, 17, 0).day()
+    )
     // lat = 33°.356; lon = 116°.8625; altitude = 1706
     const lat = new sexa.Angle(false, 33, 21, 22).rad()
     const lon = new sexa.HourAngle(false, 7, 47, 27).rad()
@@ -56,7 +68,7 @@ describe('#parallax', function () {
       const a = parallax.topocentric2(marsCoord, ρsφʹ, ρcφʹ, lon, jd)
       const Δα = a.ra
       const Δδ = a.dec
-      assert.strictEqual(float(Δα * RAD2SEC / 15).toFixed(2), 1.29) // 1.29 sec of RA
+      assert.strictEqual(float((Δα * RAD2SEC) / 15).toFixed(2), 1.29) // 1.29 sec of RA
       assert.strictEqual(float(Δδ * RAD2SEC).toFixed(1), -14.1) // -14.1 sec
     })
 
@@ -86,7 +98,8 @@ describe('#parallax', function () {
         new sexa.Angle(false, 2, 17, 26.2).rad()
       ),
       new sexa.Angle(false, 0, 16, 15.5).rad(),
-      new sexa.Angle(false, 50, 5, 7.8).rad(), 0,
+      new sexa.Angle(false, 50, 5, 7.8).rad(),
+      0,
       new sexa.Angle(false, 23, 28, 0.8).rad(),
       new sexa.Angle(false, 209, 46, 7.9).rad(),
       new sexa.Angle(false, 0, 59, 27.7).rad()

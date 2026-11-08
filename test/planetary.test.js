@@ -28,7 +28,7 @@ describe('#planetary', function () {
     const d = new julian.Calendar().fromJDE(j).toDate().toISOString()
     assert.strictEqual(float(j).toFixed(2), 2449314.14)
     assert.strictEqual(d, '1993-11-22T15:18:35.044Z')
-    assert.strictEqual(float(e * 180 / Math.PI).toFixed(4), 19.7506 /* deg */)
+    assert.strictEqual(float((e * 180) / Math.PI).toFixed(4), 19.7506 /* deg */)
     assert.strictEqual(new sexa.Angle(e).toString(0), '19°45′2″')
   })
 
@@ -40,15 +40,23 @@ describe('#planetary', function () {
     assert.strictEqual(d, '1997-04-27T18:06:34.275Z')
   })
 
-  function Tc (f, jNom, hour) {
+  function Tc(f, jNom, hour) {
     this.f = f
     this.jNom = jNom
     this.hour = hour
   }
 
   const td = [
-    new Tc(planetary.mercuryInfConj, julian.CalendarGregorianToJD(1631, 11, 7), 7),
-    new Tc(planetary.venusInfConj, julian.CalendarGregorianToJD(1882, 12, 6), 17),
+    new Tc(
+      planetary.mercuryInfConj,
+      julian.CalendarGregorianToJD(1631, 11, 7),
+      7
+    ),
+    new Tc(
+      planetary.venusInfConj,
+      julian.CalendarGregorianToJD(1882, 12, 6),
+      17
+    ),
     new Tc(planetary.marsOpp, julian.CalendarGregorianToJD(2729, 9, 9), 3),
     new Tc(planetary.jupiterOpp, julian.CalendarJulianToJD(-6, 9, 15), 7),
     new Tc(planetary.saturnOpp, julian.CalendarJulianToJD(-6, 9, 14), 9),

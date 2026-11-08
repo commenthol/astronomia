@@ -12,9 +12,17 @@
 
 import base, { Coord } from './base.js'
 
-const SEC2RAD = 1 / 3600 * Math.PI / 180
+/** @typedef {{W1: number[], L: number[][], B: number[][], R: number[][]}} ElpData */
 
-function sum (T, series) {
+const SEC2RAD = ((1 / 3600) * Math.PI) / 180
+
+/**
+ * Sum an ELP periodic series.
+ * @param {number} T - Julian centuries from J2000.
+ * @param {number[][]} series - Coefficient rows.
+ * @returns {number} Evaluated series.
+ */
+function sum(T, series) {
   const coeffs = []
   Object.keys(series).forEach((x) => {
     coeffs[x] = 0.0
@@ -36,7 +44,7 @@ export class Moon {
   /**
    * ELP representation of a Moon
    * @constructs Moon
-   * @param {object} data - elp data series
+   * @param {ElpData} data - ELP data series.
    * @example
    * ```js
    * // for use in browser
@@ -44,12 +52,17 @@ export class Moon {
    * const moon = new elp.Moon(data.elpMppDe)
    * ```
    */
-  constructor (data) {
+  constructor(data) {
     if (typeof data !== 'object') throw new TypeError('need Elp data')
     this.series = data
   }
 
-  _calcLBR (T) {
+  /**
+   * @private
+   * @param {number} T - Julian centuries from J2000.
+   * @returns {{L: number, B: number, R: number}} Lunar longitude, latitude, and distance.
+   */
+  _calcLBR(T) {
     const L = base.horner(T, this.series.W1) + sum(T, this.series.L) * SEC2RAD
     const B = sum(T, this.series.B) * SEC2RAD
     const R = sum(T, this.series.R)
@@ -59,12 +72,9 @@ export class Moon {
   /**
    * Position returns rectangular coordinates referred to the inertial mean ecliptic and equinox of J2000.
    * @param {Number} jde - Julian ephemeris day
-   * @return {object} rectangular coordinates
-   *   {Number} x
-   *   {Number} y
-   *   {Number} z
+   * @return {{x: number, y: number, z: number}} Rectangular coordinates in kilometres.
    */
-  positionXYZ (jde) {
+  positionXYZ(jde) {
     const T = base.J2000Century(jde)
     const { L, B, R } = this._calcLBR(T)
 
@@ -72,8 +82,24 @@ export class Moon {
     const y = R * Math.sin(L) * Math.cos(B)
     const z = R * Math.sin(B)
 
-    const P = base.horner(T, 0, 0.10180391e-4, 0.47020439e-6, -0.5417367e-9, -0.2507948e-11, 0.463486e-14)
-    const Q = base.horner(T, 0, -0.113469002e-3, 0.12372674e-6, 0.12654170e-8, -0.1371808e-11, -0.320334e-14)
+    const P = base.horner(
+      T,
+      0,
+      0.10180391e-4,
+      0.47020439e-6,
+      -0.5417367e-9,
+      -0.2507948e-11,
+      0.463486e-14
+    )
+    const Q = base.horner(
+      T,
+      0,
+      -0.113469002e-3,
+      0.12372674e-6,
+      0.1265417e-8,
+      -0.1371808e-11,
+      -0.320334e-14
+    )
     const sq = Math.sqrt(1 - P * P - Q * Q)
     const p11 = 1 - 2 * P * P
     const p12 = 2 * P * Q
@@ -99,7 +125,7 @@ export class Moon {
    * @param {Number} jde - Julian ephemeris day
    * @returns {Number} Delay time in days
    */
-  lightTime (jde) {
+  lightTime(jde) {
     const T = base.J2000Century(jde)
     const R = sum(T, this.series.R)
     return base.lightTime(R / base.AU)
@@ -115,16 +141,15 @@ export class Moon {
    *  {Number} lat - geocentric latitude in radians.
    *  {Number} range - geocentric range in KM.
    */
-  position (jde) {
+  position(jde) {
     const T = base.J2000Century(jde)
     const { L, B, R } = this._calcLBR(T)
 
     // precession
-    const pA = base.horner(T, 0, 5029.0966 - 0.29965, 1.1120, 0.000077, -0.00002353) * SEC2RAD
-    return new Coord(
-      base.pmod(L + pA, 2 * Math.PI),
-      B,
-      R)
+    const pA =
+      base.horner(T, 0, 5029.0966 - 0.29965, 1.112, 0.000077, -0.00002353) *
+      SEC2RAD
+    return new Coord(base.pmod(L + pA, 2 * Math.PI), B, R)
   }
 }
 
@@ -134,14 +159,11 @@ export class Moon {
  * Result computed by Elp theory.  Result is at equator and equinox
  * of date in the FK5 frame.  It does not include nutation or aberration.
  *
- * @param {Object} elpData
+ * @param {ElpData} elpData
  * @param {Number} jde - Julian ephemeris day
- * @returns {Object}
- *   {Number} lon - ecliptic longitude in radians
- *   {Number} lat - ecliptic latitude in radians
- *   {Number} range - range in KM
+ * @returns {import('./base.js').Coord} Ecliptic longitude and latitude in radians, and geocentric range in kilometres.
  */
-export function position (elpData, jde) {
+export function position(elpData, jde) {
   const moon = new Moon(elpData)
   return moon.position(jde)
 }

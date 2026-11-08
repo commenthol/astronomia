@@ -7,7 +7,7 @@ describe('#nearparabolic', function () {
       // test data p. 247
       { q: 0.921326, e: 1, t: 138.4783, ν: 102.74426, r: 2.364192 },
       { q: 0.1, e: 0.987, t: 254.9, ν: 164.50029, r: 4.063777 },
-      { q: 0.123456, e: 0.99997, t: -30.47, ν: 221.91190, r: 0.965053 },
+      { q: 0.123456, e: 0.99997, t: -30.47, ν: 221.9119, r: 0.965053 },
       { q: 3.363943, e: 1.05731, t: 1237.1, ν: 109.40598, r: 10.668551 },
       { q: 0.5871018, e: 0.9672746, t: 20, ν: 52.85331, r: 0.729116 },
       { q: 0.5871018, e: 0.9672746, t: 0, ν: 0, r: 0.5871018 }
@@ -23,7 +23,7 @@ describe('#nearparabolic', function () {
         const res = e.anomalyDistance(e.timeP + d.t)
         // console.log(res)
         if (!res.err) {
-          assert.ok(Math.abs(res.ano * 180 / Math.PI - d.ν) < 1e-5, d.ν)
+          assert.ok(Math.abs((res.ano * 180) / Math.PI - d.ν) < 1e-5, d.ν)
           assert.ok(Math.abs(res.dist - d.r) < 1e-6, d.r)
         }
       })
@@ -65,7 +65,10 @@ describe('#nearparabolic', function () {
         const res = e.anomalyDistance(e.timeP + d.t)
         assert.ok(!res.err === d.c)
         if (!res.err) {
-          assert.ok(Math.abs(res.ano * 180 / Math.PI - d.ν) < Math.pow(10, -d.p), JSON.stringify(res))
+          assert.ok(
+            Math.abs((res.ano * 180) / Math.PI - d.ν) < Math.pow(10, -d.p),
+            JSON.stringify(res)
+          )
         }
       })
     })

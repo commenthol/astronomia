@@ -19,7 +19,7 @@ describe('#moonposition', function () {
     const jde = julian.CalendarGregorianToJD(1992, 4, 12)
     const res = moonposition.position(jde)
     const π = moonposition.parallax(res.range)
-    assert.strictEqual(float(π * R2D).toFixed(6), 0.991990)
+    assert.strictEqual(float(π * R2D).toFixed(6), 0.99199)
   })
 
   it('parallax 2', function () {

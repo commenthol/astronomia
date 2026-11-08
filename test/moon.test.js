@@ -15,9 +15,9 @@ describe('#moon', function () {
     const P = a[1]
     const cSun = a[2]
     assert.strictEqual(float(cMoon.lon * R2D).toFixed(2), -1.23) // l langitude
-    assert.strictEqual(float(cMoon.lat * R2D).toFixed(2), 4.20) // b latitude
+    assert.strictEqual(float(cMoon.lat * R2D).toFixed(2), 4.2) // b latitude
     assert.strictEqual(float(P * R2D).toFixed(2), 15.08) // P position angle
-    assert.strictEqual(float(cSun.lon * R2D).toFixed(2), 67.90)
+    assert.strictEqual(float(cSun.lon * R2D).toFixed(2), 67.9)
     assert.strictEqual(float(cSun.lat * R2D).toFixed(2), 1.46)
   })
 
@@ -33,6 +33,9 @@ describe('#moon', function () {
     const j0 = julian.CalendarGregorianToJD(1992, 4, 12)
     const j = moon.sunrise(moon.selenographic.copernicus, j0, earth)
     const date = new julian.CalendarGregorian().fromJD(j)
-    assert.deepStrictEqual(date, new julian.CalendarGregorian(1992, 4, 11.806921077892184))
+    assert.deepStrictEqual(
+      date,
+      new julian.CalendarGregorian(1992, 4, 11.806921077892184)
+    )
   })
 })

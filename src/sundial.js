@@ -10,18 +10,31 @@
 
 import base from './base.js'
 
+/** @typedef {{x: number, y: number}} PointData */
+/** @typedef {{hour: number, points: PointData[]}} LineData */
+
 /**
- * Point return type represents a point to be used in constructing the sundial.
+ * Point used to construct the sundial geometry.
+ * @param {number} x - Horizontal coordinate.
+ * @param {number} y - Vertical coordinate.
+ * @property {number} x - Horizontal coordinate.
+ * @property {number} y - Vertical coordinate.
+ * @constructor
  */
-function Point (x, y) {
+function Point(x, y) {
   this.x = x || 0
   this.y = y || 0
 }
 
 /**
  * Line holds data to draw an hour line on the sundial.
+ * @param {number} hour - Hour number (0-23).
+ * @param {PointData[]} [points] - Points defining the line.
+ * @property {number} hour - Hour number.
+ * @property {PointData[]} points - Points defining the line.
+ * @constructor
  */
-function Line (hour, points) {
+function Line(hour, points) {
   this.hour = hour // 0 to 24
   this.points = points || [] // One or more points corresponding to the hour.
 }
@@ -43,8 +56,14 @@ const m = [-23.44, -20.15, -11.47, 0, 11.47, 20.15, 23.44]
  * polar stylus, and ψ, the angle which the polar stylus makes with the plane
  * of the sundial.  The center point, the points defining the hour lines, and
  * u are in units of a, the stylus length.  ψ is in radians.
+ * @param {number} φ - Geographic latitude in radians.
+ * @param {number} D - Gnomonic declination in radians.
+ * @param {number} a - Stylus length in arbitrary units.
+ * @param {number} z - Zenith distance in radians.
+ * @returns {{ lines: LineData[], center: PointData, length: number, angle: number }} Sundial lines and polar-stylus geometry.
  */
-export function general (φ, D, a, z) { // (φ, D, a, z float64)  (lines []Line, center Point, u, ψ float64)
+export function general(φ, D, a, z) {
+  // (φ, D, a, z float64)  (lines []Line, center Point, u, ψ float64)
   const [sφ, cφ] = base.sincos(φ)
   const tφ = sφ / cφ
   const [sD, cD] = base.sincos(D)
@@ -53,11 +72,11 @@ export function general (φ, D, a, z) { // (φ, D, a, z float64)  (lines []Line,
   const lines = []
   for (let i = 0; i < 24; i++) {
     const l = new Line(i)
-    const H = (i - 12) * 15 * Math.PI / 180
+    const H = ((i - 12) * 15 * Math.PI) / 180
     const aH = Math.abs(H)
     const [sH, cH] = base.sincos(H)
     for (const d of m) {
-      const tδ = Math.tan(d * Math.PI / 180)
+      const tδ = Math.tan((d * Math.PI) / 180)
       const H0 = Math.acos(-tφ * tδ)
       if (aH > H0) {
         continue // sun below horizon
@@ -67,16 +86,19 @@ export function general (φ, D, a, z) { // (φ, D, a, z float64)  (lines []Line,
         continue // sun below plane of sundial
       }
       const Nx = cD * sH - sD * (sφ * cH - cφ * tδ)
-      const Ny = cz * sD * sH - (cφ * sz - sφ * cz * cD) * cH - (sφ * sz + cφ * cz * cD) * tδ
-      l.points.push(new Point(a * Nx / Q, a * Ny / Q))
+      const Ny =
+        cz * sD * sH -
+        (cφ * sz - sφ * cz * cD) * cH -
+        (sφ * sz + cφ * cz * cD) * tδ
+      l.points.push(new Point((a * Nx) / Q, (a * Ny) / Q))
     }
     if (l.points.length > 0) {
       lines.push(l)
     }
   }
-  const center = new Point()
-  center.x = a / P * cφ * sD
-  center.y = -a / P * (sφ * sz + cφ * cz * cD)
+  const center = new Point(0, 0)
+  center.x = (a / P) * cφ * sD
+  center.y = (-a / P) * (sφ * sz + cφ * cz * cD)
   const aP = Math.abs(P)
   const u = a / aP
   const ψ = Math.asin(aP)
@@ -98,25 +120,29 @@ export function general (φ, D, a, z) { // (φ, D, a, z float64)  (lines []Line,
  * The sundial will have two sides, north and south.  Results n and s define
  * lines on the north and south sides of the sundial.  Result coordinates
  * are in units of a, the stylus length.
+ * @param {number} φ - Geographic latitude in radians.
+ * @param {number} a - Stylus length in arbitrary units.
+ * @returns {{ north: LineData[], south: LineData[] }} Hour lines on the north and south faces.
  */
-export function equatorial (φ, a) { // (φ, a float64)  (n, s []Line)
+export function equatorial(φ, a) {
+  // (φ, a float64)  (n, s []Line)
   const tφ = Math.tan(φ)
   const n = []
   const s = []
   for (let i = 0; i < 24; i++) {
     const nl = new Line(i)
     const sl = new Line(i)
-    const H = (i - 12) * 15 * Math.PI / 180
+    const H = ((i - 12) * 15 * Math.PI) / 180
     const aH = Math.abs(H)
     const [sH, cH] = base.sincos(H)
     for (const d of m) {
-      const tδ = Math.tan(d * Math.PI / 180)
+      const tδ = Math.tan((d * Math.PI) / 180)
       const H0 = Math.acos(-tφ * tδ)
       if (aH > H0) {
         continue
       }
-      const x = -a * sH / tδ
-      const yy = a * cH / tδ
+      const x = (-a * sH) / tδ
+      const yy = (a * cH) / tδ
       if (tδ < 0) {
         sl.points.push(new Point(x, yy))
       } else {
@@ -145,25 +171,29 @@ export function equatorial (φ, a) { // (φ, a float64)  (n, s []Line)
  *
  * Results consist of a set of lines, a center point, and u, the length of a
  * polar stylus.  They are in units of a, the stylus length.
+ * @param {number} φ - Geographic latitude in radians.
+ * @param {number} a - Stylus length in arbitrary units.
+ * @returns {{ lines: LineData[], center: PointData, length: number }} Hour lines and polar-stylus geometry.
  */
-export function horizontal (φ, a) { // (φ, a float64)  (lines []Line, center Point, u float64)
+export function horizontal(φ, a) {
+  // (φ, a float64)  (lines []Line, center Point, u float64)
   const [sφ, cφ] = base.sincos(φ)
   const tφ = sφ / cφ
   const lines = []
   for (let i = 0; i < 24; i++) {
     const l = new Line(i)
-    const H = (i - 12) * 15 * Math.PI / 180
+    const H = ((i - 12) * 15 * Math.PI) / 180
     const aH = Math.abs(H)
     const [sH, cH] = base.sincos(H)
     for (const d of m) {
-      const tδ = Math.tan(d * Math.PI / 180)
+      const tδ = Math.tan((d * Math.PI) / 180)
       const H0 = Math.acos(-tφ * tδ)
       if (aH > H0) {
         continue // sun below horizon
       }
       const Q = cφ * cH + sφ * tδ
-      const x = a * sH / Q
-      const y = a * (sφ * cH - cφ * tδ) / Q
+      const x = (a * sH) / Q
+      const y = (a * (sφ * cH - cφ * tδ)) / Q
       l.points.push(new Point(x, y))
     }
     if (l.points.length > 0) {
@@ -190,19 +220,24 @@ export function horizontal (φ, a) { // (φ, a float64)  (lines []Line, center P
  *
  * Results consist of a set of lines, a center point, and u, the length of a
  * polar stylus.  They are in units of a, the stylus length.
+ * @param {number} φ - Geographic latitude in radians.
+ * @param {number} D - Gnomonic declination in radians.
+ * @param {number} a - Stylus length in arbitrary units.
+ * @returns {{ lines: LineData[], center: PointData, length: number }} Hour lines and polar-stylus geometry.
  */
-export function vertical (φ, D, a) { // (φ, D, a float64)  (lines []Line, center Point, u float64)
+export function vertical(φ, D, a) {
+  // (φ, D, a float64)  (lines []Line, center Point, u float64)
   const [sφ, cφ] = base.sincos(φ)
   const tφ = sφ / cφ
   const [sD, cD] = base.sincos(D)
   const lines = []
   for (let i = 0; i < 24; i++) {
     const l = new Line(i)
-    const H = (i - 12) * 15 * Math.PI / 180
+    const H = ((i - 12) * 15 * Math.PI) / 180
     const aH = Math.abs(H)
     const [sH, cH] = base.sincos(H)
     for (const d of m) {
-      const tδ = Math.tan(d * Math.PI / 180)
+      const tδ = Math.tan((d * Math.PI) / 180)
       const H0 = Math.acos(-tφ * tδ)
       if (aH > H0) {
         continue // sun below horizon
@@ -211,17 +246,17 @@ export function vertical (φ, D, a) { // (φ, D, a float64)  (lines []Line, cent
       if (Q < 0) {
         continue // sun below plane of sundial
       }
-      const x = a * (cD * sH - sφ * sD * cH + cφ * sD * tδ) / Q
-      const y = -a * (cφ * cH + sφ * tδ) / Q
+      const x = (a * (cD * sH - sφ * sD * cH + cφ * sD * tδ)) / Q
+      const y = (-a * (cφ * cH + sφ * tδ)) / Q
       l.points.push(new Point(x, y))
     }
     if (l.points.length > 0) {
       lines.push(l)
     }
   }
-  const center = new Point()
-  center.x = -a * sD / cD
-  center.y = a * tφ / cD
+  const center = new Point(0, 0)
+  center.x = (-a * sD) / cD
+  center.y = (a * tφ) / cD
   const u = a / Math.abs(cφ * cD)
   return {
     lines,

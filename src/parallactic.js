@@ -18,8 +18,13 @@ import base from './base.js'
  *  H is hour angle of observed object.
  *
  * All angles including result are in radians.
+ * @param {number} φ - Geographic latitude in radians.
+ * @param {number} δ - Declination in radians.
+ * @param {number} H - Hour angle in radians.
+ * @returns {number} Parallactic angle in radians.
  */
-export function parallacticAngle (φ, δ, H) { // (φ, δ, H float64)  float64
+export function parallacticAngle(φ, δ, H) {
+  // (φ, δ, H float64)  float64
   const [sδ, cδ] = base.sincos(δ)
   const [sH, cH] = base.sincos(H)
   return Math.atan2(sH, Math.tan(φ) * cδ - sδ * cH) // (14.1) p. 98
@@ -29,8 +34,12 @@ export function parallacticAngle (φ, δ, H) { // (φ, δ, H float64)  float64
  * ParallacticAngleOnHorizon is a special case of ParallacticAngle.
  *
  * The hour angle is not needed as an input and the math inside simplifies.
+ * @param {number} φ - Geographic latitude in radians.
+ * @param {number} δ - Declination in radians.
+ * @returns {number} Parallactic angle at the horizon, in radians.
  */
-export function parallacticAngleOnHorizon (φ, δ) { // (φ, δ float64)  float64
+export function parallacticAngleOnHorizon(φ, δ) {
+  // (φ, δ float64)  float64
   return Math.acos(Math.sin(φ) / Math.cos(δ))
 }
 
@@ -47,8 +56,13 @@ export function parallacticAngleOnHorizon (φ, δ) { // (φ, δ float64)  float6
  *  I is the angle at which the ecliptic intersects the horizon.
  *
  * All angles, arguments and results, are in radians.
+ * @param {number} ε - Obliquity of the ecliptic in radians.
+ * @param {number} φ - Geographic latitude in radians.
+ * @param {number} θ - Local sidereal time as an hour angle in radians.
+ * @returns {[number, number, number]} Two horizon-intersection longitudes and their angle, in radians.
  */
-export function eclipticAtHorizon (ε, φ, θ) { // (ε, φ, θ float64)  (λ1, λ2, I float64)
+export function eclipticAtHorizon(ε, φ, θ) {
+  // (ε, φ, θ float64)  (λ1, λ2, I float64)
   const [sε, cε] = base.sincos(ε)
   const [sφ, cφ] = base.sincos(φ)
   const [sθ, cθ] = base.sincos(θ)
@@ -70,8 +84,12 @@ export function eclipticAtHorizon (ε, φ, θ) { // (ε, φ, θ float64)  (λ1, 
  *  ε is obliquity of the ecliptic.
  *
  * All angles in radians.
+ * @param {number} λ - Ecliptic longitude in radians.
+ * @param {number} ε - Obliquity of the ecliptic in radians.
+ * @returns {number} Angle between the ecliptic and the parallel, in radians.
  */
-export function eclipticAtEquator (λ, ε) { // (λ, ε float64)  float64
+export function eclipticAtEquator(λ, ε) {
+  // (λ, ε float64)  float64
   return Math.atan(-Math.cos(λ) * Math.tan(ε))
 }
 
@@ -83,12 +101,16 @@ export function eclipticAtEquator (λ, ε) { // (λ, ε float64)  float64
  *  φ is geographic latitude of observer.
  *
  * All angles in radians.
+ * @param {number} δ - Declination in radians.
+ * @param {number} φ - Geographic latitude in radians.
+ * @returns {number} Angle of the diurnal path relative to the horizon.
  */
-export function diurnalPathAtHorizon (δ, φ) { // (δ, φ float64)  (J float64)
+export function diurnalPathAtHorizon(δ, φ) {
+  // (δ, φ float64)  (J float64)
   const tφ = Math.tan(φ)
   const b = Math.tan(δ) * tφ
   const c = Math.sqrt(1 - b * b)
-  return Math.atan(c * Math.cos(δ) / tφ)
+  return Math.atan((c * Math.cos(δ)) / tφ)
 }
 
 export default {

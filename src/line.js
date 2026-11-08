@@ -31,14 +31,16 @@ import interp from './interpolation.js'
  * @param {Number} t5 - time in Julian Days
  * @returns {Number} time of alignment in Julian Days
  */
-export function time (r1, d1, r2, d2, r3, d3, t1, t5) { // (r1, d1, r2, d2 float64, r3, d3 []float64, t1, t5 float64)  (float64, error)
+export function time(r1, d1, r2, d2, r3, d3, t1, t5) {
+  // (r1, d1, r2, d2 float64, r3, d3 []float64, t1, t5 float64)  (float64, error)
   if (r3.length !== 5 || d3.length !== 5) {
     throw new Error('r3, d3 must be length 5')
   }
   const gc = new Array(5)
   r3.forEach((r3i, i) => {
     // (19.1) p. 121
-    gc[i] = Math.tan(d1) * Math.sin(r2 - r3i) +
+    gc[i] =
+      Math.tan(d1) * Math.sin(r2 - r3i) +
       Math.tan(d2) * Math.sin(r3i - r1) +
       Math.tan(d3[i]) * Math.sin(r1 - r2)
   })
@@ -54,8 +56,16 @@ export function time (r1, d1, r2, d2, r3, d3, t1, t5) { // (r1, d1, r2, d2 float
  * another, the result is the angle between the two lines.
  *
  * Algorithm by Meeus.
+ * @param {number} r1 - Right ascension or longitude of point 1, in radians.
+ * @param {number} d1 - Declination or latitude of point 1, in radians.
+ * @param {number} r2 - Right ascension or longitude of point 2, in radians.
+ * @param {number} d2 - Declination or latitude of point 2, in radians.
+ * @param {number} r3 - Right ascension or longitude of point 3, in radians.
+ * @param {number} d3 - Declination or latitude of point 3, in radians.
+ * @returns {number} Angle between the great circles, in radians.
  */
-export function angle (r1, d1, r2, d2, r3, d3) { // (r1, d1, r2, d2, r3, d3 float64)  float64
+export function angle(r1, d1, r2, d2, r3, d3) {
+  // (r1, d1, r2, d2, r3, d3 float64)  float64
   const [sd2, cd2] = base.sincos(d2)
   const [sr21, cr21] = base.sincos(r2 - r1)
   const [sr32, cr32] = base.sincos(r3 - r2)
@@ -71,8 +81,16 @@ export function angle (r1, d1, r2, d2, r3, d3) { // (r1, d1, r2, d2, r3, d3 floa
  * between that line and r0, d0.
  *
  * Algorithm by Meeus.
+ * @param {number} r1 - Right ascension or longitude of point 1, in radians.
+ * @param {number} d1 - Declination or latitude of point 1, in radians.
+ * @param {number} r2 - Right ascension or longitude of point 2, in radians.
+ * @param {number} d2 - Declination or latitude of point 2, in radians.
+ * @param {number} r0 - Right ascension or longitude of the test point, in radians.
+ * @param {number} d0 - Declination or latitude of the test point, in radians.
+ * @returns {number} Error angle in radians.
  */
-export function error (r1, d1, r2, d2, r0, d0) { // (r1, d1, r2, d2, r0, d0 float64)  float64
+export function error(r1, d1, r2, d2, r0, d0) {
+  // (r1, d1, r2, d2, r0, d0 float64)  float64
   const [sr1, cr1] = base.sincos(r1)
   const [sd1, cd1] = base.sincos(d1)
   const [sr2, cr2] = base.sincos(r2)
@@ -88,8 +106,10 @@ export function error (r1, d1, r2, d2, r0, d0) { // (r1, d1, r2, d2, r0, d0 floa
   const C = X1 * Y2 - Y1 * X2
   const m = Math.tan(r0)
   const n = Math.tan(d0) / Math.cos(r0)
-  return Math.asin((A + B * m + C * n) /
-    (Math.sqrt(A * A + B * B + C * C) * Math.sqrt(1 + m * m + n * n)))
+  return Math.asin(
+    (A + B * m + C * n) /
+      (Math.sqrt(A * A + B * B + C * C) * Math.sqrt(1 + m * m + n * n))
+  )
 }
 
 /**
@@ -98,11 +118,15 @@ export function error (r1, d1, r2, d2, r0, d0) { // (r1, d1, r2, d2, r0, d0 floa
  *
  * The algorithm is by B. Pessens.
  *
- * @returns {Number[]} [ψ, ω]
- *  {Number} ψ - angle between great circles defined by three points.
- *  {Number} ω - error angle of three nearly co-linear points
+ * @param {number} r1 - Right ascension or longitude of point 1, in radians.
+ * @param {number} d1 - Declination or latitude of point 1, in radians.
+ * @param {number} r2 - Right ascension or longitude of point 2, in radians.
+ * @param {number} d2 - Declination or latitude of point 2, in radians.
+ * @param {number} r3 - Right ascension or longitude of point 3, in radians.
+ * @param {number} d3 - Declination or latitude of point 3, in radians.
+ * @returns {[number, number]} Angle and error angle, both in radians.
  */
-export function angleError (r1, d1, r2, d2, r3, d3) {
+export function angleError(r1, d1, r2, d2, r3, d3) {
   const [sr1, cr1] = base.sincos(r1)
   const [c1, cd1] = base.sincos(d1)
   const [sr2, cr2] = base.sincos(r2)
@@ -124,10 +148,16 @@ export function angleError (r1, d1, r2, d2, r3, d3) {
   const n1 = a1 * b2 - a2 * b1
   const n2 = a2 * b3 - a3 * b2
   const n3 = a1 * b3 - a3 * b1
-  const ψ = Math.acos((l1 * l2 + m1 * m2 + n1 * n2) /
-    (Math.sqrt(l1 * l1 + m1 * m1 + n1 * n1) * Math.sqrt(l2 * l2 + m2 * m2 + n2 * n2)))
-  const ω = Math.asin((a2 * l3 + b2 * m3 + c2 * n3) /
-    (Math.sqrt(a2 * a2 + b2 * b2 + c2 * c2) * Math.sqrt(l3 * l3 + m3 * m3 + n3 * n3)))
+  const ψ = Math.acos(
+    (l1 * l2 + m1 * m2 + n1 * n2) /
+      (Math.sqrt(l1 * l1 + m1 * m1 + n1 * n1) *
+        Math.sqrt(l2 * l2 + m2 * m2 + n2 * n2))
+  )
+  const ω = Math.asin(
+    (a2 * l3 + b2 * m3 + c2 * n3) /
+      (Math.sqrt(a2 * a2 + b2 * b2 + c2 * c2) *
+        Math.sqrt(l3 * l3 + m3 * m3 + n3 * n3))
+  )
   return [ψ, ω]
 }
 

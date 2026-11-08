@@ -72,7 +72,7 @@ describe('#julian', function () {
       [-584, 5, 28.63, 1507900.13],
       [333, 1, 27.5, 1842713],
       [837, 4, 10.3, 2026871.8], // more examples, p. 62
-      [1582, 10, 5.5, 2299161],  // 1st day in Gregorian Calendar => 1582-10-15
+      [1582, 10, 5.5, 2299161], // 1st day in Gregorian Calendar => 1582-10-15
       [1582, 10, 4.5, 2299160],
       [2000, 12, 24, 2451915.5]
     ]
@@ -237,7 +237,10 @@ describe('#julian', function () {
           // @ts-ignore
           const res = julian.DayOfYearToCalendarGregorian(year, dayOfYear)
           // @ts-ignore
-          assert.deepStrictEqual(res, new julian.CalendarGregorian(year, month, day))
+          assert.deepStrictEqual(
+            res,
+            new julian.CalendarGregorian(year, month, day)
+          )
         })
       })
     })
@@ -258,7 +261,10 @@ describe('#julian', function () {
           // @ts-ignore
           const res = julian.DayOfYearToCalendarJulian(year, dayOfYear)
           // @ts-ignore
-          assert.deepStrictEqual(res, new julian.CalendarJulian(year, month, day))
+          assert.deepStrictEqual(
+            res,
+            new julian.CalendarJulian(year, month, day)
+          )
         })
       })
     })
@@ -289,7 +295,11 @@ describe('#julian', function () {
       })
       it('1977-12-31', function () {
         const res = new julian.CalendarGregorian().fromYear(1977.999997260274)
-        assert.deepStrictEqual(res.getDate(), { year: 1977, month: 12, day: 31 })
+        assert.deepStrictEqual(res.getDate(), {
+          year: 1977,
+          month: 12,
+          day: 31
+        })
       })
       it('1977-02-01', function () {
         const y = new julian.CalendarGregorian(1977, 2, 1).toYear()
@@ -371,11 +381,21 @@ describe('#julian', function () {
     })
     it('can return time', function () {
       const d = new julian.Calendar(new Date('2015-10-20T08:00:00.000Z'))
-      assert.deepStrictEqual(d.getTime(), { hour: 8, minute: 0, second: 0, millisecond: 0 })
+      assert.deepStrictEqual(d.getTime(), {
+        hour: 8,
+        minute: 0,
+        second: 0,
+        millisecond: 0
+      })
     })
     it('can return time 2', function () {
       const d = new julian.Calendar(2015, 10, 20.33333333)
-      assert.deepStrictEqual(d.getTime(), { hour: 7, minute: 59, second: 59, millisecond: 999 })
+      assert.deepStrictEqual(d.getTime(), {
+        hour: 7,
+        minute: 59,
+        second: 59,
+        millisecond: 999
+      })
     })
     it('can convert to Dynamical Time and back to Universal Time', function () {
       const d = new julian.Calendar(1, 1, 1)
@@ -415,13 +435,21 @@ describe('#julian', function () {
   describe('CalendarGregorian', function () {
     it('can convert date to Julian Calendar', function () {
       const d = new julian.CalendarGregorian(1582, 10, 15)
-      assert.deepStrictEqual(d.toJulian().getDate(), { year: 1582, month: 10, day: 5 })
+      assert.deepStrictEqual(d.toJulian().getDate(), {
+        year: 1582,
+        month: 10,
+        day: 5
+      })
     })
   })
   describe('CalendarJulian', function () {
     it('can convert date to Gregorian Calendar', function () {
       const d = new julian.CalendarJulian(1582, 10, 5)
-      assert.deepStrictEqual(d.toGregorian().getDate(), { year: 1582, month: 10, day: 15 })
+      assert.deepStrictEqual(d.toGregorian().getDate(), {
+        year: 1582,
+        month: 10,
+        day: 15
+      })
     })
   })
 

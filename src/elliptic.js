@@ -25,8 +25,13 @@ import solarxyz from './solarxyz.js'
  * Argument earth must be a valid V87Planet object for Earth.
  *
  * Results are right ascension and declination, α and δ in radians.
+ * @param {import('./planetposition.js').Planet} planet - Ephemeris for the observed planet.
+ * @param {import('./planetposition.js').Planet} earth - Ephemeris for Earth.
+ * @param {number} jde - Julian ephemeris day.
+ * @returns {import('./coord.js').Equatorial} Apparent equatorial coordinates.
  */
-export function position (planet, earth, jde) { // (p, earth *pp.V87Planet, jde float64)  (α, δ float64)
+export function position(planet, earth, jde) {
+  // (p, earth *pp.V87Planet, jde float64)  (α, δ float64)
   let x = 0
   let y = 0
   let z = 0
@@ -35,7 +40,7 @@ export function position (planet, earth, jde) { // (p, earth *pp.V87Planet, jde 
   const [sB0, cB0] = base.sincos(B0)
   const [sL0, cL0] = base.sincos(L0)
 
-  function pos (τ = 0) {
+  function pos(τ = 0) {
     const pos = planet.position(jde - τ)
     const [L, B, R] = [pos.lon, pos.lat, pos.range]
     const [sB, cB] = base.sincos(B)
@@ -67,6 +72,12 @@ export function position (planet, earth, jde) { // (p, earth *pp.V87Planet, jde 
 
 /**
  * Elements holds keplerian elements.
+ * @property {number} axis - Semimajor axis in AU.
+ * @property {number} ecc - Eccentricity.
+ * @property {number} inc - Inclination in radians.
+ * @property {number} argP - Argument of perihelion in radians.
+ * @property {number} node - Longitude of ascending node in radians.
+ * @property {number} timeP - Time of perihelion as a Julian ephemeris day.
  */
 export class Elements {
   /*
@@ -77,17 +88,25 @@ export class Elements {
   Node  float64 // Longitude of ascending node, Ω, in radians
   TimeP float64 // Time of perihelion, T, as jde
   */
-  constructor (axis, ecc, inc, argP, node, timeP) {
+  /**
+   * @param {number|Elements} axis - Semimajor axis in AU, or an object containing orbital elements.
+   * @param {number} [ecc] - Eccentricity.
+   * @param {number} [inc] - Inclination in radians.
+   * @param {number} [argP] - Argument of perihelion in radians.
+   * @param {number} [node] - Longitude of ascending node in radians.
+   * @param {number} [timeP] - Time of perihelion as Julian ephemeris day.
+   */
+  constructor(axis, ecc, inc, argP, node, timeP) {
     let o = {}
     if (typeof axis === 'object') {
       o = axis
     }
-    this.axis = o.axis || axis
-    this.ecc = o.ecc || ecc
-    this.inc = o.inc || inc
-    this.argP = o.argP || argP
-    this.node = o.node || node
-    this.timeP = o.timeP || timeP
+    this.axis = /** @type {number} */ (o.axis || axis)
+    this.ecc = /** @type {number} */ (o.ecc || ecc)
+    this.inc = /** @type {number} */ (o.inc || inc)
+    this.argP = /** @type {number} */ (o.argP || argP)
+    this.node = /** @type {number} */ (o.node || node)
+    this.timeP = /** @type {number} */ (o.timeP || timeP)
   }
 
   /**
@@ -97,8 +116,12 @@ export class Elements {
    *
    * Results are right ascension and declination α and δ, and elongation ψ,
    * all in radians.
+   * @param {number} jde - Julian ephemeris day.
+   * @param {import('./planetposition.js').Planet} earth - Ephemeris for Earth.
+   * @returns {import('./base.js').Coord} J2000 astrometric coordinates and elongation.
    */
-  position (jde, earth) { // (α, δ, ψ float64) {
+  position(jde, earth) {
+    // (α, δ, ψ float64) {
     // (33.6) p. 227
     const n = base.K / this.axis / Math.sqrt(this.axis)
     const sε = base.SOblJ2000
@@ -120,7 +143,8 @@ export class Elements {
     const b = Math.hypot(G, Q)
     const c = Math.hypot(H, R)
 
-    const f = (jde) => { // (x, y, z float64) {
+    const f = (jde) => {
+      // (x, y, z float64) {
       const M = n * (jde - this.timeP)
       let E
       try {
@@ -150,8 +174,13 @@ export class Elements {
  * coodinates of a body.
  *
  * Results are J2000 right ascention, declination, and elongation.
+ * @param {(jde: number) => {x: number, y: number, z: number}} f - Rectangular-coordinate function.
+ * @param {number} jde - Julian ephemeris day.
+ * @param {import('./planetposition.js').Planet} earth - Ephemeris for Earth.
+ * @returns {import('./base.js').Coord} J2000 astrometric coordinates and elongation.
  */
-export function astrometricJ2000 (f, jde, earth) { // (f func(float64)  (x, y, z float64), jde float64, e *pp.V87Planet) (α, δ, ψ float64)
+export function astrometricJ2000(f, jde, earth) {
+  // (f func(float64)  (x, y, z float64), jde float64, e *pp.V87Planet) (α, δ, ψ float64)
   const sol = solarxyz.positionJ2000(earth, jde)
   const [X, Y, Z] = [sol.x, sol.y, sol.z]
   let ξ = 0
@@ -159,7 +188,7 @@ export function astrometricJ2000 (f, jde, earth) { // (f func(float64)  (x, y, z
   let ζ = 0
   let Δ = 0
 
-  function fn (τ = 0) {
+  function fn(τ = 0) {
     // (33.10) p. 229
     const { x, y, z } = f(jde - τ)
     ξ = X + x
@@ -189,8 +218,12 @@ export function astrometricJ2000 (f, jde, earth) { // (f func(float64)  (x, y, z
  * to the Sun, both in AU.
  *
  * Result is in Km/sec.
+ * @param {number} a - Semimajor axis in AU.
+ * @param {number} r - Heliocentric distance in AU.
+ * @returns {number} Instantaneous orbital velocity in km/s.
  */
-export function velocity (a, r) { // (a, r float64)  float64
+export function velocity(a, r) {
+  // (a, r float64)  float64
   return 42.1219 * Math.sqrt(1 / r - 0.5 / a)
 }
 
@@ -200,8 +233,12 @@ export function velocity (a, r) { // (a, r float64)  float64
  * Argument a is the semimajor axis of the body in AU, e is eccentricity.
  *
  * Result is in Km/sec.
+ * @param {number} a - Semimajor axis in AU.
+ * @param {number} e - Orbital eccentricity.
+ * @returns {number} Velocity at aphelion in km/s.
  */
-export function vAphelion (a, e) { // (a, e float64)  float64
+export function vAphelion(a, e) {
+  // (a, e float64)  float64
   return 29.7847 * Math.sqrt((1 - e) / (1 + e) / a)
 }
 
@@ -211,8 +248,12 @@ export function vAphelion (a, e) { // (a, e float64)  float64
  * Argument a is the semimajor axis of the body in AU, e is eccentricity.
  *
  * Result is in Km/sec.
+ * @param {number} a - Semimajor axis in AU.
+ * @param {number} e - Orbital eccentricity.
+ * @returns {number} Velocity at perihelion in km/s.
  */
-export function vPerihelion (a, e) { // (a, e float64)  float64
+export function vPerihelion(a, e) {
+  // (a, e float64)  float64
   return 29.7847 * Math.sqrt((1 + e) / (1 - e) / a)
 }
 
@@ -223,8 +264,12 @@ export function vPerihelion (a, e) { // (a, e float64)  float64
  * Argument a is semimajor axis, e is eccentricity.
  *
  * Result is in units used for semimajor axis, typically AU.
+ * @param {number} a - Semimajor axis.
+ * @param {number} e - Orbital eccentricity.
+ * @returns {number} Approximate orbital circumference.
  */
-export function length1 (a, e) { // (a, e float64)  float64
+export function length1(a, e) {
+  // (a, e float64)  float64
   const b = a * Math.sqrt(1 - e * e)
   return Math.PI * (3 * (a + b) - Math.sqrt((a + 3 * b) * (3 * a + b)))
 }
@@ -236,14 +281,18 @@ export function length1 (a, e) { // (a, e float64)  float64
  * Argument a is semimajor axis, e is eccentricity.
  *
  * Result is in units used for semimajor axis, typically AU.
+ * @param {number} a - Semimajor axis.
+ * @param {number} e - Orbital eccentricity.
+ * @returns {number} Approximate orbital circumference.
  */
-export function length2 (a, e) { // (a, e float64)  float64
+export function length2(a, e) {
+  // (a, e float64)  float64
   const b = a * Math.sqrt(1 - e * e)
   const s = a + b
   const p = a * b
   const A = s * 0.5
   const G = Math.sqrt(p)
-  const H = 2 * p / s
+  const H = (2 * p) / s
   return Math.PI * (21 * A - 2 * G - 3 * H) * 0.125
 }
 
@@ -280,8 +329,12 @@ export function length3 (a, e) { // (a, e float64)  float64
  * Argument a is semimajor axis, e is eccentricity.
  *
  * Result is exact, and in units used for semimajor axis, typically AU.
+ * @param {number} a - Semimajor axis.
+ * @param {number} e - Orbital eccentricity.
+ * @returns {number} Orbital circumference.
  */
-export function length4 (a, e) { // (a, e float64)  float64
+export function length4(a, e) {
+  // (a, e float64)  float64
   const b = a * Math.sqrt(1 - e * e)
   const m = (a - b) / (a + b)
   const m2 = m * m
@@ -293,11 +346,11 @@ export function length4 (a, e) { // (a, e float64)  float64
   while (sum1 !== sum0) {
     nf += 2
     df += 2
-    term *= nf * nf * m2 / (df * df)
+    term *= (nf * nf * m2) / (df * df)
     sum0 = sum1
     sum1 += term
   }
-  return 2 * Math.PI * a * sum0 / (1 + m)
+  return (2 * Math.PI * a * sum0) / (1 + m)
 }
 
 export default {

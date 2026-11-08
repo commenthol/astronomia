@@ -30,12 +30,10 @@ import interp from './interpolation.js'
  * @param {Number} t1 - julian ephemeris day of first row
  * @param {Number} t5 - julian ephemeris day of fifth row
  * @param {Coord[]} cs1 - ephemeris of first moving object
- * @param {Coord[]} cs2 - ephemeris of decond moving object
- * @return {Array}
- *    {Number} t - time of conjunction in JDE
- *    {Number} Δd - is the amount that object 2 was "above" object 1 at the time of conjunction.
+ * @param {Coord[]} cs2 - ephemeris of the second moving object.
+ * @return {[number, number]} Conjunction time in Julian days and the declination difference at conjunction.
  */
-export function planetary (t1, t5, cs1, cs2) {
+export function planetary(t1, t5, cs1, cs2) {
   if (cs1.length !== 5 || cs2.length !== 5) {
     throw new Error('Five rows required in ephemerides')
   }
@@ -57,12 +55,10 @@ export function planetary (t1, t5, cs1, cs2) {
  * @param {Number} t1 - julian ephemeris day of first row
  * @param {Number} t5 - julian ephemeris day of fifth row
  * @param {Coord} c1 - ephemeris of non-moving object
- * @param {Coord[]} cs2 - ephemeris of moving object
- * @return {Array}
- *    {Number} t - time of conjunction in JDE
- *    {Number} Δd - is the amount that object 2 was "above" object 1 at the time of conjunction.
+ * @param {Coord[]} cs2 - Ephemeris of the moving object.
+ * @return {[number, number]} Conjunction time in Julian days and the declination difference at conjunction.
  */
-export function stellar (t1, t5, c1, cs2) {
+export function stellar(t1, t5, c1, cs2) {
   if (cs2.length !== 5) {
     throw new Error('Five rows required in ephemerides')
   }
@@ -75,12 +71,13 @@ export function stellar (t1, t5, c1, cs2) {
   return conj(t1, t5, dr, dd)
 }
 
-const conj = function (t1, t5, dr, dd) { // (t1, t5 float64, dr, dd []float64)  (t, Δd float64, err error)
+const conj = function (t1, t5, dr, dd) {
+  // (t1, t5 float64, dr, dd []float64)  (t, Δd float64, err error)
   let l5 = new interp.Len5(t1, t5, dr)
   const t = l5.zero(true)
   l5 = new interp.Len5(t1, t5, dd)
   const Δd = l5.interpolateXStrict(t)
-  return [t, Δd]
+  return /** @type {[number, number]} */ ([t, Δd])
 }
 
 export default {

@@ -27,9 +27,15 @@ describe('#moonphase', function () {
       const dyear = new julian.CalendarGregorian(1977, 2, 14).toYear()
       const jde = moonphase.newMoon(dyear)
       assert.strictEqual(float(jde).toFixed(5), 2443192.65118)
-      assert.strictEqual(julian.JDToDate(jde).toISOString(), '1977-02-18T03:37:42.183Z')
+      assert.strictEqual(
+        julian.JDToDate(jde).toISOString(),
+        '1977-02-18T03:37:42.183Z'
+      )
       // Example 10.a p.78
-      assert.strictEqual(julian.JDEToDate(jde).toISOString(), '1977-02-18T03:36:54.534Z')
+      assert.strictEqual(
+        julian.JDEToDate(jde).toISOString(),
+        '1977-02-18T03:36:54.534Z'
+      )
     })
 
     it('last', function () {
@@ -37,7 +43,10 @@ describe('#moonphase', function () {
       const dyear = new julian.CalendarGregorian(2044, 1, 16).toYear()
       const jde = moonphase.last(dyear)
       assert.strictEqual(float(jde).toFixed(5), 2467636.49186)
-      assert.strictEqual(julian.JDToDate(jde).toISOString(), '2044-01-21T23:48:16.956Z')
+      assert.strictEqual(
+        julian.JDToDate(jde).toISOString(),
+        '2044-01-21T23:48:16.956Z'
+      )
     })
 
     // When is Chinese New Year? Helmer Aslaksen
@@ -47,8 +56,8 @@ describe('#moonphase', function () {
         { hunt: [1990, 10, 18], exp: '1990-10-18T23:36:31+0800' },
         { hunt: [1990, 11, 17], exp: '1990-11-17T17:04:27+0800' },
         { hunt: [1990, 12, 17], exp: '1990-12-17T12:21:43+0800' },
-        { hunt: [1991,  1, 16], exp: '1991-01-16T07:49:41+0800' },
-        { hunt: [1991,  2, 15], exp: '1991-02-15T01:31:47+0800' }
+        { hunt: [1991, 1, 16], exp: '1991-01-16T07:49:41+0800' },
+        { hunt: [1991, 2, 15], exp: '1991-02-15T01:31:47+0800' }
       ]
       tests.forEach(function (t) {
         const y = t.hunt[0]

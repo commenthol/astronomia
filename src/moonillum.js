@@ -23,15 +23,19 @@ const D2R = Math.PI / 180
  * @param {Coord} cSun - coordinates and distance of the Sun
  * @returns {number} phase angle of the Moon in radians
  */
-export function phaseAngleEquatorial (cMoon, cSun) {
-  return pa(cMoon.range, cSun.range, cosEq(cMoon.ra, cMoon.dec, cSun.ra, cSun.dec))
+export function phaseAngleEquatorial(cMoon, cSun) {
+  return pa(
+    cMoon.range,
+    cSun.range,
+    cosEq(cMoon.ra, cMoon.dec, cSun.ra, cSun.dec)
+  )
 }
 
 /**
  * cos elongation from equatorial coordinates
  * @private
  */
-function cosEq (α, δ, α0, δ0) {
+function cosEq(α, δ, α0, δ0) {
   const [sδ, cδ] = base.sincos(δ)
   const [sδ0, cδ0] = base.sincos(δ0)
   return sδ0 * sδ + cδ0 * cδ * Math.cos(α0 - α)
@@ -45,9 +49,9 @@ function cosEq (α, δ, α0, δ0) {
  * @param {number} cψ
  * @returns {number}
  */
-function pa (Δ, R, cψ) {
+function pa(Δ, R, cψ) {
   const sψ = Math.sin(Math.acos(cψ))
-  let i = Math.atan(R * sψ / (Δ - R * cψ))
+  let i = Math.atan((R * sψ) / (Δ - R * cψ))
   if (i < 0) {
     i += Math.PI
   }
@@ -66,7 +70,7 @@ function pa (Δ, R, cψ) {
  * @param {Coord} cSun - coordinates of the Sun
  * @returns {number} phase angle of the Moon in radians
  */
-export function phaseAngleEquatorial2 (cMoon, cSun) {
+export function phaseAngleEquatorial2(cMoon, cSun) {
   return Math.acos(-cosEq(cMoon.ra, cMoon.dec, cSun.ra, cSun.dec))
 }
 
@@ -79,7 +83,7 @@ export function phaseAngleEquatorial2 (cMoon, cSun) {
  * @param {Coord} cSun -  longitude and distance to the Sun
  * @returns {number} phase angle of the Moon in radians
  */
-export function phaseAngleEcliptic (cMoon, cSun) {
+export function phaseAngleEcliptic(cMoon, cSun) {
   return pa(cMoon.range, cSun.range, cosEcl(cMoon.lon, cMoon.lat, cSun.lon))
 }
 
@@ -87,7 +91,8 @@ export function phaseAngleEcliptic (cMoon, cSun) {
  * cos elongation from ecliptic coordinates
  * @private
  */
-function cosEcl (λ, β, λ0) { // (λ, β, λ0 float64)  float64
+function cosEcl(λ, β, λ0) {
+  // (λ, β, λ0 float64)  float64
   return Math.cos(β) * Math.cos(λ - λ0)
 }
 
@@ -102,7 +107,7 @@ function cosEcl (λ, β, λ0) { // (λ, β, λ0 float64)  float64
  * @param {Coord} cSun -  longitude of the Sun
  * @returns {number} phase angle of the Moon in radians
  */
-export function phaseAngleEcliptic2 (cMoon, cSun) {
+export function phaseAngleEcliptic2(cMoon, cSun) {
   return Math.acos(-cosEcl(cMoon.lon, cMoon.lat, cSun.lon))
 }
 
@@ -112,22 +117,45 @@ export function phaseAngleEcliptic2 (cMoon, cSun) {
  * Less accurate than phaseAngle functions taking coordinates.
  *
  * Result in radians.
+ * @param {number} jde - Julian ephemeris day.
+ * @returns {number} Approximate lunar phase angle in radians.
  */
-export function phaseAngle3 (jde) { // (jde float64)  float64
+export function phaseAngle3(jde) {
+  // (jde float64)  float64
   const T = base.J2000Century(jde)
-  const D = base.horner(T, 297.8501921 * D2R, 445267.1114034 * D2R,
-    -0.0018819 * D2R, D2R / 545868, -D2R / 113065000)
-  const m = base.horner(T, 357.5291092 * D2R, 35999.0502909 * D2R,
-    -0.0001536 * D2R, D2R / 24490000)
-  const m_ = base.horner(T, 134.9633964 * D2R, 477198.8675055 * D2R,
-    0.0087414 * D2R, D2R / 69699, -D2R / 14712000)
-  return Math.PI - base.pmod(D, 2 * Math.PI) +
+  const D = base.horner(
+    T,
+    297.8501921 * D2R,
+    445267.1114034 * D2R,
+    -0.0018819 * D2R,
+    D2R / 545868,
+    -D2R / 113065000
+  )
+  const m = base.horner(
+    T,
+    357.5291092 * D2R,
+    35999.0502909 * D2R,
+    -0.0001536 * D2R,
+    D2R / 24490000
+  )
+  const m_ = base.horner(
+    T,
+    134.9633964 * D2R,
+    477198.8675055 * D2R,
+    0.0087414 * D2R,
+    D2R / 69699,
+    -D2R / 14712000
+  )
+  return (
+    Math.PI -
+    base.pmod(D, 2 * Math.PI) +
     -6.289 * D2R * Math.sin(m_) +
     2.1 * D2R * Math.sin(m) +
     -1.274 * D2R * Math.sin(2 * D - m_) +
     -0.658 * D2R * Math.sin(2 * D) +
     -0.214 * D2R * Math.sin(2 * m_) +
     -0.11 * D2R * Math.sin(D)
+  )
 }
 
 export default {

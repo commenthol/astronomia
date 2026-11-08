@@ -20,7 +20,7 @@ describe('#conjunction', function () {
         new sexa.Angle(false, 4, 4, 41.83).rad()
       ),
       new base.Coord(
-        new sexa.RA(10, 26, 32.410).rad(),
+        new sexa.RA(10, 26, 32.41).rad(),
         new sexa.Angle(false, 3, 55, 54.66).rad()
       ),
       new base.Coord(
@@ -69,7 +69,10 @@ describe('#conjunction', function () {
     // date in TD
     assert.strictEqual(cal.toDate().toISOString(), '1991-08-07T05:42:40.908Z')
     // compute UT = TD - ΔT
-    assert.strictEqual(cal.deltaT(true).toDate().toISOString(), '1991-08-07T05:41:42.903Z')
+    assert.strictEqual(
+      cal.deltaT(true).toDate().toISOString(),
+      '1991-08-07T05:41:42.903Z'
+    )
 
     assert.strictEqual(new sexa.Angle(Δδ).toString(0), '2°8′22″')
   })
@@ -133,7 +136,10 @@ describe('#conjunction', function () {
     // date in TD
     assert.strictEqual(cal.toDate().toISOString(), '1996-02-18T06:36:55.352Z')
     // compute UT = TD - ΔT
-    assert.strictEqual(cal.deltaT(true).toDate().toISOString(), '1996-02-18T06:35:53.634Z')
+    assert.strictEqual(
+      cal.deltaT(true).toDate().toISOString(),
+      '1996-02-18T06:35:53.634Z'
+    )
 
     assert.strictEqual(new sexa.Angle(dd).toString(0), '0°3′38″')
   })

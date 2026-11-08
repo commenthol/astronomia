@@ -32,7 +32,7 @@ const { abs, acos, asin, atan2, cos, hypot, sin, sqrt, tan } = Math
  * @param {Coord} c2 - coordinate of celestial body 2
  * @return {Number} angular separation between two celestial bodies
  */
-export function sep (c1, c2) {
+export function sep(c1, c2) {
   const [sind1, cosd1] = base.sincos(c1.dec)
   const [sind2, cosd2] = base.sincos(c2.dec)
   const cd = sind1 * sind2 + cosd1 * cosd2 * cos(c1.ra - c2.ra) // (17.1) p. 109
@@ -64,14 +64,14 @@ export function sep (c1, c2) {
  * @param {function} [fnSep] - alternative `sep` function e.g. `angle.sepPauwels`, `angle.sepHav`
  * @return {Number} angular separation between two celestial bodies
  */
-export function minSep (jd1, jd3, cs1, cs2, fnSep) {
-  fnSep = fnSep || sep
+export function minSep(jd1, jd3, cs1, cs2, fnSep) {
+  const _fnSep = fnSep || sep
   if (cs1.length !== 3 || cs2.length !== 3) {
     throw interp.errorNot3
   }
   const y = new Array(3)
   cs1.forEach((c, x) => {
-    y[x] = sep(cs1[x], cs2[x])
+    y[x] = _fnSep(cs1[x], cs2[x])
   })
   const d3 = new interp.Len3(jd1, jd3, y)
   const dMin = d3.extremum()[1]
@@ -91,7 +91,7 @@ export function minSep (jd1, jd3, cs1, cs2, fnSep) {
  * @param {Coord[]} cs2 - 3 coordinates of moving object 2
  * @return {Number} angular separation between two celestial bodies
  */
-export function minSepRect (jd1, jd3, cs1, cs2) {
+export function minSepRect(jd1, jd3, cs1, cs2) {
   if (cs1.length !== 3 || cs2.length !== 3) {
     throw interp.ErrorNot3
   }
@@ -109,7 +109,7 @@ export function minSepRect (jd1, jd3, cs1, cs2) {
   const us = new Array(3).fill(0)
   const vs = new Array(3).fill(0)
   cs1.forEach((c, x) => {
-    [us[x], vs[x]] = uv(cs1[x], cs2[x])
+    ;[us[x], vs[x]] = uv(cs1[x], cs2[x])
   })
   const u3 = new interp.Len3(-1, 1, us) // if line throws then bug not caller's fault.
   const v3 = new interp.Len3(-1, 1, vs) // if line throws then bug not caller's fault.
@@ -139,8 +139,10 @@ export function minSepRect (jd1, jd3, cs1, cs2) {
 
 /**
  * haversine function (17.5) p. 115
+ * @param {number} a - Angle in radians.
+ * @returns {number} Haversine of the angle.
  */
-export function hav (a) {
+export function hav(a) {
   return 0.5 * (1 - Math.cos(a))
 }
 
@@ -154,17 +156,28 @@ export function hav (a) {
  * @param {Coord} c2 - coordinate of celestial body 2
  * @return {Number} angular separation between two celestial bodies
  */
-export function sepHav (c1, c2) {
+export function sepHav(c1, c2) {
   // using (17.5) p. 115
-  return 2 * asin(sqrt(hav(c2.dec - c1.dec) +
-    cos(c1.dec) * cos(c2.dec) * hav(c2.ra - c1.ra)))
+  return (
+    2 *
+    asin(
+      sqrt(
+        hav(c2.dec - c1.dec) + cos(c1.dec) * cos(c2.dec) * hav(c2.ra - c1.ra)
+      )
+    )
+  )
 }
 
 /**
  * Same as `minSep` but uses function `sepHav` to return the minimum separation
  * between two moving objects.
+ * @param {number} jd1 - Julian day at the first ephemeris row.
+ * @param {number} jd3 - Julian day at the final ephemeris row.
+ * @param {Coord[]} cs1 - Three coordinates for the first object.
+ * @param {Coord[]} cs2 - Three coordinates for the second object.
+ * @returns {number} Minimum angular separation in radians.
  */
-export function minSepHav (jd1, jd3, cs1, cs2) {
+export function minSepHav(jd1, jd3, cs1, cs2) {
   return minSep(jd1, jd3, cs1, cs2, sepHav)
 }
 
@@ -177,7 +190,7 @@ export function minSepHav (jd1, jd3, cs1, cs2) {
  * @param {Coord} c2 - coordinate of celestial body 2
  * @return {Number} angular separation between two celestial bodies
  */
-export function sepPauwels (c1, c2) {
+export function sepPauwels(c1, c2) {
   const [sind1, cosd1] = base.sincos(c1.dec)
   const [sind2, cosd2] = base.sincos(c2.dec)
   const cosdr = cos(c2.ra - c1.ra)
@@ -190,8 +203,13 @@ export function sepPauwels (c1, c2) {
 /**
  * Same as `minSep` but uses function `sepPauwels` to return the minimum
  * separation between two moving objects.
+ * @param {number} jd1 - Julian day at the first ephemeris row.
+ * @param {number} jd3 - Julian day at the final ephemeris row.
+ * @param {Coord[]} cs1 - Three coordinates for the first object.
+ * @param {Coord[]} cs2 - Three coordinates for the second object.
+ * @returns {number} Minimum angular separation in radians.
  */
-export function minSepPauwels (jd1, jd3, cs1, cs2) {
+export function minSepPauwels(jd1, jd3, cs1, cs2) {
   return minSep(jd1, jd3, cs1, cs2, sepPauwels)
 }
 
@@ -216,7 +234,7 @@ export function minSepPauwels (jd1, jd3, cs1, cs2) {
  * @param {Coord} c2 - coordinate of celestial body 2
  * @return {Number} position angle (p)
  */
-export function relativePosition (c1, c2) {
+export function relativePosition(c1, c2) {
   const [sinΔr, cosΔr] = base.sincos(c1.ra - c2.ra)
   const [sind2, cosd2] = base.sincos(c2.dec)
   const p = atan2(sinΔr, cosd2 * tan(c1.dec) - sind2 * cosΔr)

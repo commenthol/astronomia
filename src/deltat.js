@@ -36,7 +36,7 @@ import interp from './interpolation.js'
 import deltat from '../data/deltat.js'
 
 // avoids ciclic import { LeapYearGregorian } from './julian.js'
-function LeapYearGregorian (y) {
+function LeapYearGregorian(y) {
   return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0
 }
 
@@ -50,23 +50,38 @@ function LeapYearGregorian (y) {
  * @param {Number} dyear - decimal year
  * @returns {Number} ΔT in seconds.
  */
-export function deltaT (dyear) {
+export function deltaT(dyear) {
   let ΔT
   if (dyear < -500) {
     ΔT = base.horner((dyear - 1820) * 0.01, -20, 0, 32)
   } else if (dyear < 500) {
-    ΔT = base.horner(dyear * 0.01,
-      10583.6, -1014.41, 33.78311, -5.952053, -0.1798452, 0.022174192, 0.0090316521
+    ΔT = base.horner(
+      dyear * 0.01,
+      10583.6,
+      -1014.41,
+      33.78311,
+      -5.952053,
+      -0.1798452,
+      0.022174192,
+      0.0090316521
     )
   } else if (dyear < 1600) {
-    ΔT = base.horner((dyear - 1000) * 0.01,
-      1574.2, -556.01, 71.23472, 0.319781, -0.8503463, -0.005050998, 0.0083572073
+    ΔT = base.horner(
+      (dyear - 1000) * 0.01,
+      1574.2,
+      -556.01,
+      71.23472,
+      0.319781,
+      -0.8503463,
+      -0.005050998,
+      0.0083572073
     )
   } else if (dyear < deltat.historic.first) {
-    ΔT = base.horner((dyear - 1600), 120, -0.9808, -0.01532, 1 / 7129)
+    ΔT = base.horner(dyear - 1600, 120, -0.9808, -0.01532, 1 / 7129)
   } else if (dyear < deltat.data.first) {
     ΔT = interpolate(dyear, deltat.historic)
-  } else if (dyear < deltat.data.last - 0.25) { // -0.25 ~= do not consider last 3 months in dataset
+  } else if (dyear < deltat.data.last - 0.25) {
+    // -0.25 ~= do not consider last 3 months in dataset
     ΔT = interpolateData(dyear, deltat.data)
   } else if (dyear < deltat.prediction.last) {
     ΔT = interpolate(dyear, deltat.prediction)
@@ -87,9 +102,12 @@ export function deltaT (dyear) {
  * @param {Number} dyear - julian year
  * @returns {Number} ΔT in seconds.
  */
-function interpolate (dyear, data) {
-  const d3 = interp.len3ForInterpolateX(dyear,
-    data.first, data.last, data.table
+function interpolate(dyear, data) {
+  const d3 = interp.len3ForInterpolateX(
+    dyear,
+    data.first,
+    data.last,
+    data.table
   )
   return d3.interpolateX(dyear)
 }
@@ -104,7 +122,7 @@ function interpolate (dyear, data) {
  * @param {Number} dyear - julian year
  * @returns {Number} ΔT in seconds.
  */
-function interpolateData (dyear, data) {
+function interpolateData(dyear, data) {
   const [fyear, fmonth] = data.firstYM
   const { year, month, first, last } = monthOfYear(dyear)
   const pos = 12 * (year - fyear) + (month - fmonth)
@@ -119,7 +137,7 @@ function interpolateData (dyear, data) {
  * @param {Number} dyear - decimal year
  * @return {Object} `{year: Number, month: Number, first: Number, last}`
  */
-function monthOfYear (dyear) {
+function monthOfYear(dyear) {
   // if (!monthOfYear.data) { // memoize yearly fractions per month
   //   monthOfYear.data = { 0: [], 1: [] }
   //   for (let m = 0; m <= 12; m++) {
@@ -138,7 +156,8 @@ function monthOfYear (dyear) {
     month--
   }
   const first = year + data[month]
-  const last = month < 11 ? year + data[month + 2] : year + 1 + data[(month + 2) % 12]
+  const last =
+    month < 11 ? year + data[month + 2] : year + 1 + data[(month + 2) % 12]
   return { year, month, first, last }
 }
 /**
@@ -146,35 +165,19 @@ function monthOfYear (dyear) {
   monthOfYear.data[1][m] = new Calendar(2000, m, 1).toYear() - 2000 // leap year
  */
 monthOfYear.data = [
-  [ // non leap year
-    0,
-    0,
-    0.08493150684921602,
-    0.16164383561635987,
-    0.24657534246580326,
-    0.3287671232876619,
-    0.4136986301368779,
-    0.4958904109589639,
-    0.5808219178081799,
-    0.6657534246576233,
-    0.747945205479482,
-    0.832876712328698,
-    0.915068493150784
+  [
+    // non leap year
+    0, 0, 0.08493150684921602, 0.16164383561635987, 0.24657534246580326,
+    0.3287671232876619, 0.4136986301368779, 0.4958904109589639,
+    0.5808219178081799, 0.6657534246576233, 0.747945205479482,
+    0.832876712328698, 0.915068493150784
   ],
-  [ // leap year
-    0,
-    0,
-    0.08743169398917416,
-    0.1639344262296163,
-    0.24863387978143692,
-    0.3306010928961314,
-    0.4153005464481794,
-    0.49726775956287383,
-    0.5819672131146945,
-    0.6666666666667425,
-    0.7486338797814369,
-    0.8333333333332575,
-    0.9153005464481794
+  [
+    // leap year
+    0, 0, 0.08743169398917416, 0.1639344262296163, 0.24863387978143692,
+    0.3306010928961314, 0.4153005464481794, 0.49726775956287383,
+    0.5819672131146945, 0.6666666666667425, 0.7486338797814369,
+    0.8333333333332575, 0.9153005464481794
   ]
 ]
 

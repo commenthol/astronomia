@@ -10,33 +10,35 @@
 import base from './base.js'
 import parallax from './parallax.js'
 
-/* eslint-disable no-multi-spaces */
 /**
  * Standard semidiameters at unit distance of 1 AU.
  * Values are scaled here to radians.
  */
-export const Sun               = 959.63 / 3600 * Math.PI / 180
-export const Mercury           = 3.36 / 3600 * Math.PI / 180
-export const VenusSurface      = 8.34 / 3600 * Math.PI / 180
-export const VenusCloud        = 8.41 / 3600 * Math.PI / 180
-export const Mars              = 4.68 / 3600 * Math.PI / 180
-export const JupiterEquatorial = 98.44 / 3600 * Math.PI / 180
-export const JupiterPolar      = 92.06 / 3600 * Math.PI / 180
-export const SaturnEquatorial  = 82.73 / 3600 * Math.PI / 180
-export const SaturnPolar       = 73.82 / 3600 * Math.PI / 180
-export const Uranus            = 35.02 / 3600 * Math.PI / 180
-export const Neptune           = 33.50 / 3600 * Math.PI / 180
-export const Pluto             = 2.07 / 3600 * Math.PI / 180
-export const Moon              = 358473400 / base.AU / 3600 * Math.PI / 180
-/* eslint-enable */
+export const Sun = ((959.63 / 3600) * Math.PI) / 180
+export const Mercury = ((3.36 / 3600) * Math.PI) / 180
+export const VenusSurface = ((8.34 / 3600) * Math.PI) / 180
+export const VenusCloud = ((8.41 / 3600) * Math.PI) / 180
+export const Mars = ((4.68 / 3600) * Math.PI) / 180
+export const JupiterEquatorial = ((98.44 / 3600) * Math.PI) / 180
+export const JupiterPolar = ((92.06 / 3600) * Math.PI) / 180
+export const SaturnEquatorial = ((82.73 / 3600) * Math.PI) / 180
+export const SaturnPolar = ((73.82 / 3600) * Math.PI) / 180
+export const Uranus = ((35.02 / 3600) * Math.PI) / 180
+export const Neptune = ((33.5 / 3600) * Math.PI) / 180
+export const Pluto = ((2.07 / 3600) * Math.PI) / 180
+export const Moon = ((358473400 / base.AU / 3600) * Math.PI) / 180
 
 /**
  * Semidiameter returns semidiameter at specified distance.
  *
  * When used with S0 values provided, Δ must be observer-body distance in AU.
  * Result will then be in radians.
+ * @param {number} s0 - Semidiameter at 1 AU in radians.
+ * @param {number} Δ - Observer-body distance in AU.
+ * @returns {number} Semidiameter in radians.
  */
-export function semidiameter (s0, Δ) { // (s0, Δ float64)  float64
+export function semidiameter(s0, Δ) {
+  // (s0, Δ float64)  float64
   return s0 / Δ
 }
 
@@ -50,12 +52,16 @@ export function semidiameter (s0, Δ) { // (s0, Δ float64)  float64
  *
  * Result is semidiameter in units of package variables SaturnPolar and
  * SaturnEquatorial, nominally radians.
+ * @param {number} Δ - Observer-Saturn distance in AU.
+ * @param {number} B - Saturnicentric latitude of the observer in radians.
+ * @returns {number} Apparent polar semidiameter in radians.
  */
-export function saturnApparentPolar (Δ, B) { // (Δ, B float64)  float64
+export function saturnApparentPolar(Δ, B) {
+  // (Δ, B float64)  float64
   let k = SaturnPolar / SaturnEquatorial
   k = 1 - k * k
   const cB = Math.cos(B)
-  return SaturnEquatorial / Δ * Math.sqrt(1 - k * cB * cB)
+  return (SaturnEquatorial / Δ) * Math.sqrt(1 - k * cB * cB)
 }
 
 /**
@@ -68,8 +74,15 @@ export function saturnApparentPolar (Δ, B) { // (Δ, B float64)  float64
  *      globe.Ellipsoid.ParallaxConstants, for example.
  *
  * Result is semidiameter in radians.
+ * @param {number} Δ - Distance to the Moon in AU.
+ * @param {number} δ - Declination of the Moon in radians.
+ * @param {number} H - Hour angle of the Moon in radians.
+ * @param {number} ρsφʹ - Sine parallax constant for the observer.
+ * @param {number} ρcφʹ - Cosine parallax constant for the observer.
+ * @returns {number} Topocentric semidiameter in radians.
  */
-export function moonTopocentric (Δ, δ, H, ρsφʹ, ρcφʹ) { // (Δ, δ, H, ρsφʹ, ρcφʹ float64)  float64
+export function moonTopocentric(Δ, δ, H, ρsφʹ, ρcφʹ) {
+  // (Δ, δ, H, ρsφʹ, ρcφʹ float64)  float64
   const k = 0.272481
   const sπ = Math.sin(parallax.Horizontal(Δ))
   // q computed by (40.6, 40.7) p. 280, ch 40.0
@@ -79,7 +92,7 @@ export function moonTopocentric (Δ, δ, H, ρsφʹ, ρcφʹ) { // (Δ, δ, H, �
   const B = cδ * cH - ρcφʹ * sπ
   const C = sδ - ρsφʹ * sπ
   const q = Math.sqrt(A * A + B * B + C * C)
-  return k / q * sπ
+  return (k / q) * sπ
 }
 
 /**
@@ -90,9 +103,13 @@ export function moonTopocentric (Δ, δ, H, ρsφʹ, ρcφʹ) { // (Δ, δ, H, �
  * horizon in radians.
  *
  * Result is semidiameter in radians.
+ * @param {number} Δ - Distance to the Moon in AU.
+ * @param {number} h - Altitude of the Moon in radians.
+ * @returns {number} Topocentric semidiameter in radians.
  */
-export function moonTopocentric2 (Δ, h) { // (Δ, h float64)  float64
-  return Moon / Δ * (1 + Math.sin(h) * Math.sin(parallax.Horizontal(Δ)))
+export function moonTopocentric2(Δ, h) {
+  // (Δ, h float64)  float64
+  return (Moon / Δ) * (1 + Math.sin(h) * Math.sin(parallax.Horizontal(Δ)))
 }
 
 /**
@@ -100,8 +117,12 @@ export function moonTopocentric2 (Δ, h) { // (Δ, h float64)  float64
  * and albedo A.
  *
  * Result is in km.
+ * @param {number} H - Absolute magnitude.
+ * @param {number} A - Albedo.
+ * @returns {number} Approximate asteroid diameter in kilometres.
  */
-export function asteroidDiameter (H, A) { // (H, A float64)  float64
+export function asteroidDiameter(H, A) {
+  // (H, A float64)  float64
   return Math.pow(10, 3.12 - 0.2 * H - 0.5 * Math.log10(A))
 }
 
@@ -112,9 +133,13 @@ export function asteroidDiameter (H, A) { // (H, A float64)  float64
  * Argument d is diameter in km, Δ is distance in AU.
  *
  * Result is semidiameter in radians.
+ * @param {number} d - Asteroid diameter in kilometres.
+ * @param {number} Δ - Distance in AU.
+ * @returns {number} Semidiameter in radians.
  */
-export function asteroid (d, Δ) { // (d, Δ float64)  float64
-  return 0.0013788 * d / Δ / 3600 * Math.PI / 180
+export function asteroid(d, Δ) {
+  // (d, Δ float64)  float64
+  return (((0.0013788 * d) / Δ / 3600) * Math.PI) / 180
 }
 
 export default {
