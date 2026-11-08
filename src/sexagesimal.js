@@ -97,10 +97,11 @@ export class Angle {
    * @param {Number} [precision] - precision of `.ff`
    * @returns {String}
    */
-  toDegString(precision) {
-    let [i, s] = modf(this.deg())
+  toDegString (precision) {
+    const degrees = this.deg()
+    let [i, s] = modf(Math.abs(degrees))
     s = round(s, precision).toString().replace(/^0\./, '.')
-    const str = i + '°' + s
+    const str = (degrees < 0 ? '-' : '') + (i + '°') + s
     return str
   }
 }
