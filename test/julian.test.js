@@ -186,6 +186,22 @@ describe('#julian', function () {
         const res = julian.JDEToDate(jde)
         assert.strictEqual(res.toISOString(), '1977-02-18T03:36:52.351Z')
       })
+      it('keeps the year when ΔT moves the time before 1 January', function () {
+        const jde = julian.CalendarGregorianToJD(2026, 1, 1) + 30 / 86400
+        const res = julian.JDEToDate(jde)
+        assert.strictEqual(res.toISOString(), '2025-12-31T23:59:21.172Z')
+      })
+      it('keeps the year for years 0-99 (#20)', function () {
+        const d = 1721790.0684809217
+        assert.strictEqual(
+          julian.JDEToDate(d).toISOString(),
+          '0001-12-31T10:42:33.414Z'
+        )
+        assert.strictEqual(
+          julian.JDEToDate(d + 0.5).toISOString(),
+          '0001-12-31T22:42:33.428Z'
+        )
+      })
     })
   })
 
@@ -364,6 +380,16 @@ describe('#julian', function () {
       const d = new julian.Calendar().fromJD(base.J2000)
       const date = d.toDate()
       assert.strictEqual(date.toISOString(), '2000-01-01T12:00:00.000Z')
+    })
+    it('can convert a day below 1 to the previous month or year', function () {
+      assert.strictEqual(
+        new julian.Calendar(2026, 1, 0.5).toDate().toISOString(),
+        '2025-12-31T12:00:00.000Z'
+      )
+      assert.strictEqual(
+        new julian.Calendar(2026, 3, -0.3).toDate().toISOString(),
+        '2026-02-27T16:48:00.000Z'
+      )
     })
     it('can set date to midnight of same day and convert date to iso string', function () {
       const d = new julian.Calendar(2015, 10, 20.4)

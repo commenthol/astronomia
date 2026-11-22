@@ -105,23 +105,12 @@ export class Calendar {
    * @returns {Date} proleptic Gregorian date
    */
   toDate() {
-    const [day, fhour] = base.modf(this.day)
-    const [hour, fminute] = base.modf(fhour * 24)
-    const [minute, fsecond] = base.modf(fminute * 60)
-    const [second, fms] = base.modf(fsecond * 60)
-    const date = new Date(
-      Date.UTC(
-        this.year,
-        this.month - 1,
-        day,
-        hour,
-        minute,
-        second,
-        Math.round(fms * 1000)
-      )
-    )
-    date.setUTCFullYear(this.year)
-    return date
+    // setUTCFullYear keeps the years 0-99 (Date.UTC maps them to 1900-1999);
+    // the day fraction is added in ms, so a day below 1 (e.g. after
+    // `fromJDE`) rolls back into the previous month or year
+    const date = new Date(0)
+    date.setUTCFullYear(this.year, this.month - 1, 1)
+    return new Date(date.getTime() + Math.round((this.day - 1) * 86400000))
   }
 
   /**
